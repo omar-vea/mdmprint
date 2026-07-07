@@ -51,13 +51,43 @@
   .topbar .tb-mail:hover::after{opacity:1;transform:translateY(0)}
   /* «О компании» — выпадающее меню в топбаре */
   .topbar .tb-drop{position:relative;height:40px;display:flex;align-items:center}
-  .topbar .tb-drop-t{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+  .topbar .tb-drop-t{display:inline-flex;align-items:center;gap:5px;cursor:pointer;height:40px;transition:color .15s}
   .topbar .tb-drop-t svg{transition:transform .15s}
+  .topbar .tb-drop:hover .tb-drop-t{color:#fff}
   .topbar .tb-drop:hover .tb-drop-t svg{transform:rotate(180deg)}
-  .topbar .tb-menu{position:absolute;top:100%;left:-8px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.16);padding:6px;min-width:200px;display:none;flex-direction:column;z-index:60}
-  .topbar .tb-drop:hover .tb-menu{display:flex}
-  .topbar .tb-menu a{color:#3a3a3a;padding:9px 12px;border-radius:7px;font-size:13px}
-  .topbar .tb-menu a:hover{background:var(--hover);color:#1a1a1a}
+  /* панель = продолжение самого бара: наследует его поверхность, «выезжает» снизу без парящей карточки */
+  .topbar .tb-menu{position:absolute;top:100%;left:-16px;display:none;grid-template-columns:1fr 1fr;gap:1px 20px;
+    background:#232327;border:1px solid rgba(255,255,255,.08);border-top:none;border-radius:0 0 12px 12px;
+    box-shadow:0 18px 34px -12px rgba(0,0,0,.5);padding:13px 16px 15px;z-index:60}
+  .topbar .tb-drop:hover .tb-menu{display:grid}
+  .topbar .tb-col{display:flex;flex-direction:column;min-width:168px}
+  .topbar .tb-col-h{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;color:#6b6d73;padding:2px 10px 7px}
+  .topbar .tb-menu a{color:#c7c9cd;padding:8px 10px;border-radius:7px;font-size:13px;white-space:nowrap}
+  .topbar .tb-menu a:hover{background:rgba(255,255,255,.07);color:#fff}
+  /* светлый топбар — светлая панель того же языка */
+  body.tb-light .topbar .tb-drop:hover .tb-drop-t{color:#1a1a1a}
+  body.tb-light .topbar .tb-menu{background:#fff;border-color:var(--line);box-shadow:0 16px 32px -12px rgba(0,0,0,.16)}
+  body.tb-light .topbar .tb-col-h{color:var(--muted)}
+  body.tb-light .topbar .tb-menu a{color:#3a3a3a}
+  body.tb-light .topbar .tb-menu a:hover{background:var(--hover);color:#1a1a1a}
+
+  /* ── ДЕМО: варианты топбара (переключаются классом на body). По умолчанию — чёрный (as-is) ── */
+  /* Светлый: */
+  body.tb-light .topbar{background:#f6f6f7;color:#5a5f68;border-bottom:1px solid var(--line)}
+  body.tb-light .topbar a,body.tb-light .topbar .info .it{color:#5a5f68}
+  body.tb-light .topbar a:hover,body.tb-light .topbar .info .it:hover{color:#1a1a1a}
+  body.tb-light .topbar .tb-cta{color:#1a1a1a}/* CTA — тёмный текст на жёлтом, не серый */
+  body.tb-light .topbar .tb-cta:hover{color:#1a1a1a}
+  body.tb-light .topbar .tb-mail{color:#1a1a1a}
+  body.tb-light .topbar .tb-mail .ml-tx{border-bottom-color:rgba(0,0,0,.28)}
+  body.tb-light .topbar .tb-mail:hover .ml-tx{border-color:#1a1a1a}
+
+  /* ── ДЕМО-тумблер топбара (легко удалить перед продом) ── */
+  .tbswitch{position:fixed;right:16px;bottom:16px;z-index:200;display:flex;gap:2px;background:#fff;border:1px solid var(--line2);border-radius:12px;padding:4px;box-shadow:0 10px 30px rgba(0,0,0,.16);font-size:12px}
+  .tbswitch b{align-self:center;color:var(--muted);font-weight:600;padding:0 6px 0 4px;font-size:11px}
+  .tbswitch button{font-family:inherit;font-size:12px;font-weight:600;color:#3a3a3a;background:none;border:none;padding:6px 11px;border-radius:8px;cursor:pointer;transition:.12s}
+  .tbswitch button:hover{background:var(--hover)}
+  .tbswitch button.on{background:#1a1a1a;color:#fff}
 
   /* ===== ОСНОВНАЯ ШАПКА ===== */
   header{background:var(--bg);border-bottom:1px solid var(--line);position:relative;z-index:40}
@@ -130,7 +160,7 @@
   /* телефон в шапке — выделенный (решение со встречи) */
   .hphone{display:flex;align-items:center;gap:10px;flex-shrink:0;margin:0 4px;padding:5px 10px;border-radius:10px;transition:background .15s}
   .hphone:hover{background:var(--hover)}
-  .hphone .ph-ic{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#1a1a1a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .hphone .ph-ic{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:#1a1a1a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
   .hphone .ph-txt{display:flex;flex-direction:column;align-items:flex-start;gap:0}
   .hphone .num{font-size:16px;font-weight:500;color:#1a1a1a;white-space:nowrap;letter-spacing:.2px;line-height:1.25}
   .hphone .num .pre{font-weight:500;color:#1a1a1a}
@@ -174,6 +204,61 @@
   /* ===== МЕГАМЕНЮ ===== */
   .overlay{position:fixed;inset:0;background:rgba(17,17,17,.35);opacity:0;visibility:hidden;transition:.2s;z-index:30}
   .overlay.show{opacity:1;visibility:visible}
+
+  /* ── Модалка «Заказать звонок» ── */
+  .cbm-back{position:fixed;inset:0;background:rgba(17,17,17,.42);opacity:0;visibility:hidden;transition:opacity .18s,visibility .18s;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+  .cbm-back.show{opacity:1;visibility:visible}
+  .cbm{position:relative;width:100%;max-width:384px;background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:28px 26px 22px;transform:translateY(8px) scale(.985);transition:transform .2s}
+  .cbm-back.show .cbm{transform:none}
+  .cbm-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border:none;background:var(--hover);border-radius:50%;color:#5a5f68;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s}
+  .cbm-x:hover{background:#ececec;color:#1a1a1a}
+  .cbm-title{font-size:20px;font-weight:700;letter-spacing:-.2px;color:var(--ink)}
+  .cbm-sub{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .cbm form{margin-top:18px;display:flex;flex-direction:column;gap:13px}
+  .cbm-field{display:flex;flex-direction:column;gap:6px}
+  .cbm-lbl{font-size:12.5px;font-weight:600;color:#3a3a3a}
+  .cbm-lbl i{color:#e0483a;font-style:normal}
+  .cbm-lbl em{color:var(--muted2);font-weight:500;font-style:normal}
+  .cbm input[type=tel],.cbm input.cbm-tf{height:46px;border:1.5px solid var(--line2);border-radius:12px;padding:0 14px;font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
+  .cbm input[type=tel]:focus,.cbm input.cbm-tf:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .cbm input::placeholder{color:var(--muted2)}
+  .cbm-row{display:flex;gap:11px}
+  .cbm-row .cbm-field{flex:1;min-width:0}
+  .cbm-ta{border:1.5px solid var(--line2);border-radius:12px;padding:11px 14px;font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;width:100%;resize:vertical;min-height:76px;line-height:1.4}
+  .cbm-ta:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .cbm-ta::placeholder{color:var(--muted2)}
+  /* селектор способа связи */
+  .cbm-sel{position:relative}
+  .cbm-sel select{appearance:none;-webkit-appearance:none;cursor:pointer;width:100%;height:46px;border:1.5px solid var(--line2);border-radius:12px;padding:0 36px 0 14px;font-family:inherit;font-size:15px;color:var(--ink);background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+  .cbm-sel select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .cbm-sel select:invalid{color:var(--muted2)}
+  .cbm-sel::after{content:"";position:absolute;right:15px;top:calc(50% - 6px);width:8px;height:8px;transform:rotate(45deg);border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);pointer-events:none}
+  /* загрузка файлов */
+  .cbm-file{position:relative;display:flex;align-items:center;gap:8px;height:46px;border:1.5px dashed var(--line2);border-radius:12px;padding:0 14px;cursor:pointer;color:#5a5f68;font-size:14px;transition:border-color .15s,background .15s}
+  .cbm-file:hover{border-color:var(--muted2);background:var(--hover)}
+  .cbm-file input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .cbm-file svg{flex-shrink:0;color:var(--muted)}
+  .cbm-file-btn{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .cbm-file-hint{font-size:11px;color:var(--muted2);line-height:1.4;margin-top:-4px}
+  #reqBack .cbm{max-width:440px;max-height:calc(100vh - 40px);overflow-y:auto}
+  .cbm-field.invalid input{border-color:#e0483a}
+  .cbm-field.invalid input:focus{box-shadow:0 0 0 3px rgba(224,72,58,.12)}
+  .cbm-err{display:none;font-size:11.5px;color:#e0483a}
+  .cbm-field.invalid .cbm-err{display:block}
+  .cbm-hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+  .cbm-check{display:flex;gap:9px;align-items:flex-start;cursor:pointer;font-size:12px;line-height:1.45;color:#5a5f68}
+  .cbm-check input{width:17px;height:17px;margin-top:1px;accent-color:#1a1a1a;flex-shrink:0;cursor:pointer}
+  .cbm-check a{color:#5a5f68;text-decoration:underline;text-underline-offset:2px}
+  .cbm-check a:hover{color:#1a1a1a}
+  .cbm-check em{color:var(--muted2);font-style:normal}
+  .cbm-submit{height:48px;border:none;border-radius:12px;background:var(--accent);color:#1a1a1a;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s,opacity .15s;margin-top:3px}
+  .cbm-submit:hover:not(:disabled){background:#ffbf0a}
+  .cbm-submit:disabled{background:#f0f0f1;color:var(--muted2);cursor:not-allowed}
+  .cbm-fine{font-size:10.5px;color:var(--muted2);line-height:1.4;text-align:center}
+  .cbm-done{text-align:center;padding:8px 4px 4px}
+  .cbm-done-ic{width:56px;height:56px;border-radius:50%;background:var(--accent);color:#1a1a1a;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  .cbm-done .cbm-sub{margin:6px 0 20px}
+  .cbm-done .cbm-submit{width:100%;margin-top:0}
 
   .mega{position:absolute;left:0;right:0;top:100%;z-index:45;display:none;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 16px 30px -8px rgba(0,0,0,.12)}
   .mega.open{display:block}
@@ -414,15 +499,21 @@
         <div class="tb-drop">
           <span class="tb-drop-t">О компании <svg width="9" height="9" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <div class="tb-menu">
-            <a href="#">Преимущества компании</a>
-            <a href="#">О компании</a>
-            <a href="#">Производство</a>
-            <a href="#">Сертификаты и лицензии</a>
-            <a href="#">Вакансии</a>
-            <a href="#">Отзывы</a>
-            <a href="#">Блог</a>
-            <a href="#">Новости</a>
-            <a href="#">Написать директору</a>
+            <div class="tb-col">
+              <span class="tb-col-h">Компания</span>
+              <a href="#">О компании</a>
+              <a href="#">Преимущества компании</a>
+              <a href="#">Производство</a>
+              <a href="#">Сертификаты и лицензии</a>
+              <a href="#">Вакансии</a>
+            </div>
+            <div class="tb-col">
+              <span class="tb-col-h">Медиа и контакты</span>
+              <a href="#">Отзывы</a>
+              <a href="#">Блог</a>
+              <a href="#">Новости</a>
+              <a href="#">Написать директору</a>
+            </div>
           </div>
         </div>
       </div>
@@ -440,7 +531,7 @@
   <header>
     <div class="wrap hbar">
       <a href="#" class="logo">
-        <img src="assets/mdmprint-logo.svg" alt="MDMprint — заводская типография">
+        <img src="../assets/mdmprint-logo.svg" alt="MDMprint — заводская типография">
       </a>
       <div class="hcat" id="hcat" title="Каталог">
         <span class="ic"><i></i><i></i><i></i></span>
@@ -488,7 +579,7 @@
         </div>
       </form>
       <div class="hphone">
-        <span class="ph-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.5 15.5 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2z"/></svg></span>
+        <span class="ph-ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
         <div class="ph-txt">
           <a href="tel:+74952561000" class="num"><span class="pre">+7 (495) 256-</span><span class="l4">10-00</span></a>
           <div class="psub"><span class="day">без выходных</span><a href="#" class="cb">Заказать звонок</a></div>
@@ -499,12 +590,12 @@
           <span class="ci"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><circle cx="8.5" cy="17.3" r="1" fill="currentColor"/><circle cx="12" cy="17.3" r="1" fill="currentColor"/><circle cx="15.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
           Калькулятор
         </a>
-        <div class="hbtn" title="Telegram">
-          <span class="ci"><img src="assets/telegram.svg" alt="Telegram" width="22" height="22"></span>
+        <div class="hbtn" title="Написать в Telegram">
+          <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg></span>
           Telegram
         </div>
-        <div class="hbtn" title="MAX">
-          <span class="ci"><img src="assets/maxnew.svg" alt="MAX" width="22" height="22"></span>
+        <div class="hbtn" title="Написать в MAX">
+          <span class="ci"><svg width="20" height="20" viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></span>
           MAX
         </div>
         <span class="sep"></span>
@@ -1412,6 +1503,143 @@
 
   <div class="overlay" id="overlay"></div>
 
+  <!-- ДЕМО-тумблер топбара: удалить перед продом (вместе с .tbswitch CSS/JS и body.tb-* если выбран дефолт) -->
+  <div class="tbswitch" id="tbSwitch">
+    <b>Топбар</b>
+    <button type="button" data-tb="" class="on">Чёрный</button>
+    <button type="button" data-tb="light">Светлый</button>
+  </div>
+
+  <!-- МОДАЛКА «Заказать звонок»: телефон обязателен, имя — необязательно; согласие на ПДн (152-ФЗ) -->
+  <div class="cbm-back" id="cbmBack" aria-hidden="true">
+    <div class="cbm" role="dialog" aria-modal="true" aria-labelledby="cbmTitle">
+      <button class="cbm-x" type="button" data-cbm-close aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+
+      <div id="cbmForm" data-role="form">
+        <h2 class="cbm-title" id="cbmTitle">Заказать звонок</h2>
+        <p class="cbm-sub">Оставьте номер — перезвоним в течение 15 минут в рабочее время.</p>
+        <form id="cbmFormEl" novalidate>
+          <div class="cbm-field">
+            <label class="cbm-lbl" for="cbmPhone">Телефон <i>*</i></label>
+            <input type="tel" id="cbmPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required aria-required="true">
+            <span class="cbm-err">Введите корректный номер телефона</span>
+          </div>
+          <div class="cbm-field">
+            <label class="cbm-lbl" for="cbmName">Имя <em>— необязательно</em></label>
+            <input type="text" class="cbm-tf" id="cbmName" name="name" autocomplete="name" placeholder="Как к вам обращаться">
+          </div>
+          <!-- honeypot: скрытое поле-ловушка для ботов; люди его не видят и не заполняют -->
+          <input type="text" class="cbm-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="cbm-check">
+            <input type="checkbox" id="cbmConsent" data-role="consent" required>
+            <span>Я даю согласие на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и принимаю <a href="#" target="_blank" rel="noopener">политику конфиденциальности</a></span>
+          </label>
+          <label class="cbm-check">
+            <input type="checkbox" id="cbmPromo">
+            <span>Согласен получать новости и спецпредложения <em>(необязательно)</em></span>
+          </label>
+          <button type="submit" class="cbm-submit" id="cbmSubmit" disabled>Жду звонка</button>
+          <p class="cbm-fine">Мы используем номер только для обратного звонка по вашей заявке.</p>
+        </form>
+      </div>
+
+      <div id="cbmDone" data-role="done" hidden>
+        <div class="cbm-done">
+          <div class="cbm-done-ic">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h2 class="cbm-title">Заявка принята</h2>
+          <p class="cbm-sub">Перезвоним на указанный номер в ближайшее время. Спасибо!</p>
+          <button type="button" class="cbm-submit" data-cbm-close>Хорошо</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА «Оставить заявку»: расширенная заявка; телефон обязателен, остальное — необязательно; согласие на ПДн (152-ФЗ) -->
+  <div class="cbm-back" id="reqBack" aria-hidden="true">
+    <div class="cbm" role="dialog" aria-modal="true" aria-labelledby="reqTitle">
+      <button class="cbm-x" type="button" data-cbm-close aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+
+      <div data-role="form">
+        <h2 class="cbm-title" id="reqTitle">Оставить заявку</h2>
+        <p class="cbm-sub">Опишите задачу — рассчитаем стоимость и сроки и перезвоним.</p>
+        <form novalidate>
+          <div class="cbm-row">
+            <div class="cbm-field">
+              <label class="cbm-lbl" for="reqPhone">Телефон <i>*</i></label>
+              <input type="tel" id="reqPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required aria-required="true">
+              <span class="cbm-err">Введите корректный номер телефона</span>
+            </div>
+            <div class="cbm-field">
+              <label class="cbm-lbl" for="reqWay">Способ связи <i>*</i></label>
+              <div class="cbm-sel">
+                <select class="cbm-tf" id="reqWay" name="contact_way" required aria-required="true">
+                  <option value="" disabled selected>Выберите способ</option>
+                  <option>Позвонить</option>
+                  <option>Telegram</option>
+                  <option>WhatsApp</option>
+                  <option>MAX</option>
+                  <option>E-mail</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="cbm-row">
+            <div class="cbm-field">
+              <label class="cbm-lbl" for="reqName">Имя <i>*</i></label>
+              <input type="text" class="cbm-tf" id="reqName" name="name" autocomplete="name" placeholder="Как к вам обращаться" required aria-required="true">
+            </div>
+            <div class="cbm-field">
+              <label class="cbm-lbl" for="reqEmail">E-mail <i>*</i></label>
+              <input type="email" class="cbm-tf" id="reqEmail" name="email" autocomplete="email" placeholder="you@example.ru" required aria-required="true">
+            </div>
+          </div>
+          <div class="cbm-field">
+            <label class="cbm-lbl" for="reqMsg">Задача <em>— необязательно</em></label>
+            <textarea class="cbm-ta" id="reqMsg" name="message" rows="3" placeholder="Что нужно напечатать, тираж, сроки, пожелания…"></textarea>
+          </div>
+          <div class="cbm-field">
+            <label class="cbm-lbl">Файлы <em>— необязательно</em></label>
+            <label class="cbm-file">
+              <input type="file" id="reqFiles" name="files" multiple accept=".pdf,.ai,.cdr,.eps,.psd,.tif,.tiff,.png,.jpg,.jpeg,.zip,.rar">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 11.5l-8.4 8.4a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="cbm-file-btn" data-file-label>Прикрепить макет</span>
+            </label>
+          </div>
+          <p class="cbm-file-hint">До 10 файлов, PDF · AI · CDR · PSD · JPG · ZIP. Большие макеты — архивом.</p>
+          <!-- honeypot: скрытое поле-ловушка для ботов -->
+          <input type="text" class="cbm-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="cbm-check">
+            <input type="checkbox" data-role="consent" required>
+            <span>Я даю согласие на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и принимаю <a href="#" target="_blank" rel="noopener">политику конфиденциальности</a></span>
+          </label>
+          <label class="cbm-check">
+            <input type="checkbox" name="promo">
+            <span>Согласен получать новости и спецпредложения <em>(необязательно)</em></span>
+          </label>
+          <button type="submit" class="cbm-submit" disabled>Отправить заявку</button>
+          <p class="cbm-fine">Мы используем контакты только для ответа по вашей заявке.</p>
+        </form>
+      </div>
+
+      <div data-role="done" hidden>
+        <div class="cbm-done">
+          <div class="cbm-done-ic">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h2 class="cbm-title">Заявка отправлена</h2>
+          <p class="cbm-sub">Менеджер свяжется с вами в ближайшее время. Спасибо!</p>
+          <button type="button" class="cbm-submit" data-cbm-close>Хорошо</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ЗАГЛУШКА страницы: только для демонстрации фикс-шапки и скролла -->
   <main class="ph-page">
     <div class="ph-row" style="height:360px">
@@ -1594,6 +1822,111 @@
 
     clearBtn && clearBtn.addEventListener('click', ()=>{ input.value=''; input.focus(); render(''); });
   })();
+
+  /* ── ДЕМО: переключатель топбара ── */
+  (function(){
+    const sw = document.getElementById('tbSwitch');
+    if(!sw) return;
+    sw.addEventListener('click', e=>{
+      const b = e.target.closest('button[data-tb]'); if(!b) return;
+      document.body.classList.remove('tb-grey','tb-light');
+      if(b.dataset.tb) document.body.classList.add('tb-'+b.dataset.tb);
+      sw.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
+    });
+  })();
+
+  /* ── Модалки-лиды (обратный звонок + заявка): общая логика ── */
+  function setupLead(back, triggerSel){
+    if(!back) return;
+    const formWrap = back.querySelector('[data-role="form"]');
+    const doneWrap = back.querySelector('[data-role="done"]');
+    const form     = back.querySelector('form');
+    const phone    = back.querySelector('input[type="tel"]');
+    const pField   = phone.closest('.cbm-field');
+    const consent  = back.querySelector('input[data-role="consent"]');
+    const submit   = back.querySelector('button[type="submit"]');
+    const hp       = form.querySelector('.cbm-hp');
+    const fileInput = form.querySelector('input[type="file"]');
+    const fileLabel = form.querySelector('[data-file-label]');
+    const fileLabelText = fileLabel ? fileLabel.textContent : '';
+    let lastFocus = null;
+
+    function updateFile(){
+      if(!fileLabel) return;
+      const n = fileInput.files.length;
+      fileLabel.textContent = n ? (n===1 ? fileInput.files[0].name : 'Выбрано файлов: '+n) : fileLabelText;
+    }
+    fileInput && fileInput.addEventListener('change', updateFile);
+
+    const digits = v => (v||'').replace(/\D/g,'');
+    function norm(v){ let d = digits(v); if(d[0]==='8') d='7'+d.slice(1); if(d && d[0]!=='7') d='7'+d; return d.slice(0,11); }
+    function phoneValid(){ const d = norm(phone.value); return d.length===11 && d[0]==='7'; }
+    const emailOk = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v||'').trim());
+    function formValid(){
+      if(!phoneValid() || !consent.checked) return false;
+      // все прочие поля с атрибутом required (имя, email, способ связи…)
+      for(const el of form.querySelectorAll('[required]')){
+        if(el===phone || el===consent) continue;
+        if(el.type==='checkbox'){ if(!el.checked) return false; continue; }
+        if(!el.value.trim()) return false;
+        if(el.type==='email' && !emailOk(el.value)) return false;
+      }
+      return true;
+    }
+    function refresh(){ submit.disabled = !formValid(); }
+
+    // лёгкое форматирование в +7 (XXX) XXX-XX-XX
+    function fmt(v){
+      const d = norm(v);
+      if(!d) return '';
+      let r = '+7';
+      if(d.length>1) r += ' (' + d.slice(1,4);
+      if(d.length>=4) r += ')';
+      if(d.length>=5) r += ' ' + d.slice(4,7);
+      if(d.length>=8) r += '-' + d.slice(7,9);
+      if(d.length>=10) r += '-' + d.slice(9,11);
+      return r;
+    }
+
+    function openModal(e){
+      if(e) e.preventDefault();
+      lastFocus = document.activeElement;
+      formWrap.hidden = false; doneWrap.hidden = true;
+      back.classList.add('show'); back.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+      if(typeof closeMega==='function') closeMega();
+      setTimeout(()=>phone.focus(), 60);
+    }
+    function closeModal(){
+      back.classList.remove('show'); back.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      form.reset(); pField.classList.remove('invalid'); refresh();
+      if(lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    document.querySelectorAll(triggerSel).forEach(o=>o.addEventListener('click', openModal));
+    back.querySelectorAll('[data-cbm-close]').forEach(c=>c.addEventListener('click', closeModal));
+    back.addEventListener('click', e=>{ if(e.target===back) closeModal(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape' && back.classList.contains('show')) closeModal(); });
+
+    phone.addEventListener('input', ()=>{ phone.value = fmt(phone.value); pField.classList.remove('invalid'); });
+    phone.addEventListener('blur', ()=>{ if(phone.value && !phoneValid()) pField.classList.add('invalid'); });
+    form.addEventListener('input', refresh);
+    form.addEventListener('change', refresh);
+
+    form.addEventListener('submit', e=>{
+      e.preventDefault();
+      if(hp && hp.value){ closeModal(); return; }          // бот попался в honeypot — тихо закрываем
+      if(!formValid()){ if(!phoneValid()){ pField.classList.add('invalid'); phone.focus(); } return; }
+      // на реале: POST на бэкенд { phone: norm(phone.value), + прочие поля формы,
+      //   consent:true, page: location.href, ts: Date.now() } + серверная валидация/антиспам/rate-limit
+      formWrap.hidden = true; doneWrap.hidden = false;
+    });
+
+    refresh();
+  }
+  setupLead(document.getElementById('cbmBack'), '.cb');       // обратный звонок
+  setupLead(document.getElementById('reqBack'), '.tb-cta');   // оставить заявку
 </script>
 </body>
 </html>

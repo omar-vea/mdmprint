@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Attractive';
+    src: local('Attractive Cond Bold'), local('Attractive-Cond-Bold'),
+        url('AttractiveCond-Bold.woff2') format('woff2'),
+        url('AttractiveCond-Bold.woff') format('woff'),
+        url('AttractiveCond-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+  }

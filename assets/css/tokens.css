@@ -1,0 +1,66 @@
+/* ============================================================
+   MDMprint — Design tokens (единый источник правды)
+   Значения выверены по Figma «Layouts for mdmprint.ru v3».
+   Бренд-жёлтый переопределён на фирменный #FFC100.
+   ============================================================ */
+:root{
+  /* ---- Бренд ---- */
+  --brand:            #FFC100;   /* фирменный жёлтый */
+  --brand-hover:      #E6A800;   /* затемнение под hover/active */
+  --brand-dark:       #CC9E00;
+  --brand-soft:       #FFF3CC;   /* мягкая плашка-заливка */
+  --brand-tint:       rgba(255,193,0,.12); /* акцент @ ~12% */
+  --on-brand:         #222220;   /* текст на жёлтом */
+
+  /* ---- Текст ---- */
+  --text-primary:     #222220;
+  --text-secondary:   #6e6e6a;
+  --text-tertiary:    #9a9a96;
+  --text-on-dark:     #ffffff;
+
+  /* ---- Поверхности / линии ---- */
+  --surface-page:     #ffffff;
+  --surface-subtle:   #f6f6f4;
+  --surface-gray:     #f5f5f5;
+  --surface-card:     #ffffff;
+  --surface-dark:     #222220;
+  --border:           #e4e4e4;
+  --border-strong:    #d8d8d6;
+
+  /* ---- Радиусы ---- */
+  --radius-inside:    4px;
+  --radius-md:        8px;
+  --radius-outside:   14px;
+  --radius-pill:      999px;
+
+  /* ---- Тень ---- */
+  --shadow:           0 4px 22px rgba(0,0,0,.10);
+  --shadow-lg:        0 24px 60px -24px rgba(0,0,0,.22);
+
+  /* ---- Отступы (шкала Figma) ---- */
+  --sp-2:2px; --sp-4:4px; --sp-6:6px; --sp-8:8px; --sp-10:10px;
+  --sp-12:12px; --sp-16:16px; --sp-20:20px; --sp-24:24px; --sp-32:32px;
+  --sp-40:40px; --sp-48:48px; --sp-64:64px; --sp-80:80px;
+  --section-y:        80px;   /* вертикальный отступ секции */
+
+  /* ---- Раскладка ---- */
+  --container:        1200px;
+  --container-pad:    22px;
+
+  /* ---- Шрифты ---- */
+  --font-head:        'AttractiveCond', 'PT Sans Narrow', -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-body:        'Roboto', -apple-system, 'Segoe UI', Arial, sans-serif;
+
+  /* ---- Типошкала: размер / интерлиньяж / трекинг ----
+     Заголовки — AttractiveCond, КАПС; текст — Roboto. */
+  --t-display:        50px;  --t-display-lh:54px;  --t-display-ls:1px;
+  --t-h1:             40px;  --t-h1-lh:44px;       --t-h1-ls:1px;
+  --t-h2:             32px;  --t-h2-lh:38px;       --t-h2-ls:1.5px;
+  --t-h3:             24px;  --t-h3-lh:28px;       --t-h3-ls:2px;
+  --t-h4:             18px;  --t-h4-lh:22px;       --t-h4-ls:2px;
+  --t-lead:           18px;  --t-lead-lh:27px;
+  --t-body:           16px;  --t-body-lh:24px;
+  --t-small:          14px;  --t-small-lh:20px;
+  --t-caption:        13px;  --t-caption-lh:16px;
+  --t-label:          12px;  --t-label-lh:16px;    --t-label-ls:.5px;
+}

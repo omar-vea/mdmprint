@@ -1,0 +1,19 @@
+/* ============================================================
+   MDMprint — шрифты
+   Файлы в assets/fonts/. Заголовки — AttractiveCond.
+   ============================================================ */
+@font-face{
+  font-family:'AttractiveCond';
+  src:url('../fonts/AttractiveCond-Bold.woff2') format('woff2');
+  font-weight:700; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'AttractiveCond';
+  src:url('../fonts/AttractiveCond-SemiBold.woff2') format('woff2');
+  font-weight:600; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'AttractiveCond';
+  src:url('../fonts/AttractiveCond-Regular.woff2') format('woff2');
+  font-weight:400; font-style:normal; font-display:swap;
+}

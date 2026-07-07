@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Attractive';
+    src: local('Attractive Cond SemiBold'), local('Attractive-Cond-SemiBold'),
+        url('AttractiveCond-SemiBold.woff2') format('woff2'),
+        url('AttractiveCond-SemiBold.woff') format('woff'),
+        url('AttractiveCond-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+  }

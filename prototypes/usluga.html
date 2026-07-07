@@ -1,0 +1,2480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тиснение фольгой — MDMprint</title>
+<link rel="preload" href="../assets/fonts/AttractiveCond-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/AttractiveCond-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/fonts.css">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/kit.css">
+<style>
+  :root{
+    --max:1200px;
+    --ink:#1a1a1a;
+    --muted:#8a8f98;
+    --muted2:#aeb2b9;
+    --line:#ececec;
+    --line2:#e0e0e0;
+    --bg:#fff;
+    --hover:#f3f3f4;
+    --accent:#FFC100;
+    --accent-soft:#FFF3CC;
+    --accent-soft2:#FFE9AE;
+    --radius:10px;
+    --radius-pill:40px;
+    --shadow:0 16px 44px rgba(0,0,0,.13);
+    /* единая иконка-стрелка (SVG-маска, наследует цвет текста) */
+    --arr:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h10M9 4.5 12.5 8 9 11.5'/%3E%3C/svg%3E");
+  }
+  /* переиспользуемая стрелка-иконка */
+  .arr-ico{display:inline-block;width:14px;height:14px;background:currentColor;-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat;flex-shrink:0;transition:transform .15s}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,'Segoe UI',Inter,Arial,sans-serif;color:var(--ink);background:#fafafa;font-size:14px;line-height:1.45}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+  svg{display:block}
+
+  /* ===== ВЕРХНЯЯ ТЁМНАЯ ПОЛОСА ===== */
+  .topbar{background:#1b1b1d;color:#c7c9cd;font-size:14px;position:relative;z-index:50}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:40px}
+  .topbar a{color:#c7c9cd;transition:color .15s}
+  .topbar a:hover{color:#fff}
+  .topbar .menu{display:flex;gap:22px;align-items:center;font-weight:500}
+  .topbar .info{display:flex;gap:18px;align-items:center}
+  .topbar .tb-cta{display:inline-flex;align-items:center;height:32px;padding:0 16px;border-radius:var(--radius-pill);background:#FFC829;color:#1a1a1a;font-size:13.5px;font-weight:600;white-space:nowrap}
+  .topbar .tb-cta:hover{background:#E6A700;color:#1a1a1a}
+  .topbar .info .it{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;color:#c7c9cd}
+  .topbar .info .it:hover{color:#fff}
+  /* почта — выделена белым + подсказка «скопировать кликом» */
+  .topbar .tb-mail{color:#fff;position:relative;cursor:pointer}
+  .topbar .tb-mail .ml-tx{border-bottom:1px dashed rgba(255,255,255,.45);transition:border-color .15s}
+  .topbar .tb-mail:hover{color:#fff}
+  .topbar .tb-mail:hover .ml-tx{border-color:#fff}
+  .topbar .tb-mail::after{content:attr(data-hint);position:absolute;top:calc(100% + 7px);left:0;background:#fff;color:#1a1a1a;font-size:11.5px;font-weight:600;padding:5px 9px;border-radius:7px;white-space:nowrap;opacity:0;pointer-events:none;transform:translateY(-3px);transition:opacity .15s,transform .15s;box-shadow:0 8px 22px rgba(0,0,0,.2);z-index:60}
+  .topbar .tb-mail:hover::after{opacity:1;transform:translateY(0)}
+  /* «О компании» — выпадающее меню в топбаре */
+  .topbar .tb-drop{position:relative;height:40px;display:flex;align-items:center}
+  .topbar .tb-drop-t{display:inline-flex;align-items:center;gap:5px;cursor:pointer;height:40px;transition:color .15s}
+  .topbar .tb-drop-t svg{transition:transform .15s}
+  .topbar .tb-drop:hover .tb-drop-t{color:#fff}
+  .topbar .tb-drop:hover .tb-drop-t svg{transform:rotate(180deg)}
+  /* панель = продолжение самого бара: наследует его поверхность, «выезжает» снизу без парящей карточки */
+  .topbar .tb-menu{position:absolute;top:100%;left:-16px;display:none;grid-template-columns:1fr 1fr;gap:1px 20px;
+    background:#232327;border:1px solid rgba(255,255,255,.08);border-top:none;border-radius:0 0 12px 12px;
+    box-shadow:0 18px 34px -12px rgba(0,0,0,.5);padding:13px 16px 15px;z-index:60}
+  .topbar .tb-drop:hover .tb-menu{display:grid}
+  .topbar .tb-col{display:flex;flex-direction:column;min-width:168px}
+  .topbar .tb-col-h{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;color:#6b6d73;padding:2px 10px 7px}
+  .topbar .tb-menu a{color:#c7c9cd;padding:8px 10px;border-radius:7px;font-size:13px;white-space:nowrap}
+  .topbar .tb-menu a:hover{background:rgba(255,255,255,.07);color:#fff}
+  /* светлый топбар — светлая панель того же языка */
+  body.tb-light .topbar .tb-drop:hover .tb-drop-t{color:#1a1a1a}
+  body.tb-light .topbar .tb-menu{background:#fff;border-color:var(--line);box-shadow:0 16px 32px -12px rgba(0,0,0,.16)}
+  body.tb-light .topbar .tb-col-h{color:var(--muted)}
+  body.tb-light .topbar .tb-menu a{color:#3a3a3a}
+  body.tb-light .topbar .tb-menu a:hover{background:var(--hover);color:#1a1a1a}
+
+  /* ── ДЕМО: варианты топбара (переключаются классом на body). По умолчанию — чёрный (as-is) ── */
+  /* Светлый: */
+  body.tb-light .topbar{background:#f6f6f7;color:#5a5f68;border-bottom:1px solid var(--line)}
+  body.tb-light .topbar a,body.tb-light .topbar .info .it{color:#5a5f68}
+  body.tb-light .topbar a:hover,body.tb-light .topbar .info .it:hover{color:#1a1a1a}
+  body.tb-light .topbar .tb-cta{color:#1a1a1a}/* CTA — тёмный текст на жёлтом, не серый */
+  body.tb-light .topbar .tb-cta:hover{color:#1a1a1a}
+  body.tb-light .topbar .tb-mail{color:#1a1a1a}
+  body.tb-light .topbar .tb-mail .ml-tx{border-bottom-color:rgba(0,0,0,.28)}
+  body.tb-light .topbar .tb-mail:hover .ml-tx{border-color:#1a1a1a}
+
+  /* ── ДЕМО-тумблер топбара (легко удалить перед продом) ── */
+  .tbswitch{position:fixed;right:16px;bottom:16px;z-index:200;display:flex;gap:2px;background:#fff;border:1px solid var(--line2);border-radius:12px;padding:4px;box-shadow:0 10px 30px rgba(0,0,0,.16);font-size:12px}
+  .tbswitch b{align-self:center;color:var(--muted);font-weight:600;padding:0 6px 0 4px;font-size:11px}
+  .tbswitch button{font-family:inherit;font-size:12px;font-weight:600;color:#3a3a3a;background:none;border:none;padding:6px 11px;border-radius:8px;cursor:pointer;transition:.12s}
+  .tbswitch button:hover{background:var(--hover)}
+  .tbswitch button.on{background:#1a1a1a;color:#fff}
+
+  /* ============================================================
+     СТРАНИЦА УСЛУГИ / МАТЕРИАЛА (namespace .usl) — пример «Тиснение»
+     ============================================================ */
+  .usl{background:#fff;color:var(--ink)}
+  .usl .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+  .usl section{padding:var(--section-y) 0;border-top:1px solid var(--line);scroll-margin-top:118px}
+  .usl section:first-child{border-top:none}
+  .usl .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--brand-dark)}
+  .usl h2{font-family:var(--font-head);font-size:var(--t-h2);font-weight:700;letter-spacing:var(--t-h2-ls);text-transform:uppercase;line-height:var(--t-h2-lh);margin:8px 0 0}
+  .usl .sec-head{margin-bottom:32px}
+  .usl h3{font-family:var(--font-head);font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px;line-height:1.15;margin:0}
+  .usl p{color:#41454d;line-height:1.55}
+  .usl .lead{font-size:16px;color:#41454d;line-height:1.6}
+
+  /* buttons */
+  .usl .btn{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 24px;border-radius:var(--radius-pill);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:.15s;white-space:nowrap}
+  .usl .btn-primary{background:var(--accent);color:#1a1a1a}
+  .usl .btn-primary:hover{background:#E6A700}
+  .usl .btn-ghost{background:#fff;border-color:var(--line2);color:#1a1a1a}
+  .usl .btn-ghost:hover{border-color:#1a1a1a}
+  .usl .btn-sm{height:40px;padding:0 18px;font-size:14px}
+
+  /* breadcrumbs */
+  .usl .crumbs{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:22px}
+  .usl .crumbs a:hover{color:#1a1a1a}
+  .usl .crumbs span{color:#c7c9cd}
+
+  /* HERO */
+  .usl-hero{padding:40px 0 0!important}
+  .usl-hero .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .usl-hero h1{font-family:var(--font-head);font-size:var(--t-display);font-weight:700;letter-spacing:var(--t-display-ls);text-transform:uppercase;line-height:var(--t-display-lh);margin:10px 0 18px}
+  .usl-hero .hero-cta{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .usl-hero .hero-media{position:relative;aspect-ratio:4/3;border-radius:18px;background:
+    radial-gradient(120% 120% at 70% 20%, #fff7e0 0%, #f4f0e6 55%, #efe9db 100%);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.25)}
+  .usl-hero .hero-media .card-mock{width:64%;aspect-ratio:1.6/1;background:#fff;border-radius:10px;
+    box-shadow:0 24px 50px -14px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;position:relative}
+  .usl-hero .hero-media .foil{width:44px;height:44px;border-radius:50%;background:
+    linear-gradient(135deg,#ffe08a,#f5b301 60%,#c98a00);box-shadow:0 6px 16px rgba(201,138,0,.4)}
+  .usl-hero .ph-tag{position:absolute;bottom:12px;left:14px;font-size:12px;color:#9a927f;font-weight:600}
+
+  /* stats strip */
+  .usl-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:44px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .usl-stats .st{padding:22px 24px;border-left:1px solid var(--line)}
+  .usl-stats .st:first-child{border-left:none}
+  .usl-stats .st b{display:block;font-family:var(--font-head);font-size:32px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;line-height:1}
+  .usl-stats .st span{display:block;margin-top:6px;font-size:13px;color:var(--muted)}
+
+  /* STICKY SUBNAV */
+  .usl-subnav{position:sticky;top:54px;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:0!important}
+  .usl-subnav .wrap{display:flex;gap:28px;height:52px;align-items:stretch;overflow-x:auto}
+  .usl-subnav a{display:inline-flex;align-items:center;font-size:14px;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
+  .usl-subnav a:hover{color:#1a1a1a}
+  .usl-subnav a.active{color:#1a1a1a;font-weight:600;border-bottom-color:var(--accent)}
+
+  /* generic card */
+  .usl .card{background:#fff;border:1px solid var(--line);border-radius:14px}
+
+  /* ПРЕИМУЩЕСТВА */
+  .usl-adv .adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
+  .usl-adv .adv-media{border-radius:14px;background:#f2f2f2;border:1.5px dashed #c9c9c9;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:6px;min-height:300px;color:#8f8f8f}
+  .usl-adv .adv-media b{font-size:15px;font-weight:600;color:#6b6b6b}
+  .usl-adv .tiles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .usl-adv .tile{background:var(--accent-soft);border-radius:14px;padding:18px}
+  .usl-adv .tile .dot{width:20px;height:20px;border-radius:50%;background:var(--accent);margin-bottom:12px}
+  .usl-adv .tile h3{font-size:15px;text-transform:uppercase;letter-spacing:.3px}
+  .usl-adv .tile p{font-size:13.5px;margin-top:6px}
+  .usl-adv .pm{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px}
+  .usl-adv .pm .card{padding:22px 24px}
+  .usl-adv .pm h4{font-size:14px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .usl-adv .pm .badge{width:8px;height:8px;border-radius:50%}
+  .usl-adv .pm ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .usl-adv .pm li{position:relative;padding-left:16px;font-size:14px;color:#41454d}
+  .usl-adv .pm li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:#c7c9cd}
+
+  /* ВИДЫ */
+  .usl-vidy .vidy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .usl-vidy .vcard .vmedia{aspect-ratio:4/3;border-radius:12px;background:linear-gradient(135deg,#faf8f3,#eee9df);margin-bottom:16px;position:relative;overflow:hidden}
+  .usl-vidy .vcard .vmedia.gold{background:linear-gradient(135deg,#fff6da,#f3d488)}
+  .usl-vidy .vcard .vtag{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#C79600}
+  .usl-vidy .vcard h3{font-size:17px;margin:6px 0 8px}
+  .usl-vidy .vcard p{font-size:13.5px}
+  .usl-vidy .vidy-note{margin-top:22px;font-size:14px;color:var(--muted)}
+
+  /* ЦЕНЫ */
+  .usl-price .price-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:24px;align-items:stretch}
+  .usl-price .ptable{background:#f6f6f6;border-radius:16px;padding:26px}
+  .usl-price .ptable .ph{font-size:14px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-bottom:14px}
+  .usl-price .prow{display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:center;padding:14px 0;border-top:1px solid #e6e6e6}
+  .usl-price .prow:first-of-type{border-top:none}
+  .usl-price .prow .pname{font-size:14px;color:#41454d}
+  .usl-price .prow .pterm{font-size:13px;color:var(--muted);text-align:right;min-width:80px}
+  .usl-price .prow .pval{font-size:15px;font-weight:700;text-align:right;min-width:96px}
+  .usl-price .ptable .btn{margin-top:18px}
+  .usl-price .calc{background:#1b1b1d;color:#fff;border-radius:16px;padding:26px;display:flex;flex-direction:column;align-items:flex-start}
+  .usl-price .calc h3{font-size:16px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+  .usl-price .calc p{color:#b9bcc2;font-size:14px;margin-bottom:18px}
+  .usl-price .calc .btn{background:#fff;color:#1a1a1a}
+  .usl-price .calc .btn:hover{background:#f0f0f0}
+
+  /* ПОРТФОЛИО */
+  .usl-port .stories{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:28px}
+  .usl-port .stories .slabel{grid-column:1/-1;font-size:13px;color:var(--muted);margin-bottom:-6px}
+  .usl-port .story{aspect-ratio:9/16;border-radius:14px;background:#f2f2f2;border:1.5px dashed #ccc;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:12px;text-align:center;padding:10px;color:#8a8a8a}
+  .usl-port .story .play{width:44px;height:44px;border-radius:50%;background:var(--accent);position:relative}
+  .usl-port .story .play::after{content:"";position:absolute;top:50%;left:54%;transform:translate(-50%,-50%);border-style:solid;border-width:8px 0 8px 13px;border-color:transparent transparent transparent #fff}
+  .usl-port .story span{font-size:12px;font-weight:600;color:#6b6b6b;line-height:1.3}
+  .usl-port .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .usl-port .pgrid .shot{aspect-ratio:1/1;border-radius:14px;background:linear-gradient(135deg,#3a3a3a,#111)}
+  .usl-port .pgrid .shot:nth-child(3n+1){background:linear-gradient(135deg,#8a1f2b,#4a0f16)}
+  .usl-port .pgrid .shot:nth-child(3n+2){background:linear-gradient(135deg,#2a2a2a,#000)}
+  .usl-port .pgrid .shot:nth-child(3n){background:linear-gradient(135deg,#1e3a4a,#0a1a24)}
+
+  /* ТРЕБОВАНИЯ — табы */
+  .usl-req .tabbar{display:flex;gap:28px;border-bottom:1px solid var(--line);margin-bottom:28px}
+  .usl-req .tabbtn{font-family:inherit;font-size:15px;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;padding:0 2px 12px;cursor:pointer;transition:.15s}
+  .usl-req .tabbtn:hover{color:#1a1a1a}
+  .usl-req .tabbtn.active{color:#1a1a1a;font-weight:600;border-bottom-color:var(--accent)}
+  .usl-req .tabpanel{display:none}
+  .usl-req .tabpanel.active{display:block}
+  /* чек-лист */
+  .usl-req .checklist .ci{display:flex;gap:14px;padding:18px 4px;border-top:1px solid var(--line)}
+  .usl-req .checklist .ci:first-child{border-top:none}
+  .usl-req .checklist .tick{width:26px;height:26px;border-radius:50%;background:var(--accent-soft2);flex-shrink:0;position:relative}
+  .usl-req .checklist .tick::after{content:"";position:absolute;top:46%;left:50%;transform:translate(-50%,-50%) rotate(-45deg);width:11px;height:6px;border-left:2px solid #C79600;border-bottom:2px solid #C79600}
+  .usl-req .checklist .ci b{display:block;font-size:15px;margin-bottom:3px}
+  .usl-req .checklist .ci p{font-size:13.5px}
+  /* таблица параметров */
+  .usl-req .ptable-full{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .usl-req .ptable-full .tr{display:grid;grid-template-columns:280px 1fr;border-top:1px solid var(--line)}
+  .usl-req .ptable-full .tr:first-child{border-top:none}
+  .usl-req .ptable-full .tk{padding:16px 20px;font-weight:600;font-size:14px}
+  .usl-req .ptable-full .tv{padding:16px 20px;font-size:14px;color:#41454d;background:#fafafa}
+  /* подробные требования — статья */
+  .usl-req .article{max-width:780px}
+  .usl-req .article .src{font-size:13px;color:var(--muted);margin-bottom:20px}
+  .usl-req .article h3{margin:24px 0 10px}
+  .usl-req .article ol{margin:10px 0 0 20px}
+  .usl-req .article ol li{font-size:14px;color:#41454d;margin:4px 0}
+  .usl-req .article .pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:14px}
+  .usl-req .article .imgph{aspect-ratio:16/10;border-radius:12px;background:#f2f2f2;border:1.5px dashed #ccc;padding:12px;position:relative}
+  .usl-req .article .imgph .st-ok,.usl-req .article .imgph .st-no{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+  .usl-req .article .imgph .st-ok{color:#2ea64f}
+  .usl-req .article .imgph .st-no{color:#d43c3c}
+  /* готовые материалы */
+  .usl-req .files{margin-top:28px;background:#f6f6f6;border-radius:16px;padding:22px 24px}
+  .usl-req .files h4{font-size:13px;text-transform:uppercase;letter-spacing:.4px}
+  .usl-req .files .fnote{font-size:13px;color:var(--muted);margin:2px 0 14px}
+  .usl-req .files .frow{display:flex;align-items:center;gap:12px;background:#fff;border-radius:10px;padding:12px 16px;margin-top:8px}
+  .usl-req .files .frow .fname{flex:1;font-size:14px}
+  .usl-req .files .ext{font-size:11px;font-weight:600;color:#6b6b6b;background:#eee;border-radius:6px;padding:3px 8px}
+  .usl-req .files .dl{font-size:13px;font-weight:600;color:#C79600;cursor:pointer}
+
+  /* FAQ */
+  .usl-faq .acc{border-top:1px solid var(--line)}
+  .usl-faq .acc:last-child{border-bottom:1px solid var(--line)}
+  .usl-faq .acc summary{list-style:none;cursor:pointer;padding:20px 4px;font-size:16px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .usl-faq .acc summary::-webkit-details-marker{display:none}
+  .usl-faq .acc summary::after{content:"";width:12px;height:12px;flex-shrink:0;border-right:2px solid #9a9a9a;border-bottom:2px solid #9a9a9a;transform:rotate(45deg);transition:.2s}
+  .usl-faq .acc[open] summary::after{transform:rotate(-135deg)}
+  .usl-faq .acc p{padding:0 4px 20px;font-size:14.5px;max-width:820px}
+
+  /* ГДЕ ПРИМЕНЯЕТСЯ / продукты */
+  .usl-prod .pcards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .usl-prod .pc{border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.15s}
+  .usl-prod .pc:hover{border-color:var(--line2);box-shadow:0 12px 30px -14px rgba(0,0,0,.16)}
+  .usl-prod .pc .pcm{aspect-ratio:4/3;background:linear-gradient(135deg,#f6f2ea,#ece6d8)}
+  .usl-prod .pc .pcb{padding:14px 16px}
+  .usl-prod .pc b{font-size:14.5px}
+  .usl-prod .pc span{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
+
+  /* СОЧЕТАЕТСЯ */
+  .usl-combo .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .usl-combo .chip{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line2);border-radius:var(--radius-pill);padding:12px 20px;font-size:14px;font-weight:500;transition:.15s;cursor:pointer}
+  .usl-combo .chip:hover{border-color:#1a1a1a;background:#fafafa}
+  .usl-combo .chip .arr-ico{color:var(--muted)}
+
+  /* ОТЗЫВЫ */
+  .usl-rev .revs{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .usl-rev .rev{border:1px solid var(--line);border-radius:14px;padding:22px}
+  .usl-rev .stars{color:var(--accent);font-size:15px;letter-spacing:2px;margin-bottom:10px}
+  .usl-rev .rev p{font-size:14px}
+  .usl-rev .who{display:flex;align-items:center;gap:12px;margin-top:16px}
+  .usl-rev .who .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ffd97a,#f0a500)}
+  .usl-rev .who b{font-size:14px;display:block}
+  .usl-rev .who span{font-size:12.5px;color:var(--muted);display:block;margin-top:2px}
+
+  /* СТАТЬИ */
+  .usl-art .arts{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .usl-art .art{border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.15s}
+  .usl-art .art:hover{box-shadow:0 12px 30px -14px rgba(0,0,0,.16)}
+  .usl-art .art .am{aspect-ratio:16/9;background:linear-gradient(135deg,#e9e4d8,#d8d0bf)}
+  .usl-art .art .ab{padding:16px 18px}
+  .usl-art .art .meta{font-size:11.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#C79600}
+  .usl-art .art h3{font-size:16px;margin:6px 0 0;line-height:1.3}
+
+  /* FINAL CTA */
+  .usl-final{border-top:none!important}
+  .usl-final .cta-box{background:#1b1b1d;border-radius:20px;padding:48px 44px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+  .usl-final .cta-box h2{color:#fff;font-size:26px;margin:0}
+  .usl-final .cta-box p{color:#b9bcc2;margin-top:10px;max-width:520px}
+
+  /* FOOTER (упрощённый) */
+  .usl-foot{background:#141416;color:#9a9da3;padding:48px 0 28px}
+  .usl-foot .fcols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}
+  .usl-foot h5{color:#fff;font-size:13px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+  .usl-foot a{display:block;color:#9a9da3;padding:4px 0;font-size:13.5px}
+  .usl-foot a:hover{color:#fff}
+  .usl-foot .fbot{border-top:1px solid #2a2a2d;margin-top:36px;padding-top:20px;font-size:12.5px;color:#6b6d73}
+
+  /* адаптив */
+  @media(max-width:900px){
+    .usl-hero .hero-grid,.usl-adv .adv-grid,.usl-price .price-grid{grid-template-columns:1fr}
+    .usl-stats{grid-template-columns:1fr 1fr}
+    .usl-vidy .vidy-grid,.usl-port .pgrid,.usl-rev .revs,.usl-art .arts{grid-template-columns:1fr 1fr}
+    .usl-port .stories{grid-template-columns:repeat(3,1fr)}
+    .usl-prod .pcards{grid-template-columns:1fr 1fr}
+    .usl-adv .tiles,.usl-adv .pm,.usl-req .article .pair{grid-template-columns:1fr}
+    .usl-req .ptable-full .tr{grid-template-columns:1fr}
+    .usl-hero h1{font-size:34px}
+    .usl h2{font-size:24px}
+    .usl-foot .fcols{grid-template-columns:1fr 1fr}
+  }
+
+  /* ===== ОСНОВНАЯ ШАПКА ===== */
+  header{background:var(--bg);border-bottom:1px solid var(--line);position:relative;z-index:40}
+  .hbar{display:flex;align-items:center;gap:20px;height:60px}
+
+  .logo{display:flex;align-items:center;flex-shrink:0}
+  .logo img{height:26px;width:auto;display:block}
+
+  .search{flex:1;display:flex;align-items:center;height:42px;border:1.5px solid var(--line2);border-radius:var(--radius-pill);padding:0 5px 0 16px;transition:border-color .15s;background:#fff}
+  .search:focus-within{border-color:#1a1a1a}
+  .search .si{color:var(--muted2);flex-shrink:0;margin-right:8px}
+  .search input{flex:1;border:none;outline:none;font-size:13.5px;background:transparent;color:#1a1a1a}
+  .search input::placeholder{color:var(--muted2)}
+  .search .s-go{height:32px;padding:0 18px;border:none;border-radius:var(--radius-pill);background:#1a1a1a;color:#fff;font-size:13px;font-weight:500;cursor:pointer;flex-shrink:0;transition:background .15s}
+  .search .s-go:hover{background:#000}
+
+  /* ===== ПОИСК: кнопка очистки + дропдаун подсказок (состояния) ===== */
+  .search{position:relative}
+  .search .s-clear{display:none;width:28px;height:28px;align-items:center;justify-content:center;border:none;background:none;color:#aeb2b9;cursor:pointer;border-radius:50%;flex-shrink:0;margin-right:2px;transition:.12s}
+  .search.has-val .s-clear{display:flex}
+  .search .s-clear:hover{background:var(--hover);color:#1a1a1a}
+  body.search-open header{z-index:60}/* поднять шапку над навбаром, чтобы блок поиска был сверху */
+  /* активное состояние: поле + дропдаун = ЕДИНЫЙ приподнятый блок (поле «утоплено» в верх панели),
+     одна рамка + одна тень отделяют весь блок от шапки */
+  .search-drop{position:absolute;top:-1.5px;left:-1.5px;right:-1.5px;background:#fff;border:1px solid var(--line2);border-radius:20px;box-shadow:0 16px 40px -8px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.05);padding:47px 8px 9px;z-index:1;display:none;max-height:min(80vh,620px);overflow:hidden}
+  /* тонкий разделитель строки поиска от подсказок внутри блока */
+  .search-drop::before{content:"";position:absolute;top:45px;left:15px;right:15px;height:1px;background:var(--line)}
+  .search.s-open{border-color:transparent;background:transparent;z-index:61}
+  .search.s-open > :not(.search-drop){position:relative;z-index:2}/* контролы поля поверх панели */
+  .search.s-open .search-drop{display:block}
+  .search-drop .sd-pane{display:none}
+  .search-drop[data-state="empty"] .sd-empty{display:block}
+  .search-drop[data-state="results"] .sd-results{display:block}
+  .search-drop[data-state="none"] .sd-none{display:block}
+  .sd-h{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;padding:9px 10px 7px}
+  .sd-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 8px 6px}
+  .sd-chip{font-family:inherit;font-size:13px;color:#3a3a3a;background:#f4f4f5;border:1px solid var(--line2);border-radius:18px;padding:7px 13px;cursor:pointer;transition:.12s;white-space:nowrap}
+  .sd-chip:hover{background:var(--accent-soft);border-color:var(--accent-soft2);color:#1a1a1a}
+  .sd-cats{display:flex;flex-wrap:wrap;gap:5px;padding:0 6px 4px}
+  .sd-cat{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:#5a5f68;padding:8px 11px;border-radius:10px;transition:.12s}
+  .sd-cat:hover{background:var(--hover);color:#1a1a1a}
+  .sd-cat .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+  /* список подсказок прокручивается, футер «Все результаты» остаётся закреплённым ниже */
+  .sd-list{list-style:none;max-height:min(46vh,316px);overflow-y:auto;overscroll-behavior:contain}
+  .sd-list::-webkit-scrollbar{width:9px}
+  .sd-list::-webkit-scrollbar-thumb{background:#dfe2e6;border-radius:9px;border:2px solid #fff}
+  .sd-list::-webkit-scrollbar-thumb:hover{background:#cdd0d5}
+  .sd-row{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .12s}
+  .sd-row:hover,.sd-row.sel{background:var(--hover)}
+  .sd-row .sd-tx{flex:1;min-width:0;font-size:14px;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sd-row .sd-tx mark{background:var(--accent-soft);color:#1a1a1a;border-radius:3px;padding:0 1px}
+  .sd-row .sd-tag{font-size:11.5px;color:#8a8f98;background:#f4f4f5;border-radius:6px;padding:3px 8px;flex-shrink:0;white-space:nowrap}
+  /* цветные теги типов сущностей (поиск по всему сайту) */
+  .sd-tag.t-svc{color:#6a6f78;background:#f1f2f4}
+  .sd-tag.t-sec{color:#9a7a1f;background:var(--accent-soft)}
+  .sd-tag.t-art{color:#3b6fb0;background:#edf3fb}
+  .sd-tag.t-port{color:#6b53b0;background:#f1ecfb}
+  .sd-tag.t-news{color:#3f8a52;background:#e9f6ed}
+  .sd-tag.t-page{color:#6a6f78;background:#f1f2f4}
+  .sd-row .arr-ico{width:14px;height:14px;color:#cdd0d5;flex-shrink:0;transition:transform .15s,color .15s}
+  .sd-row:hover .arr-ico{color:#5a5f68;transform:translateX(2px)}
+  .sd-all{display:flex;align-items:center;gap:9px;margin-top:5px;padding:11px 12px 6px;border-top:1px solid var(--line);font-size:13.5px;font-weight:600;color:#1a1a1a;cursor:pointer}
+  .sd-all b{font-weight:800}
+  .sd-all .arr-ico{width:14px;height:14px;margin-left:auto;transition:transform .15s}
+  .sd-all:hover .arr-ico{transform:translateX(2px)}
+  .sd-none{padding:24px 18px;text-align:center}
+  .sd-none-t{font-size:14.5px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+  .sd-none-s{font-size:13px;color:#8a8f98;line-height:1.55}
+
+  /* телефон в шапке — выделенный (решение со встречи) */
+  .hphone{display:flex;align-items:center;gap:10px;flex-shrink:0;margin:0 4px;padding:5px 10px;border-radius:10px;transition:background .15s}
+  .hphone:hover{background:var(--hover)}
+  .hphone .ph-ic{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:#1a1a1a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .hphone .ph-txt{display:flex;flex-direction:column;align-items:flex-start;gap:0}
+  .hphone .num{font-size:16px;font-weight:500;color:#1a1a1a;white-space:nowrap;letter-spacing:.2px;line-height:1.25}
+  .hphone .num .pre{font-weight:500;color:#1a1a1a}
+  .hphone .num .l4{color:#1a1a1a;font-weight:800}
+  .hphone .psub{display:flex;align-items:center;gap:8px}
+  .hphone .day{font-size:11.5px;color:#8a8f98;line-height:1.3;white-space:nowrap}
+  .hphone .cb{font-size:11.5px;color:#8a8f98;border-bottom:1px dashed #c9cdd3;line-height:1.3}
+  .hphone .cb:hover{color:#1a1a1a;border-color:#1a1a1a}
+
+  /* единый стиль кнопок шапки */
+  .hactions{display:flex;align-items:center;gap:2px;flex-shrink:0}
+  .hactions .sep{width:1px;height:30px;background:var(--line);margin:0 8px}
+  .hbtn{display:flex;flex-direction:column;align-items:center;gap:3px;color:#3a3a3a;cursor:pointer;font-size:12px;font-weight:500;position:relative;padding:5px 8px;border-radius:10px;transition:background .15s,color .15s;min-width:56px}
+  .hbtn:hover{background:var(--hover);color:#1a1a1a}
+  .hbtn .ci{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+  .hbtn .badge{position:absolute;top:2px;right:10px;background:var(--accent);color:#1a1a1a;font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+  /* акцентный кружок с самолётиком */
+  .hbtn .accent-ic{width:22px;height:22px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center}
+
+  /* ===== ПОЛОСА НАВИГАЦИИ ===== */
+  .navbar{background:var(--bg);border-bottom:1px solid var(--line);position:relative;z-index:46}
+  .nav{display:flex;align-items:center;gap:6px;height:44px;position:relative;z-index:2}
+  .catbtn{display:flex;align-items:center;gap:8px;background:#1a1a1a;color:#fff;font-weight:500;font-size:13px;height:36px;padding:0 16px;border-radius:var(--radius-pill);cursor:pointer;user-select:none;flex-shrink:0}
+  .catbtn .ic{display:flex;flex-direction:column;gap:3px;transition:.2s}
+  .catbtn .ic i{width:14px;height:1.5px;background:#fff;border-radius:2px;transition:.2s}
+  .catbtn.active .ic i:nth-child(1){transform:translateY(4.5px) rotate(45deg)}
+  .catbtn.active .ic i:nth-child(2){opacity:0}
+  .catbtn.active .ic i:nth-child(3){transform:translateY(-4.5px) rotate(-45deg)}
+
+  .quick{display:flex;align-items:center;gap:0;flex:1;overflow:hidden;padding-left:4px}
+  .quick a{padding:0 12px;height:44px;display:flex;align-items:center;color:#5a5f68;font-size:14px;font-weight:500;white-space:nowrap;border-bottom:2px solid transparent}
+  .quick a:hover{color:#1a1a1a}
+  .quick a.active{color:#1a1a1a;font-weight:600;border-bottom-color:#1a1a1a}
+
+  /* светлая кнопка расчёта + бейдж выгоды поверх */
+  .calc{position:relative;display:flex;align-items:center;gap:8px;background:#fff;color:#1a1a1a;font-weight:500;font-size:13px;height:36px;padding:0 14px;border:1.5px solid var(--line2);border-radius:var(--radius-pill);cursor:pointer;flex-shrink:0;transition:border-color .15s,background .15s}
+  .calc:hover{border-color:#c9cdd3;background:#fafafa}
+  .calc svg{color:#E6A700}
+  .calc .save{display:inline-flex;align-items:center;background:var(--accent);color:#1a1a1a;font-size:11px;font-weight:800;line-height:1;padding:4px 8px;border-radius:20px;letter-spacing:.1px;flex-shrink:0}
+
+  /* ===== МЕГАМЕНЮ ===== */
+  .overlay{position:fixed;inset:0;background:rgba(17,17,17,.35);opacity:0;visibility:hidden;transition:.2s;z-index:30}
+  .overlay.show{opacity:1;visibility:visible}
+
+  /* ── Модалка «Заказать звонок» ── */
+  .cbm-back{position:fixed;inset:0;background:rgba(17,17,17,.42);opacity:0;visibility:hidden;transition:opacity .18s,visibility .18s;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+  .cbm-back.show{opacity:1;visibility:visible}
+  .cbm{position:relative;width:100%;max-width:384px;background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:28px 26px 22px;transform:translateY(8px) scale(.985);transition:transform .2s}
+  .cbm-back.show .cbm{transform:none}
+  .cbm-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border:none;background:var(--hover);border-radius:50%;color:#5a5f68;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s}
+  .cbm-x:hover{background:#ececec;color:#1a1a1a}
+  .cbm-title{font-size:20px;font-weight:700;letter-spacing:-.2px;color:var(--ink)}
+  .cbm-sub{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .cbm form{margin-top:18px;display:flex;flex-direction:column;gap:13px}
+  .cbm-field{display:flex;flex-direction:column;gap:6px}
+  .cbm-lbl{font-size:12.5px;font-weight:600;color:#3a3a3a}
+  .cbm-lbl i{color:#e0483a;font-style:normal}
+  .cbm-lbl em{color:var(--muted2);font-weight:500;font-style:normal}
+  .cbm input[type=tel],.cbm input.cbm-tf{height:46px;border:1.5px solid var(--line2);border-radius:12px;padding:0 14px;font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
+  .cbm input[type=tel]:focus,.cbm input.cbm-tf:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .cbm input::placeholder{color:var(--muted2)}
+  .cbm-row{display:flex;gap:11px}
+  .cbm-row .cbm-field{flex:1;min-width:0}
+  .cbm-ta{border:1.5px solid var(--line2);border-radius:12px;padding:11px 14px;font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;width:100%;resize:vertical;min-height:76px;line-height:1.4}
+  .cbm-ta:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .cbm-ta::placeholder{color:var(--muted2)}
+  /* селектор способа связи */
+  .cbm-sel{position:relative}
+  .cbm-sel select{appearance:none;-webkit-appearance:none;cursor:pointer;width:100%;height:46px;border:1.5px solid var(--line2);border-radius:12px;padding:0 36px 0 14px;font-family:inherit;font-size:15px;color:var(--ink);background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+  .cbm-sel select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .cbm-sel select:invalid{color:var(--muted2)}
+  .cbm-sel::after{content:"";position:absolute;right:15px;top:calc(50% - 6px);width:8px;height:8px;transform:rotate(45deg);border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);pointer-events:none}
+  /* загрузка файлов */
+  .cbm-file{position:relative;display:flex;align-items:center;gap:8px;height:46px;border:1.5px dashed var(--line2);border-radius:12px;padding:0 14px;cursor:pointer;color:#5a5f68;font-size:14px;transition:border-color .15s,background .15s}
+  .cbm-file:hover{border-color:var(--muted2);background:var(--hover)}
+  .cbm-file input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .cbm-file svg{flex-shrink:0;color:var(--muted)}
+  .cbm-file-btn{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .cbm-file-hint{font-size:11px;color:var(--muted2);line-height:1.4;margin-top:-4px}
+  #reqBack .cbm{max-width:440px;max-height:calc(100vh - 40px);overflow-y:auto}
+  .cbm-field.invalid input{border-color:#e0483a}
+  .cbm-field.invalid input:focus{box-shadow:0 0 0 3px rgba(224,72,58,.12)}
+  .cbm-err{display:none;font-size:11.5px;color:#e0483a}
+  .cbm-field.invalid .cbm-err{display:block}
+  .cbm-hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+  .cbm-check{display:flex;gap:9px;align-items:flex-start;cursor:pointer;font-size:12px;line-height:1.45;color:#5a5f68}
+  .cbm-check input{width:17px;height:17px;margin-top:1px;accent-color:#1a1a1a;flex-shrink:0;cursor:pointer}
+  .cbm-check a{color:#5a5f68;text-decoration:underline;text-underline-offset:2px}
+  .cbm-check a:hover{color:#1a1a1a}
+  .cbm-check em{color:var(--muted2);font-style:normal}
+  .cbm-submit{height:48px;border:none;border-radius:12px;background:var(--accent);color:#1a1a1a;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s,opacity .15s;margin-top:3px}
+  .cbm-submit:hover:not(:disabled){background:#ffbf0a}
+  .cbm-submit:disabled{background:#f0f0f1;color:var(--muted2);cursor:not-allowed}
+  .cbm-fine{font-size:10.5px;color:var(--muted2);line-height:1.4;text-align:center}
+  .cbm-done{text-align:center;padding:8px 4px 4px}
+  .cbm-done-ic{width:56px;height:56px;border-radius:50%;background:var(--accent);color:#1a1a1a;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  .cbm-done .cbm-sub{margin:6px 0 20px}
+  .cbm-done .cbm-submit{width:100%;margin-top:0}
+
+  .mega{position:absolute;left:0;right:0;top:100%;z-index:45;display:none;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 16px 30px -8px rgba(0,0,0,.12)}
+  .mega.open{display:block}
+  .mega-inner{max-width:var(--max);margin:0 auto;padding:0 20px}
+  .mega-box{border-left:1px solid var(--line);border-right:1px solid var(--line)}
+
+  /* внутренние табы: Каталог / Услуги / Материалы */
+  .mtabs{display:flex;gap:28px;padding:14px 20px 0;border-bottom:1px solid var(--line);margin:0 -1px}
+  .mtabs button{background:none;border:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;color:#aeb2b9;padding:0 0 12px;position:relative;transition:color .15s}
+  .mtabs button:hover:not(:disabled){color:#5a5f68}
+  .mtabs button.active{color:#1a1a1a}
+  .mtabs button.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#1a1a1a;border-radius:0}
+  .mtabs button:disabled{color:#cdd0d5;cursor:not-allowed}
+
+  /* панели табов */
+  .mtab{display:none}
+  .mtab.show{display:block}
+
+  .mega-card{display:grid;grid-template-columns:280px 1fr 240px;min-height:460px}
+
+  /* общий контейнер для Услуг/Материалов (без рельсы и промо) */
+  .svc-pane{padding:18px 4px 28px}
+  .svc-pane .phead{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .svc-pane .phead h3{font-size:17px;font-weight:800;letter-spacing:-.1px}
+  .svc-pane .phead a{font-size:13px;color:#5a5f68;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:color .12s}
+  .svc-pane .phead a:hover{color:#1a1a1a}
+  .svc-pane .phead a .arr-ico{width:13px;height:13px}
+  .svc-pane .phead a:hover .arr-ico{transform:translateX(2px)}
+  .cols-flow--4{column-count:4}
+
+  /* карточки материалов */
+  .mat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .mat-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--line2);border-radius:14px;background:#fff;transition:border-color .15s,background .15s,box-shadow .15s}
+  .mat-card:hover{border-color:#c9cdd3;background:#fafafa;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+  .mat-card .mat-ic{width:48px;height:48px;border-radius:12px;background:#f2f3f5;display:flex;align-items:center;justify-content:center;color:#5a5f68;flex-shrink:0;transition:background .15s,color .15s}
+  .mat-card:hover .mat-ic{background:var(--accent-soft);color:#1a1a1a}
+  .mat-card .mat-tx{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+  .mat-card .mat-tx b{font-size:14.5px;font-weight:700;color:#1a1a1a}
+  .mat-card .mat-tx i{font-size:12.5px;font-style:normal;color:#8a8f98}
+  .mat-card .arr-ico{width:14px;height:14px;color:#c9cdd3;flex-shrink:0;transition:transform .15s,color .15s}
+  .mat-card:hover .arr-ico{color:#5a5f68;transform:translateX(2px)}
+  .mat-card--accent .mat-ic{background:var(--accent);color:#1a1a1a}
+
+  /* левая колонка — рельса разделов */
+  .rail{border-right:1px solid var(--line);padding:8px 0;overflow-y:auto;max-height:540px}
+  .rail .ri{display:flex;align-items:center;gap:12px;padding:9px 14px;min-height:40px;cursor:pointer;font-size:14px;font-weight:500;line-height:1.2;letter-spacing:.2px;position:relative;color:#2a2a2a;transition:background .12s}
+  .rail .ri .em{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:#9a9fa8;flex-shrink:0;transition:color .12s}
+  .rail .ri .em [stroke]{stroke-width:1.7}/* единая толщина обводки иконок рельсы */
+  .rail .ri:hover{background:var(--hover)}
+  .rail .ri:hover .em{color:#5a5f68}
+  .rail .ri.active{background:var(--accent-soft);color:#1a1a1a;text-shadow:0.4px 0 0 currentColor}
+  .rail .ri.active::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent)}
+  .rail .ri.active .em{color:#1a1a1a}
+  .rail .ri .arr{margin-left:auto;display:flex;align-items:center;color:#1a1a1a;opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .15s,color .15s;flex-shrink:0}
+  .rail .ri:hover .arr{opacity:.45;transform:translateX(0);color:#6a6f78}
+  .rail .ri.active .arr{opacity:1;transform:translateX(0);color:#1a1a1a}
+  .rail .sep{height:1px;background:var(--line);margin:6px 0}
+  .rail .lbl{padding:8px 14px 4px;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700}
+  /* демо-переключение рельсы: вар.2 (развёрнуто) ↔ вар.1 (компактно) */
+  .rail-v1{display:none}
+  body.rv1 .rail-v2{display:none}
+  body.rv1 .rail-v1{display:block}
+
+  /* центр — контент раздела */
+  .pane{padding:18px 26px 22px;overflow-y:auto;max-height:540px;border-right:1px solid var(--line)}
+  /* заголовок раздела: линию тянем на всю ширину центральной колонки (вровень с бордюрами рельсы/промо) */
+  .pane .phead{display:flex;align-items:center;justify-content:space-between;margin:0 -26px 18px;padding:0 26px 12px;border-bottom:1px solid var(--line)}
+  .pane .phead h3{font-size:17px;font-weight:800;letter-spacing:-.1px}
+  .pane .phead a{font-size:13px;color:#5a5f68;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:color .12s}
+  .pane .phead a:hover{color:#1a1a1a}
+  .pane .phead a .arr-ico{width:13px;height:13px}
+  .pane .phead a:hover .arr-ico{transform:translateX(2px)}
+  .panel{display:none}
+  .panel.show{display:block}
+
+  .cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:0 28px}
+  .col{display:flex;flex-direction:column}
+  .cols-flow{column-count:3;column-gap:28px}
+  .cols-flow .group{break-inside:avoid}
+
+  .group{margin-bottom:20px}
+  /* подкатегория = кликабельный заголовок-раздел (страница) */
+  .group h4{display:inline-block;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:9px;color:#1a1a1a;cursor:pointer;transition:color .12s;line-height:1.3}
+  .group h4 .nw{white-space:nowrap}/* последнее слово + стрелка не разрываются */
+  .group h4 .ha{display:inline-block;width:12px;height:12px;background:#6a6f78;-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat;opacity:0;margin-left:5px;vertical-align:-1px;transition:opacity .15s,transform .15s}
+  .group h4:hover{color:#000}
+  .group h4:hover .ha{opacity:1;transform:translateX(2px)}
+  .group ul{list-style:none}
+  .group li{padding:3.5px 0}
+  /* товар = конечная страница, легче заголовка. inline — чтобы бейдж/иконка липли к последнему слову при переносе */
+  .group li a{color:#5a5f68;font-size:13.5px;transition:color .12s;display:inline}
+  .group li a:hover{color:#1a1a1a;text-decoration:underline;text-underline-offset:2px}
+  .group li .more{color:#5a5f68;font-size:13px;font-weight:600}
+  .group li .more:hover{color:#1a1a1a}
+  .group li .more .arr-ico{width:12px;height:12px;margin-left:5px;vertical-align:-2px}
+  .group li .more:hover .arr-ico{transform:translateX(2px)}
+  /* лейбл ХИТ — прилипает к последнему слову (inline) */
+  .hit{display:inline-block;background:var(--accent);color:#1a1a1a;font-size:9px;font-weight:800;line-height:1;letter-spacing:.4px;text-transform:uppercase;padding:3px 6px 2.5px;border-radius:5px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+  /* бейдж «Новое» — тёмный, чтобы отличался от жёлтого ХИТ */
+  .new{display:inline-block;background:#1a1a1a;color:#fff;font-size:9px;font-weight:800;line-height:1;letter-spacing:.4px;text-transform:uppercase;padding:3px 6px 2.5px;border-radius:5px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+  /* внешняя ссылка-строка внизу раздела (каталог сувениров) */
+  /* внешняя ссылка на mdmgifts — аккуратный последний пункт группы с тонким разделителем и ↗ */
+  .group li.ext-sep{margin-top:7px;padding-top:8px;border-top:1px solid var(--line)}
+  .group .extli{color:#8a7846;font-weight:600}
+  .group .extli .ext-ar{display:inline-block;margin-left:2px;transition:transform .15s}
+  .group .extli:hover{color:#1a1a1a;text-decoration:none}
+  .group .extli:hover .ext-ar{transform:translate(2px,-2px)}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0 9px}
+  .tabs span{font-size:11.5px;color:#5a5f68;background:#f4f4f5;border:1px solid var(--line2);border-radius:7px;padding:3px 9px;cursor:pointer;transition:.12s}
+  .tabs span:hover{background:var(--accent-soft);border-color:var(--accent-soft2)}
+  /* опции: максимум 4 видимых + «ещё» */
+  .tabs .tab-hidden{display:none}
+  .tabs.expanded .tab-hidden{display:inline-block}
+  .tabs .tab-more{background:none;border:1px dashed var(--line2);color:#8a8f98;font-weight:600}
+  .tabs.expanded .tab-more{display:none}
+
+  /* ===== ПРОМО — переключаемый компонент (единая дизайн-система) ===== */
+  .promo{position:relative;background:linear-gradient(160deg,#FFF6DD 0%,#FFE9B0 100%);overflow:hidden}
+  /* тело варианта — по умолчанию скрыто, активное показывается */
+  .promo-body{display:none;flex-direction:column;height:100%;padding:22px}
+  .promo[data-variant="offer"]   .promo-body[data-for="offer"],
+  .promo[data-variant="image"]   .promo-body[data-for="image"],
+  .promo[data-variant="content"] .promo-body[data-for="content"],
+  .promo[data-variant="hybrid"]  .promo-body[data-for="hybrid"]{display:flex}
+
+  /* --- АТОМ: бейдж/лейбл (форма одна, цвет под фон) --- */
+  .promo .tag{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 9px;border-radius:16px;background:#1a1a1a;color:#fff}
+  .promo .tag--accent{background:var(--accent);color:#1a1a1a}
+  .promo .tag--soft{background:#fff;color:#1a1a1a;border:1px solid #E9D9A6}
+
+  /* --- АТОМ: заголовок + текст --- */
+  .promo h4{font-size:19px;font-weight:800;line-height:1.22;margin:14px 0 9px;color:#1a1a1a}
+  .promo p{font-size:13.5px;line-height:1.5;color:#8a7846;margin:0}
+
+  /* --- АТОМ: цена --- */
+  .promo .price{display:flex;align-items:baseline;gap:10px;margin:14px 0 0}
+  .promo .price b{font-size:26px;font-weight:800;color:#1a1a1a}
+  .promo .price s{font-size:15px;color:#b3a06a}
+
+  /* --- АТОМ: кнопка (одна форма; цвет под фон) --- */
+  .promo .order{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:7px;height:40px;border-radius:10px;font-weight:700;font-size:13.5px;cursor:pointer;text-decoration:none;background:#1a1a1a;color:#fff;transition:background .15s}
+  .promo .order:hover{background:#000}
+  .promo .order--light{background:#fff;color:#1a1a1a}
+  .promo .order--light:hover{background:#f0f0f1}
+  .promo .order .arr-ico{transition:transform .15s}
+  .promo .order:hover .arr-ico{transform:translateX(2px)}
+
+  /* --- АТОМ: визуал (мокап/обложка), единый градиент --- */
+  .promo-visual{flex:1;display:flex;align-items:center;justify-content:center;min-height:90px;margin:8px 0 4px}
+  .promo-visual svg{max-width:200px}
+
+  /* A. OFFER — мокап заполняет центр, цена+кнопка прижаты вниз (через flex:1 на visual) */
+
+  /* B. BANNER — изображение-обложка сверху, кнопка снизу (та же кнопка-атом) */
+  .promo-banner{text-decoration:none}
+  .promo-banner .promo-cover{flex:1}
+
+  /* C. CONTENT — обложка сверху, текст, кнопка прижата вниз */
+  .promo-cover{margin:-22px -22px 16px;min-height:140px;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 100% at 50% 35%,#FFFAEC 0%,#FFE3A0 100%)}
+  .promo-body[data-for="content"] .order{margin-top:auto}
+
+  /* D. HYBRID — тёмный фон, бейдж сверху, текст+кнопка снизу */
+  .promo-hybrid{text-decoration:none;background:linear-gradient(160deg,#1a1a1a 0%,#2b2b2e 100%)}
+  .promo-hybrid::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 80% 10%,rgba(255,200,41,.35) 0%,transparent 60%);pointer-events:none}
+  .promo-hybrid .tag{position:relative}
+  .promo-hybrid .hybrid-text{position:relative;margin-top:auto}
+  .promo-hybrid h4{color:#fff}
+  .promo-hybrid p{color:#b9bbc0}
+  .promo-hybrid .order{position:relative}
+
+
+  .note{max-width:var(--max);margin:22px auto;padding:14px 18px;font-size:12.5px;color:#6a6f78;background:#fff;border:1px dashed var(--line2);border-radius:10px;line-height:1.7}
+  .note b{color:#1a1a1a}
+
+  /* ===== ФИКС-ШАПКА + УМЕНЬШЕНИЕ ПРИ СКРОЛЛЕ (демо; механику доработаем) ===== */
+  .site-head{position:sticky;top:0;z-index:50}
+  .topbar{transition:max-height .25s ease,opacity .2s ease;max-height:80px}
+  body.scrolled .topbar{max-height:0;opacity:0;overflow:hidden}
+
+  /* компактная «Каталог» в основной шапке (видна только при скролле) */
+  .hcat{display:none;align-items:center;gap:8px;background:#1a1a1a;color:#fff;font-weight:500;font-size:13px;height:36px;padding:0 14px;border-radius:var(--radius-pill);cursor:pointer;user-select:none;flex-shrink:0}
+  .hcat .ic{display:flex;flex-direction:column;gap:3px}
+  .hcat .ic i{width:14px;height:1.5px;background:#fff;border-radius:2px;transition:.2s}
+  .hcat.active .ic i:nth-child(1){transform:translateY(4.5px) rotate(45deg)}
+  .hcat.active .ic i:nth-child(2){opacity:0}
+  .hcat.active .ic i:nth-child(3){transform:translateY(-4.5px) rotate(-45deg)}
+  /* компактный «Калькулятор» перед Telegram — в стиле кнопки Telegram (.hbtn), виден только при скролле */
+  .hcalc{display:none}
+  /* компактный калькулятор: сплошная жёлтая плитка + тёмный жирный глиф —
+     чтобы не выглядел тускло/тонко рядом с цветными Telegram/MAX */
+  body.scrolled .hcalc .ci{width:24px;height:24px;background:var(--accent);border-radius:7px}
+  .hcalc .ci svg{color:#1a1a1a;width:18px;height:18px}
+  .hcalc .ci svg [stroke]{stroke-width:1.9}
+
+  /* плавное пропорциональное уменьшение элементов */
+  .hbar{transition:height .2s ease}
+  .logo img,.search,.search button,.hphone,.hphone .ph-ic,.hphone .num,.hbtn,.hbtn .ci{transition:all .2s ease}
+  body.scrolled .hbar{height:54px;gap:12px}
+  body.scrolled .logo img{height:22px}
+  body.scrolled .search{height:36px;min-width:280px}
+  body.scrolled .search button{height:28px;padding:0 14px;font-size:12.5px}
+  body.scrolled .search input{font-size:13px}
+  body.scrolled .hphone{padding:3px 8px;gap:8px}
+  body.scrolled .hphone .ph-ic{width:30px;height:30px}
+  body.scrolled .hphone .num{font-size:14.5px}
+  body.scrolled .hbtn{min-width:50px;font-size:11.5px;padding:4px 6px}
+  body.scrolled .hbtn .ci{width:20px;height:20px}
+  body.scrolled .hcat{display:flex;height:34px}
+  body.scrolled .hcalc{display:flex}
+  /* скрыть 3-ю линию шапки, оставив навбар как опору для выпадающего каталога */
+  body.scrolled .navbar{border-bottom:none}
+  body.scrolled .navbar .nav{display:none}
+
+  /* страница-заглушка (демо скролла; в проде — реальный контент) */
+  .ph-page{max-width:var(--max);margin:24px auto 64px;padding:0 20px;display:flex;flex-direction:column;gap:20px}
+  .ph-row{background:#fff;border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center}
+  .scroll-hint{display:inline-flex;align-items:center;gap:10px;color:#9a9fa8;font-size:16px;font-weight:600;letter-spacing:.2px;user-select:none}
+  .scroll-hint svg{animation:hintBounce 1.4s ease-in-out infinite}
+  @keyframes hintBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+</style>
+</head>
+<body class="rv1">
+
+  <!-- ФИКС-ШАПКА (прилипает + уменьшается при скролле) -->
+  <div class="site-head">
+
+  <!-- ВЕРХНЯЯ ПОЛОСА (меню слева, контакты справа) -->
+  <div class="topbar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="#">Оплата</a>
+        <a href="#">Доставка</a>
+        <a href="#">Портфолио</a>
+        <a href="#">Требования к макетам</a>
+        <a href="#">Контакты</a>
+        <div class="tb-drop">
+          <span class="tb-drop-t">О компании <svg width="9" height="9" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div class="tb-menu">
+            <div class="tb-col">
+              <span class="tb-col-h">Компания</span>
+              <a href="#">О компании</a>
+              <a href="#">Преимущества компании</a>
+              <a href="#">Производство</a>
+              <a href="#">Сертификаты и лицензии</a>
+              <a href="#">Вакансии</a>
+            </div>
+            <div class="tb-col">
+              <span class="tb-col-h">Медиа и контакты</span>
+              <a href="#">Отзывы</a>
+              <a href="#">Блог</a>
+              <a href="#">Новости</a>
+              <a href="#">Написать директору</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="info">
+        <a class="it tb-mail" id="tbMail" href="mailto:info@mdmprint.ru" data-hint="Скопировать кликом" data-mail="info@mdmprint.ru">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span class="ml-tx">info@mdmprint.ru</span>
+        </a>
+        <a class="tb-cta" href="#">Оставить заявку</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ШАПКА -->
+  <header>
+    <div class="wrap hbar">
+      <a href="#" class="logo">
+        <img src="../assets/mdmprint-logo.svg" alt="MDMprint — заводская типография">
+      </a>
+      <div class="hcat" id="hcat" title="Каталог">
+        <span class="ic"><i></i><i></i><i></i></span>
+        Каталог
+      </div>
+      <form class="search" id="searchForm" onsubmit="return false" autocomplete="off">
+        <span class="si"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <input type="text" id="searchInput" placeholder="Поиск по 2000+ услугам: визитки, наклейки, коробки…">
+        <button type="button" class="s-clear" id="searchClear" aria-label="Очистить" title="Очистить">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button type="submit" class="s-go">Найти</button>
+
+        <!-- ДРОПДАУН ПОИСКА: состояния empty / results / none -->
+        <div class="search-drop" id="searchDrop" data-state="empty">
+          <div class="sd-pane sd-empty">
+            <div class="sd-h">Популярные запросы</div>
+            <div class="sd-chips">
+              <button type="button" class="sd-chip">Визитки</button>
+              <button type="button" class="sd-chip">Листовки</button>
+              <button type="button" class="sd-chip">Наклейки</button>
+              <button type="button" class="sd-chip">Календари 2027</button>
+              <button type="button" class="sd-chip">Коробки</button>
+              <button type="button" class="sd-chip">Roll-Up</button>
+              <button type="button" class="sd-chip">Футболки с лого</button>
+              <button type="button" class="sd-chip">Брошюры</button>
+            </div>
+            <div class="sd-h">Разделы каталога</div>
+            <div class="sd-cats">
+              <a class="sd-cat" href="#" data-open="1"><span class="dot"></span>Полиграфия</a>
+              <a class="sd-cat" href="#" data-open="4"><span class="dot"></span>Наклейки</a>
+              <a class="sd-cat" href="#" data-open="2"><span class="dot"></span>Широкоформат</a>
+              <a class="sd-cat" href="#" data-open="6"><span class="dot"></span>Сувениры и мерч</a>
+              <a class="sd-cat" href="#" data-open="5"><span class="dot"></span>Упаковка</a>
+            </div>
+          </div>
+          <div class="sd-pane sd-results">
+            <ul class="sd-list" id="sdList"></ul>
+            <a class="sd-all" id="sdAll" href="#">Все результаты по «<b id="sdQ"></b>»<span class="arr-ico"></span></a>
+          </div>
+          <div class="sd-pane sd-none">
+            <div class="sd-none-t">Ничего не найдено</div>
+            <div class="sd-none-s">Попробуйте «визитки», «наклейки» или «коробки» — либо откройте каталог слева.</div>
+          </div>
+        </div>
+      </form>
+      <div class="hphone">
+        <span class="ph-ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
+        <div class="ph-txt">
+          <a href="tel:+74952561000" class="num"><span class="pre">+7 (495) 256-</span><span class="l4">10-00</span></a>
+          <div class="psub"><span class="day">без выходных</span><a href="#" class="cb">Заказать звонок</a></div>
+        </div>
+      </div>
+      <div class="hactions">
+        <a class="hbtn hcalc" id="hcalc" href="#" title="Калькулятор">
+          <span class="ci"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><circle cx="8.5" cy="17.3" r="1" fill="currentColor"/><circle cx="12" cy="17.3" r="1" fill="currentColor"/><circle cx="15.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
+          Калькулятор
+        </a>
+        <div class="hbtn" title="Написать в Telegram">
+          <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg></span>
+          Telegram
+        </div>
+        <div class="hbtn" title="Написать в MAX">
+          <span class="ci"><svg width="20" height="20" viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></span>
+          MAX
+        </div>
+        <span class="sep"></span>
+        <div class="hbtn" title="Войти">
+          <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c.5-3.4 3.3-5.4 7-5.4s6.5 2 7 5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+          Войти
+        </div>
+        <div class="hbtn" title="Корзина">
+          <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 4h2.2l1.8 11.5a1.5 1.5 0 0 0 1.5 1.3h8.4a1.5 1.5 0 0 0 1.5-1.2L20.5 8H6.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20" r="1.3" fill="currentColor"/><circle cx="17.5" cy="20" r="1.3" fill="currentColor"/></svg></span>
+          <span class="badge">3</span>
+          Корзина
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- НАВИГАЦИЯ -->
+  <div class="navbar">
+    <div class="wrap nav">
+      <div class="catbtn" id="catbtn">
+        <span class="ic"><i></i><i></i><i></i></span>
+        Каталог
+      </div>
+      <!-- Топ категорий: курируется из админки, меняется под сезон (не дублирует разделы каталога) -->
+      <nav class="quick" id="quick">
+        <a href="#" data-open="1">Календари 2027</a>
+        <a href="#" data-open="6">Новогодние наборы</a>
+        <a href="#" data-open="0">Визитки</a>
+        <a href="#" data-open="4">Наклейки для маркетплейсов</a>
+        <a href="#" data-open="2">Баннеры и Roll-Up</a>
+      </nav>
+      <div class="calc">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><circle cx="8.5" cy="17.3" r="1" fill="currentColor"/><circle cx="12" cy="17.3" r="1" fill="currentColor"/><circle cx="15.5" cy="17.3" r="1" fill="currentColor"/></svg>
+        Калькулятор
+        <span class="save">−5%</span>
+      </div>
+    </div>
+
+    <!-- МЕГАМЕНЮ -->
+    <div class="mega" id="mega">
+      <div class="mega-inner">
+      <div class="mega-box">
+
+        <!-- ЕДИНАЯ СЕТКА: рельса (Каталог/Услуги/Материалы) + центр + промо -->
+        <div class="mega-card">
+
+          <!-- РЕЛЬСА (порядок по otavtora) -->
+          <div class="rail" id="rail">
+            <div class="lbl">Каталог</div>
+            <div class="ri active" data-sec="0"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M7 14h5M7 10.5h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span> Визитки <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="1"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2M7 15h10v5H7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Печать полиграфии <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="2"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m6 14 3.5-4 2.5 3 2-2.5L18 14" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Широкоформатная печать <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="3"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="11" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M9 9h1M9 16h1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="m16 6 4 1.4-3 12L13 18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Карты и настольные игры <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="4"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M5 4h9l5 5v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2zM14 4v5h5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Наклейки, стикеры, этикетки <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="5"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 4 7v10l8 4 8-4V7zM4 7l8 4 8-4M12 11v10" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Упаковка и коробки <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="6"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 8h16v3H4zM5 11h14v9H5zM12 8v12M12 8S10.5 3 8 4.5 9.5 8 12 8ZM12 8s1.5-5 4-3.5S14.5 8 12 8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Сувениры и мерч <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="7"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M8 4 4 6v4l2.5-1V20h11V9l2.5 1V6l-4-2-2 2H10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Нанесение <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="8"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3v6M12 9l3 2.5M12 9 9 11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="6" y="11" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.7"/></svg></span> POS-материалы <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="9"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.7"/><path d="M7 14h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span> Пластиковые карты <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="sep"></div>
+            <div class="lbl">Готовые решения</div>
+            <div class="ri" data-sec="10"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 20V9l8-5 8 5v11" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="9" y="13" width="6" height="7" stroke="currentColor" stroke-width="1.7"/></svg></span> Бизнесу <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="11"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 11l16-6-3 14-5-4-3 3v-5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Рекламным агентствам <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="rail-v2">
+            <div class="sep"></div>
+            <div class="lbl">Услуги</div>
+            <div class="ri" data-sec="s0"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.2 2.2-2-2 2.2-2.2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Брошюровка и переплёт <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="s1"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2M7 15h10v5H7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Способы печати <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="s2"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 20s2-1 4-1 3 1 5 1 4-1 4-1V6s-2 1-4 1-3-1-5-1-4 1-4 1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Нанесение <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="s3"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="m12 3 2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Постпечатная обработка <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="s4"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="18" r="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 7.5 20 17M8 16.5 20 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span> Резка и сверление <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="s5"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span> Другие услуги <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="sep"></div>
+            <div class="lbl">Материалы</div>
+            <div class="ri" data-sec="m0"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v4h4M8 12h8M8 16h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span> Бумага <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="m1"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.6"/></svg></span> Пластик <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="m2"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 9h16M9 4v16" stroke="currentColor" stroke-width="1.6"/></svg></span> Ламинация <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="m3"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v12H4zM4 17l4 2 4-2 4 2 4-2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Набор каталогов <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            </div><!-- /rail-v2 -->
+            <div class="rail-v1">
+              <div class="sep"></div>
+              <div class="ri" data-sec="svc"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.2 2.2-2-2 2.2-2.2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Услуги <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+              <div class="ri" data-sec="mat"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v12H4zM4 17l4 2 4-2 4 2 4-2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Материалы <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            </div>
+          </div>
+
+          <!-- КОНТЕНТ -->
+          <div class="pane" id="pane">
+
+            <!-- 0 ВИЗИТКИ -->
+            <div class="panel show" data-sec="0">
+              <div class="phead"><h3>Визитки</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Печать <span class="nw">визиток<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Премиальные визитки</a></li>
+                  <li><a href="#">Визитки дёшево</a></li>
+                  <li><a href="#">Многослойные</a></li>
+                  <li><a href="#">С белилами</a></li>
+                  <li><a href="#">С конгревом</a></li>
+                  <li><a href="#">С ламинацией</a></li>
+                  <li><a href="#">С объёмным лаком <span class="hit">Хит</span></a></li>
+                  <li><a href="#">С тиснением</a></li>
+                  <li><a href="#">С фольгой</a></li>
+                  <li><a href="#">Со скруглением углов</a></li>
+                  <li><a href="#">Софт-тач</a></li>
+                  <li><a href="#">Срочная печать <span class="hit">Хит</span></a></li>
+                  <li><a href="#">УФ печать</a></li>
+                  <li><a href="#">Шелкография</a></li>
+                </ul></div>
+                <div class="group"><h4>Материал <span class="nw">визиток<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Каландрированная бумага</a></li>
+                  <li><a href="#">Крафт-бумага</a></li>
+                  <li><a href="#">Лён</a></li>
+                  <li><a href="#">Пластик</a></li>
+                  <li><a href="#">Плотная калька</a></li>
+                  <li><a href="#">Плотный картон</a></li>
+                  <li><a href="#">Бумага Majestic</a></li>
+                  <li><a href="#">Бумага Plike</a></li>
+                  <li><a href="#">Touche Paper</a></li>
+                </ul></div>
+                <div class="group"><h4>Визитки по <span class="nw">применению<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Для автосервиса</a></li>
+                  <li><a href="#">Для бизнеса</a></li>
+                  <li><a href="#">Для грузоперевозок</a></li>
+                  <li><a href="#">Для мастера маникюра</a></li>
+                  <li><a href="#">Для парикмахера</a></li>
+                  <li><a href="#">Для салона красоты</a></li>
+                  <li><a href="#">Для строительной компании</a></li>
+                  <li><a href="#">Для такси</a></li>
+                  <li><a href="#">Для фотографа</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 1 ПЕЧАТЬ ПОЛИГРАФИИ -->
+            <div class="panel" data-sec="1">
+              <div class="phead"><h3>Печать полиграфии</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols3">
+
+                <!-- Колонка 1: Листовая + Папки -->
+                <div class="col">
+                  <div class="group"><h4>Листовая <span class="nw">полиграфия<i class="ha"></i></span></h4><ul>
+                    <li><a href="#">Афиши</a></li>
+                    <li><a href="#">Бейджи</a></li>
+                    <li><a href="#">Билеты</a></li>
+                    <li><a href="#">Буклеты</a></li>
+                    <li><a href="#">Грамоты и дипломы</a></li>
+                    <li><a href="#">Инструкции</a></li>
+                    <li><a href="#">Конверты</a></li>
+                    <li><a href="#">Листовки</a></li>
+                    <li><a href="#">Лифлеты</a></li>
+                    <li><a href="#">Открытки</a></li>
+                    <li><a href="#">Плакаты <span class="hit">Хит</span></a></li>
+                    <li><a href="#">Постеры <span class="hit">Хит</span></a></li>
+                    <li><a href="#">Прайс-листы</a></li>
+                    <li><a href="#">Приглашения</a></li>
+                    <li><a href="#">Флаеры</a></li>
+                    <li><a href="#">Сертификаты</a></li>
+                    <li><a href="#">Фирменные бланки</a></li>
+                    <li><a href="#">Ярлыки и бирки</a></li>
+                    <li><a href="#">Листовое меню</a></li>
+                    <li><a href="#">Плейсматы</a></li>
+                    <li><a href="#">Костеры</a></li>
+                    <li><a href="#">Бирдекели</a></li>
+                    <li><a href="#">Складные карты</a></li>
+                    <li><a href="#">Кубарики</a></li>
+                  </ul></div>
+                  <div class="group"><h4>Изготовление <span class="nw">папок<i class="ha"></i></span></h4><ul>
+                    <li><a href="#">Бумажные папки</a></li>
+                    <li><a href="#">Папки на кольцах</a></li>
+                    <li><a href="#">Папки с карманом</a></li>
+                    <li><a href="#">Папки-планшеты</a></li>
+                  </ul></div>
+                </div>
+
+                <!-- Колонка 2: Многостраничная + Брошюровка -->
+                <div class="col">
+                  <div class="group"><h4>Многостраничная <span class="nw">полиграфия<i class="ha"></i></span></h4>
+                    <ul>
+                      <li><a href="#">Блокноты</a></li>
+                      <li><a href="#">Брошюры <span class="hit">Хит</span></a></li>
+                      <li><a href="#">Годовые отчёты</a></li>
+                      <li><a href="#">Ежедневники</a></li>
+                      <li><a href="#">Журналы</a></li>
+                    </ul>
+                    <div class="tabs"><span>КБС</span><span>КШС</span><span>На болтах</span><span>На пружине</span><span class="tab-hidden">На скобе</span><span class="tab-hidden">С ламинацией</span><span class="tab-hidden">С фольгой</span><span class="tab-more">ещё 3</span></div>
+                    <ul><li><a href="#">Каталоги <span class="hit">Хит</span></a></li></ul>
+                    <div class="tabs"><span>КБС</span><span>КШС</span><span>На болтах</span><span>На пружине</span><span class="tab-hidden">На скобе</span><span class="tab-hidden">С ламинацией</span><span class="tab-hidden">С фольгой</span><span class="tab-more">ещё 3</span></div>
+                    <ul><li><a href="#">Книги</a></li></ul>
+                    <div class="tabs"><span>Мягкий (КБС)</span><span>Мягкий (КШС)</span><span>Твёрдый (7БЦ)</span></div>
+                    <ul>
+                      <li><a href="#">Маркетинг-кит</a></li>
+                      <li><a href="#">Презентации</a></li>
+                      <li><a href="#">Тетради</a></li>
+                      <li><a href="#">Учебные пособия</a></li>
+                    </ul>
+                  </div>
+                  <div class="group"><h4>Брошюровка и <span class="nw">переплёт<i class="ha"></i></span></h4><ul>
+                    <li><a href="#">Брошюровка на пружину</a></li>
+                    <li><a href="#">Брошюровка на скобу</a></li>
+                    <li><a href="#">Переплёт 7Б</a></li>
+                    <li><a href="#">Переплёт 7БЦ</a></li>
+                    <li><a href="#">Переплёт КБС</a></li>
+                    <li><a href="#">Переплёт КШС</a></li>
+                    <li><a href="#">ПУР-клеевое скрепление</a></li>
+                  </ul></div>
+                </div>
+
+                <!-- Колонка 3: Календари + Тематическая -->
+                <div class="col">
+                  <div class="group"><h4>Печать <span class="nw">календарей<i class="ha"></i></span> 2027</h4><ul>
+                    <li><a href="#">Адвент-календари</a></li>
+                    <li><a href="#">Карманные</a></li>
+                    <li><a href="#">Квартальные</a></li>
+                    <li><a href="#">Календари-домики</a></li>
+                    <li><a href="#">Календари-линейки</a></li>
+                    <li><a href="#">Настенные</a></li>
+                    <li><a href="#">Настольные</a></li>
+                    <li><a href="#">Перекидные</a></li>
+                    <li><a href="#">Планинги</a></li>
+                    <li><a href="#">Фотокалендари</a></li>
+                  </ul></div>
+                  <div class="group"><h4>Тематическая <span class="nw">полиграфия<i class="ha"></i></span></h4><ul>
+                    <li><a href="#">Для бизнеса</a></li>
+                    <li><a href="#">Для выставок</a></li>
+                    <li><a href="#">Для маркетплейсов</a></li>
+                    <li><a href="#">Для свечей и мыла</a></li>
+                    <li><a href="#">Для туризма</a></li>
+                    <li><a href="#">Event-полиграфия</a></li>
+                  </ul></div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- 2 ШИРОКОФОРМАТ -->
+            <div class="panel" data-sec="2">
+              <div class="phead"><h3>Широкоформатная печать и реклама</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Наружная <span class="nw">реклама<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Баннеры на ткани <span class="hit">Хит</span></a></li>
+                  <li><a href="#">Баннеры на сетке</a></li>
+                  <li><a href="#">Билборды</a></li>
+                  <li><a href="#">Блюбэк</a></li>
+                  <li><a href="#">Ситилайт</a></li>
+                  <li><a href="#">Бэклит</a></li>
+                  <li><a href="#">Перфорированная плёнка</a></li>
+                </ul></div>
+                <div class="group"><h4>Интерьерная <span class="nw">печать<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Афиши</a></li>
+                  <li><a href="#">Модульные картины</a></li>
+                  <li><a href="#">Печать на холсте</a></li>
+                  <li><a href="#">Плакаты и постеры</a></li>
+                  <li><a href="#">Поп-арт картины</a></li>
+                  <li><a href="#">Фотообои</a></li>
+                  <li><a href="#">Коллажи</a></li>
+                </ul></div>
+                <div class="group"><h4>Рекламные <span class="nw">конструкции<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Brand Wall</a></li>
+                  <li><a href="#">Pop Up</a></li>
+                  <li><a href="#">Press Wall</a></li>
+                  <li><a href="#">X-Stand</a></li>
+                  <li><a href="#">Roll-Up <span class="hit">Хит</span></a></li>
+                  <li><a href="#">Стенды</a></li>
+                  <li><a href="#">Штендеры</a></li>
+                  <li><a href="#">Таблички</a></li>
+                </ul></div>
+                <div class="group"><h4>Накатка на <span class="nw">основу<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">На композит</a></li>
+                  <li><a href="#">На пенокартон</a></li>
+                  <li><a href="#">На ПВХ</a></li>
+                  <li><a href="#">Печать на оргстекле</a></li>
+                </ul></div>
+                <div class="group"><h4>Широкоформатные <span class="nw">наклейки<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">На авто</a></li>
+                  <li><a href="#">На витрины</a></li>
+                  <li><a href="#">На окна</a></li>
+                  <li><a href="#">На двери</a></li>
+                  <li><a href="#">На пол</a></li>
+                  <li><a href="#">На стену</a></li>
+                </ul></div>
+                <div class="group"><h4>Инженерная <span class="nw">печать<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Копирование чертежей</a></li>
+                  <li><a href="#">Печать лекал</a></li>
+                  <li><a href="#">Проектная документация</a></li>
+                  <li><a href="#">Сканирование чертежей</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 3 КАРТЫ И ИГРЫ -->
+            <div class="panel" data-sec="3">
+              <div class="phead"><h3>Карты и настольные игры</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Печать карт и <span class="nw">карточек<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Ассоциативные и метафорические</a></li>
+                  <li><a href="#">Аффирмации и мотивация</a></li>
+                  <li><a href="#">Гадальные</a></li>
+                  <li><a href="#">Игральные карты</a></li>
+                  <li><a href="#">Карты Таро <span class="hit">Хит</span></a></li>
+                  <li><a href="#">Обучающие и развивающие</a></li>
+                  <li><a href="#">С персонажами</a></li>
+                </ul></div>
+                <div class="group"><h4>Настольные <span class="nw">игры<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бизнес-игры</a></li>
+                  <li><a href="#">Игры-бродилки</a></li>
+                  <li><a href="#">Игры-стратегии</a></li>
+                  <li><a href="#">Игровое поле</a></li>
+                  <li><a href="#">Пазлы</a></li>
+                  <li><a href="#">Фигурки из акрила</a></li>
+                </ul></div>
+                <div class="group"><h4><span class="nw">Упаковка<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Коробочки для колоды <span class="hit">Хит</span></a></li>
+                  <li><a href="#">Упаковка для колоды</a></li>
+                  <li><a href="#">Упаковка для игр</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 4 НАКЛЕЙКИ -->
+            <div class="panel" data-sec="4">
+              <div class="phead"><h3>Наклейки, стикеры, этикетки</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4><span class="nw">Популярное<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Наклейки УФ ДТФ <span class="hit">Хит</span></a></li>
+                  <li><a href="#">Стикерпаки <span class="hit">Хит</span></a></li>
+                  <li><a href="#">3D стикеры со смолой</a></li>
+                </ul></div>
+                <div class="group"><h4>Печать <span class="nw">наклеек<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бумажные</a></li>
+                  <li><a href="#">Виниловые</a></li>
+                  <li><a href="#">На белой плёнке</a></li>
+                  <li><a href="#">На глянце / мате</a></li>
+                  <li><a href="#">На металлизированной</a></li>
+                  <li><a href="#">На прозрачной плёнке</a></li>
+                </ul></div>
+                <div class="group"><h4>Этикетки на <span class="nw">товар<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Для одежды</a></li>
+                  <li><a href="#">Для цветов</a></li>
+                  <li><a href="#">Для Ozon</a></li>
+                  <li><a href="#">Для Wildberries <span class="hit">Хит</span></a></li>
+                  <li><a href="#">На банки</a></li>
+                  <li><a href="#">На свечи</a></li>
+                  <li><a href="#">На бутылки</a></li>
+                  <li><a href="#">На воду</a></li>
+                </ul></div>
+                <div class="group"><h4>Дополнительная <span class="nw">отделка<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">С высечкой</a></li>
+                  <li><a href="#">С конгревом</a></li>
+                  <li><a href="#">С ламинацией</a></li>
+                  <li><a href="#">С объёмным лаком</a></li>
+                  <li><a href="#">С тиснением фольгой</a></li>
+                </ul></div>
+                <div class="group"><h4>По <span class="nw">форме<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Квадратные</a></li>
+                  <li><a href="#">Круглые</a></li>
+                  <li><a href="#">Прямоугольные</a></li>
+                  <li><a href="#">Фигурные и произвольные</a></li>
+                </ul></div>
+                <div class="group"><h4>Способы <span class="nw">печати<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">В листах</a></li>
+                  <li><a href="#">В рулоне</a></li>
+                  <li><a href="#">Офсетная</a></li>
+                  <li><a href="#">Цифровая</a></li>
+                  <li><a href="#">УФ</a></li>
+                  <li><a href="#">УФ ДТФ</a></li>
+                  <li><a href="#">Флексография</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 5 УПАКОВКА -->
+            <div class="panel" data-sec="5">
+              <div class="phead"><h3>Упаковка и коробки</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Кашированные <span class="nw">коробки<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Крышка-дно <span class="hit">Хит</span></a></li>
+                  <li><a href="#">Пенал</a></li>
+                  <li><a href="#">С магнитным клапаном</a></li>
+                </ul></div>
+                <div class="group"><h4>Из <span class="nw">картона<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бонбоньерки</a></li>
+                  <li><a href="#">Коробка 2 клапана</a></li>
+                  <li><a href="#">Крышка-дно</a></li>
+                  <li><a href="#">Пенал</a></li>
+                  <li><a href="#">Ласточкин хвост</a></li>
+                  <li><a href="#">Самосборные</a></li>
+                </ul></div>
+                <div class="group"><h4>Из <span class="nw">МГК<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">2 / 4 клапана</a></li>
+                  <li><a href="#">Крышка-дно</a></li>
+                  <li><a href="#">Лоток</a></li>
+                  <li><a href="#">С ручкой</a></li>
+                  <li><a href="#">«Самолёт»</a></li>
+                </ul></div>
+                <div class="group"><h4>С <span class="nw">ложементами<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Изолон</a></li>
+                  <li><a href="#">Поролон</a></li>
+                  <li><a href="#">Картон</a></li>
+                  <li><a href="#">Переплётный картон</a></li>
+                  <li><a href="#">МГК</a></li>
+                  <li><a href="#">ЭВА</a></li>
+                </ul></div>
+                <div class="group"><h4>По типу <span class="nw">товара<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Алкоголь</a></li>
+                  <li><a href="#">Конфеты</a></li>
+                  <li><a href="#">Косметика</a></li>
+                  <li><a href="#">Парфюм</a></li>
+                  <li><a href="#">Одежда</a></li>
+                  <li><a href="#">Обувь</a></li>
+                  <li><a class="more" href="#">Все типы товаров <span class="arr-ico"></span></a></li>
+                </ul></div>
+                <div class="group"><h4>Пакеты и <span class="nw">бумага<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бумажные</a></li>
+                  <li><a href="#">ПЭТ</a></li>
+                  <li><a href="#">ПВД</a></li>
+                  <li><a href="#">Тишью</a></li>
+                  <li><a href="#">Крафт</a></li>
+                  <li><a href="#">Калька</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 6 СУВЕНИРЫ -->
+            <div class="panel" data-sec="6">
+              <div class="phead"><h3>Сувениры и мерч</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Корпоративный <span class="nw">мерч<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Брендированная одежда</a></li>
+                  <li><a href="#">Брендированные аксессуары</a></li>
+                  <li><a href="#">Брендированные гаджеты</a></li>
+                  <li><a href="#">Виниловые магниты</a></li>
+                  <li><a href="#">Корпоративные наборы</a></li>
+                  <li><a href="#">Welcome pack</a></li>
+                </ul></div>
+                <div class="group"><h4>Сувениры с <span class="nw">логотипом<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Печать на ежедневниках</a></li>
+                  <li><a href="#">Печать на блокнотах</a></li>
+                  <li><a href="#">Печать на кружках</a></li>
+                  <li><a href="#">Печать на посуде</a></li>
+                  <li><a href="#">Печать на зонтах</a></li>
+                  <li><a href="#">Печать на сумках</a></li>
+                  <li><a href="#">Печать на футболках</a></li>
+                  <li><a href="#">Печать на толстовках</a></li>
+                  <li><a href="#">Печать на часах</a></li>
+                  <li><a href="#">Печать на электронике</a></li>
+                  <li><a href="#">Промо-сувениры</a></li>
+                </ul></div>
+                <div class="group"><h4>Готовые наборы и <span class="nw">проекты<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бизнес-наборы</a></li>
+                  <li><a href="#">Винные наборы</a></li>
+                  <li><a href="#">Новогодние наборы</a></li>
+                  <li><a href="#">Элитные подарки</a></li>
+                  <li><a href="#">Индивидуальный дизайн</a></li>
+                  <li class="ext-sep"><a class="extli" href="https://mdmgifts.ru" target="_blank" rel="noopener" title="Внешний каталог готовых сувениров">Весь каталог на mdmgifts.ru <span class="ext-ar">↗</span></a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 7 НАНЕСЕНИЕ -->
+            <div class="panel" data-sec="7">
+              <div class="phead"><h3>Нанесение</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Печать на <span class="nw">текстиле<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Кепки</a></li>
+                  <li><a href="#">Банданы</a></li>
+                  <li><a href="#">Куртки</a></li>
+                  <li><a href="#">Ветровки</a></li>
+                  <li><a href="#">Поло</a></li>
+                  <li><a href="#">Рубашки</a></li>
+                  <li><a href="#">Сумки-шопперы</a></li>
+                  <li><a href="#">Толстовки и худи</a></li>
+                  <li><a href="#">Футболки</a></li>
+                  <li><a href="#">Майки</a></li>
+                  <li><a class="more" href="#">Вся одежда <span class="arr-ico"></span></a></li>
+                </ul></div>
+                <div class="group"><h4>Печать на <span class="nw">акриле<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Брелоки</a></li>
+                  <li><a href="#">Фигурки</a></li>
+                  <li><a href="#">Кубки и награды</a></li>
+                  <li><a href="#">План рассадки</a></li>
+                  <li><a href="#">Таблички</a></li>
+                </ul></div>
+                <div class="group"><h4>Печать на <span class="nw">лентах<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Атласные ленты</a></li>
+                  <li><a href="#">Ленты для бейджей</a></li>
+                  <li><a href="#">Репсовые ленты</a></li>
+                </ul></div>
+                <div class="group"><h4>Способы <span class="nw">нанесения<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Вышивка</a></li>
+                  <li><a href="#">Сублимация</a></li>
+                  <li><a href="#">Лазерная гравировка</a></li>
+                  <li><a href="#">УФ печать</a></li>
+                  <li><a href="#">Шелкография</a></li>
+                  <li><a href="#">DTF</a></li>
+                  <li><a href="#">Термотрансфер</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 8 POS-МАТЕРИАЛЫ -->
+            <div class="panel" data-sec="8">
+              <div class="phead"><h3>POS-материалы</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:3;column-gap:28px">
+                <li><a href="#">Баркеты для товаров</a></li>
+                <li><a href="#">Блоттеры</a></li>
+                <li><a href="#">Воблеры</a></li>
+                <li><a href="#">Гирлянды</a></li>
+                <li><a href="#">Денглеры</a></li>
+                <li><a href="#">Лотки</a></li>
+                <li><a href="#">Менюхолдеры</a></li>
+                <li><a href="#">Мобайлы</a></li>
+                <li><a href="#">Монетницы</a></li>
+                <li><a href="#">Некхенгеры на бутылки</a></li>
+                <li><a href="#">Объёмные хештеги</a></li>
+                <li><a href="#">Панкарты и хардпостеры</a></li>
+                <li><a href="#">Таблички с QR-кодом</a></li>
+                <li><a href="#">Тейбл-тенты</a></li>
+                <li><a href="#">Холдеры и подставки</a></li>
+                <li><a href="#">Хенгеры на ручки</a></li>
+                <li><a href="#">Ценники</a></li>
+              </ul></div>
+            </div>
+
+            <!-- 9 ПЛАСТИКОВЫЕ КАРТЫ -->
+            <div class="panel" data-sec="9">
+              <div class="phead"><h3>Пластиковые карты</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Виды <span class="nw">карт<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">С магнитной полосой</a></li>
+                  <li><a href="#">С чипом MiFare</a></li>
+                  <li><a href="#">С RFID / NFC-меткой</a></li>
+                  <li><a href="#">С эмбоссированием</a></li>
+                  <li><a href="#">Со штрих- и QR-кодом</a></li>
+                  <li><a href="#">Со скретч-панелью</a></li>
+                </ul></div>
+                <div class="group"><h4>По <span class="nw">применению<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Дисконтные</a></li>
+                  <li><a href="#">Бонусные</a></li>
+                  <li><a href="#">Клубные</a></li>
+                  <li><a href="#">Подарочные</a></li>
+                  <li><a href="#">Пропуска (СКУД)</a></li>
+                  <li><a href="#">Визитки на пластике</a></li>
+                </ul></div>
+                <div class="group"><h4>Тиражи и <span class="nw">сроки<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Сборные тиражи</a></li>
+                  <li><a href="#">Срочное изготовление</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 10 БИЗНЕСУ -->
+            <div class="panel" data-sec="10">
+              <div class="phead"><h3>Готовые решения бизнесу</h3><a href="#">Все решения<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Для <span class="nw">офиса<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бейджи</a></li>
+                  <li><a href="#">Бланки</a></li>
+                  <li><a href="#">Визитки</a></li>
+                  <li><a href="#">Кубарики</a></li>
+                  <li><a href="#">Папки с лого</a></li>
+                </ul></div>
+                <div class="group"><h4>Для <span class="nw">клиентов<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Брендирование сувениров</a></li>
+                  <li><a href="#">Бумажные пакеты</a></li>
+                  <li><a href="#">Готовые наборы подарков</a></li>
+                  <li><a href="#">Мерч</a></li>
+                  <li><a href="#">Сувениры с лого</a></li>
+                </ul></div>
+                <div class="group"><h4>Для <span class="nw">офлайн-рекламы<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Афиши</a></li>
+                  <li><a href="#">Каталоги</a></li>
+                  <li><a href="#">Листовки</a></li>
+                  <li><a href="#">Презентации</a></li>
+                  <li><a href="#">Флаеры</a></li>
+                </ul></div>
+                <div class="group"><h4>Для <span class="nw">товара<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бирки</a></li>
+                  <li><a href="#">Наклейки</a></li>
+                  <li><a href="#">Упаковка</a></li>
+                  <li><a href="#">Этикетки</a></li>
+                </ul></div>
+                <div class="group"><h4>По <span class="nw">направлениям<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Банки</a></li>
+                  <li><a href="#">Медицина</a></li>
+                  <li><a href="#">Производство</a></li>
+                  <li><a href="#">Рестораны и кафе</a></li>
+                  <li><a href="#">Салоны красоты</a></li>
+                  <li><a href="#">Селлеры на МП</a></li>
+                  <li><a href="#">Туризм</a></li>
+                  <li><a href="#">Программа лояльности и партнёрства <span class="new">Новое</span></a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 11 РЕКЛАМНЫМ АГЕНТСТВАМ -->
+            <div class="panel" data-sec="11">
+              <div class="phead"><h3>Готовые решения рекламным агентствам</h3><a href="#">Все решения<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Выставки и <span class="nw">мероприятия<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Блокноты</a></li>
+                  <li><a href="#">Ручки</a></li>
+                  <li><a href="#">Брендированные пакеты</a></li>
+                  <li><a href="#">Контрольные браслеты</a></li>
+                  <li><a href="#">Ланъярды для бейджей</a></li>
+                  <li><a href="#">Печать бейджей</a></li>
+                  <li><a href="#">Стикерпаки</a></li>
+                  <li><a href="#">Roll-Up</a></li>
+                  <li><a href="#">Press Wall</a></li>
+                </ul></div>
+                <div class="group"><h4>Для <span class="nw">офлайн-рекламы<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Афиши</a></li>
+                  <li><a href="#">Каталоги</a></li>
+                  <li><a href="#">Листовки</a></li>
+                  <li><a href="#">Презентации</a></li>
+                  <li><a href="#">Флаеры</a></li>
+                </ul></div>
+                <div class="group"><h4>По типу <span class="nw">мероприятий<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бизнес-форумы</a></li>
+                  <li><a href="#">Концерты</a></li>
+                  <li><a href="#">Промоакции</a></li>
+                  <li><a href="#">Спортивные мероприятия</a></li>
+                  <li><a href="#">Программа лояльности и партнёрства <span class="new">Новое</span></a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- УСЛУГИ s0..s5 -->
+            <div class="panel" data-sec="s0">
+              <div class="phead"><h3>Брошюровка и переплёт</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Брошюровка на пружину</a></li>
+                <li><a href="#">Брошюровка на скобу</a></li>
+                <li><a href="#">Переплёт 7Б</a></li>
+                <li><a href="#">Переплёт 7БЦ</a></li>
+                <li><a href="#">Переплёт КБС</a></li>
+                <li><a href="#">Переплёт КШС</a></li>
+                <li><a href="#">ПУР-клеевое скрепление <span class="hit">Хит</span></a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s1">
+              <div class="phead"><h3>Способы печати</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Высокая печать</a></li>
+                <li><a href="#">Офсетная печать</a></li>
+                <li><a href="#">Печать на плёнке</a></li>
+                <li><a href="#">Трафаретная печать</a></li>
+                <li><a href="#">Флексографическая печать</a></li>
+                <li><a href="#">Цифровая печать</a></li>
+                <li><a href="#">Широкоформатная печать</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s2">
+              <div class="phead"><h3>Нанесение</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Вышивка</a></li>
+                <li><a href="#">Сублимация</a></li>
+                <li><a href="#">Термотрансфер</a></li>
+                <li><a href="#">УФ DTF печать</a></li>
+                <li><a href="#">УФ печать</a></li>
+                <li><a href="#">Шелкография</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s3">
+              <div class="phead"><h3>Постпечатная обработка</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">3D-лак и 3D-фольга</a></li>
+                <li><a href="#">Биговка</a></li>
+                <li><a href="#">Вырубка (высечка)</a></li>
+                <li><a href="#">Гравировка</a></li>
+                <li><a href="#">Конгревное тиснение</a></li>
+                <li><a href="#">Лакирование</a></li>
+                <li><a href="#">Ламинирование</a></li>
+                <li><a href="#">Праймирование</a></li>
+                <li><a href="#">Тиснение без фольги</a></li>
+                <li><a href="#">Тиснение с фольгой</a></li>
+                <li><a href="#">Фальцовка</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s4">
+              <div class="phead"><h3>Резка и сверление</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Гильотинная резка</a></li>
+                <li><a href="#">Лазерная резка</a></li>
+                <li><a href="#">Перфорация</a></li>
+                <li><a href="#">Планшетная резка</a></li>
+                <li><a href="#">Плоттерная резка</a></li>
+                <li><a href="#">Сверление отверстий</a></li>
+                <li><a href="#">Скругление углов</a></li>
+                <li><a href="#">Фигурная резка</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s5">
+              <div class="phead"><h3>Другие услуги</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Подбор материалов</a></li>
+                <li><a href="#">Подготовка макета к печати</a></li>
+                <li><a href="#">Разработка дизайна</a></li>
+                <li><a href="#">Цветопроба печати</a></li>
+              </ul></div>
+            </div>
+
+            <!-- МАТЕРИАЛЫ m0..m3 -->
+            <div class="panel" data-sec="m0">
+              <div class="phead"><h3>Бумага</h3><a href="#">Все материалы<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Дизайнерская Majestic</a></li>
+                <li><a href="#">Дизайнерская Plike</a></li>
+                <li><a href="#">Калька плотная</a></li>
+                <li><a href="#">Картон плотный</a></li>
+                <li><a href="#">Крафт-бумага</a></li>
+                <li><a href="#">Лён</a></li>
+                <li><a href="#">Мелованная</a></li>
+                <li><a href="#">Touche Paper</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="m1">
+              <div class="phead"><h3>Пластик</h3><a href="#">Все материалы<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">ПВХ</a></li>
+                <li><a href="#">ПЭТ</a></li>
+                <li><a href="#">Пластик для карт</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="m2">
+              <div class="phead"><h3>Ламинация</h3><a href="#">Все материалы<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Глянцевая</a></li>
+                <li><a href="#">Матовая</a></li>
+                <li><a href="#">Софт-тач</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="m3">
+              <div class="phead"><h3>Набор каталогов «Look &amp; Print»</h3></div>
+              <div class="group">
+                <p style="font-size:13.5px;color:#5a5f68;line-height:1.6;max-width:420px;margin-bottom:14px">Образцы всех материалов и видов отделки в руки. Поможет выбрать бумагу, ламинацию и эффекты до заказа тиража.</p>
+                <a href="#" class="order" style="display:inline-flex;width:auto;padding:0 18px;text-decoration:none">Заказать набор образцов <span class="arr-ico"></span></a>
+              </div>
+            </div>
+
+            <!-- ВАРИАНТ 1: общий вид «Услуги» -->
+            <div class="panel" data-sec="svc">
+              <div class="phead"><h3>Услуги типографии</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="cols-flow cols-flow--4">
+                <div class="group"><h4>Брошюровка и <span class="nw">переплёт<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Брошюровка на пружину</a></li>
+                  <li><a href="#">Брошюровка на скобу</a></li>
+                  <li><a href="#">Переплёт 7Б</a></li>
+                  <li><a href="#">Переплёт 7БЦ</a></li>
+                  <li><a href="#">Переплёт КБС</a></li>
+                  <li><a href="#">Переплёт КШС</a></li>
+                  <li><a href="#">ПУР-клеевое скрепление</a></li>
+                </ul></div>
+                <div class="group"><h4>Способы <span class="nw">печати<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Высокая печать</a></li>
+                  <li><a href="#">Офсетная печать</a></li>
+                  <li><a href="#">Печать на плёнке</a></li>
+                  <li><a href="#">Трафаретная печать</a></li>
+                  <li><a href="#">Флексографическая печать</a></li>
+                  <li><a href="#">Цифровая печать</a></li>
+                  <li><a href="#">Широкоформатная печать</a></li>
+                </ul></div>
+                <div class="group"><h4><span class="nw">Нанесение<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Вышивка</a></li>
+                  <li><a href="#">Сублимация</a></li>
+                  <li><a href="#">Термотрансфер</a></li>
+                  <li><a href="#">УФ DTF печать</a></li>
+                  <li><a href="#">УФ печать</a></li>
+                  <li><a href="#">Шелкография</a></li>
+                </ul></div>
+                <div class="group"><h4>Постпечатная <span class="nw">обработка<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">3D-лак и 3D-фольга</a></li>
+                  <li><a href="#">Биговка</a></li>
+                  <li><a href="#">Вырубка (высечка)</a></li>
+                  <li><a href="#">Гравировка</a></li>
+                  <li><a href="#">Конгревное тиснение</a></li>
+                  <li><a href="#">Лакирование</a></li>
+                  <li><a href="#">Ламинирование</a></li>
+                  <li><a href="#">Тиснение с фольгой</a></li>
+                  <li><a href="#">Фальцовка</a></li>
+                </ul></div>
+                <div class="group"><h4>Резка и <span class="nw">сверление<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Гильотинная резка</a></li>
+                  <li><a href="#">Лазерная резка</a></li>
+                  <li><a href="#">Перфорация</a></li>
+                  <li><a href="#">Плоттерная резка</a></li>
+                  <li><a href="#">Сверление отверстий</a></li>
+                  <li><a href="#">Скругление углов</a></li>
+                  <li><a href="#">Фигурная резка</a></li>
+                </ul></div>
+                <div class="group"><h4>Другие <span class="nw">услуги<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Подбор материалов</a></li>
+                  <li><a href="#">Подготовка макета к печати</a></li>
+                  <li><a href="#">Разработка дизайна</a></li>
+                  <li><a href="#">Цветопроба печати</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- ВАРИАНТ 1: общий вид «Материалы» -->
+            <div class="panel" data-sec="mat">
+              <div class="phead"><h3>Материалы</h3><a href="#">Все материалы<span class="arr-ico"></span></a></div>
+              <div class="mat-grid">
+                <a href="#" class="mat-card">
+                  <span class="mat-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v4h4M8 12h8M8 16h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                  <span class="mat-tx"><b>Бумага</b><i>Мелованная, дизайнерская, крафт</i></span>
+                  <span class="arr-ico"></span>
+                </a>
+                <a href="#" class="mat-card">
+                  <span class="mat-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.6"/></svg></span>
+                  <span class="mat-tx"><b>Пластик</b><i>ПВХ, ПЭТ, для карт</i></span>
+                  <span class="arr-ico"></span>
+                </a>
+                <a href="#" class="mat-card">
+                  <span class="mat-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 9h16M9 4v16" stroke="currentColor" stroke-width="1.6"/></svg></span>
+                  <span class="mat-tx"><b>Ламинация</b><i>Глянец, мат, софт-тач</i></span>
+                  <span class="arr-ico"></span>
+                </a>
+                <a href="#" class="mat-card mat-card--accent">
+                  <span class="mat-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v12H4zM4 17l4 2 4-2 4 2 4-2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 9h8M8 12h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                  <span class="mat-tx"><b>Набор каталогов «Look &amp; Print»</b><i>Образцы материалов в руки</i></span>
+                  <span class="arr-ico"></span>
+                </a>
+              </div>
+            </div>
+
+          </div><!-- /pane -->
+
+          <!-- ПРОМО (переключаемый компонент: data-variant = offer|image|content|hybrid; дефолт — hybrid) -->
+          <div class="promo" id="promo" data-variant="hybrid">
+
+            <!-- A. ОФФЕР: бейдж + заголовок + текст + мокап + цена + кнопка -->
+            <div class="promo-body" data-for="offer">
+              <span class="tag tag--accent">Акция месяца</span>
+              <h4>Визитки 1000 шт — за 990 ₽</h4>
+              <p>Премиальный картон, печать с двух сторон. Готовы за 24 часа.</p>
+              <div class="promo-visual">
+                <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%">
+                  <rect x="34" y="34" width="132" height="78" rx="8" fill="#fff" stroke="#E9D9A6" stroke-width="1.5" transform="rotate(-7 100 73)"/>
+                  <rect x="24" y="22" width="132" height="78" rx="8" fill="#fff" stroke="#EBDCAA" stroke-width="1.5" transform="rotate(4 90 61)"/>
+                  <rect x="38" y="30" width="124" height="72" rx="8" fill="#fff" stroke="#1a1a1a" stroke-width="1.6"/>
+                  <rect x="50" y="42" width="26" height="26" rx="5" fill="#FFC829"/>
+                  <rect x="86" y="46" width="60" height="6" rx="3" fill="#1a1a1a"/>
+                  <rect x="86" y="58" width="44" height="5" rx="2.5" fill="#c9cdd3"/>
+                  <rect x="50" y="80" width="96" height="5" rx="2.5" fill="#dfe2e6"/>
+                  <rect x="50" y="90" width="70" height="5" rx="2.5" fill="#dfe2e6"/>
+                </svg>
+              </div>
+              <div class="price"><b>990 ₽</b><s>1 800 ₽</s></div>
+              <a href="#" class="order">Заказать <span class="arr-ico"></span></a>
+            </div>
+
+            <!-- B. БАННЕР: крупное изображение-обложка + бейдж + заголовок + кнопка -->
+            <div class="promo-body promo-banner" data-for="image">
+              <div class="promo-cover">
+                <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg" width="60%">
+                  <rect x="38" y="30" width="124" height="72" rx="8" fill="#fff" stroke="#1a1a1a" stroke-width="1.6"/>
+                  <rect x="50" y="42" width="26" height="26" rx="5" fill="#FFC829"/>
+                  <rect x="86" y="46" width="60" height="6" rx="3" fill="#1a1a1a"/>
+                  <rect x="86" y="58" width="44" height="5" rx="2.5" fill="#c9cdd3"/>
+                  <rect x="50" y="80" width="96" height="5" rx="2.5" fill="#dfe2e6"/>
+                </svg>
+              </div>
+              <span class="tag tag--accent">Новинка</span>
+              <h4>Каталог готовых макетов</h4>
+              <a href="#" class="order">Смотреть <span class="arr-ico"></span></a>
+            </div>
+
+            <!-- C. КОНТЕНТ: картинка сверху + заголовок + текст + ссылка -->
+            <div class="promo-body" data-for="content">
+              <div class="promo-cover">
+                <svg viewBox="0 0 200 110" fill="none" xmlns="http://www.w3.org/2000/svg" width="55%">
+                  <rect x="40" y="22" width="120" height="66" rx="8" fill="#fff" stroke="#1a1a1a" stroke-width="1.6"/>
+                  <rect x="52" y="34" width="24" height="24" rx="5" fill="#FFC829"/>
+                  <rect x="86" y="38" width="58" height="6" rx="3" fill="#1a1a1a"/>
+                  <rect x="86" y="50" width="40" height="5" rx="2.5" fill="#c9cdd3"/>
+                  <rect x="52" y="70" width="92" height="5" rx="2.5" fill="#dfe2e6"/>
+                </svg>
+              </div>
+              <span class="tag tag--soft">Статья</span>
+              <h4>Как выбрать бумагу для визиток</h4>
+              <p>Лён, софт-тач, плотный картон — разбираем 9 материалов и для чего каждый.</p>
+              <a href="#" class="order order--light">Читать <span class="arr-ico"></span></a>
+            </div>
+
+            <!-- D. ГИБРИД: тёмный фон + бейдж + текст + кнопка -->
+            <div class="promo-body promo-hybrid" data-for="hybrid">
+              <span class="tag tag--accent">−45%</span>
+              <div class="hybrid-text">
+                <h4>Скидка на первый заказ</h4>
+                <p>Для новых клиентов до конца месяца.</p>
+              </div>
+              <a href="#" class="order order--light">Получить <span class="arr-ico"></span></a>
+            </div>
+
+          </div>
+
+        </div><!-- /mega-card -->
+
+      </div><!-- /mega-box -->
+      </div><!-- /mega-inner -->
+    </div><!-- /mega -->
+  </div>
+  </div><!-- /site-head -->
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- МОДАЛКА «Заказать звонок»: телефон обязателен, имя — необязательно; согласие на ПДн (152-ФЗ) -->
+  <div class="cbm-back" id="cbmBack" aria-hidden="true">
+    <div class="cbm" role="dialog" aria-modal="true" aria-labelledby="cbmTitle">
+      <button class="cbm-x" type="button" data-cbm-close aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+
+      <div id="cbmForm" data-role="form">
+        <h2 class="cbm-title" id="cbmTitle">Заказать звонок</h2>
+        <p class="cbm-sub">Оставьте номер — перезвоним в течение 15 минут в рабочее время.</p>
+        <form id="cbmFormEl" novalidate>
+          <div class="cbm-field">
+            <label class="cbm-lbl" for="cbmPhone">Телефон <i>*</i></label>
+            <input type="tel" id="cbmPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required aria-required="true">
+            <span class="cbm-err">Введите корректный номер телефона</span>
+          </div>
+          <div class="cbm-field">
+            <label class="cbm-lbl" for="cbmName">Имя <em>— необязательно</em></label>
+            <input type="text" class="cbm-tf" id="cbmName" name="name" autocomplete="name" placeholder="Как к вам обращаться">
+          </div>
+          <!-- honeypot: скрытое поле-ловушка для ботов; люди его не видят и не заполняют -->
+          <input type="text" class="cbm-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="cbm-check">
+            <input type="checkbox" id="cbmConsent" data-role="consent" required>
+            <span>Я даю согласие на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и принимаю <a href="#" target="_blank" rel="noopener">политику конфиденциальности</a></span>
+          </label>
+          <label class="cbm-check">
+            <input type="checkbox" id="cbmPromo">
+            <span>Согласен получать новости и спецпредложения <em>(необязательно)</em></span>
+          </label>
+          <button type="submit" class="cbm-submit" id="cbmSubmit" disabled>Жду звонка</button>
+          <p class="cbm-fine">Мы используем номер только для обратного звонка по вашей заявке.</p>
+        </form>
+      </div>
+
+      <div id="cbmDone" data-role="done" hidden>
+        <div class="cbm-done">
+          <div class="cbm-done-ic">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h2 class="cbm-title">Заявка принята</h2>
+          <p class="cbm-sub">Перезвоним на указанный номер в ближайшее время. Спасибо!</p>
+          <button type="button" class="cbm-submit" data-cbm-close>Хорошо</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА «Оставить заявку»: расширенная заявка; телефон обязателен, остальное — необязательно; согласие на ПДн (152-ФЗ) -->
+  <div class="cbm-back" id="reqBack" aria-hidden="true">
+    <div class="cbm" role="dialog" aria-modal="true" aria-labelledby="reqTitle">
+      <button class="cbm-x" type="button" data-cbm-close aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+
+      <div data-role="form">
+        <h2 class="cbm-title" id="reqTitle">Оставить заявку</h2>
+        <p class="cbm-sub">Опишите задачу — рассчитаем стоимость и сроки и перезвоним.</p>
+        <form novalidate>
+          <div class="cbm-row">
+            <div class="cbm-field">
+              <label class="cbm-lbl" for="reqPhone">Телефон <i>*</i></label>
+              <input type="tel" id="reqPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required aria-required="true">
+              <span class="cbm-err">Введите корректный номер телефона</span>
+            </div>
+            <div class="cbm-field">
+              <label class="cbm-lbl" for="reqWay">Способ связи <i>*</i></label>
+              <div class="cbm-sel">
+                <select class="cbm-tf" id="reqWay" name="contact_way" required aria-required="true">
+                  <option value="" disabled selected>Выберите способ</option>
+                  <option>Позвонить</option>
+                  <option>Telegram</option>
+                  <option>WhatsApp</option>
+                  <option>MAX</option>
+                  <option>E-mail</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="cbm-row">
+            <div class="cbm-field">
+              <label class="cbm-lbl" for="reqName">Имя <i>*</i></label>
+              <input type="text" class="cbm-tf" id="reqName" name="name" autocomplete="name" placeholder="Как к вам обращаться" required aria-required="true">
+            </div>
+            <div class="cbm-field">
+              <label class="cbm-lbl" for="reqEmail">E-mail <i>*</i></label>
+              <input type="email" class="cbm-tf" id="reqEmail" name="email" autocomplete="email" placeholder="you@example.ru" required aria-required="true">
+            </div>
+          </div>
+          <div class="cbm-field">
+            <label class="cbm-lbl" for="reqMsg">Задача <em>— необязательно</em></label>
+            <textarea class="cbm-ta" id="reqMsg" name="message" rows="3" placeholder="Что нужно напечатать, тираж, сроки, пожелания…"></textarea>
+          </div>
+          <div class="cbm-field">
+            <label class="cbm-lbl">Файлы <em>— необязательно</em></label>
+            <label class="cbm-file">
+              <input type="file" id="reqFiles" name="files" multiple accept=".pdf,.ai,.cdr,.eps,.psd,.tif,.tiff,.png,.jpg,.jpeg,.zip,.rar">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 11.5l-8.4 8.4a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="cbm-file-btn" data-file-label>Прикрепить макет</span>
+            </label>
+          </div>
+          <p class="cbm-file-hint">До 10 файлов, PDF · AI · CDR · PSD · JPG · ZIP. Большие макеты — архивом.</p>
+          <!-- honeypot: скрытое поле-ловушка для ботов -->
+          <input type="text" class="cbm-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="cbm-check">
+            <input type="checkbox" data-role="consent" required>
+            <span>Я даю согласие на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и принимаю <a href="#" target="_blank" rel="noopener">политику конфиденциальности</a></span>
+          </label>
+          <label class="cbm-check">
+            <input type="checkbox" name="promo">
+            <span>Согласен получать новости и спецпредложения <em>(необязательно)</em></span>
+          </label>
+          <button type="submit" class="cbm-submit" disabled>Отправить заявку</button>
+          <p class="cbm-fine">Мы используем контакты только для ответа по вашей заявке.</p>
+        </form>
+      </div>
+
+      <div data-role="done" hidden>
+        <div class="cbm-done">
+          <div class="cbm-done-ic">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h2 class="cbm-title">Заявка отправлена</h2>
+          <p class="cbm-sub">Менеджер свяжется с вами в ближайшее время. Спасибо!</p>
+          <button type="button" class="cbm-submit" data-cbm-close>Хорошо</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ СТРАНИЦА УСЛУГИ: ТИСНЕНИЕ ============ -->
+  <main class="usl">
+
+    <!-- HERO -->
+    <section class="usl-hero" id="obzor">
+      <div class="wrap">
+        <div class="crumbs">
+          <a href="#">Главная</a><span>/</span>
+          <a href="#">Технологии</a><span>/</span>
+          <a href="#">Постпечатная обработка</a><span>/</span>
+          <b>Тиснение</b>
+        </div>
+        <div class="hero-grid">
+          <div class="hero-left">
+            <span class="eyebrow">Постпечатная обработка</span>
+            <h1>Тиснение фольгой</h1>
+            <p class="lead">Металлизированный или рельефный акцент, который поднимает статус изделия ещё до прочтения. Золото, серебро, голография и цветной металлик — на визитках, обложках, упаковке и открытках.</p>
+            <div class="hero-cta">
+              <button class="btn btn-primary tb-cta">Оставить заявку на расчёт</button>
+              <a class="btn btn-ghost cb">Заказать образец</a>
+            </div>
+          </div>
+          <div class="hero-media">
+            <div class="card-mock"><div class="foil"></div></div>
+            <span class="ph-tag">визитка с тиснением — фото</span>
+          </div>
+        </div>
+        <div class="usl-stats">
+          <div class="st"><b>150</b><span>материалов в каталоге</span></div>
+          <div class="st"><b>200+</b><span>видов и оттенков фольги</span></div>
+          <div class="st"><b>от 2 дней</b><span>срок изготовления</span></div>
+          <div class="st"><b>50 шт</b><span>минимальный тираж</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STICKY SUBNAV -->
+    <nav class="usl-subnav">
+      <div class="wrap">
+        <a href="#obzor" class="active">Обзор</a>
+        <a href="#preim">Преимущества</a>
+        <a href="#vidy">Виды</a>
+        <a href="#ceny">Цены</a>
+        <a href="#primery">Примеры</a>
+        <a href="#trebovaniya">Требования</a>
+        <a href="#faq">Вопросы</a>
+      </div>
+    </nav>
+
+    <!-- ПРЕИМУЩЕСТВА -->
+    <section class="usl-adv" id="preim">
+      <div class="wrap">
+        <div class="sec-head"><h2>Преимущества тиснения</h2></div>
+        <div class="adv-grid">
+          <div class="adv-media"><b>Фото или видео тиснения</b><span>крупный план · 4:3</span></div>
+          <div class="tiles">
+            <div class="tile"><div class="dot"></div><h3>Премиальный вид</h3><p>Мгновенно поднимает статус изделия — считывается как «дорого» ещё до прочтения.</p></div>
+            <div class="tile"><div class="dot"></div><h3>Тактильность</h3><p>Фольгу и рельеф чувствуешь на ощупь. Изделие хочется взять в руки.</p></div>
+            <div class="tile"><div class="dot"></div><h3>Стойкость</h3><p>Не выцветает и не стирается — эффект держится весь срок службы.</p></div>
+            <div class="tile"><div class="dot"></div><h3>Контраст на тёмном</h3><p>Металлик ярко работает там, где обычная краска почти не видна.</p></div>
+          </div>
+        </div>
+        <div class="pm">
+          <div class="card">
+            <h4><span class="badge" style="background:#2ea64f"></span>Плюсы</h4>
+            <ul>
+              <li>Премиальный вид и тактильный акцент</li>
+              <li>Стойкость к истиранию и времени</li>
+              <li>Сочетается с конгревом, лаком и ламинацией</li>
+              <li>Палитра: золото, серебро, цвет, голография</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4><span class="badge" style="background:var(--accent)"></span>Что учесть</h4>
+            <ul>
+              <li>Не для мелких деталей и тонких линий</li>
+              <li>Нужен отдельный слой под фольгу в макете</li>
+              <li>Стоимость считается отдельно от печати</li>
+              <li>Минимальный тираж — от 50 шт</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ВИДЫ -->
+    <section class="usl-vidy" id="vidy">
+      <div class="wrap">
+        <div class="sec-head"><h2>Виды тиснения</h2></div>
+        <div class="vidy-grid">
+          <div class="vcard">
+            <div class="vmedia gold"></div>
+            <span class="vtag">Блеск · металлик</span>
+            <h3>Тиснение фольгой</h3>
+            <p>Горячий перенос металлизированной плёнки. Золото, серебро, голография и цветной металлик — яркий акцент даже на тёмной бумаге.</p>
+          </div>
+          <div class="vcard">
+            <div class="vmedia"></div>
+            <span class="vtag">Объём · 3D</span>
+            <h3>Конгревное тиснение</h3>
+            <p>Выпуклый рельеф без краски и фольги: изображение выступает над поверхностью и хорошо ощущается на ощупь.</p>
+          </div>
+          <div class="vcard">
+            <div class="vmedia"></div>
+            <span class="vtag">Рельеф в цвет</span>
+            <h3>Блинтовое (слепое) тиснение</h3>
+            <p>Рисунок вдавливается в материал без фольги. Сдержанный тактильный эффект тон-в-тон — за счёт фактуры и теней.</p>
+          </div>
+        </div>
+        <p class="vidy-note">Эффекты комбинируются: например, конгрев с фольгой даёт объём и блеск одновременно. Подберём вид под изделие, материал и бюджет.</p>
+      </div>
+    </section>
+
+    <!-- ЦЕНЫ -->
+    <section class="usl-price" id="ceny">
+      <div class="wrap">
+        <div class="sec-head"><h2>Рассчитайте стоимость тиснения</h2></div>
+        <div class="price-grid">
+          <div class="ptable">
+            <div class="ph">Примерная стоимость и сроки</div>
+            <div class="prow"><span class="pname">Визитки с тиснением</span><span class="pterm">2–3 дня</span><span class="pval">от 18 ₽/шт</span></div>
+            <div class="prow"><span class="pname">Обложки каталогов</span><span class="pterm">3–5 дней</span><span class="pval">от 60 ₽/шт</span></div>
+            <div class="prow"><span class="pname">Упаковка с фольгой</span><span class="pterm">от 5 дней</span><span class="pval">от 120 ₽/шт</span></div>
+            <button class="btn btn-primary btn-sm tb-cta">Оставить заявку на расчёт</button>
+          </div>
+          <div class="calc">
+            <h3>Онлайн-калькулятор тиража</h3>
+            <p>Рассчитайте свой тираж за 1 минуту в нашем калькуляторе.</p>
+            <a class="btn btn-sm" href="#">Онлайн-калькулятор</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ПОРТФОЛИО -->
+    <section class="usl-port" id="primery">
+      <div class="wrap">
+        <div class="sec-head"><h2>Портфолио</h2></div>
+        <div class="stories">
+          <div class="slabel">Видео · вертикальные сторис</div>
+          <div class="story"><div class="play"></div><span>Просто продукт</span></div>
+          <div class="story"><div class="play"></div><span>Процесс тиснения</span></div>
+          <div class="story"><div class="play"></div><span>Визитка · фольга</span></div>
+          <div class="story"><div class="play"></div><span>Открытка · ламинация</span></div>
+          <div class="story"><div class="play"></div><span>Наклейка · 3D-лак</span></div>
+          <div class="story"><div class="play"></div><span>Кружка · УФ ДТФ</span></div>
+        </div>
+        <div class="pgrid">
+          <div class="shot"></div><div class="shot"></div><div class="shot"></div>
+          <div class="shot"></div><div class="shot"></div><div class="shot"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ТРЕБОВАНИЯ К МАКЕТУ (табы) -->
+    <section class="usl-req" id="trebovaniya">
+      <div class="wrap">
+        <div class="sec-head"><h2>Требования к макету</h2></div>
+        <div class="tabbar" role="tablist">
+          <button class="tabbtn active" data-tab="check">Чек-лист</button>
+          <button class="tabbtn" data-tab="params">Технические параметры</button>
+          <button class="tabbtn" data-tab="detail">Подробные требования</button>
+        </div>
+
+        <div class="tabpanel active" data-panel="check">
+          <div class="checklist">
+            <div class="ci"><div class="tick"></div><div><b>Поля и вылеты</b><p>3–5 мм с каждой стороны под обрезку. Важные элементы — не ближе 5 мм от края.</p></div></div>
+            <div class="ci"><div class="tick"></div><div><b>Слой под фольгу</b><p>Отдельным слоем, плашка 100% Magenta. Без градиентов и полутонов.</p></div></div>
+            <div class="ci"><div class="tick"></div><div><b>Изображения</b><p>Разрешение 300 dpi, цветовая модель CMYK.</p></div></div>
+            <div class="ci"><div class="tick"></div><div><b>Шрифты</b><p>Переведите в кривые или вложите в файл.</p></div></div>
+          </div>
+        </div>
+
+        <div class="tabpanel" data-panel="params">
+          <div class="ptable-full">
+            <div class="tr"><div class="tk">Минимальный тираж</div><div class="tv">от 50 шт</div></div>
+            <div class="tr"><div class="tk">Максимальный формат тиснения</div><div class="tv">320 × 480 мм</div></div>
+            <div class="tr"><div class="tk">Виды фольги</div><div class="tv">золото, серебро, цветной металлик, голография, матовая, пигментная</div></div>
+            <div class="tr"><div class="tk">Минимальная толщина линии</div><div class="tv">0,5 мм</div></div>
+            <div class="tr"><div class="tk">Минимальный кегль шрифта</div><div class="tv">от 6 пт</div></div>
+            <div class="tr"><div class="tk">Материалы</div><div class="tv">дизайнерская бумага и картон от 250 г</div></div>
+            <div class="tr"><div class="tk">Совмещение эффектов</div><div class="tv">фольга + конгрев в один прогон</div></div>
+          </div>
+        </div>
+
+        <div class="tabpanel" data-panel="detail">
+          <div class="article">
+            <div class="src">Полные требования · тянется из раздела «Требования к макетам»</div>
+            <h3>Поля, вылеты и безопасная зона</h3>
+            <div class="pair">
+              <div class="imgph"><div class="st-ok">✓ Правильно</div></div>
+              <div class="imgph"><div class="st-no">✕ Неправильно</div></div>
+            </div>
+            <h3>Слой под фольгу</h3>
+            <ol>
+              <li>Отдельный слой «Foil», заливка 100%</li>
+              <li>Минимальная толщина линии — 0,5 мм</li>
+              <li>Мелкий текст — от 6 пт, без тонких засечек</li>
+            </ol>
+            <div class="pair">
+              <div class="imgph"><div class="st-ok">✓ Подходит</div></div>
+              <div class="imgph"><div class="st-no">✕ Не подходит</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="files">
+          <h4>Готовые материалы</h4>
+          <div class="fnote">Скачайте и соберите макет без ошибок:</div>
+          <div class="frow"><span class="fname">Пример правильного макета</span><span class="ext">PDF</span><span class="dl">Скачать</span></div>
+          <div class="frow"><span class="fname">Шаблон: поля + слой под фольгу</span><span class="ext">AI, PDF</span><span class="dl">Скачать</span></div>
+          <div class="frow"><span class="fname">Требования к тиснению</span><span class="ext">PDF</span><span class="dl">Скачать</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="usl-faq" id="faq">
+      <div class="wrap">
+        <div class="sec-head"><h2>Частые вопросы</h2></div>
+        <details class="acc" open><summary>Чем тиснение отличается от печати золотой краской?</summary><p>Тиснение — это перенос металлизированной фольги под давлением и температурой. В отличие от краски, оно даёт настоящий металлический блеск, рельеф и стойкость к истиранию.</p></details>
+        <details class="acc"><summary>Какой минимальный тираж?</summary><p>От 50 штук. На меньших тиражах стоимость за штуку выше из-за подготовки штампа.</p></details>
+        <details class="acc"><summary>Нужен ли отдельный макет под фольгу?</summary><p>Да. Зону тиснения выносят отдельным слоем и заливают плашкой 100% Magenta или spot-цветом. Мы пришлём шаблон.</p></details>
+        <details class="acc"><summary>Можно ли совместить фольгу и конгрев?</summary><p>Да, фольга и конгрев выполняются в один прогон — получается объёмный блестящий элемент.</p></details>
+        <details class="acc"><summary>На каких материалах делается тиснение?</summary><p>Лучше всего на дизайнерской бумаге и картоне от 250 г. Подойдём к выбору материала под ваш проект.</p></details>
+      </div>
+    </section>
+
+    <!-- ГДЕ ПРИМЕНЯЕТСЯ -->
+    <section class="usl-prod" id="products">
+      <div class="wrap">
+        <div class="sec-head"><h2>Где применяется тиснение</h2></div>
+        <div class="pcards">
+          <a class="pc"><div class="pcm"></div><div class="pcb"><b>Визитки</b><span>Премиальные и с фольгой</span></div></a>
+          <a class="pc"><div class="pcm"></div><div class="pcb"><b>Обложки каталогов</b><span>Твёрдый и мягкий переплёт</span></div></a>
+          <a class="pc"><div class="pcm"></div><div class="pcb"><b>Упаковка</b><span>Коробки и пакеты</span></div></a>
+          <a class="pc"><div class="pcm"></div><div class="pcb"><b>Открытки</b><span>Поздравительные и бизнес</span></div></a>
+          <a class="pc"><div class="pcm"></div><div class="pcb"><b>Папки</b><span>Презентационные</span></div></a>
+          <a class="pc"><div class="pcm"></div><div class="pcb"><b>Приглашения</b><span>Свадебные и корпоративные</span></div></a>
+          <a class="pc"><div class="pcm"></div><div class="pcb"><b>Сертификаты</b><span>Дипломы и грамоты</span></div></a>
+          <a class="pc"><div class="pcm"></div><div class="pcb"><b>Этикетки</b><span>Для премиум-продукции</span></div></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- С ЧЕМ СОЧЕТАЕТСЯ -->
+    <section class="usl-combo">
+      <div class="wrap">
+        <div class="sec-head"><h2>С чем сочетается тиснение</h2></div>
+        <div class="chips">
+          <a class="chip">Конгрев <i class="arr-ico"></i></a>
+          <a class="chip">Выборочный УФ-лак <i class="arr-ico"></i></a>
+          <a class="chip">Ламинация soft-touch <i class="arr-ico"></i></a>
+          <a class="chip">Каширование <i class="arr-ico"></i></a>
+          <a class="chip">Высечка <i class="arr-ico"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ОТЗЫВЫ -->
+    <section class="usl-rev">
+      <div class="wrap">
+        <div class="sec-head"><h2>Отзывы</h2></div>
+        <div class="revs">
+          <div class="rev"><div class="stars">★★★★★</div><p>Заказывали визитки с золотым тиснением — выглядят дорого, клиенты отмечают. Сделали точно в срок.</p><div class="who"><div class="av"></div><div><b>Анна К.</b><span>студия дизайна</span></div></div></div>
+          <div class="rev"><div class="stars">★★★★★</div><p>Обложки каталога с конгревом и фольгой — уровень полиграфии супер. Помогли с макетом.</p><div class="who"><div class="av"></div><div><b>Дмитрий М.</b><span>мебельный бренд</span></div></div></div>
+          <div class="rev"><div class="stars">★★★★★</div><p>Упаковка с серебряным тиснением — то что нужно для премиум-линейки. Рекомендую.</p><div class="who"><div class="av"></div><div><b>Ольга В.</b><span>косметика</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- СТАТЬИ -->
+    <section class="usl-art">
+      <div class="wrap">
+        <div class="sec-head"><h2>Статьи</h2></div>
+        <div class="arts">
+          <a class="art"><div class="am"></div><div class="ab"><div class="meta">Блог · 5 мин</div><h3>Виды тиснения: где применять каждый</h3></div></a>
+          <a class="art"><div class="am"></div><div class="ab"><div class="meta">Блог · 4 мин</div><h3>Как подготовить макет под фольгу</h3></div></a>
+          <a class="art"><div class="am"></div><div class="ab"><div class="meta">Блог · 6 мин</div><h3>Фольга и конгрев: как сочетать эффекты</h3></div></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="usl-final">
+      <div class="wrap">
+        <div class="cta-box">
+          <div>
+            <h2>Рассчитайте свой тираж за 1 минуту</h2>
+            <p>Оставьте заявку — подберём вид тиснения, материал и рассчитаем стоимость под ваш проект.</p>
+          </div>
+          <button class="btn btn-primary tb-cta">Оставить заявку на расчёт</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (упрощённый) -->
+  <footer class="usl-foot">
+    <div class="wrap">
+      <div class="fcols">
+        <div>
+          <h5>MDMprint</h5>
+          <p style="color:#9a9da3;font-size:13.5px;max-width:280px">Типография полного цикла: печать, постпечать и брендирование под ключ.</p>
+        </div>
+        <div>
+          <h5>Услуги</h5>
+          <a href="#">Тиснение</a><a href="#">Ламинация</a><a href="#">УФ-лак</a><a href="#">Конгрев</a>
+        </div>
+        <div>
+          <h5>Каталог</h5>
+          <a href="#">Визитки</a><a href="#">Упаковка</a><a href="#">Сувениры</a><a href="#">Наклейки</a>
+        </div>
+        <div>
+          <h5>Контакты</h5>
+          <a href="tel:+74951234567">+7 (495) 123-45-67</a><a href="mailto:info@mdmprint.ru">info@mdmprint.ru</a>
+        </div>
+      </div>
+      <div class="fbot">© 2026 MDMprint. Все права защищены.</div>
+    </div>
+  </footer>
+
+<script>
+  const mega = document.getElementById('mega');
+  const catbtn = document.getElementById('catbtn');
+  const hcat = document.getElementById('hcat');
+  const overlay = document.getElementById('overlay');
+  const rail = document.getElementById('rail');
+  const ris = [...rail.querySelectorAll('.ri')];
+  const panels = [...document.querySelectorAll('.panel')];
+  const quick = [...document.querySelectorAll('.quick a[data-open]')];
+
+  function showSec(sec){
+    panels.forEach(p=>p.classList.toggle('show', p.dataset.sec===sec));
+    ris.forEach(r=>r.classList.toggle('active', r.dataset.sec===sec));
+    quick.forEach(a=>a.classList.toggle('active', a.dataset.open===sec));
+    document.getElementById('pane').scrollTop = 0;
+  }
+  function openMega(sec){
+    showSec(sec!==undefined ? sec : '0');
+    mega.classList.add('open');
+    catbtn.classList.add('active');
+    hcat.classList.add('active');
+    overlay.classList.add('show');
+  }
+  function closeMega(){
+    mega.classList.remove('open');
+    catbtn.classList.remove('active');
+    hcat.classList.remove('active');
+    overlay.classList.remove('show');
+    showSec('0');                                   // сброс панелей/рельсы к разделу по умолчанию
+    quick.forEach(a=>a.classList.remove('active'));  // ...после сброса гасим подсветку таба (showSec её ставит)
+  }
+
+  catbtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    mega.classList.contains('open') ? closeMega() : openMega();
+  });
+  hcat.addEventListener('click', e=>{
+    e.stopPropagation();
+    mega.classList.contains('open') ? closeMega() : openMega();
+  });
+
+  ris.forEach(r=>{
+    r.addEventListener('mouseenter', ()=>showSec(r.dataset.sec));
+    r.addEventListener('click', ()=>showSec(r.dataset.sec));
+  });
+
+  quick.forEach(a=>{
+    a.addEventListener('click', e=>{e.preventDefault();e.stopPropagation();openMega(a.dataset.open);});
+  });
+
+  mega.addEventListener('click', e=>e.stopPropagation());
+  overlay.addEventListener('click', closeMega);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeMega(); });
+
+  // опции (табы): раскрытие «ещё»
+  document.querySelectorAll('.tabs .tab-more').forEach(m=>{
+    m.addEventListener('click', e=>{ e.stopPropagation(); m.closest('.tabs').classList.add('expanded'); });
+  });
+
+  // фикс-шапка: класс .scrolled при прокрутке (демо уменьшения).
+  // Гистерезис: включаем при >80px, выключаем при <20px — мёртвая зона убирает мерцание у границы.
+  // В уменьшенном состоянии поле поиска уже — подменяем плейсхолдер на короткий, чтобы он влезал.
+  const searchInput = document.querySelector('.search input');
+  const phFull = searchInput ? searchInput.placeholder : '';
+  const phShort = 'Поиск по 2000+ услугам…';
+  let headShrunk = false;
+  const onScroll = () => {
+    const y = window.scrollY;
+    if(!headShrunk && y > 80){ headShrunk = true; document.body.classList.add('scrolled'); if(searchInput) searchInput.placeholder = phShort; }
+    else if(headShrunk && y < 20){ headShrunk = false; document.body.classList.remove('scrolled'); if(searchInput) searchInput.placeholder = phFull; }
+  };
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // почта в топбаре: клик копирует адрес в буфер + подсказка «Скопировано ✓»
+  (function(){
+    const m = document.getElementById('tbMail');
+    if(!m) return;
+    m.addEventListener('click', e=>{
+      e.preventDefault();
+      const mail = m.dataset.mail || m.textContent.trim();
+      const orig = m.dataset.hint;
+      const done = ()=>{ m.dataset.hint='Скопировано ✓'; setTimeout(()=>{ m.dataset.hint=orig; }, 1500); };
+      if(navigator.clipboard) navigator.clipboard.writeText(mail).then(done, done); else done();
+    });
+  })();
+
+  // ===== ПОИСК: дропдаун с подсказками (состояния: empty / results / none) =====
+  (function(){
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('searchInput');
+    const drop = document.getElementById('searchDrop');
+    const list = document.getElementById('sdList');
+    const qEl = document.getElementById('sdQ');
+    const clearBtn = document.getElementById('searchClear');
+    if(!form || !input || !drop) return;
+
+    // демо-датасет подсказок: [услуга, раздел]
+    // поиск по всему сайту: услуги + разделы каталога + контент (статьи/портфолио/новости) + страницы
+    const DATA = [
+      // услуги печати
+      ['Визитки','Услуга'],['Премиальные визитки','Услуга'],['Визитки с тиснением','Услуга'],['Визитки с фольгой','Услуга'],['Многослойные визитки','Услуга'],['Срочные визитки','Услуга'],
+      ['Листовки','Услуга'],['Флаеры','Услуга'],['Буклеты','Услуга'],['Брошюры','Услуга'],['Каталоги','Услуга'],['Блокноты','Услуга'],['Календари 2027','Услуга'],['Плакаты','Услуга'],['Постеры','Услуга'],
+      ['Наклейки','Услуга'],['Стикерпаки','Услуга'],['Наклейки УФ ДТФ','Услуга'],['Этикетки для Wildberries','Услуга'],
+      ['Коробки крышка-дно','Услуга'],['Подарочные коробки','Услуга'],['Бумажные пакеты','Услуга'],
+      ['Баннеры','Услуга'],['Roll-Up','Услуга'],
+      ['Футболки с логотипом','Услуга'],['Кружки с логотипом','Услуга'],['Корпоративные наборы','Услуга'],
+      ['Карты Таро','Услуга'],['Пластиковые карты','Услуга'],['Тиснение фольгой','Услуга'],['Ламинация','Услуга'],
+      // разделы каталога (3-й элемент = sec → открыть мегаменю)
+      ['Полиграфия','Раздел','1'],['Наклейки и стикеры','Раздел','4'],['Широкоформатная печать','Раздел','2'],['Упаковка и коробки','Раздел','5'],['Сувениры и мерч','Раздел','6'],['Карты и настольные игры','Раздел','3'],
+      // статьи / блог
+      ['Как выбрать бумагу для визиток','Статья'],['Чем офсет отличается от цифровой печати','Статья'],['Виды тиснения: где применять','Статья'],['Как подготовить макет к печати','Статья'],['Тренды упаковки 2027','Статья'],
+      // портфолио / кейсы
+      ['Кейс: брендбук для кофейни','Портфолио'],['Упаковка для косметики — кейс','Портфолио'],['Мерч для IT-компании','Портфолио'],['Каталог для мебельного бренда','Портфолио'],
+      // новости
+      ['Запустили ПУР-склейку','Новость'],['Акция на визитки в июне','Новость'],['График работы в праздники','Новость'],
+      // страницы сайта
+      ['Доставка','Страница'],['Оплата','Страница'],['Контакты','Страница'],['Требования к макетам','Страница'],['О компании','Страница'],['Вакансии','Страница'],['Портфолио','Страница'],['Блог','Страница'],['Новости','Страница']
+    ];
+    // тип → css-класс тега и приоритет в выдаче (коммерческое выше контента)
+    const TYPE_CLS = {'Услуга':'t-svc','Раздел':'t-sec','Статья':'t-art','Портфолио':'t-port','Новость':'t-news','Страница':'t-page'};
+    const TYPE_RANK = {'Услуга':0,'Раздел':0,'Статья':1,'Портфолио':1,'Новость':2,'Страница':2};
+    const esc = s => s.replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+    function setState(s){ drop.dataset.state = s; }
+    function open(){ form.classList.add('s-open'); document.body.classList.add('search-open'); if(typeof closeMega==='function') closeMega(); }
+    function close(){ form.classList.remove('s-open'); document.body.classList.remove('search-open'); }
+
+    function render(raw){
+      const q = (raw||'').trim();
+      form.classList.toggle('has-val', q.length>0);
+      if(!q){ setState('empty'); return; }
+      const ql = q.toLowerCase();
+      const m = DATA.filter(d=>d[0].toLowerCase().includes(ql));
+      m.sort((a,b)=>{
+        const aw = a[0].toLowerCase().startsWith(ql)?0:1, bw = b[0].toLowerCase().startsWith(ql)?0:1;
+        return aw-bw || (TYPE_RANK[a[1]]-TYPE_RANK[b[1]]) || a[0].length-b[0].length;
+      });
+      const top = m.slice(0,12);
+      if(!top.length){ setState('none'); return; }
+      qEl.textContent = q;
+      list.innerHTML = top.map(d=>{
+        const t = d[0], type = d[1], i = t.toLowerCase().indexOf(ql);
+        const tx = esc(t.slice(0,i)) + '<mark>' + esc(t.slice(i,i+q.length)) + '</mark>' + esc(t.slice(i+q.length));
+        const sec = d[2] ? ' data-sec="'+esc(d[2])+'"' : '';
+        return '<li class="sd-row" data-t="'+esc(t)+'"'+sec+'><span class="sd-tx">'+tx+'</span><span class="sd-tag '+TYPE_CLS[type]+'">'+esc(type)+'</span><span class="arr-ico"></span></li>';
+      }).join('');
+      setState('results');
+    }
+
+    input.addEventListener('focus', ()=>{ open(); render(input.value); });
+    input.addEventListener('input', ()=>{ open(); render(input.value); });
+    input.addEventListener('keydown', e=>{ if(e.key==='Escape'){ close(); input.blur(); } });
+    document.addEventListener('click', e=>{ if(!form.contains(e.target)) close(); });
+
+    drop.addEventListener('click', e=>{
+      const cat = e.target.closest('.sd-cat');
+      if(cat){ e.preventDefault(); close(); input.blur(); if(typeof openMega==='function') openMega(cat.dataset.open); return; }
+      const chip = e.target.closest('.sd-chip');
+      if(chip){ input.value = chip.textContent.trim(); input.focus(); render(input.value); return; }
+      const row = e.target.closest('.sd-row');
+      if(row){
+        if(row.dataset.sec!==undefined){ close(); input.blur(); if(typeof openMega==='function') openMega(row.dataset.sec); return; } // раздел → открыть каталог
+        input.value = row.dataset.t; render(input.value); input.focus(); // прототип: тут был бы переход на страницу результата
+      }
+    });
+
+    clearBtn && clearBtn.addEventListener('click', ()=>{ input.value=''; input.focus(); render(''); });
+  })();
+
+  /* ── Модалки-лиды (обратный звонок + заявка): общая логика ── */
+  function setupLead(back, triggerSel){
+    if(!back) return;
+    const formWrap = back.querySelector('[data-role="form"]');
+    const doneWrap = back.querySelector('[data-role="done"]');
+    const form     = back.querySelector('form');
+    const phone    = back.querySelector('input[type="tel"]');
+    const pField   = phone.closest('.cbm-field');
+    const consent  = back.querySelector('input[data-role="consent"]');
+    const submit   = back.querySelector('button[type="submit"]');
+    const hp       = form.querySelector('.cbm-hp');
+    const fileInput = form.querySelector('input[type="file"]');
+    const fileLabel = form.querySelector('[data-file-label]');
+    const fileLabelText = fileLabel ? fileLabel.textContent : '';
+    let lastFocus = null;
+
+    function updateFile(){
+      if(!fileLabel) return;
+      const n = fileInput.files.length;
+      fileLabel.textContent = n ? (n===1 ? fileInput.files[0].name : 'Выбрано файлов: '+n) : fileLabelText;
+    }
+    fileInput && fileInput.addEventListener('change', updateFile);
+
+    const digits = v => (v||'').replace(/\D/g,'');
+    function norm(v){ let d = digits(v); if(d[0]==='8') d='7'+d.slice(1); if(d && d[0]!=='7') d='7'+d; return d.slice(0,11); }
+    function phoneValid(){ const d = norm(phone.value); return d.length===11 && d[0]==='7'; }
+    const emailOk = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v||'').trim());
+    function formValid(){
+      if(!phoneValid() || !consent.checked) return false;
+      // все прочие поля с атрибутом required (имя, email, способ связи…)
+      for(const el of form.querySelectorAll('[required]')){
+        if(el===phone || el===consent) continue;
+        if(el.type==='checkbox'){ if(!el.checked) return false; continue; }
+        if(!el.value.trim()) return false;
+        if(el.type==='email' && !emailOk(el.value)) return false;
+      }
+      return true;
+    }
+    function refresh(){ submit.disabled = !formValid(); }
+
+    // лёгкое форматирование в +7 (XXX) XXX-XX-XX
+    function fmt(v){
+      const d = norm(v);
+      if(!d) return '';
+      let r = '+7';
+      if(d.length>1) r += ' (' + d.slice(1,4);
+      if(d.length>=4) r += ')';
+      if(d.length>=5) r += ' ' + d.slice(4,7);
+      if(d.length>=8) r += '-' + d.slice(7,9);
+      if(d.length>=10) r += '-' + d.slice(9,11);
+      return r;
+    }
+
+    function openModal(e){
+      if(e) e.preventDefault();
+      lastFocus = document.activeElement;
+      formWrap.hidden = false; doneWrap.hidden = true;
+      back.classList.add('show'); back.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+      if(typeof closeMega==='function') closeMega();
+      setTimeout(()=>phone.focus(), 60);
+    }
+    function closeModal(){
+      back.classList.remove('show'); back.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      form.reset(); pField.classList.remove('invalid'); refresh();
+      if(lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    document.querySelectorAll(triggerSel).forEach(o=>o.addEventListener('click', openModal));
+    back.querySelectorAll('[data-cbm-close]').forEach(c=>c.addEventListener('click', closeModal));
+    back.addEventListener('click', e=>{ if(e.target===back) closeModal(); });
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape' && back.classList.contains('show')) closeModal(); });
+
+    phone.addEventListener('input', ()=>{ phone.value = fmt(phone.value); pField.classList.remove('invalid'); });
+    phone.addEventListener('blur', ()=>{ if(phone.value && !phoneValid()) pField.classList.add('invalid'); });
+    form.addEventListener('input', refresh);
+    form.addEventListener('change', refresh);
+
+    form.addEventListener('submit', e=>{
+      e.preventDefault();
+      if(hp && hp.value){ closeModal(); return; }          // бот попался в honeypot — тихо закрываем
+      if(!formValid()){ if(!phoneValid()){ pField.classList.add('invalid'); phone.focus(); } return; }
+      // на реале: POST на бэкенд { phone: norm(phone.value), + прочие поля формы,
+      //   consent:true, page: location.href, ts: Date.now() } + серверная валидация/антиспам/rate-limit
+      formWrap.hidden = true; doneWrap.hidden = false;
+    });
+
+    refresh();
+  }
+  setupLead(document.getElementById('cbmBack'), '.cb');       // обратный звонок
+  setupLead(document.getElementById('reqBack'), '.tb-cta');   // оставить заявку
+
+  // ===== СТРАНИЦА УСЛУГИ: табы «Требования к макету» =====
+  (function(){
+    const bar = document.querySelector('.usl-req .tabbar');
+    if(!bar) return;
+    const btns = [...bar.querySelectorAll('.tabbtn')];
+    const panels = [...document.querySelectorAll('.usl-req .tabpanel')];
+    btns.forEach(b=>b.addEventListener('click', ()=>{
+      btns.forEach(x=>x.classList.toggle('active', x===b));
+      panels.forEach(p=>p.classList.toggle('active', p.dataset.panel===b.dataset.tab));
+    }));
+  })();
+
+  // ===== СТРАНИЦА УСЛУГИ: подсветка активного пункта под-навигации при скролле =====
+  (function(){
+    const links = [...document.querySelectorAll('.usl-subnav a')];
+    if(!links.length) return;
+    const map = links.map(a=>({a, sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
+    const spy = () => {
+      const y = window.scrollY + 160;
+      let cur = map[0];
+      for(const m of map){ if(m.sec.offsetTop <= y) cur = m; }
+      links.forEach(a=>a.classList.toggle('active', a===cur.a));
+    };
+    window.addEventListener('scroll', spy, {passive:true});
+    spy();
+  })();
+</script>
+</body>
+</html>
