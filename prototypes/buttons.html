@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кнопки — MDMprint UI kit</title>
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/fonts.css">
+<link rel="stylesheet" href="../assets/css/kit.css">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--surface-subtle);color:var(--text-primary);font-family:var(--font-body);
+    font-size:var(--t-body);line-height:var(--t-body-lh)}
+  .page{max-width:1000px;margin:0 auto;padding:64px 24px 120px}
+  .page > header{margin-bottom:56px}
+  .page > header p{color:var(--text-secondary);max-width:640px;margin:12px 0 0}
+
+  section{background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius-outside);
+    padding:32px;margin-bottom:24px}
+  section > h2{margin:0 0 4px}
+  section > .note{color:var(--text-secondary);font-size:var(--t-small);line-height:var(--t-small-lh);margin:0 0 28px}
+
+  /* таблица-сетка: подпись строки слева, образцы справа */
+  .row{display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:center;
+    padding:20px 0;border-top:1px solid var(--border)}
+  .row:first-of-type{border-top:none}
+  .row > .k{font-size:var(--t-small);line-height:1.35}
+  .row > .k b{display:block;font-weight:600}
+  .row > .k span{color:var(--text-tertiary);font-size:var(--t-caption)}
+  .row > .v{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+  .dark-bg{background:var(--surface-dark);border-radius:var(--radius-md);padding:20px;margin-top:4px}
+
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+    background:var(--surface-subtle);border:1px solid var(--border);border-radius:var(--radius-inside);padding:1px 5px}
+  .usage{margin:28px 0 0;padding:20px 0 0;border-top:1px solid var(--border);
+    font-size:var(--t-small);line-height:1.7;color:var(--text-secondary)}
+  .usage b{color:var(--text-primary);font-weight:600}
+  .warn{background:#fff8e1;border:1px solid #ffe08a;border-radius:var(--radius-md);
+    padding:14px 16px;font-size:var(--t-small);line-height:1.6;margin-top:28px}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <span class="mk-eyebrow">MDMprint · UI kit</span>
+    <h1 class="mk-h1" style="margin-top:8px">Кнопки</h1>
+    <p>Форма — пилюля, едина для всего сайта. Четыре вида, три размера. Всё на токенах
+       из <code>tokens.css</code>, стили — <code>kit.css</code>, класс <code>.mk-btn</code>.</p>
+  </header>
+
+  <!-- ВИДЫ -->
+  <section>
+    <h2 class="mk-h3">Виды</h2>
+    <p class="note">Вид выбирается по весу действия, не по вкусу. На экране — одна primary.</p>
+
+    <div class="row">
+      <div class="k"><b>Primary</b><span>главное действие</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--primary">Оставить заявку</button>
+        <button class="mk-btn mk-btn--primary">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M2 8h12M2 12h8"/></svg>
+          С иконкой
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>Dark</b><span>действие интерфейса</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--dark">Найти</button>
+        <button class="mk-btn mk-btn--dark">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+          Каталог
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>Ghost</b><span>вторичное действие</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--ghost">Заказать образец</button>
+        <button class="mk-btn mk-btn--ghost">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/><path d="M5.5 5h5M5.5 8h5M5.5 11h2.5"/></svg>
+          Калькулятор
+          <span class="mk-btn__badge">−5%</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>Link</b><span>третьестепенное</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--link">Заказать звонок</button>
+      </div>
+    </div>
+
+    <div class="usage">
+      <b>Где применяется.</b>
+      Primary — CTA в hero, финальный CTA, отправка формы, «Оставить заявку» в топбаре.
+      Dark — «Каталог», «Найти» в поиске.
+      Ghost — «Заказать образец», «Калькулятор», второй CTA рядом с primary.
+      Link — «Заказать звонок» и всё, что не должно перетягивать внимание.
+    </div>
+  </section>
+
+  <!-- РАЗМЕРЫ -->
+  <section>
+    <h2 class="mk-h3">Размеры</h2>
+    <p class="note">Три штуки. Размер задаёт контейнер, а не важность действия.</p>
+
+    <div class="row">
+      <div class="k"><b>lg — 48px</b><span>по умолчанию</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--primary">Оставить заявку</button>
+        <button class="mk-btn mk-btn--ghost">Заказать образец</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>md — 36px</b><span><code>.mk-btn--md</code></span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--dark mk-btn--md">Каталог</button>
+        <button class="mk-btn mk-btn--ghost mk-btn--md">Калькулятор <span class="mk-btn__badge">−5%</span></button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>sm — 32px</b><span><code>.mk-btn--sm</code></span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--primary mk-btn--sm">Оставить заявку</button>
+        <button class="mk-btn mk-btn--dark mk-btn--sm">Найти</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>Только иконка</b><span><code>.mk-btn--icon</code></span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--ghost mk-btn--icon" aria-label="Закрыть">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>
+        </button>
+        <button class="mk-btn mk-btn--dark mk-btn--icon mk-btn--md" aria-label="Играть">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l8 5-8 5z"/></svg>
+        </button>
+        <button class="mk-btn mk-btn--primary mk-btn--icon mk-btn--sm" aria-label="Дальше">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3l5 5-5 5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="usage">
+      <b>Правило.</b> lg — контент страницы. md — панель шапки (высота 36 при полосе 54).
+      sm — топбар (высота 32 при полосе 40) и кнопка внутри поля поиска.
+    </div>
+  </section>
+
+  <!-- СОСТОЯНИЯ -->
+  <section>
+    <h2 class="mk-h3">Состояния</h2>
+    <p class="note">Наведите мышь — живой hover. Ниже те же состояния зафиксированы классами
+      <code>.is-hover</code> / <code>.is-active</code>, чтобы их было видно на скриншоте.</p>
+
+    <div class="row">
+      <div class="k"><b>Primary</b><span>#FFC100 → #E6A800 → #CC9E00</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--primary">Default</button>
+        <button class="mk-btn mk-btn--primary is-hover">Hover</button>
+        <button class="mk-btn mk-btn--primary is-active">Active</button>
+        <button class="mk-btn mk-btn--primary is-disabled">Disabled</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>Dark</b><span>#222220 → #000 → #3A3A38</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--dark">Default</button>
+        <button class="mk-btn mk-btn--dark is-hover">Hover</button>
+        <button class="mk-btn mk-btn--dark is-active">Active</button>
+        <button class="mk-btn mk-btn--dark is-disabled">Disabled</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>Ghost</b><span>рамка → чёрная, фон → #F6F6F4</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--ghost">Default</button>
+        <button class="mk-btn mk-btn--ghost is-hover">Hover</button>
+        <button class="mk-btn mk-btn--ghost is-active">Active</button>
+        <button class="mk-btn mk-btn--ghost is-disabled">Disabled</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>Link</b><span>пунктир → сплошная</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--link">Default</button>
+        <button class="mk-btn mk-btn--link is-hover">Hover</button>
+        <button class="mk-btn mk-btn--link is-disabled">Disabled</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="k"><b>Focus</b><span>только с клавиатуры</span></div>
+      <div class="v">
+        <button class="mk-btn mk-btn--primary">Нажмите Tab →</button>
+        <button class="mk-btn mk-btn--ghost">…и ещё раз</button>
+      </div>
+    </div>
+
+    <div class="usage">
+      <b>Focus-ring</b> — 2px <code>--brand-dark</code> с отступом 2px, показывается только при
+      навигации с клавиатуры (<code>:focus-visible</code>), мышь его не вызывает.
+      <b>Disabled</b> — плоский серый <code>--surface-gray</code> для всех видов (не прозрачность:
+      полупрозрачный жёлтый читается как активная кнопка). Клики не проходят.
+    </div>
+  </section>
+
+  <!-- НА ТЁМНОМ -->
+  <section>
+    <h2 class="mk-h3">На тёмном фоне</h2>
+    <p class="note">Финальный CTA-блок и футер. Dark-кнопка здесь не работает — только primary и ghost-инверсия.</p>
+    <div class="dark-bg">
+      <div class="v" style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="mk-btn mk-btn--primary">Оставить заявку</button>
+        <button class="mk-btn mk-btn--ghost" style="background:transparent;border-color:#55554f;color:#fff">Заказать образец</button>
+      </div>
+    </div>
+    <div class="warn">
+      Ghost на тёмном пока задан инлайном. Если блок «финальный CTA» останется тёмным —
+      завести <code>.mk-btn--ghost-inverse</code> в ките.
+    </div>
+  </section>
+
+  <!-- РАСХОЖДЕНИЯ -->
+  <section>
+    <h2 class="mk-h3">Что не сходится с прототипом</h2>
+    <p class="note">Зафиксировано, не исправлено. Требует решения.</p>
+    <div class="usage" style="border:none;padding-top:0;margin-top:0">
+      <b>1. Жёлтый.</b> Шапка красит CTA в <code>#FFC829</code>, бренд-токен — <code>#FFC100</code>.
+      Кит использует токен.<br>
+      <b>2. Радиус.</b> <code>usluga.html:26</code> объявляет локальный <code>--radius-pill:40px</code>
+      и затирает токен <code>999px</code>. На высоте 48 разница не видна, на 32 — видна.<br>
+      <b>3. Высоты 28 и 40.</b> Встречаются по одному разу (<code>.usl .btn-sm</code>, кнопка в модалке).
+      В системе их нет — при миграции схлопнуть в 32/36.<br>
+      <b>4. Кнопки прототипа</b> (<code>.btn</code>, <code>.catbtn</code>, <code>.calc</code>, <code>.s-go</code>,
+      <code>.tb-cta</code>) пока живут своим CSS. Миграция на <code>.mk-btn</code> — отдельный шаг.
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

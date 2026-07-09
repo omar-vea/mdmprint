@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* ---- Раскладка ---- */
-.mk-container{max-width:var(--container);margin:0 auto;padding:0 var(--container-pad)}
+.mk-container{width:min(100% - var(--container-pad) * 2, var(--container));margin-inline:auto}
 .mk-section{padding:var(--section-y) 0}
 
 /* ---- Типографика ---- */
@@ -21,32 +21,359 @@
 .mk-caption{font-size:var(--t-caption);line-height:var(--t-caption-lh);color:var(--text-secondary)}
 .mk-label{font-size:var(--t-label);line-height:var(--t-label-lh);letter-spacing:var(--t-label-ls);
   text-transform:uppercase;font-weight:500;font-family:var(--font-body)}
-.mk-eyebrow{display:inline-block;font-family:var(--font-body);font-size:var(--t-label);font-weight:700;
-  letter-spacing:.8px;text-transform:uppercase;color:var(--brand-dark)}
+.mk-eyebrow{display:inline-block;font-family:var(--font-body);font-size:var(--t-label);font-weight:500;
+  line-height:var(--t-label-lh);letter-spacing:var(--t-label-ls);text-transform:uppercase;color:var(--brand-text)}
 
-/* ---- Кнопки ---- */
-.mk-btn{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 24px;border-radius:var(--radius-pill);
-  font-family:var(--font-body);font-size:15px;font-weight:600;line-height:1;cursor:pointer;border:1.5px solid transparent;
-  transition:background .15s,border-color .15s,color .15s;white-space:nowrap;text-decoration:none}
+/* ---- Кнопки ------------------------------------------------
+   Форма: пилюля (--radius-pill) — единая для всего сайта.
+   Размеры: lg 48 (контент/hero) · md 36 (шапка) · sm 32 (топбар).
+   Виды:    primary (жёлтая) · dark (чёрная) · ghost (белая с рамкой) · link (текст).
+   Состояния: hover / active / focus-visible / disabled.
+   Классы .is-hover, .is-active — только для витрины (buttons.html).
+   ------------------------------------------------------------ */
+.mk-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  height:48px;padding:0 24px;border-radius:var(--radius-pill);
+  font-family:var(--font-body);font-size:var(--t-button);font-weight:var(--t-button-w);line-height:var(--t-button-lh);
+  cursor:pointer;border:1px solid transparent;
+  transition:background .15s,border-color .15s,color .15s,opacity .15s;white-space:nowrap;text-decoration:none}
+.mk-btn:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
+/* disabled — плоский серый, а не прозрачность: полупрозрачный жёлтый читается как активная кнопка */
+/* display:inline-flex перебивает [hidden] — возвращаем */
+.mk-btn[hidden]{display:none}
+.mk-btn:disabled,.mk-btn.is-disabled{background:var(--surface-gray);color:var(--text-tertiary);
+  border-color:transparent;cursor:not-allowed;pointer-events:none}
+.mk-btn--ghost:disabled,.mk-btn--ghost.is-disabled{background:transparent;border-color:var(--border)}
+.mk-btn--link:disabled,.mk-btn--link.is-disabled{background:none;border-bottom-color:var(--border)}
+
 .mk-btn--primary{background:var(--brand);color:var(--on-brand)}
-.mk-btn--primary:hover{background:var(--brand-hover)}
-.mk-btn--ghost{background:var(--surface-card);border-color:var(--border-strong);color:var(--text-primary)}
-.mk-btn--ghost:hover{border-color:var(--text-primary)}
+.mk-btn--primary:hover,.mk-btn--primary.is-hover{background:var(--brand-hover)}
+.mk-btn--primary:active,.mk-btn--primary.is-active{background:var(--brand-dark)}
+
 .mk-btn--dark{background:var(--surface-dark);color:var(--text-on-dark)}
-.mk-btn--dark:hover{background:#000}
-.mk-btn--sm{height:40px;padding:0 18px;font-size:14px}
-.mk-btn--lg{height:54px;padding:0 30px;font-size:16px}
+.mk-btn--dark:hover,.mk-btn--dark.is-hover{background:#000}
+.mk-btn--dark:active,.mk-btn--dark.is-active{background:var(--surface-dark-2)}
+
+.mk-btn--ghost{background:var(--surface-card);border-color:var(--border);color:var(--text-primary)}
+.mk-btn--ghost:hover,.mk-btn--ghost.is-hover{border-color:var(--text-primary)}
+.mk-btn--ghost:active,.mk-btn--ghost.is-active{background:var(--surface-subtle);border-color:var(--text-primary)}
+
+/* ghost на тёмной поверхности (финальный CTA, тёмные карточки) */
+.mk-btn--ghost-inverse{background:transparent;border-color:var(--border-on-dark);color:var(--text-on-dark)}
+.mk-btn--ghost-inverse:hover,.mk-btn--ghost-inverse.is-hover{border-color:#fff}
+.mk-btn--ghost-inverse:active,.mk-btn--ghost-inverse.is-active{background:rgba(255,255,255,.08);border-color:#fff}
+
+/* текстовая — для второстепенных действий («Заказать звонок») */
+.mk-btn--link{height:auto;padding:0;background:none;border:none;color:var(--text-secondary);font-weight:400;
+  border-bottom:1px dashed var(--border-strong);border-radius:0}
+.mk-btn--link:hover,.mk-btn--link.is-hover{color:var(--text-primary);border-bottom-color:var(--text-primary)}
+
+.mk-btn--md{height:36px;padding:0 16px;font-size:13px}
+.mk-btn--sm{height:32px;padding:0 16px;font-size:13px}
+
+/* только иконка — квадрат по высоте размера */
+.mk-btn--icon{padding:0;width:48px}
+.mk-btn--icon.mk-btn--md{width:36px}
+.mk-btn--icon.mk-btn--sm{width:32px}
+.mk-btn svg{width:16px;height:16px;flex-shrink:0}
+
+/* бейдж внутри кнопки («−5%») */
+.mk-btn__badge{background:var(--brand);color:var(--on-brand);font-size:11px;font-weight:700;
+  padding:2px 6px;border-radius:var(--radius-inside);line-height:1.2}
 
 /* ---- Карточка ---- */
 .mk-card{background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius-outside)}
 .mk-card--subtle{background:var(--surface-subtle);border:none}
+.mk-card--gray{background:var(--surface-gray);border:none}
 .mk-card--dark{background:var(--surface-dark);color:var(--text-on-dark);border:none}
+/* заголовки на тёмной карточке наследуют её цвет */
+.mk-card--dark .mk-h1,.mk-card--dark .mk-h2,.mk-card--dark .mk-h3,.mk-card--dark .mk-h4{color:inherit}
+
+/* ---- Полоса доверия (цифра + подпись) ----
+   Белая полоса во всю ширину, контейнер внутри, разделители — линии на всю высоту. */
+.mk-statbar{background:var(--surface-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.mk-statbar__row{display:grid;grid-template-columns:repeat(4,1fr)}
+.mk-statbar__item{display:flex;flex-direction:column;gap:var(--sp-4);padding:var(--sp-32) var(--sp-24);min-width:0}
+.mk-statbar__item + .mk-statbar__item{border-left:1px solid var(--border)}
+.mk-statbar__item:first-child{padding-left:0}
+.mk-statbar__item:last-child{padding-right:0}
+.mk-statbar__value{font-family:var(--font-head);font-weight:700;text-transform:uppercase;color:var(--text-primary);
+  font-size:var(--t-h1);line-height:var(--t-h1-lh);letter-spacing:var(--t-h1-ls)}
+.mk-statbar__label{font-family:var(--font-body);font-weight:400;color:var(--text-secondary);
+  font-size:var(--t-small);line-height:var(--t-small-lh)}
+
+/* ---- Чек-лист (буллеты «✓ …») ---- */
+.mk-checklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--sp-8)}
+.mk-checklist li{display:flex;gap:var(--sp-10);align-items:flex-start;
+  font-family:var(--font-body);font-size:var(--t-body);line-height:var(--t-small-lh);color:var(--text-primary)}
+.mk-checklist li::before{content:"✓";color:var(--brand-text);font-weight:700;line-height:inherit;flex-shrink:0}
+
+/* ---- Плитка преимущества (иконка + заголовок + текст) ---- */
+.mk-tile{display:flex;flex-direction:column;gap:var(--sp-12);align-items:flex-start;
+  background:var(--brand-tint);border-radius:var(--radius-outside);padding:var(--sp-16)}
+.mk-tile__ico{width:24px;height:24px;border-radius:var(--radius-md);background:var(--brand);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;color:var(--on-brand)}
+.mk-tile__title{font-family:var(--font-head);font-weight:600;text-transform:uppercase;color:var(--text-primary);
+  font-size:var(--t-h4);line-height:var(--t-h4-lh);letter-spacing:var(--t-h4-ls);margin:0}
+.mk-tile__text{font-family:var(--font-body);color:var(--text-secondary);
+  font-size:var(--t-small);line-height:var(--t-small-lh);margin:0}
+
+/* ---- Прайс-лист ----
+   Ряд белых плашек с переносом. В каждой: услуга, срок, цена.
+   Радиус плашки меньше радиуса карточки-родителя (вложенный радиус). */
+.mk-pricelist{display:flex;flex-wrap:wrap;gap:var(--sp-16);width:100%}
+.mk-pcard{flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:var(--sp-4);
+  background:var(--surface-card);border-radius:var(--radius-md);padding:var(--sp-16)}
+.mk-pcard__name{font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);
+  color:var(--text-primary)}
+.mk-pcard__term{font-family:var(--font-body);font-size:var(--t-caption);line-height:var(--t-caption-lh);
+  color:var(--text-secondary)}
+.mk-pcard__val{font-family:var(--font-head);font-weight:700;text-transform:uppercase;color:var(--text-primary);
+  font-size:var(--t-h4);line-height:var(--t-h4-lh);letter-spacing:var(--t-h4-ls);margin-top:var(--sp-4)}
+
+/* ---- Лента с горизонтальной прокруткой ----
+   Нативный скролл + snap. Стрелки — вспомогательные: трекпад/колесо работают и без них.
+   --item-w задаёт, сколько карточек влезает в кадр. */
+.mk-scroller{position:relative}
+.mk-scroller__track{display:flex;gap:var(--sp-20);overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
+.mk-scroller__track::-webkit-scrollbar{display:none}
+.mk-scroller__track > *{flex:0 0 var(--item-w);scroll-snap-align:start}
+.mk-scroller__nav{position:absolute;top:var(--nav-top,50%);transform:translateY(-50%);z-index:2;
+  display:flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;
+  background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius-pill);
+  color:var(--text-primary);cursor:pointer;box-shadow:var(--shadow);
+  opacity:0;transition:opacity .2s,background .15s}
+.mk-scroller:hover .mk-scroller__nav,.mk-scroller__nav:focus-visible{opacity:1}
+.mk-scroller__nav:hover{background:var(--surface-subtle)}
+.mk-scroller__nav:disabled{opacity:0!important;pointer-events:none}
+.mk-scroller__nav--prev{left:-20px}
+.mk-scroller__nav--next{right:-20px}
+.mk-scroller__nav svg{width:18px;height:18px;display:block}
+@media (prefers-reduced-motion:reduce){.mk-scroller__track{scroll-behavior:auto}}
+
+/* ---- Медиа-карточка (фото 4:3 + тег + заголовок + текст) ----
+   Виды, статьи, продукты, портфолио — один компонент. */
+.mk-mcard{--mcard-aspect:4/3;display:flex;flex-direction:column;background:var(--surface-gray);
+  border-radius:var(--radius-outside);overflow:hidden;text-align:left}
+.mk-mcard--story{--mcard-aspect:9/16}
+/* фон НЕ задаём: сквозь прозрачные PNG должна просвечивать подложка карточки,
+   иначе при hover темнеет только тело. Для --bare подложки нет — фон там свой. */
+.mk-mcard__media{aspect-ratio:var(--mcard-aspect);position:relative;overflow:hidden}
+.mk-mcard__media img{width:100%;height:100%;object-fit:cover;display:block}
+/* фото снято на белом фоне — вычитаем подложку. НЕ применять к PNG с прозрачностью:
+   у прозрачных пикселей RGB=0 и darken зальёт их чёрным. */
+.mk-mcard--knockout .mk-mcard__media img{mix-blend-mode:darken}
+
+/* видео: play по центру + длительность в углу */
+.mk-mcard__play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:48px;height:48px;color:var(--brand);pointer-events:none;transition:transform .2s}
+.mk-mcard__play svg{width:100%;height:100%;display:block}
+.mk-mcard--video:hover .mk-mcard__play{transform:translate(-50%,-50%) scale(1.08)}
+.mk-mcard__dur{position:absolute;right:var(--sp-8);bottom:var(--sp-8);
+  background:rgba(34,34,32,.72);color:var(--text-on-dark);border-radius:var(--radius-inside);
+  padding:2px 6px;font-family:var(--font-body);font-size:11px;font-weight:500;line-height:1.4}
+
+/* без подложки: только медиа со скруглением, текст прямо на фоне секции */
+.mk-mcard--bare{background:none;border-radius:0;overflow:visible}
+.mk-mcard--bare .mk-mcard__media{border-radius:var(--radius-outside);background:var(--surface-gray)}
+.mk-mcard--bare .mk-mcard__body{padding:var(--sp-12) 0 0}
+
+/* кликабельная карточка: приподнимается, с подложкой — ещё и темнеет фон */
+.mk-mcard--link{border:none;padding:0;cursor:pointer;font:inherit;
+  transition:background .15s,transform .2s}
+.mk-mcard--link:hover{background:var(--surface-gray-2);transform:translateY(-2px)}
+.mk-mcard--bare.mk-mcard--link:hover{background:none}
+.mk-mcard--link:focus-visible{outline:2px solid var(--brand-dark);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.mk-mcard--link{transition:none}
+  .mk-mcard--link:hover{transform:none}}
+.mk-mcard__body{display:flex;flex-direction:column;gap:var(--sp-8);
+  padding:var(--sp-16) var(--sp-20) var(--sp-20)}
+.mk-mcard__tag{font-family:var(--font-body);font-weight:500;text-transform:uppercase;color:var(--brand-text);
+  font-size:var(--t-label);line-height:var(--t-label-lh);letter-spacing:var(--t-label-ls)}
+/* Заголовок карточки.
+   По умолчанию НАБОРНЫЙ (Text/Body Strong) — уникальный текст, который читают: имя работы, статьи.
+   Модификатор --label — фирменный капс для ярлыков из закрытого списка: продукт, вид тиснения.
+   Ярлык скользят взглядом и опознают, уникальное — читают; капс замедляет чтение. */
+.mk-mcard__title{font-family:var(--font-body);font-weight:600;color:var(--text-primary);
+  font-size:var(--t-body);line-height:var(--t-body-lh);margin:0}
+.mk-mcard__title--label{font-family:var(--font-head);text-transform:uppercase;
+  font-size:var(--t-h4);line-height:var(--t-h4-lh);letter-spacing:var(--t-h4-ls)}
+.mk-mcard__text{font-family:var(--font-body);color:var(--text-secondary);
+  font-size:var(--t-small);line-height:var(--t-small-lh);margin:0}
+
+/* ---- Отзыв ----
+   Рамку/фон/радиус даёт .mk-card — здесь только внутренняя раскладка.
+   Источник обязателен: отзывы приходят из Яндекс.Карт и 2ГИС (виджет SmartWidgets),
+   плюс собственные с сайта. Все три вида — один поток, различаются бейджем. */
+.mk-review{display:flex;flex-direction:column;gap:var(--sp-16);padding:var(--sp-28)}
+.mk-review__head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-12)}
+.mk-review__stars{color:var(--brand);font-size:var(--t-body);line-height:var(--t-body-lh);letter-spacing:.08em}
+
+/* бейдж источника */
+.mk-review__source{display:inline-flex;align-items:center;gap:var(--sp-6);flex-shrink:0;
+  font-family:var(--font-body);font-size:var(--t-label);line-height:var(--t-label-lh);
+  color:var(--text-tertiary);text-decoration:none}
+.mk-review__source:hover{color:var(--text-secondary)}
+.mk-review__source::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--text-tertiary)}
+.mk-review__source--yandex::before{background:var(--src-yandex)}
+.mk-review__source--2gis::before{background:var(--src-2gis)}
+.mk-review__source--site::before{background:var(--brand)}
+
+/* карточка отзыва в карусели: одинаковая высота (align-items:stretch у ленты), автор прижат вниз.
+   Длинный отзыв скроллится ВНУТРИ карточки (max-height задаёт страница). «Читать полностью» и
+   «Ответ типографии» убраны — ответов не будет. Каветка: вложенный вертикальный скролл в
+   горизонтальной ленте перехватывает колесо мыши/трекпада, пока текст не долистан — осознанный компромисс. */
+.mk-review__text{overflow-y:auto;
+  font-family:var(--font-body);font-size:var(--t-lead);line-height:var(--t-lead-lh);
+  color:var(--text-primary);margin:0}
+/* автор: аватар (фото или круг с инициалами) + имя/подпись справа */
+.mk-review__author{margin-top:auto;display:flex;align-items:center;gap:var(--sp-12)}
+.mk-review__avatar{flex-shrink:0;width:40px;height:40px;border-radius:50%;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface-gray);color:var(--text-secondary);
+  font-family:var(--font-body);font-weight:600;font-size:var(--t-small);
+  line-height:1;text-transform:uppercase;letter-spacing:.02em}
+.mk-review__avatar img{width:100%;height:100%;object-fit:cover}
+.mk-review__who{display:flex;flex-direction:column;gap:var(--sp-2);min-width:0}
+.mk-review__name{font-family:var(--font-body);font-weight:600;
+  font-size:var(--t-body);line-height:var(--t-body-lh);color:var(--text-primary)}
+.mk-review__role{font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);
+  color:var(--text-tertiary)}
+
+/* ---- Плитка-ссылка (горизонтальная) ----
+   Для технологий/материалов: миниатюра + название + пояснение + стрелка.
+   Отличается формой от вертикальной .mk-mcard: продукт — витрина, технология — навигация. */
+.mk-tilelink{display:flex;align-items:center;gap:var(--sp-16);text-decoration:none;
+  background:var(--surface-gray);border-radius:var(--radius-outside);overflow:hidden;
+  transition:background .15s,transform .2s}
+.mk-tilelink:hover{background:var(--surface-gray-2);transform:translateY(-2px)}
+.mk-tilelink:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
+/* картинка вплотную к краям плитки: тянется на всю высоту слева, левые углы клипует сама плитка (overflow:hidden) */
+.mk-tilelink__media{flex-shrink:0;width:140px;align-self:stretch;
+  overflow:hidden;background:var(--surface-card);border-right:1px solid var(--border)}
+.mk-tilelink__media img{width:100%;height:100%;object-fit:cover;display:block}
+.mk-tilelink__txt{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;padding-block:var(--sp-24)}
+.mk-tilelink__title{font-family:var(--font-body);font-weight:600;
+  font-size:var(--t-body);line-height:var(--t-body-lh);color:var(--text-primary)}
+.mk-tilelink__note{font-family:var(--font-body);font-size:var(--t-caption);line-height:1.45;
+  color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mk-tilelink .arr-ico{flex-shrink:0;margin-right:var(--sp-12);color:var(--text-tertiary);transition:transform .15s}
+.mk-tilelink:hover .arr-ico{transform:translateX(2px)}
+@media (prefers-reduced-motion:reduce){.mk-tilelink,.mk-tilelink .arr-ico{transition:none}
+  .mk-tilelink:hover{transform:none} .mk-tilelink:hover .arr-ico{transform:none}}
+
+/* ---- Аккордеон (FAQ) ----
+   Маркер «+» поворотом на 45° превращается в «×» — один символ на оба состояния. */
+.mk-acc{border-bottom:1px solid var(--border)}
+.mk-acc__q{display:flex;align-items:center;gap:var(--sp-16);cursor:pointer;list-style:none;
+  padding:var(--sp-20) 0;
+  font-family:var(--font-body);font-size:var(--t-body);line-height:var(--t-body-lh);
+  font-weight:600;color:var(--text-primary)}
+.mk-acc__q::-webkit-details-marker{display:none}
+.mk-acc__q::after{content:"+";flex-shrink:0;margin-left:auto;
+  font-size:24px;font-weight:400;line-height:1;color:var(--text-tertiary);
+  transition:transform .2s,color .2s}
+.mk-acc__q:hover::after{color:var(--text-primary)}
+.mk-acc[open] .mk-acc__q::after{transform:rotate(45deg)}
+/* открытый вопрос — ближе к своему ответу: гасим нижний отступ summary; закрытый ритм 20/20 не трогаем */
+.mk-acc[open] .mk-acc__q{padding-bottom:var(--sp-10)}
+.mk-acc__q:focus-visible{outline:2px solid var(--brand-dark);outline-offset:-2px}
+.mk-acc__a{padding-bottom:var(--sp-20);max-width:72ch;
+  font-family:var(--font-body);font-size:var(--t-body);line-height:var(--t-body-lh);color:var(--text-secondary)}
+/* карточный вариант: обводка + скругление (для коротких списков / одиночных блоков) */
+.mk-acclist--card{display:flex;flex-direction:column;gap:var(--sp-8)}
+.mk-acc--card{border:1px solid var(--border);border-radius:var(--radius-outside);
+  background:var(--surface-card);padding:0 var(--sp-20);transition:border-color .15s}
+.mk-acc--card:hover{border-color:var(--border-strong)}
+.mk-acc--card[open]{border-color:var(--border-strong)}
+@media (prefers-reduced-motion:reduce){.mk-acc__q::after{transition:none}
+  .mk-acc--card{transition:none}}
+
+/* ---- Строка файла ----
+   Вся строка — ссылка: цель для клика во всю ширину, а не слово «Скачать».
+   Иконка справа — аффорданс, загорается брендом при наведении на строку. */
+.mk-filerow{display:flex;align-items:center;gap:var(--sp-12);text-decoration:none;
+  background:var(--surface-card);border:1px solid transparent;border-radius:var(--radius-md);
+  padding:var(--sp-10) var(--sp-12);transition:border-color .15s}
+.mk-filerow:hover{border-color:var(--border-strong)}
+.mk-filerow:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
+.mk-filerow__txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.mk-filerow__name{font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);
+  color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mk-filerow__meta{font-family:var(--font-body);font-size:11px;line-height:1.4;color:var(--text-tertiary);
+  text-transform:uppercase;letter-spacing:var(--t-label-ls)}
+.mk-filerow__ico{flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:var(--radius-pill);
+  border:1px solid var(--border);background:var(--surface-card);color:var(--text-secondary);
+  transition:background .15s,color .15s,border-color .15s}
+.mk-filerow:hover .mk-filerow__ico{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.mk-filerow__ico svg{width:16px;height:16px;display:block}
+
+/* ---- Список требований (галочка + заголовок + пояснение) ----
+   Белые плашки на серой карточке — тот же язык, что у прайс-листа. */
+.mk-reqlist{display:flex;flex-direction:column;gap:var(--sp-8)}
+.mk-reqlist__item{display:flex;gap:var(--sp-14);align-items:flex-start;cursor:pointer;
+  background:var(--surface-card);border:1px solid transparent;border-radius:var(--radius-md);padding:var(--sp-16);
+  transition:border-color .15s,opacity .2s}
+.mk-reqlist__item:hover{border-color:var(--border-strong)}
+.mk-reqlist__item:has(.mk-check:checked){opacity:.6}
+.mk-reqlist__item:has(.mk-check:focus-visible){border-color:var(--brand-dark)}
+.mk-reqlist__item:has(.mk-check:checked) .mk-reqlist__title{text-decoration:line-through}
+.mk-reqlist__txt{display:flex;flex-direction:column;gap:3px;min-width:0}
+.mk-reqlist__title{font-family:var(--font-body);font-weight:500;font-size:15px;color:var(--text-primary)}
+.mk-reqlist__note{font-family:var(--font-body);font-size:var(--t-caption);line-height:1.45;color:var(--text-secondary)}
+
+/* строка прогресса чек-листа */
+.mk-reqlist__bar{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-12);
+  padding:0 var(--sp-4) var(--sp-4)}
+.mk-reqlist__count{font-family:var(--font-body);font-size:var(--t-caption);color:var(--text-secondary)}
+.mk-reqlist__count b{color:var(--text-primary);font-weight:600}
+.mk-reqlist__done{color:var(--success);font-weight:600}
+
+/* ---- Чекбокс ---- */
+.mk-check{appearance:none;-webkit-appearance:none;margin:0;flex-shrink:0;
+  width:22px;height:22px;border:1px solid var(--border-strong);border-radius:var(--radius-inside);
+  background:var(--surface-card);cursor:pointer;position:relative;
+  transition:background .15s,border-color .15s}
+.mk-check:hover{border-color:var(--text-primary)}
+.mk-check:checked{background:var(--brand);border-color:var(--brand)}
+.mk-check:checked::after{content:"";position:absolute;left:50%;top:46%;
+  width:10px;height:5px;transform:translate(-50%,-50%) rotate(-45deg);
+  border-left:2px solid var(--on-brand);border-bottom:2px solid var(--on-brand)}
+.mk-check:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
+
+/* ---- Таблица «ключ — значение» ---- */
+.mk-kv{display:flex;flex-direction:column;gap:var(--sp-8)}
+.mk-kv__row{display:grid;grid-template-columns:1fr auto;gap:var(--sp-16);align-items:baseline;
+  background:var(--surface-card);border-radius:var(--radius-md);padding:var(--sp-12) var(--sp-16)}
+.mk-kv__k{font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);color:var(--text-secondary)}
+.mk-kv__v{font-family:var(--font-body);font-weight:500;font-size:var(--t-small);line-height:var(--t-small-lh);
+  color:var(--text-primary);text-align:right}
+
+/* ---- Маркированный список (точка) ---- */
+.mk-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--sp-8)}
+.mk-list li{position:relative;padding-left:var(--sp-16);
+  font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);color:var(--text-secondary)}
+.mk-list li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;
+  background:var(--text-tertiary)}
+
+/* ---- Плейсхолдер медиа (только прототип) ---- */
+.mk-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sp-6);
+  background:var(--surface-gray);border:1px dashed var(--border-strong);border-radius:var(--radius-outside);
+  color:var(--text-tertiary);font-size:var(--t-caption);text-align:center}
+.mk-ph b{font-size:var(--t-small);font-weight:500;color:var(--text-secondary)}
 
 /* ---- Чип ---- */
-.mk-chip{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--border-strong);
-  border-radius:var(--radius-pill);padding:12px 20px;font-family:var(--font-body);font-size:14px;font-weight:500;
+.mk-chip{display:inline-flex;align-items:center;gap:var(--sp-10);border:1px solid var(--border-strong);
+  border-radius:var(--radius-pill);padding:var(--sp-12) var(--sp-20);
+  font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:500;
   color:var(--text-primary);transition:border-color .15s,background .15s;cursor:pointer;text-decoration:none}
 .mk-chip:hover{border-color:var(--text-primary);background:var(--surface-subtle)}
+.mk-chip:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
+.mk-chip .arr-ico{color:var(--text-tertiary);transition:transform .15s}
+.mk-chip:hover .arr-ico{transform:translateX(2px)}
+@media (prefers-reduced-motion:reduce){.mk-chip .arr-ico{transition:none}
+  .mk-chip:hover .arr-ico{transform:none}}
 
 /* ---- Табы (подчёркивание активного — единый паттерн с навигацией) ---- */
 .mk-tabs{display:flex;gap:28px;border-bottom:1px solid var(--border)}
@@ -54,6 +381,39 @@
   border-bottom:2px solid transparent;padding:0 2px 12px;cursor:pointer;transition:color .15s,border-color .15s}
 .mk-tab:hover{color:var(--text-primary)}
 .mk-tab.is-active{color:var(--text-primary);font-weight:600;border-bottom-color:var(--brand)}
+/* обёртка панелей: плавно тянется под высоту активной, без скачка */
+.mk-tabpanels{position:relative;transition:height .3s cubic-bezier(.4,0,.2,1)}
+/* обрезаем только пока идёт анимация: постоянный overflow срезал бы hover-подъём и focus-ring карточек */
+.mk-tabpanels.is-animating{overflow:hidden}
+.mk-tabpanel{display:none}
+.mk-tabpanel.is-active{display:block;animation:mk-tab-in .3s cubic-bezier(.4,0,.2,1) both}
+@keyframes mk-tab-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* карточки внутри панели въезжают волной — задержка нарастает к правому краю */
+.mk-tabpanel.is-active [class*="mk-mcard"]{animation:mk-tab-in .3s cubic-bezier(.4,0,.2,1) both}
+.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(1){animation-delay:.02s}
+.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(2){animation-delay:.05s}
+.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(3){animation-delay:.08s}
+.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(4){animation-delay:.11s}
+.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(5){animation-delay:.14s}
+.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(6){animation-delay:.17s}
+
+@media (prefers-reduced-motion:reduce){
+  .mk-tabpanels{transition:none}
+  .mk-tabpanel.is-active,.mk-tabpanel.is-active [class*="mk-mcard"]{animation:none}
+}
+
+/* ---- Переключатель вида (сегмент из иконок) ----
+   Не действие, а смена представления одного и того же — поэтому сегмент, а не две кнопки. */
+.mk-segment{display:inline-flex;gap:var(--sp-4);padding:var(--sp-4);flex-shrink:0;
+  background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius-pill)}
+.mk-segment__btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;
+  background:none;border:none;border-radius:var(--radius-pill);color:var(--text-secondary);cursor:pointer;
+  transition:background .15s,color .15s}
+.mk-segment__btn:hover{background:var(--surface-subtle);color:var(--text-primary)}
+.mk-segment__btn.is-active{background:var(--surface-dark);color:var(--text-on-dark)}
+.mk-segment__btn:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
+.mk-segment__btn svg{width:18px;height:18px;display:block}
 
 /* ---- Разделитель ---- */
 .mk-divider{height:1px;background:var(--border);border:none}

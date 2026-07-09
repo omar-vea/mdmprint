@@ -8,7 +8,9 @@
   --brand:            #FFC100;   /* фирменный жёлтый */
   --brand-hover:      #E6A800;   /* затемнение под hover/active */
   --brand-dark:       #CC9E00;
+  --brand-text:       #A87D00;   /* бренд как цвет ТЕКСТА на светлом: #FFC100 даёт контраст 1.7:1 — нечитаемо */
   --brand-soft:       #FFF3CC;   /* мягкая плашка-заливка */
+  --brand-soft-2:     #FFE9AE;   /* рамка/hover поверх --brand-soft */
   --brand-tint:       rgba(255,193,0,.12); /* акцент @ ~12% */
   --on-brand:         #222220;   /* текст на жёлтом */
 
@@ -20,10 +22,21 @@
 
   /* ---- Поверхности / линии ---- */
   --surface-page:     #ffffff;
-  --surface-subtle:   #f6f6f4;
-  --surface-gray:     #f5f5f5;
-  --surface-card:     #ffffff;
+  --surface-subtle:   #f6f6f4;   /* фон СЕКЦИИ (герой) — тёплый */
+  --surface-gray:     #f5f5f5;   /* подложка КАРТОЧКИ и мелких плашек (бейдж, disabled) */
+  --surface-gray-2:   #ececea;   /* её hover/нажатое состояние */
+  --surface-card:     #ffffff;   /* белая плашка поверх --surface-gray */
   --surface-dark:     #222220;
+  --surface-dark-2:   #2b2b29;   /* панель/подложка на тёмном (топбар-меню) */
+  --text-on-dark-2:   #c7c9cd;   /* приглушённый текст на тёмном */
+  --border-on-dark:   rgba(255,255,255,.09);
+  /* ---- Цвета внешних площадок (маркер источника отзыва) ----
+     Единственные чужие бренд-цвета в системе: подменять их нельзя. */
+  --src-yandex:       #fc3f1d;
+  --src-2gis:         #19aa1e;
+
+  --danger:           #e0483a;   /* ошибки валидации, обязательные поля */
+  --success:          #2ea64f;   /* маркер «плюсы» */
   --border:           #e4e4e4;
   --border-strong:    #d8d8d6;
 
@@ -39,28 +52,31 @@
 
   /* ---- Отступы (шкала Figma) ---- */
   --sp-2:2px; --sp-4:4px; --sp-6:6px; --sp-8:8px; --sp-10:10px;
-  --sp-12:12px; --sp-16:16px; --sp-20:20px; --sp-24:24px; --sp-32:32px;
+  --sp-12:12px; --sp-14:14px; --sp-16:16px; --sp-18:18px; --sp-20:20px; --sp-24:24px; --sp-28:28px; --sp-32:32px;
   --sp-40:40px; --sp-48:48px; --sp-64:64px; --sp-80:80px;
   --section-y:        80px;   /* вертикальный отступ секции */
 
   /* ---- Раскладка ---- */
-  --container:        1200px;
-  --container-pad:    22px;
+  --container:        1176px;  /* ширина контента (Figma: 1176 при 1440, поля 132) */
+  --container-pad:    24px;    /* боковые поля на узких экранах */
 
   /* ---- Шрифты ---- */
   --font-head:        'AttractiveCond', 'PT Sans Narrow', -apple-system, 'Segoe UI', Arial, sans-serif;
   --font-body:        'Roboto', -apple-system, 'Segoe UI', Arial, sans-serif;
 
   /* ---- Типошкала: размер / интерлиньяж / трекинг ----
-     Заголовки — AttractiveCond, КАПС; текст — Roboto. */
-  --t-display:        50px;  --t-display-lh:54px;  --t-display-ls:1px;
-  --t-h1:             40px;  --t-h1-lh:44px;       --t-h1-ls:1px;
-  --t-h2:             32px;  --t-h2-lh:38px;       --t-h2-ls:1.5px;
-  --t-h3:             24px;  --t-h3-lh:28px;       --t-h3-ls:2px;
-  --t-h4:             18px;  --t-h4-lh:22px;       --t-h4-ls:2px;
+     Заголовки — AttractiveCond, КАПС; текст — Roboto.
+     ВАЖНО: трекинг в Figma задан в ПРОЦЕНТАХ, не в px (H4 «2» = 2% = 0.36px при 18px).
+     Поэтому здесь em, а не px — иначе буквы разряжены в 3–6 раз. */
+  --t-display:        50px;  --t-display-lh:54px;  --t-display-ls:.01em;   /* 1%   */
+  --t-h1:             40px;  --t-h1-lh:44px;       --t-h1-ls:.01em;        /* 1%   */
+  --t-h2:             32px;  --t-h2-lh:44px;       --t-h2-ls:.015em;       /* 1.5% */
+  --t-h3:             24px;  --t-h3-lh:28px;       --t-h3-ls:.02em;        /* 2%   */
+  --t-h4:             18px;  --t-h4-lh:22px;       --t-h4-ls:.02em;        /* 2%   */
   --t-lead:           18px;  --t-lead-lh:27px;
   --t-body:           16px;  --t-body-lh:24px;
   --t-small:          14px;  --t-small-lh:20px;
   --t-caption:        13px;  --t-caption-lh:16px;
-  --t-label:          12px;  --t-label-lh:16px;    --t-label-ls:.5px;
+  --t-label:          12px;  --t-label-lh:16px;    --t-label-ls:.005em;    /* 0.5% */
+  --t-button:         15px;  --t-button-lh:16px;   --t-button-w:500;  /* Text/Button — Roboto Medium */
 }
