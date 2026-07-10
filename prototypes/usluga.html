@@ -618,12 +618,6 @@
   .hphone .num .l4{color:var(--text-primary);font-weight:800}
   .hphone .psub{display:flex;align-items:center;gap:8px}
   .hphone .day{font-size:var(--t-label);line-height:var(--t-label-lh);color:var(--text-secondary);white-space:nowrap}
-  /* «Заказать звонок» — отдельная компактная кнопка справа от блока (вынесена из подстроки:
-     там теперь только график, чтобы разгрузить контейнер). Тянется на всю высоту блока. */
-  .hphone .cb{align-self:stretch;display:flex;flex-direction:column;justify-content:center;text-align:center;
-    font-size:var(--t-label);line-height:1.15;font-weight:600;color:var(--text-secondary);white-space:nowrap;
-    border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:0 12px;transition:color .15s,border-color .15s}
-  .hphone .cb:hover{color:var(--text-primary);border-color:var(--text-primary)}
   /* Телефон копируется на десктопе (с ПК не звонят); на тач остаётся обычный tel:.
      Подсказка/подтверждение висят на всём блоке .hphone и уходят ПОД него — так они не
      накрывают подстроку «без выходных · Заказать звонок» и не режутся топбаром сверху.
@@ -1057,9 +1051,12 @@
           <a href="tel:+74952561000" class="num" data-copy="+7 (495) 256-10-00"><span class="pre">+7 (495) 256-</span><span class="l4">10-00</span></a>
           <div class="psub"><span class="day">Ежедневно, 9:00–21:00</span></div>
         </div>
-        <a href="#" class="cb">Заказать<br>звонок</a>
       </div>
       <div class="hactions">
+        <button type="button" class="hbtn cb" title="Заказать звонок">
+          <span class="ci"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span>
+          Заказать звонок
+        </button>
         <button type="button" class="hbtn" title="Написать в Телеграме">
           <span class="ci"><svg width="21" height="21" viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg></span>
           Телеграм
