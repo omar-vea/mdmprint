@@ -621,15 +621,21 @@
   .hphone .cb{font-size:var(--t-label);line-height:var(--t-label-lh);color:var(--text-secondary);border-bottom:1px dashed var(--border-strong)}
   .hphone .cb:hover{color:var(--text-primary);border-color:var(--text-primary)}
   /* Телефон копируется на десктопе (с ПК не звонят); на тач остаётся обычный tel:.
-     Тултип-подсказку не ставим: сверху топбар (клиппит), снизу подстрока (накрывает) —
-     аффорданс даёт пунктир на hover, а подтверждение «Скопировано» (жёлтое, как у почты/футера)
-     показываем снизу транзиентно (1.8с). */
+     Подсказка/подтверждение висят на всём блоке .hphone и уходят ПОД него — так они не
+     накрывают подстроку «без выходных · Заказать звонок» и не режутся топбаром сверху.
+     Тултип попадает в зону навбара, поэтому на время наведения/подтверждения поднимаем
+     шапку над навбаром (header z40 < navbar z46) — тем же приёмом, что при search-open. */
   @media (hover:hover){
-    .hphone .num{position:relative;cursor:pointer}
+    .hphone{position:relative}
+    .hphone .num{cursor:pointer}
     .hphone .num:hover{text-decoration:underline dashed;text-decoration-thickness:1px;text-underline-offset:3px}
-    .hphone .num.is-done::after{content:"Скопировано";position:absolute;top:calc(100% + 8px);left:0;z-index:60;
-      background:var(--brand);color:var(--on-brand);font-size:11.5px;font-weight:600;line-height:1.3;
-      padding:5px 9px;border-radius:var(--radius-inside);white-space:nowrap;box-shadow:var(--shadow)}
+    .hphone::after{content:"Нажмите, чтобы скопировать";position:absolute;top:calc(100% + 8px);left:44px;z-index:60;
+      background:var(--surface-dark);color:var(--text-on-dark);font-size:11.5px;font-weight:600;line-height:1.3;
+      padding:5px 9px;border-radius:var(--radius-inside);white-space:nowrap;box-shadow:var(--shadow);
+      opacity:0;pointer-events:none;transform:translateY(-3px);transition:opacity .15s,transform .15s}
+    .hphone:has(.num:hover)::after{opacity:1;transform:translateY(0)}
+    .hphone:has(.num.is-done)::after{content:"Скопировано";background:var(--brand);color:var(--on-brand);opacity:1;transform:translateY(0)}
+    header:has(.hphone .num:hover),header:has(.hphone .num.is-done){z-index:60}
   }
 
   /* единый стиль кнопок шапки */
