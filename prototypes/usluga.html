@@ -367,36 +367,37 @@
   /* ── ВАРИАНТ Б копирования: без кнопок, подсказка при наведении ──
      Включается классом body.fcopy-hint. Кнопки-иконки (вариант А) при этом скрыты.
      Клик по номеру копирует вместо перехода — но только там, где есть мышь:
-     на тач-устройстве tel:/mailto: должны работать как обычные ссылки. */
+     на тач-устройстве tel:/mailto: должны работать как обычные ссылки.
+     Оформление висит на [data-hint], а не на .fcopy-link: адрес не копируется,
+     но ведёт себя так же — пунктир и подсказка «Показать на карте». */
   body.fcopy-hint .usl-foot .fcopy{display:none}
-  body.fcopy-hint .usl-foot .fcopy-link{position:relative;display:inline-block}
+  body.fcopy-hint .usl-foot [data-hint]{position:relative}
   @media (hover:hover){
-    body.fcopy-hint .usl-foot .fcopy-link{cursor:pointer;
+    body.fcopy-hint .usl-foot [data-hint]{cursor:pointer;
       border-bottom:1px dashed var(--border-on-dark-2);transition:border-color .15s}
-    body.fcopy-hint .usl-foot .fcopy-link:hover{border-bottom-color:var(--text-on-dark)}
+    body.fcopy-hint .usl-foot [data-hint]:hover{border-bottom-color:var(--text-on-dark)}
     /* подсказка справа, а не снизу: строки идут через 12px и снизу она накрывала соседнюю */
-    body.fcopy-hint .usl-foot .fcopy-link::after{content:attr(data-hint);position:absolute;
+    body.fcopy-hint .usl-foot [data-hint]::after{content:attr(data-hint);position:absolute;
       left:calc(100% + var(--sp-10));top:50%;z-index:5;
       background:var(--surface-card);color:var(--text-primary);
       font-size:11.5px;font-weight:600;line-height:1.3;padding:5px 9px;
       border-radius:var(--radius-inside);white-space:nowrap;box-shadow:var(--shadow);
       opacity:0;pointer-events:none;transform:translate(-3px,-50%);
       transition:opacity .15s,transform .15s}
-    body.fcopy-hint .usl-foot .fcopy-link:hover::after,
-    body.fcopy-hint .usl-foot .fcopy-link:focus-visible::after,
+    body.fcopy-hint .usl-foot [data-hint]:hover::after,
+    body.fcopy-hint .usl-foot [data-hint]:focus-visible::after,
     body.fcopy-hint .usl-foot .fcopy-link.is-done::after{opacity:1;transform:translate(0,-50%)}
     body.fcopy-hint .usl-foot .fcopy-link.is-done::after{content:"Скопировано";
       background:var(--brand);color:var(--on-brand)}
   }
-  @media (prefers-reduced-motion:reduce){body.fcopy-hint .usl-foot .fcopy-link,
-    body.fcopy-hint .usl-foot .fcopy-link::after{transition:none}}
+  @media (prefers-reduced-motion:reduce){body.fcopy-hint .usl-foot [data-hint],
+    body.fcopy-hint .usl-foot [data-hint]::after{transition:none}}
 
-  /* Адрес ведёт на карту — стрелка «наружу» говорит это до клика.
-     display:inline (а не block от .usl-foot a и не inline-flex): при переносе адреса
-     во flex-строке стрелка отрывалась от текста и уезжала к краю колонки. */
-  .usl-foot .fcontacts a.fmap{display:inline}
-  .usl-foot .fcontacts a.fmap svg{display:inline-block;width:11px;height:11px;
-    margin-left:var(--sp-4);vertical-align:-1px;opacity:.7}
+  /* Адрес ведёт на карту. Стрелки «наружу» нет: подсказку даёт [data-hint],
+     как у телефона и почты. align-self — потому что .fcontact__body это flex-колонка:
+     её дети блокифицируются, ссылка растягивалась на всю ширину, и подсказка
+     (left:100%) улетала за правый край колонки вместо того, чтобы встать у текста. */
+  .usl-foot .fcontacts a.fmap{align-self:flex-start}
   .usl-foot .fnote{margin:0;font-size:var(--t-small);line-height:var(--t-small-lh)}
 
   /* Мессенджеры — тот же канал связи, что телефон и почта, поэтому и строка та же.
@@ -405,7 +406,7 @@
 
   /* ЗАГЛУШКА: бейдж «Хорошее место» — товарный знак Яндекса, рисовать свой нельзя.
      Нужен официальный ассет/виджет Яндекс.Бизнеса. */
-  .usl-foot .fbadge{display:inline-flex;align-items:center;gap:var(--sp-10);
+  .usl-foot .fbadge{display:inline-flex;align-items:center;gap:var(--sp-10);justify-self:start;
     border:1px dashed var(--border-on-dark);border-radius:var(--radius-md);
     padding:var(--sp-10) var(--sp-12);max-width:260px}
   .usl-foot .fbadge b{color:var(--text-on-dark);font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:600}
@@ -442,13 +443,19 @@
   .usl-foot .fsoc a{padding:var(--sp-4) 0}
 
   .usl-foot .fbot-bleed{border-top:1px solid var(--border-on-dark)}
-  .usl-foot .fbot{display:flex;justify-content:space-between;align-items:baseline;
-    gap:var(--sp-16) var(--sp-24);flex-wrap:wrap;padding:var(--sp-20) 0 var(--sp-28);
+  /* Бренд встаёт под контакты (436 — та же колонка, что во втором уровне).
+     Дальше сетка своя: реквизитам нужна ширина под адрес, документам её хватает и в 356. */
+  .usl-foot .fbot{display:grid;grid-template-columns:436fr 356fr 336fr;
+    gap:var(--sp-32) var(--sp-24);align-items:start;padding:var(--sp-32) 0 var(--sp-40)}
+  .usl-foot .fbot-brand .fabout{margin:0;max-width:300px}
+  .usl-foot .fcopy-line{margin:var(--sp-8) 0 var(--sp-20);color:var(--text-tertiary);
     font-size:var(--t-caption);line-height:var(--t-caption-lh)}
-  .usl-foot .fbot p{margin:0;color:var(--text-on-dark-2)}
-  .usl-foot .fbot-co p + p{margin-top:var(--sp-4)}
-  .usl-foot .flegal{display:flex;flex-wrap:wrap;gap:var(--sp-4) var(--sp-20)}
-  .usl-foot .flegal a{padding:0;font-size:var(--t-caption);line-height:var(--t-caption-lh)}
+  /* документы столбиком — как соцсети над ними */
+  .usl-foot .flegal{display:flex;flex-direction:column;gap:var(--sp-2)}
+  .usl-foot .flegal a{padding:var(--sp-4) 0}
+  /* реквизиты — справочные строки, не ссылки: кегль как у подписей, цвет приглушён */
+  .usl-foot .freq{margin:0;color:var(--text-on-dark-2);
+    font-size:var(--t-caption);line-height:var(--t-caption-lh);padding:var(--sp-4) 0}
   @media (prefers-reduced-motion:reduce){.usl-foot a,.usl-foot .fsub-form{transition:none}}
 
   /* Последним правилом футера: .usl-foot a{display:block}, .flogo{display:block},
@@ -480,7 +487,7 @@
     .usl-port .port-grid--photo{--item-w:calc((100% - var(--sp-20)) / 2)}
     .usl-hero h1{font-size:34px}
     .usl h2{font-size:24px}
-    .usl-foot .ftop{grid-template-columns:1fr}
+    .usl-foot .ftop,.usl-foot .fbot{grid-template-columns:1fr}
     .usl-foot .flinks{grid-template-columns:1fr 1fr}
   }
 
@@ -2829,9 +2836,6 @@
      <div class="wrap">
       <div class="ftop">
         <div class="fbrand">
-          <!-- временно скрыты: на их месте заголовок «Контакты» -->
-          <a href="#" class="flogo" hidden><img src="../assets/mdmprint-logo-dark.svg" alt="MDMprint — заводская типография"></a>
-          <p class="fabout" hidden>Типография полного цикла: печать, постпечать и брендирование под ключ. Работаем с 2012 года.</p>
           <h5 class="mk-label">Контакты</h5>
 
           <!-- Контакты столбиком -->
@@ -2840,7 +2844,7 @@
               <div class="fcontact">
                 <span class="fcontact__ic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 2a7.5 7.5 0 0 0-7.5 7.5c0 5.4 6.6 12 6.9 12.3a.85.85 0 0 0 1.2 0c.3-.3 6.9-6.9 6.9-12.3A7.5 7.5 0 0 0 12 2Zm0 10a2.6 2.6 0 1 1 0-5.2 2.6 2.6 0 0 1 0 5.2Z"/></svg></span>
                 <div class="fcontact__body">
-                  <a class="fmap" href="https://yandex.ru/maps/?text=Москва,%20улица%20Орджоникидзе,%2011с1А" target="_blank" rel="noopener noreferrer">Москва, ул. Орджоникидзе, 11с1А, подъезд 29<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg><span class="mk-sr">Откроется на Яндекс.Картах в новой вкладке</span></a>
+                  <a class="fmap" href="https://yandex.ru/maps/?text=Москва,%20улица%20Орджоникидзе,%2011с1А" target="_blank" rel="noopener noreferrer" data-hint="Показать на карте">Москва, ул. Орджоникидзе, 11с1А, подъезд 29<span class="mk-sr">Откроется на Яндекс.Картах в новой вкладке</span></a>
                   <p class="fnote">Офис открыт Пн–Вс, 09:00–22:00</p>
                 </div>
               </div>
@@ -2869,12 +2873,6 @@
             </div>
           </div>
           <p class="mk-sr js-copy-status" role="status" aria-live="polite"></p>
-
-          <!-- ЗАГЛУШКА: официальный бейдж Яндекс.Бизнеса. Свой рисовать нельзя — товарный знак. -->
-          <div class="fbadge" hidden>
-            <b>Хорошее место</b>
-            <span>Яндекс · 4,9 из 5</span>
-          </div>
         </div>
 
         <div class="fsub">
@@ -2906,19 +2904,40 @@
      </div>
     </div>
 
+    <!-- ТРЕТИЙ УРОВЕНЬ: бренд с бейджем, документы, реквизиты — по той же сетке,
+         что и второй (436/476/216), поэтому столбцы стоят друг под другом. -->
     <div class="fbot-bleed">
       <div class="wrap">
         <div class="fbot">
-          <div class="fbot-co">
-            <p>© 2012–2026 ООО «МДМпринт»</p>
-            <!-- сведения о продавце: наименование, ИНН, ОГРН, юридический адрес -->
-            <p>ИНН 7704815108 · ОГРН 1127746679587 · 115419, г. Москва, ул. Орджоникидзе, д. 11, стр. 1А</p>
+          <div class="fbot-brand">
+            <a href="#" class="flogo"><img src="../assets/mdmprint-logo-dark.svg" alt="MDMprint — заводская типография"></a>
+            <p class="fabout">Типография полного цикла: печать, постпечать и брендирование под ключ. Работаем с 2012 года.</p>
+            <p class="fcopy-line">© 2012–2026 ООО «МДМпринт»</p>
+
+            <!-- ЗАГЛУШКА: официальный бейдж Яндекс.Бизнеса. Свой рисовать нельзя — товарный знак. -->
+            <div class="fbadge">
+              <b>Хорошее место</b>
+              <span>Яндекс · 4,9 из 5</span>
+            </div>
           </div>
-          <div class="flegal">
-            <a href="#">Политика обработки персональных данных</a>
-            <a href="#">Публичная оферта</a>
-            <a href="#">Пользовательское соглашение</a>
-            <a href="#">Обработка cookies</a>
+
+          <div>
+            <h5 class="mk-label">Документы</h5>
+            <div class="flegal">
+              <a href="#">Политика обработки персональных данных</a>
+              <a href="#">Публичная оферта</a>
+              <a href="#">Пользовательское соглашение</a>
+              <a href="#">Обработка cookies</a>
+            </div>
+          </div>
+
+          <div>
+            <h5 class="mk-label">Реквизиты</h5>
+            <!-- сведения о продавце: наименование, ИНН, ОГРН, юридический адрес -->
+            <p class="freq">ООО «МДМпринт»</p>
+            <p class="freq">ИНН 7704815108</p>
+            <p class="freq">ОГРН 1127746679587</p>
+            <p class="freq">115419, г. Москва, ул. Орджоникидзе, д. 11, стр. 1А</p>
           </div>
         </div>
       </div>
