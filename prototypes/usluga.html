@@ -10,28 +10,8 @@
 <link rel="stylesheet" href="../assets/css/tokens.css">
 <link rel="stylesheet" href="../assets/css/kit.css">
 <style>
-  :root{
-    /* Старые имена прототипа = алиасы на токены ДС (tokens.css).
-       Своих значений здесь больше нет — единственный источник правды там. */
-    --max:var(--container);
-    --ink:var(--text-primary);
-    --muted:var(--text-secondary);
-    --muted2:var(--text-tertiary);
-    --line:var(--border);
-    --line2:var(--border-strong);
-    --bg:var(--surface-page);
-    --hover:var(--surface-subtle);
-    --accent:var(--brand);
-    --accent-soft:var(--brand-soft);
-    --accent-soft2:var(--brand-soft-2);
-    --radius:var(--radius-md);
-    /* единая иконка-стрелка (SVG-маска, наследует цвет текста) */
-    --arr:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h10M9 4.5 12.5 8 9 11.5'/%3E%3C/svg%3E");
-  }
-  /* переиспользуемая стрелка-иконка */
-  .arr-ico{display:inline-block;width:14px;height:14px;background:currentColor;-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat;flex-shrink:0;transition:transform .15s}
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:var(--font-body);color:var(--ink);background:var(--surface-subtle);font-size:14px;line-height:1.45}
+  body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:14px;line-height:1.45}
   a{color:inherit;text-decoration:none}
   .wrap{width:min(100% - var(--container-pad) * 2, var(--container));margin-inline:auto}
   svg{display:block}
@@ -73,9 +53,11 @@
   /* ============================================================
      СТРАНИЦА УСЛУГИ / МАТЕРИАЛА (namespace .usl) — пример «Тиснение»
      ============================================================ */
-  .usl{background:#fff;color:var(--ink)}
+  /* tabindex=-1 — цель skip-link; своего фокус-кольца не рисуем, фокус тут технический */
+  .usl{background:var(--surface-page);color:var(--text-primary);scroll-margin-top:118px}
+  .usl:focus{outline:none}
   .usl .wrap{width:min(100% - var(--container-pad) * 2, var(--container));margin-inline:auto}
-  .usl section{padding:var(--section-y) 0;border-top:1px solid var(--line);scroll-margin-top:118px}
+  .usl section{padding:var(--section-y) 0;border-top:1px solid var(--border);scroll-margin-top:118px}
   .usl section:first-child{border-top:none}
   .usl .eyebrow{display:inline-block;font-family:var(--font-body);font-size:var(--t-label);font-weight:500;line-height:var(--t-label-lh);letter-spacing:var(--t-label-ls);text-transform:uppercase;color:var(--brand-text)}
   /* базовая типографика — только для тегов БЕЗ класса, иначе перебивает кит (.mk-*) */
@@ -88,7 +70,7 @@
   /* кнопки — из кита (.mk-btn), локальных больше нет */
 
   /* breadcrumbs */
-  .usl .crumbs{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:22px}
+  .usl .crumbs{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--text-secondary);margin-bottom:22px}
   .usl .crumbs a:hover{color:var(--text-primary)}
   .usl .crumbs span{color:var(--text-on-dark-2)}
 
@@ -110,15 +92,15 @@
   /* сверху линию даёт .mk-statbar, снизу — своя (нужна, когда подменю прилипло) */
   /* низ липкой зоны = top подрубрикатора (54) + его высота (53) */
   .usl-req{--stack-top:107px}
-  .usl-subnav{position:sticky;top:54px;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:0!important}
+  .usl-subnav{position:sticky;top:54px;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0!important}
   .usl-subnav + section{border-top:none}
   .usl-subnav .wrap{display:flex;gap:28px;height:52px;align-items:stretch;overflow-x:auto}
-  .usl-subnav a{display:inline-flex;align-items:center;font-size:14px;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
+  .usl-subnav a{display:inline-flex;align-items:center;font-size:14px;color:var(--text-secondary);border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
   .usl-subnav a:hover{color:var(--text-primary)}
-  .usl-subnav a.active{color:var(--text-primary);font-weight:600;border-bottom-color:var(--accent)}
+  .usl-subnav a.active{color:var(--text-primary);font-weight:600;border-bottom-color:var(--brand)}
 
   /* generic card */
-  .usl .card{background:#fff;border:1px solid var(--line);border-radius:14px}
+  .usl .card{background:var(--surface-card);border:1px solid var(--border);border-radius:14px}
 
   /* ПРЕИМУЩЕСТВА — плитки и списки из кита (.mk-tile / .mk-list / .mk-ph) */
   .usl-adv .adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-24);align-items:stretch}
@@ -307,10 +289,21 @@
      На .wrap линия обрывалась бы по контентной ширине и спорила с ритмом страницы. */
   .usl-foot{background:var(--surface-dark);color:var(--text-on-dark-2);
     border-top:1px solid var(--border-on-dark)}
-  .usl-foot .fmain{padding:var(--sp-48) 0}
-  /* 4/8 — тот же модуль, что у req/faq/статей: бренд с контактами слева, рубрики справа */
-  .usl-foot .fcols{display:grid;grid-template-columns:376fr 776fr;gap:var(--sp-32) var(--sp-24)}
-  .usl-foot .flinks{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-24)}
+  /* навигация идёт первой; линия отделяет её от нижней полосы с контактами */
+  .usl-foot .fmain{border-top:1px solid var(--border-on-dark);padding:var(--sp-40) 0}
+  /* Нижняя полоса: контакты | дайджест | соцсети.
+     436 + 476 + 216 + два гэпа по 24 = 1176. Адрес встаёт в одну строку,
+     а форма (max-width 420) не упирается в соседнюю колонку. */
+  .usl-foot .ftop{display:grid;grid-template-columns:436fr 476fr 216fr;
+    gap:var(--sp-32) var(--sp-24);align-items:start}
+  /* Навигация — своя зона во всю ширину. 6 колонок по 176px: 176*6 + 24*5 = 1176,
+     та же сетка, что у блока «Продукты». По одному заголовку на колонку, поэтому
+     все h5 стоят на одной линии — раньше вторые заголовки («Материалы», «Компания»)
+     садились на разной высоте и колонки визуально скакали. */
+  .usl-foot .flinks{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-24);
+    padding:var(--sp-48) 0 var(--sp-40)}
+  /* Второй заголовок внутри колонки не ломает линию первых: подзаголовки есть
+     только у «Услуг», сравнивать их по высоте не с чем. */
   .usl-foot .flinks h5:not(:first-child){margin-top:var(--sp-24)}
   .usl-foot h5{color:var(--text-on-dark);margin:0 0 var(--sp-14)}
   .usl-foot .fabout{margin:0 0 var(--sp-24);max-width:300px;
@@ -323,25 +316,92 @@
   .usl-foot .flogo{display:block;margin-bottom:var(--sp-16)}
   .usl-foot .flogo img{height:26px;width:auto;display:block}
 
-  /* Контакты — своя панель на --surface-dark-2, а не строки в общем потоке:
-     рядом четыре колонки ссылок одного кегля, и телефон с почтой в них терялись.
-     Иконки добавляют опознаваемость строки до чтения. Телефон и почта равнозначны — один кегль. */
-  .usl-foot .fcontacts{display:flex;flex-direction:column;gap:var(--sp-12);
-    background:var(--surface-dark-2);border-radius:var(--radius-outside);
-    padding:var(--sp-20);margin-bottom:var(--sp-20)}
+  /* Контакты. Панель на --surface-dark-2 была ошибкой: её тон отличался от футера на 1.12:1,
+     то есть зону держали радиус и замкнутый контур, а не цвет — коробка ради коробки.
+     Ни фона, ни рамок: контакты опознаются иконками, а текст живёт по общему стилю
+     ссылок футера (.usl-foot a) — своего кегля и цвета у них нет. */
+  .usl-foot .fcontacts{display:flex;flex-direction:column;gap:var(--sp-16);
+    margin:var(--sp-14) 0 var(--sp-24)}
+  .usl-foot .fcont-col{display:flex;flex-direction:column;gap:var(--sp-16);min-width:0}
   .usl-foot .fcontact{display:flex;align-items:center;gap:var(--sp-12)}
-  .usl-foot .fcontact svg{flex-shrink:0;width:16px;height:16px;color:var(--text-on-dark-2)}
-  .usl-foot .fcontacts a{padding:0;color:var(--text-on-dark);
-    font-size:var(--t-body);line-height:var(--t-body-lh)}
+  /* Иконка на плитке: текст контактов теперь ничем не отличается от прочих ссылок,
+     поэтому опознаваемость строки держит именно плитка. Фон белый @10% (1.36:1 к футеру):
+     заметен, но не спорит с текстом. --surface-dark-2 здесь не годится — он даёт 1.12:1. */
+  .usl-foot .fcontact__ic{display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    width:32px;height:32px;border-radius:var(--radius-md);
+    background:var(--surface-on-dark);color:var(--text-on-dark-2);
+    transition:background .15s,color .15s}
+  .usl-foot .fcontact:hover .fcontact__ic{background:var(--surface-on-dark-2);color:var(--text-on-dark)}
+  .usl-foot .fcontact__ic svg{width:16px;height:16px;display:block}
+  .usl-foot .fcontacts a{padding:0}
+  /* адрес + график одной строкой: график — подпись к адресу, а не самостоятельный контакт */
+  .usl-foot .fcontact__body{display:flex;flex-direction:column;gap:var(--sp-2);min-width:0}
+  .usl-foot .fcontact__body .fnote{font-size:var(--t-caption);line-height:var(--t-caption-lh);
+    color:var(--text-tertiary)}
+  @media (prefers-reduced-motion:reduce){.usl-foot .fcontact__ic{transition:none}}
+
+  /* Копирование телефона/почты. Кнопка видна всегда, а не по наведению: иначе о ней
+     не догадаться, пока не наведёшь. В покое приглушена, на hover строки — белая.
+     Ссылка остаётся ссылкой (tel:/mailto:), копирует отдельная кнопка — так работает
+     и клавиатура, и тап по номеру на телефоне. */
+  /* Кнопка держится текста, но не липнет: gap строки (12) отодвигал глиф на ~18px и он читался
+     как отдельный элемент. Гасим gap отрицательным полем, оставляя 6px — на них не наезжает
+     подложка кнопки при наведении. */
+  .usl-foot .fcopy{display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    width:26px;height:26px;margin-left:calc(var(--sp-6) - var(--sp-12));
+    padding:0;border:none;background:none;cursor:pointer;
+    border-radius:var(--radius-inside);color:var(--text-on-dark-2);opacity:.6;
+    transition:opacity .15s,background .15s,color .15s}
+  .usl-foot .fcontact:hover .fcopy,.usl-foot .fcopy:focus-visible{opacity:1}
+  .usl-foot .fcopy:hover{background:var(--surface-dark-2);color:var(--text-on-dark)}
+  .usl-foot .fcopy:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+  .usl-foot .fcopy svg{width:15px;height:15px;display:block}
+  .usl-foot .fcopy .ic-done{display:none}
+  .usl-foot .fcopy.is-done{opacity:1;color:var(--brand)}
+  .usl-foot .fcopy.is-done .ic-copy{display:none}
+  .usl-foot .fcopy.is-done .ic-done{display:block}
+  /* сенсорный ввод: копировать нечего — там тап по номеру звонит, по почте открывает клиент */
+  @media (hover:none){.usl-foot .fcopy{display:none}}
+  @media (prefers-reduced-motion:reduce){.usl-foot .fcopy{transition:none}}
+
+  /* ── ВАРИАНТ Б копирования: без кнопок, подсказка при наведении ──
+     Включается классом body.fcopy-hint. Кнопки-иконки (вариант А) при этом скрыты.
+     Клик по номеру копирует вместо перехода — но только там, где есть мышь:
+     на тач-устройстве tel:/mailto: должны работать как обычные ссылки. */
+  body.fcopy-hint .usl-foot .fcopy{display:none}
+  body.fcopy-hint .usl-foot .fcopy-link{position:relative;display:inline-block}
+  @media (hover:hover){
+    body.fcopy-hint .usl-foot .fcopy-link{cursor:pointer;
+      border-bottom:1px dashed var(--border-on-dark-2);transition:border-color .15s}
+    body.fcopy-hint .usl-foot .fcopy-link:hover{border-bottom-color:var(--text-on-dark)}
+    /* подсказка справа, а не снизу: строки идут через 12px и снизу она накрывала соседнюю */
+    body.fcopy-hint .usl-foot .fcopy-link::after{content:attr(data-hint);position:absolute;
+      left:calc(100% + var(--sp-10));top:50%;z-index:5;
+      background:var(--surface-card);color:var(--text-primary);
+      font-size:11.5px;font-weight:600;line-height:1.3;padding:5px 9px;
+      border-radius:var(--radius-inside);white-space:nowrap;box-shadow:var(--shadow);
+      opacity:0;pointer-events:none;transform:translate(-3px,-50%);
+      transition:opacity .15s,transform .15s}
+    body.fcopy-hint .usl-foot .fcopy-link:hover::after,
+    body.fcopy-hint .usl-foot .fcopy-link:focus-visible::after,
+    body.fcopy-hint .usl-foot .fcopy-link.is-done::after{opacity:1;transform:translate(0,-50%)}
+    body.fcopy-hint .usl-foot .fcopy-link.is-done::after{content:"Скопировано";
+      background:var(--brand);color:var(--on-brand)}
+  }
+  @media (prefers-reduced-motion:reduce){body.fcopy-hint .usl-foot .fcopy-link,
+    body.fcopy-hint .usl-foot .fcopy-link::after{transition:none}}
+
+  /* Адрес ведёт на карту — стрелка «наружу» говорит это до клика.
+     display:inline (а не block от .usl-foot a и не inline-flex): при переносе адреса
+     во flex-строке стрелка отрывалась от текста и уезжала к краю колонки. */
+  .usl-foot .fcontacts a.fmap{display:inline}
+  .usl-foot .fcontacts a.fmap svg{display:inline-block;width:11px;height:11px;
+    margin-left:var(--sp-4);vertical-align:-1px;opacity:.7}
   .usl-foot .fnote{margin:0;font-size:var(--t-small);line-height:var(--t-small-lh)}
 
-  /* Мессенджеры — канал связи («написать нам»), а не подписка: поэтому кнопки, а не список ссылок.
-     Соцсети живут в другой зоне, рядом с подпиской — там цель «следить за нами».
-     Иконки — официальные ассеты из assets/ (свои рисовать нельзя: товарные знаки). */
-  .usl-foot .fmsg{display:flex;flex-wrap:wrap;gap:var(--sp-8);margin-bottom:var(--sp-24)}
-  /* .usl-foot a{display:block} (0,1,1) перебивает .mk-btn{display:inline-flex} (0,1,0) — возвращаем */
-  .usl-foot .fmsg .mk-btn{display:inline-flex;gap:var(--sp-8);padding:0 var(--sp-14)}
-  .usl-foot .fmsg img{width:18px;height:18px;display:block}
+  /* Мессенджеры — тот же канал связи, что телефон и почта, поэтому и строка та же.
+     Глифы монохромные (fill:currentColor), те же контуры, что у кнопок мессенджеров в шапке:
+     растровый max.png в плитку не годится и цвет не наследует. */
 
   /* ЗАГЛУШКА: бейдж «Хорошее место» — товарный знак Яндекса, рисовать свой нельзя.
      Нужен официальный ассет/виджет Яндекс.Бизнеса. */
@@ -352,21 +412,33 @@
   .usl-foot .fbadge span{font-size:var(--t-caption);line-height:var(--t-caption-lh)}
 
   /* ПОДПИСКА + СОЦСЕТИ — отдельная зона: цель «следить за нами», а не «связаться». */
-  .usl-foot .fsub-bleed{border-top:1px solid var(--border-on-dark)}
-  .usl-foot .fsub{display:grid;grid-template-columns:776fr 376fr;gap:var(--sp-24);
-    align-items:start;padding:var(--sp-32) 0}
+  /* дайджест и соцсети живут в верхней полосе; своей зоны у них больше нет */
   .usl-foot .fsub h5{margin-bottom:var(--sp-8)}
-  .usl-foot .fsub-note{margin:0 0 var(--sp-16);font-size:var(--t-small);line-height:var(--t-small-lh);max-width:520px}
-  .usl-foot .fsub-form{display:flex;gap:var(--sp-8);flex-wrap:wrap;max-width:520px}
-  .usl-foot .fsub-form input{flex:1 1 240px;min-width:0;height:48px;padding:0 var(--sp-16);
-    background:transparent;border:1px solid var(--border-on-dark);border-radius:var(--radius-pill);
-    color:var(--text-on-dark);font-family:var(--font-body);font-size:var(--t-small);
+  .usl-foot .fsub-note{margin:0 0 var(--sp-16);font-size:var(--t-small);line-height:var(--t-small-lh);max-width:420px}
+  /* Кнопка внутри поля — тот же приём, что у поиска в шапке (.search): пилюля-контейнер
+     держит рамку и фокус, input внутри прозрачный и без своей рамки, кнопка .mk-btn--sm.
+     420 < ширины колонки: между кнопкой и соседней колонкой остаётся воздух. */
+  .usl-foot .fsub-form{display:flex;align-items:center;max-width:420px;height:48px;
+    padding:0 var(--sp-6) 0 var(--sp-16);background:transparent;
+    border:1px solid var(--border-on-dark);border-radius:var(--radius-pill);
     transition:border-color .15s}
+  .usl-foot .fsub-form:focus-within{border-color:var(--brand)}
+  .usl-foot .fsub-form input{flex:1;min-width:0;height:100%;padding:0;
+    background:transparent;border:none;outline:none;
+    color:var(--text-on-dark);font-family:var(--font-body);font-size:var(--t-small)}
   .usl-foot .fsub-form input::placeholder{color:var(--text-on-dark-2)}
-  .usl-foot .fsub-form input:focus{outline:none;border-color:var(--brand)}
-  .usl-foot .fsub-legal{margin:var(--sp-12) 0 0;font-size:var(--t-caption);line-height:var(--t-caption-lh);max-width:520px}
-  .usl-foot .fsub-legal a{display:inline;padding:0;text-decoration:underline;text-underline-offset:2px}
-  .usl-foot .fsoc{display:flex;flex-wrap:wrap;gap:var(--sp-4) var(--sp-16)}
+  /* .usl-foot a{display:block} до кнопки не достаёт (она button), но flex-shrink нужен явно */
+  .usl-foot .fsub-form .mk-btn{flex-shrink:0}
+  /* Согласие на рассылку — чекбокс, а не «нажимая кнопку»: дайджест с акциями это реклама,
+     а рекламная рассылка требует предварительного согласия, которое надо уметь доказать
+     (ч.1 ст.18 ФЗ «О рекламе»). Тот же паттерн, что в модалке заявки, но на тёмном. */
+  .usl-foot .fsub-check{display:flex;gap:var(--sp-8);align-items:flex-start;cursor:pointer;
+    margin:var(--sp-12) 0 0;max-width:420px;
+    font-size:var(--t-caption);line-height:var(--t-caption-lh)}
+  .usl-foot .fsub-check input{width:16px;height:16px;margin-top:1px;flex-shrink:0;
+    accent-color:var(--brand);cursor:pointer}
+  .usl-foot .fsub-check a{display:inline;padding:0;text-decoration:underline;text-underline-offset:2px}
+  .usl-foot .fsoc{display:flex;flex-direction:column;gap:var(--sp-2)}
   .usl-foot .fsoc a{padding:var(--sp-4) 0}
 
   .usl-foot .fbot-bleed{border-top:1px solid var(--border-on-dark)}
@@ -374,9 +446,15 @@
     gap:var(--sp-16) var(--sp-24);flex-wrap:wrap;padding:var(--sp-20) 0 var(--sp-28);
     font-size:var(--t-caption);line-height:var(--t-caption-lh)}
   .usl-foot .fbot p{margin:0;color:var(--text-on-dark-2)}
+  .usl-foot .fbot-co p + p{margin-top:var(--sp-4)}
   .usl-foot .flegal{display:flex;flex-wrap:wrap;gap:var(--sp-4) var(--sp-20)}
   .usl-foot .flegal a{padding:0;font-size:var(--t-caption);line-height:var(--t-caption-lh)}
-  @media (prefers-reduced-motion:reduce){.usl-foot a,.usl-foot .fsub-form input{transition:none}}
+  @media (prefers-reduced-motion:reduce){.usl-foot a,.usl-foot .fsub-form{transition:none}}
+
+  /* Последним правилом футера: .usl-foot a{display:block}, .flogo{display:block},
+     .fbadge{display:inline-flex} — все той же специфичности, что и селектор ниже.
+     При равной специфичности решает порядок, поэтому [hidden] должен идти после них. */
+  .usl-foot [hidden]{display:none}
 
   /* Виджет SmartWidgets: нужен только как источник данных (window.swapp_data).
      Его собственный CSS перебивает атрибут [hidden] (.sw-app получает display:flex,
@@ -402,23 +480,22 @@
     .usl-port .port-grid--photo{--item-w:calc((100% - var(--sp-20)) / 2)}
     .usl-hero h1{font-size:34px}
     .usl h2{font-size:24px}
-    .usl-foot .fcols{grid-template-columns:1fr}
+    .usl-foot .ftop{grid-template-columns:1fr}
     .usl-foot .flinks{grid-template-columns:1fr 1fr}
-    .usl-foot .fsub{grid-template-columns:1fr}
   }
 
   /* ===== ОСНОВНАЯ ШАПКА ===== */
-  header{background:var(--bg);border-bottom:1px solid var(--line);position:relative;z-index:40}
+  header{background:var(--surface-page);border-bottom:1px solid var(--border);position:relative;z-index:40}
   .hbar{display:flex;align-items:center;gap:20px;height:60px}
 
   .logo{display:flex;align-items:center;flex-shrink:0}
   .logo img{height:26px;width:auto;display:block}
 
-  .search{flex:1;display:flex;align-items:center;height:42px;border:1px solid var(--line2);border-radius:var(--radius-pill);padding:0 5px 0 16px;transition:border-color .15s;background:var(--surface-card)}
+  .search{flex:1;display:flex;align-items:center;height:42px;border:1px solid var(--border-strong);border-radius:var(--radius-pill);padding:0 5px 0 16px;transition:border-color .15s;background:var(--surface-card)}
   .search:focus-within{border-color:var(--text-primary)}
-  .search .si{color:var(--muted2);flex-shrink:0;margin-right:8px}
+  .search .si{color:var(--text-tertiary);flex-shrink:0;margin-right:8px}
   .search input{flex:1;border:none;outline:none;font-size:13.5px;background:transparent;color:var(--text-primary)}
-  .search input::placeholder{color:var(--muted2)}
+  .search input::placeholder{color:var(--text-tertiary)}
   /* .s-go = .mk-btn--dark --sm */
   .search .s-go{flex-shrink:0}
 
@@ -426,13 +503,13 @@
   .search{position:relative}
   .search .s-clear{display:none;width:28px;height:28px;align-items:center;justify-content:center;border:none;background:none;color:var(--text-tertiary);cursor:pointer;border-radius:50%;flex-shrink:0;margin-right:2px;transition:.12s}
   .search.has-val .s-clear{display:flex}
-  .search .s-clear:hover{background:var(--hover);color:var(--text-primary)}
+  .search .s-clear:hover{background:var(--surface-subtle);color:var(--text-primary)}
   body.search-open header{z-index:60}/* поднять шапку над навбаром, чтобы блок поиска был сверху */
   /* активное состояние: поле + дропдаун = ЕДИНЫЙ приподнятый блок (поле «утоплено» в верх панели),
      одна рамка + одна тень отделяют весь блок от шапки */
-  .search-drop{position:absolute;top:-1px;left:-1px;right:-1px;background:var(--surface-card);border:1px solid var(--line2);border-radius:var(--radius-outside);box-shadow:0 16px 40px -8px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.05);padding:47px 8px 9px;z-index:1;display:none;max-height:min(80vh,620px);overflow:hidden}
+  .search-drop{position:absolute;top:-1px;left:-1px;right:-1px;background:var(--surface-card);border:1px solid var(--border-strong);border-radius:var(--radius-outside);box-shadow:0 16px 40px -8px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.05);padding:47px 8px 9px;z-index:1;display:none;max-height:min(80vh,620px);overflow:hidden}
   /* тонкий разделитель строки поиска от подсказок внутри блока */
-  .search-drop::before{content:"";position:absolute;top:45px;left:15px;right:15px;height:1px;background:var(--line)}
+  .search-drop::before{content:"";position:absolute;top:45px;left:15px;right:15px;height:1px;background:var(--border)}
   .search.s-open{border-color:transparent;background:transparent;z-index:61}
   .search.s-open > :not(.search-drop){position:relative;z-index:2}/* контролы поля поверх панели */
   .search.s-open .search-drop{display:block}
@@ -440,34 +517,33 @@
   .search-drop[data-state="empty"] .sd-empty{display:block}
   .search-drop[data-state="results"] .sd-results{display:block}
   .search-drop[data-state="none"] .sd-none{display:block}
-  .sd-h{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;padding:9px 10px 7px}
+  .sd-h{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-secondary);font-weight:700;padding:9px 10px 7px}
   .sd-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 8px 6px}
-  .sd-chip{font-family:inherit;font-size:13px;color:var(--text-primary);background:var(--surface-gray);border:1px solid var(--line2);border-radius:var(--radius-pill);padding:7px 13px;cursor:pointer;transition:.12s;white-space:nowrap}
-  .sd-chip:hover{background:var(--accent-soft);border-color:var(--accent-soft2);color:var(--text-primary)}
+  .sd-chip{font-family:inherit;font-size:13px;color:var(--text-primary);background:var(--surface-gray);border:1px solid var(--border-strong);border-radius:var(--radius-pill);padding:7px 13px;cursor:pointer;transition:.12s;white-space:nowrap}
+  .sd-chip:hover{background:var(--brand-soft);border-color:var(--brand-soft-2);color:var(--text-primary)}
   .sd-cats{display:flex;flex-wrap:wrap;gap:5px;padding:0 6px 4px}
   .sd-cat{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-secondary);padding:8px 11px;border-radius:var(--radius-md);transition:.12s}
-  .sd-cat:hover{background:var(--hover);color:var(--text-primary)}
-  .sd-cat .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+  .sd-cat:hover{background:var(--surface-subtle);color:var(--text-primary)}
+  .sd-cat .dot{width:7px;height:7px;border-radius:50%;background:var(--brand);flex-shrink:0}
   /* список подсказок прокручивается, футер «Все результаты» остаётся закреплённым ниже */
   .sd-list{list-style:none;max-height:min(46vh,316px);overflow-y:auto;overscroll-behavior:contain}
   .sd-list::-webkit-scrollbar{width:9px}
-  .sd-list::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:var(--radius-pill);border:2px solid #fff}
+  .sd-list::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:var(--radius-pill);border:2px solid var(--surface-card)}
   .sd-list::-webkit-scrollbar-thumb:hover{background:var(--text-tertiary)}
   .sd-row{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--radius-md);cursor:pointer;transition:background .12s}
-  .sd-row:hover,.sd-row.sel{background:var(--hover)}
+  .sd-row:hover,.sd-row.sel{background:var(--surface-subtle)}
   .sd-row .sd-tx{flex:1;min-width:0;font-size:14px;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .sd-row .sd-tx mark{background:var(--accent-soft);color:var(--text-primary);border-radius:3px;padding:0 1px}
+  .sd-row .sd-tx mark{background:var(--brand-soft);color:var(--text-primary);border-radius:3px;padding:0 1px}
   .sd-row .sd-tag{font-size:11.5px;color:var(--text-secondary);background:var(--surface-gray);border-radius:var(--radius-inside);padding:3px 8px;flex-shrink:0;white-space:nowrap}
   /* цветные теги типов сущностей (поиск по всему сайту) */
-  .sd-tag.t-svc{color:var(--text-secondary);background:#f1f2f4}
-  .sd-tag.t-sec{color:#9a7a1f;background:var(--accent-soft)}
-  .sd-tag.t-art{color:#3b6fb0;background:#edf3fb}
-  .sd-tag.t-port{color:#6b53b0;background:#f1ecfb}
-  .sd-tag.t-news{color:#3f8a52;background:#e9f6ed}
-  .sd-tag.t-page{color:var(--text-secondary);background:#f1f2f4}
+  /* t-svc и t-page своего цвета не имеют: базовый .sd-tag уже нейтральный */
+  .sd-tag.t-sec{color:var(--brand-text);background:var(--brand-soft)}
+  .sd-tag.t-art{color:var(--tag-article);background:var(--tag-article-bg)}
+  .sd-tag.t-port{color:var(--tag-portfolio);background:var(--tag-portfolio-bg)}
+  .sd-tag.t-news{color:var(--tag-news);background:var(--tag-news-bg)}
   .sd-row .arr-ico{width:14px;height:14px;color:var(--text-tertiary);flex-shrink:0;transition:transform .15s,color .15s}
   .sd-row:hover .arr-ico{color:var(--text-secondary);transform:translateX(2px)}
-  .sd-all{display:flex;align-items:center;gap:9px;margin-top:5px;padding:11px 12px 6px;border-top:1px solid var(--line);font-size:13.5px;font-weight:600;color:var(--text-primary);cursor:pointer}
+  .sd-all{display:flex;align-items:center;gap:9px;margin-top:5px;padding:11px 12px 6px;border-top:1px solid var(--border);font-size:13.5px;font-weight:600;color:var(--text-primary);cursor:pointer}
   .sd-all b{font-weight:800}
   .sd-all .arr-ico{width:14px;height:14px;margin-left:auto;transition:transform .15s}
   .sd-all:hover .arr-ico{transform:translateX(2px)}
@@ -477,8 +553,8 @@
 
   /* телефон в шапке — выделенный (решение со встречи) */
   .hphone{display:flex;align-items:center;gap:10px;flex-shrink:0;margin:0 4px;padding:5px 10px;border-radius:var(--radius-md);transition:background .15s}
-  .hphone:hover{background:var(--hover)}
-  .hphone .ph-ic{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--text-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .hphone:hover{background:var(--surface-subtle)}
+  .hphone .ph-ic{width:34px;height:34px;border-radius:50%;background:var(--brand-soft);color:var(--text-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
   .hphone .ph-txt{display:flex;flex-direction:column;align-items:flex-start;gap:0}
   .hphone .num{font-size:16px;font-weight:500;color:var(--text-primary);white-space:nowrap;letter-spacing:.2px;line-height:1.25}
   .hphone .num .pre{font-weight:500;color:var(--text-primary)}
@@ -490,16 +566,18 @@
 
   /* единый стиль кнопок шапки */
   .hactions{display:flex;align-items:center;gap:2px;flex-shrink:0}
-  .hactions .sep{width:1px;height:30px;background:var(--line);margin:0 8px}
-  .hbtn{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--text-primary);cursor:pointer;font-size:12px;font-weight:500;position:relative;padding:5px 8px;border-radius:var(--radius-md);transition:background .15s,color .15s;min-width:56px}
-  .hbtn:hover{background:var(--hover);color:var(--text-primary)}
+  .hactions .sep{width:1px;height:30px;background:var(--border);margin:0 8px}
+  /* и <button>, и <a>: сбрасываем кнопочные умолчания, шрифт наследуем */
+  .hbtn{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--text-primary);cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;position:relative;padding:5px 8px;border:none;background:none;border-radius:var(--radius-md);transition:background .15s,color .15s;min-width:56px}
+  .hbtn:hover{background:var(--surface-subtle);color:var(--text-primary)}
+  .hbtn:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
   .hbtn .ci{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
-  .hbtn .badge{position:absolute;top:2px;right:10px;background:var(--accent);color:var(--text-primary);font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+  .hbtn .badge{position:absolute;top:2px;right:10px;background:var(--brand);color:var(--text-primary);font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px}
   /* акцентный кружок с самолётиком */
-  .hbtn .accent-ic{width:22px;height:22px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center}
+  .hbtn .accent-ic{width:22px;height:22px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center}
 
   /* ===== ПОЛОСА НАВИГАЦИИ ===== */
-  .navbar{background:var(--bg);border-bottom:1px solid var(--line);position:relative;z-index:46}
+  .navbar{background:var(--surface-page);border-bottom:1px solid var(--border);position:relative;z-index:46}
   .nav{display:flex;align-items:center;gap:6px;height:44px;position:relative;z-index:2}
   /* .catbtn = .mk-btn--dark --md; своё — только бургер-иконка */
   .catbtn{user-select:none;flex-shrink:0}
@@ -528,36 +606,36 @@
   .cbm-back.show{opacity:1;visibility:visible}
   .cbm{position:relative;width:100%;max-width:384px;background:var(--surface-card);border-radius:var(--radius-outside);box-shadow:var(--shadow-lg);padding:28px 26px 22px;transform:translateY(8px) scale(.985);transition:transform .2s}
   .cbm-back.show .cbm{transform:none}
-  .cbm-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border:none;background:var(--hover);border-radius:50%;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s}
+  .cbm-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border:none;background:var(--surface-subtle);border-radius:50%;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s}
   .cbm-x:hover{background:var(--border);color:var(--text-primary)}
-  .cbm-title{font-size:20px;font-weight:700;letter-spacing:-.2px;color:var(--ink)}
-  .cbm-sub{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .cbm-title{font-size:20px;font-weight:700;letter-spacing:-.2px;color:var(--text-primary)}
+  .cbm-sub{font-size:13px;color:var(--text-secondary);margin-top:6px;line-height:1.4}
   .cbm form{margin-top:18px;display:flex;flex-direction:column;gap:13px}
   .cbm-field{display:flex;flex-direction:column;gap:6px}
   .cbm-lbl{font-size:12.5px;font-weight:600;color:var(--text-primary)}
   .cbm-lbl i{color:var(--danger);font-style:normal}
-  .cbm-lbl em{color:var(--muted2);font-weight:500;font-style:normal}
-  .cbm input[type=tel],.cbm input.cbm-tf,.faq-form input[type=tel],.faq-form input.cbm-tf{height:46px;border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:0 14px;font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
-  .cbm input[type=tel]:focus,.cbm input.cbm-tf:focus,.faq-form input[type=tel]:focus,.faq-form input.cbm-tf:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-  .cbm input::placeholder,.faq-form input::placeholder{color:var(--muted2)}
+  .cbm-lbl em{color:var(--text-tertiary);font-weight:500;font-style:normal}
+  .cbm input[type=tel],.cbm input.cbm-tf,.faq-form input[type=tel],.faq-form input.cbm-tf{height:46px;border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:0 14px;font-family:inherit;font-size:15px;color:var(--text-primary);outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
+  .cbm input[type=tel]:focus,.cbm input.cbm-tf:focus,.faq-form input[type=tel]:focus,.faq-form input.cbm-tf:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+  .cbm input::placeholder,.faq-form input::placeholder{color:var(--text-tertiary)}
   .cbm-row{display:flex;gap:11px}
   .cbm-row .cbm-field{flex:1;min-width:0}
-  .cbm-ta{border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:11px 14px;font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;width:100%;resize:vertical;min-height:76px;line-height:1.4}
-  .cbm-ta:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-  .cbm-ta::placeholder{color:var(--muted2)}
+  .cbm-ta{border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:11px 14px;font-family:inherit;font-size:15px;color:var(--text-primary);outline:none;transition:border-color .15s,box-shadow .15s;width:100%;resize:vertical;min-height:76px;line-height:1.4}
+  .cbm-ta:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+  .cbm-ta::placeholder{color:var(--text-tertiary)}
   /* селектор способа связи */
   .cbm-sel{position:relative}
-  .cbm-sel select{appearance:none;-webkit-appearance:none;cursor:pointer;width:100%;height:46px;border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:0 36px 0 14px;font-family:inherit;font-size:15px;color:var(--ink);background:var(--surface-card);outline:none;transition:border-color .15s,box-shadow .15s}
-  .cbm-sel select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-  .cbm-sel select:invalid{color:var(--muted2)}
-  .cbm-sel::after{content:"";position:absolute;right:15px;top:calc(50% - 6px);width:8px;height:8px;transform:rotate(45deg);border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);pointer-events:none}
+  .cbm-sel select{appearance:none;-webkit-appearance:none;cursor:pointer;width:100%;height:46px;border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:0 36px 0 14px;font-family:inherit;font-size:15px;color:var(--text-primary);background:var(--surface-card);outline:none;transition:border-color .15s,box-shadow .15s}
+  .cbm-sel select:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+  .cbm-sel select:invalid{color:var(--text-tertiary)}
+  .cbm-sel::after{content:"";position:absolute;right:15px;top:calc(50% - 6px);width:8px;height:8px;transform:rotate(45deg);border-right:2px solid var(--text-secondary);border-bottom:2px solid var(--text-secondary);pointer-events:none}
   /* загрузка файлов */
   .cbm-file{position:relative;display:flex;align-items:center;gap:8px;height:46px;border:1px dashed var(--border-strong);border-radius:var(--radius-md);padding:0 14px;cursor:pointer;color:var(--text-secondary);font-size:14px;transition:border-color .15s,background .15s}
-  .cbm-file:hover{border-color:var(--muted2);background:var(--hover)}
+  .cbm-file:hover{border-color:var(--text-tertiary);background:var(--surface-subtle)}
   .cbm-file input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-  .cbm-file svg{flex-shrink:0;color:var(--muted)}
+  .cbm-file svg{flex-shrink:0;color:var(--text-secondary)}
   .cbm-file-btn{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-  .cbm-file-hint{font-size:11px;color:var(--muted2);line-height:1.4;margin-top:-4px}
+  .cbm-file-hint{font-size:11px;color:var(--text-tertiary);line-height:1.4;margin-top:-4px}
   #reqBack .cbm{max-width:440px;max-height:calc(100vh - 40px);overflow-y:auto}
   .cbm-field.invalid input{border-color:var(--danger)}
   .cbm-field.invalid input:focus{box-shadow:0 0 0 3px rgba(224,72,58,.12)}
@@ -568,22 +646,22 @@
   .cbm-check input{width:17px;height:17px;margin-top:1px;accent-color:var(--text-primary);flex-shrink:0;cursor:pointer}
   .cbm-check a{color:var(--text-secondary);text-decoration:underline;text-underline-offset:2px}
   .cbm-check a:hover{color:var(--text-primary)}
-  .cbm-check em{color:var(--muted2);font-style:normal}
+  .cbm-check em{color:var(--text-tertiary);font-style:normal}
   /* .cbm-submit = .mk-btn--primary; своё — растяжка по ширине формы */
   .cbm-submit{width:100%;margin-top:3px}
-  .cbm-fine{font-size:10.5px;color:var(--muted2);line-height:1.4;text-align:center}
+  .cbm-fine{font-size:10.5px;color:var(--text-tertiary);line-height:1.4;text-align:center}
   .cbm-done{text-align:center;padding:8px 4px 4px}
-  .cbm-done-ic{width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--text-primary);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  .cbm-done-ic{width:56px;height:56px;border-radius:50%;background:var(--brand);color:var(--text-primary);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
   .cbm-done .cbm-sub{margin:6px 0 20px}
   .cbm-done .cbm-submit{width:100%;margin-top:0}
 
-  .mega{position:absolute;left:0;right:0;top:100%;z-index:45;display:none;background:var(--surface-card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 16px 30px -8px rgba(0,0,0,.12)}
+  .mega{position:absolute;left:0;right:0;top:100%;z-index:45;display:none;background:var(--surface-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);box-shadow:0 16px 30px -8px rgba(0,0,0,.12)}
   .mega.open{display:block}
   .mega-inner{width:min(100% - var(--container-pad) * 2, var(--container));margin-inline:auto}
-  .mega-box{border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  .mega-box{border-left:1px solid var(--border);border-right:1px solid var(--border)}
 
   /* внутренние табы: Каталог / Услуги / Материалы */
-  .mtabs{display:flex;gap:28px;padding:14px 20px 0;border-bottom:1px solid var(--line);margin:0 -1px}
+  .mtabs{display:flex;gap:28px;padding:14px 20px 0;border-bottom:1px solid var(--border);margin:0 -1px}
   .mtabs button{background:none;border:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;color:var(--text-tertiary);padding:0 0 12px;position:relative;transition:color .15s}
   .mtabs button:hover:not(:disabled){color:var(--text-secondary)}
   .mtabs button.active{color:var(--text-primary)}
@@ -598,7 +676,7 @@
 
   /* общий контейнер для Услуг/Материалов (без рельсы и промо) */
   .svc-pane{padding:18px 4px 28px}
-  .svc-pane .phead{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .svc-pane .phead{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border)}
   .svc-pane .phead h3{font-size:17px;font-weight:800;letter-spacing:-.1px}
   .svc-pane .phead a{font-size:13px;color:var(--text-secondary);font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:color .12s}
   .svc-pane .phead a:hover{color:var(--text-primary)}
@@ -608,41 +686,41 @@
 
   /* карточки материалов */
   .mat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-  .mat-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--line2);border-radius:14px;background:var(--surface-card);transition:border-color .15s,background .15s,box-shadow .15s}
-  .mat-card:hover{border-color:var(--border-strong);background:#fafafa;box-shadow:0 4px 14px rgba(0,0,0,.05)}
-  .mat-card .mat-ic{width:48px;height:48px;border-radius:var(--radius-md);background:#f2f3f5;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);flex-shrink:0;transition:background .15s,color .15s}
-  .mat-card:hover .mat-ic{background:var(--accent-soft);color:var(--text-primary)}
+  .mat-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--border-strong);border-radius:14px;background:var(--surface-card);transition:border-color .15s,background .15s,box-shadow .15s}
+  .mat-card:hover{border-color:var(--border-strong);background:var(--surface-subtle);box-shadow:0 4px 14px rgba(0,0,0,.05)}
+  .mat-card .mat-ic{width:48px;height:48px;border-radius:var(--radius-md);background:var(--surface-gray);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);flex-shrink:0;transition:background .15s,color .15s}
+  .mat-card:hover .mat-ic{background:var(--brand-soft);color:var(--text-primary)}
   .mat-card .mat-tx{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
   .mat-card .mat-tx b{font-size:14.5px;font-weight:700;color:var(--text-primary)}
   .mat-card .mat-tx i{font-size:12.5px;font-style:normal;color:var(--text-secondary)}
   .mat-card .arr-ico{width:14px;height:14px;color:var(--border-strong);flex-shrink:0;transition:transform .15s,color .15s}
   .mat-card:hover .arr-ico{color:var(--text-secondary);transform:translateX(2px)}
-  .mat-card--accent .mat-ic{background:var(--accent);color:var(--text-primary)}
+  .mat-card--accent .mat-ic{background:var(--brand);color:var(--text-primary)}
 
   /* левая колонка — рельса разделов */
-  .rail{border-right:1px solid var(--line);padding:8px 0;overflow-y:auto;max-height:540px}
-  .rail .ri{display:flex;align-items:center;gap:12px;padding:9px 14px;min-height:40px;cursor:pointer;font-size:14px;font-weight:500;line-height:1.2;letter-spacing:.2px;position:relative;color:#2a2a2a;transition:background .12s}
-  .rail .ri .em{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:#9a9fa8;flex-shrink:0;transition:color .12s}
+  .rail{border-right:1px solid var(--border);padding:8px 0;overflow-y:auto;max-height:540px}
+  .rail .ri{display:flex;align-items:center;gap:12px;padding:9px 14px;min-height:40px;cursor:pointer;font-size:14px;font-weight:500;line-height:1.2;letter-spacing:.2px;position:relative;color:var(--text-primary);transition:background .12s}
+  .rail .ri .em{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);flex-shrink:0;transition:color .12s}
   .rail .ri .em [stroke]{stroke-width:1.7}/* единая толщина обводки иконок рельсы */
-  .rail .ri:hover{background:var(--hover)}
+  .rail .ri:hover{background:var(--surface-subtle)}
   .rail .ri:hover .em{color:var(--text-secondary)}
-  .rail .ri.active{background:var(--accent-soft);color:var(--text-primary);text-shadow:0.4px 0 0 currentColor}
-  .rail .ri.active::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent)}
+  .rail .ri.active{background:var(--brand-soft);color:var(--text-primary);text-shadow:0.4px 0 0 currentColor}
+  .rail .ri.active::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--brand)}
   .rail .ri.active .em{color:var(--text-primary)}
   .rail .ri .arr{margin-left:auto;display:flex;align-items:center;color:var(--text-primary);opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .15s,color .15s;flex-shrink:0}
   .rail .ri:hover .arr{opacity:.45;transform:translateX(0);color:var(--text-secondary)}
   .rail .ri.active .arr{opacity:1;transform:translateX(0);color:var(--text-primary)}
-  .rail .sep{height:1px;background:var(--line);margin:6px 0}
-  .rail .lbl{padding:8px 14px 4px;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700}
+  .rail .sep{height:1px;background:var(--border);margin:6px 0}
+  .rail .lbl{padding:8px 14px 4px;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-secondary);font-weight:700}
   /* демо-переключение рельсы: вар.2 (развёрнуто) ↔ вар.1 (компактно) */
   .rail-v1{display:none}
   body.rv1 .rail-v2{display:none}
   body.rv1 .rail-v1{display:block}
 
   /* центр — контент раздела */
-  .pane{padding:18px 26px 22px;overflow-y:auto;max-height:540px;border-right:1px solid var(--line)}
+  .pane{padding:18px 26px 22px;overflow-y:auto;max-height:540px;border-right:1px solid var(--border)}
   /* заголовок раздела: линию тянем на всю ширину центральной колонки (вровень с бордюрами рельсы/промо) */
-  .pane .phead{display:flex;align-items:center;justify-content:space-between;margin:0 -26px 18px;padding:0 26px 12px;border-bottom:1px solid var(--line)}
+  .pane .phead{display:flex;align-items:center;justify-content:space-between;margin:0 -26px 18px;padding:0 26px 12px;border-bottom:1px solid var(--border)}
   .pane .phead h3{font-size:17px;font-weight:800;letter-spacing:-.1px}
   .pane .phead a{font-size:13px;color:var(--text-secondary);font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:color .12s}
   .pane .phead a:hover{color:var(--text-primary)}
@@ -661,7 +739,6 @@
   .group h4{display:inline-block;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:9px;color:var(--text-primary);cursor:pointer;transition:color .12s;line-height:1.3}
   .group h4 .nw{white-space:nowrap}/* последнее слово + стрелка не разрываются */
   .group h4 .ha{display:inline-block;width:12px;height:12px;background:var(--text-secondary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat;opacity:0;margin-left:5px;vertical-align:-1px;transition:opacity .15s,transform .15s}
-  .group h4:hover{color:#000}
   .group h4:hover .ha{opacity:1;transform:translateX(2px)}
   .group ul{list-style:none}
   .group li{padding:3.5px 0}
@@ -673,24 +750,24 @@
   .group li .more .arr-ico{width:12px;height:12px;margin-left:5px;vertical-align:-2px}
   .group li .more:hover .arr-ico{transform:translateX(2px)}
   /* лейбл ХИТ — прилипает к последнему слову (inline) */
-  .hit{display:inline-block;background:var(--accent);color:var(--text-primary);font-size:9px;font-weight:800;line-height:1;letter-spacing:.4px;text-transform:uppercase;padding:3px 6px 2.5px;border-radius:5px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+  .hit{display:inline-block;background:var(--brand);color:var(--text-primary);font-size:9px;font-weight:800;line-height:1;letter-spacing:.4px;text-transform:uppercase;padding:3px 6px 2.5px;border-radius:5px;margin-left:6px;vertical-align:1px;white-space:nowrap}
   /* бейдж «Новое» — тёмный, чтобы отличался от жёлтого ХИТ */
   .new{display:inline-block;background:var(--text-primary);color:var(--text-on-dark);font-size:9px;font-weight:800;line-height:1;letter-spacing:.4px;text-transform:uppercase;padding:3px 6px 2.5px;border-radius:5px;margin-left:6px;vertical-align:1px;white-space:nowrap}
   /* внешняя ссылка-строка внизу раздела (каталог сувениров) */
   /* внешняя ссылка на mdmgifts — аккуратный последний пункт группы с тонким разделителем и ↗ */
-  .group li.ext-sep{margin-top:7px;padding-top:8px;border-top:1px solid var(--line)}
-  .group .extli{color:#8a7846;font-weight:600}
+  .group li.ext-sep{margin-top:7px;padding-top:8px;border-top:1px solid var(--border)}
+  .group .extli{color:var(--brand-text);font-weight:600}
   .group .extli .ext-ar{display:inline-block;margin-left:2px;transition:transform .15s}
   .group .extli:hover{color:var(--text-primary);text-decoration:none}
   .group .extli:hover .ext-ar{transform:translate(2px,-2px)}
 
   .tabs{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0 9px}
-  .tabs span{font-size:11.5px;color:var(--text-secondary);background:var(--surface-gray);border:1px solid var(--line2);border-radius:var(--radius-inside);padding:3px 9px;cursor:pointer;transition:.12s}
-  .tabs span:hover{background:var(--accent-soft);border-color:var(--accent-soft2)}
+  .tabs span{font-size:11.5px;color:var(--text-secondary);background:var(--surface-gray);border:1px solid var(--border-strong);border-radius:var(--radius-inside);padding:3px 9px;cursor:pointer;transition:.12s}
+  .tabs span:hover{background:var(--brand-soft);border-color:var(--brand-soft-2)}
   /* опции: максимум 4 видимых + «ещё» */
   .tabs .tab-hidden{display:none}
   .tabs.expanded .tab-hidden{display:inline-block}
-  .tabs .tab-more{background:none;border:1px dashed var(--line2);color:var(--text-secondary);font-weight:600}
+  .tabs .tab-more{background:none;border:1px dashed var(--border-strong);color:var(--text-secondary);font-weight:600}
   .tabs.expanded .tab-more{display:none}
 
   /* ===== ПРОМО — переключаемый компонент (единая дизайн-система) ===== */
@@ -704,12 +781,12 @@
 
   /* --- АТОМ: бейдж/лейбл (форма одна, цвет под фон) --- */
   .promo .tag{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 9px;border-radius:16px;background:var(--text-primary);color:var(--text-on-dark)}
-  .promo .tag--accent{background:var(--accent);color:var(--text-primary)}
-  .promo .tag--soft{background:var(--surface-card);color:var(--text-primary);border:1px solid #E9D9A6}
+  .promo .tag--accent{background:var(--brand);color:var(--text-primary)}
+  .promo .tag--soft{background:var(--surface-card);color:var(--text-primary);border:1px solid var(--brand-soft-2)}
 
   /* --- АТОМ: заголовок + текст --- */
   .promo h4{font-size:19px;font-weight:800;line-height:1.22;margin:14px 0 9px;color:var(--text-primary)}
-  .promo p{font-size:13.5px;line-height:1.5;color:#8a7846;margin:0}
+  .promo p{font-size:13.5px;line-height:1.5;color:var(--brand-text);margin:0}
 
   /* --- АТОМ: цена --- */
   .promo .price{display:flex;align-items:baseline;gap:10px;margin:14px 0 0}
@@ -718,9 +795,9 @@
 
   /* --- АТОМ: кнопка (одна форма; цвет под фон) --- */
   .promo .order{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:7px;height:40px;border-radius:var(--radius-md);font-weight:700;font-size:13.5px;cursor:pointer;text-decoration:none;background:var(--text-primary);color:var(--text-on-dark);transition:background .15s}
-  .promo .order:hover{background:#000}
+  .promo .order:hover{background:var(--surface-dark-hover)}
   .promo .order--light{background:var(--surface-card);color:var(--text-primary)}
-  .promo .order--light:hover{background:#f0f0f1}
+  .promo .order--light:hover{background:var(--surface-gray-2)}
   .promo .order .arr-ico{transition:transform .15s}
   .promo .order:hover .arr-ico{transform:translateX(2px)}
 
@@ -739,17 +816,14 @@
   .promo-body[data-for="content"] .order{margin-top:auto}
 
   /* D. HYBRID — тёмный фон, бейдж сверху, текст+кнопка снизу */
-  .promo-hybrid{text-decoration:none;background:linear-gradient(160deg,var(--text-primary) 0%,#2b2b2e 100%)}
-  .promo-hybrid::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 80% 10%,rgba(255,200,41,.35) 0%,transparent 60%);pointer-events:none}
+  .promo-hybrid{text-decoration:none;background:linear-gradient(160deg,var(--surface-dark) 0%,var(--surface-dark-2) 100%)}
+  .promo-hybrid::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 80% 10%,rgba(255,193,0,.35) 0%,transparent 60%);pointer-events:none}
   .promo-hybrid .tag{position:relative}
   .promo-hybrid .hybrid-text{position:relative;margin-top:auto}
   .promo-hybrid h4{color:var(--text-on-dark)}
-  .promo-hybrid p{color:#b9bbc0}
+  .promo-hybrid p{color:var(--text-on-dark-2)}
   .promo-hybrid .order{position:relative}
 
-
-  .note{max-width:var(--max);margin:22px auto;padding:14px 18px;font-size:12.5px;color:var(--text-secondary);background:var(--surface-card);border:1px dashed var(--line2);border-radius:var(--radius-md);line-height:1.7}
-  .note b{color:var(--text-primary)}
 
   /* ===== ФИКС-ШАПКА + УМЕНЬШЕНИЕ ПРИ СКРОЛЛЕ (демо; механику доработаем) ===== */
   .site-head{position:sticky;top:0;z-index:50}
@@ -787,16 +861,14 @@
   body.scrolled .navbar{border-bottom:none}
   body.scrolled .navbar .nav{display:none}
 
-  /* страница-заглушка (демо скролла; в проде — реальный контент) */
-  .ph-page{max-width:var(--max);margin:24px auto 64px;padding:0 20px;display:flex;flex-direction:column;gap:20px}
-  .ph-row{background:var(--surface-card);border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;justify-content:center}
-  .scroll-hint{display:inline-flex;align-items:center;gap:10px;color:#9a9fa8;font-size:16px;font-weight:600;letter-spacing:.2px;user-select:none}
-  .scroll-hint svg{animation:hintBounce 1.4s ease-in-out infinite}
-  @keyframes hintBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
 </style>
 </head>
-<body class="rv1">
+<!-- fcopy-hint = вариант Б (подсказка при наведении). Убрать класс → вариант А (кнопки-иконки). -->
+<body class="rv1 fcopy-hint">
+
+  <!-- Шапка длинная: без этого до контента с клавиатуры ~40 табов -->
+  <a class="mk-skip" href="#content">К основному содержимому</a>
 
   <!-- ФИКС-ШАПКА (прилипает + уменьшается при скролле) -->
   <div class="site-head">
@@ -847,10 +919,10 @@
       <a href="#" class="logo">
         <img src="../assets/mdmprint-logo.svg" alt="MDMprint — заводская типография">
       </a>
-      <div class="hcat mk-btn mk-btn--dark mk-btn--md" id="hcat" title="Каталог">
+      <button type="button" class="hcat mk-btn mk-btn--dark mk-btn--md" id="hcat" title="Каталог" aria-haspopup="true" aria-expanded="false" aria-controls="mega">
         <span class="ic"><i></i><i></i><i></i></span>
         Каталог
-      </div>
+      </button>
       <form class="search" id="searchForm" onsubmit="return false" autocomplete="off">
         <span class="si"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
         <input type="text" id="searchInput" placeholder="Поиск по 2000+ услугам: визитки, наклейки, коробки…">
@@ -900,28 +972,28 @@
         </div>
       </div>
       <div class="hactions">
-        <div class="hbtn" title="Написать в Telegram">
-          <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg></span>
-          Telegram
-        </div>
-        <div class="hbtn" title="Написать в MAX">
+        <button type="button" class="hbtn" title="Написать в Телеграме">
+          <span class="ci"><svg width="21" height="21" viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg></span>
+          Телеграм
+        </button>
+        <button type="button" class="hbtn" title="Написать в Максе">
           <span class="ci"><svg width="20" height="20" viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></span>
-          MAX
-        </div>
+          Макс
+        </button>
         <span class="sep"></span>
         <a class="hbtn hcalc" id="hcalc" href="#" title="Калькулятор">
           <span class="ci"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><circle cx="8.5" cy="17.3" r="1" fill="currentColor"/><circle cx="12" cy="17.3" r="1" fill="currentColor"/><circle cx="15.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
           Калькулятор
         </a>
-        <div class="hbtn" title="Войти">
+        <button type="button" class="hbtn" title="Войти">
           <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c.5-3.4 3.3-5.4 7-5.4s6.5 2 7 5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
           Войти
-        </div>
-        <div class="hbtn" title="Корзина">
+        </button>
+        <button type="button" class="hbtn" title="Корзина">
           <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 4h2.2l1.8 11.5a1.5 1.5 0 0 0 1.5 1.3h8.4a1.5 1.5 0 0 0 1.5-1.2L20.5 8H6.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20" r="1.3" fill="currentColor"/><circle cx="17.5" cy="20" r="1.3" fill="currentColor"/></svg></span>
           <span class="badge">3</span>
           Корзина
-        </div>
+        </button>
       </div>
     </div>
   </header>
@@ -929,23 +1001,23 @@
   <!-- НАВИГАЦИЯ -->
   <div class="navbar">
     <div class="wrap nav">
-      <div class="catbtn mk-btn mk-btn--dark mk-btn--md" id="catbtn">
+      <button type="button" class="catbtn mk-btn mk-btn--dark mk-btn--md" id="catbtn" aria-haspopup="true" aria-expanded="false" aria-controls="mega">
         <span class="ic"><i></i><i></i><i></i></span>
         Каталог
-      </div>
+      </button>
       <!-- Топ категорий: курируется из админки, меняется под сезон (не дублирует разделы каталога) -->
-      <nav class="quick" id="quick">
+      <nav class="quick" id="quick" aria-label="Популярные разделы">
         <a href="#" data-open="1">Календари 2027</a>
         <a href="#" data-open="6">Новогодние наборы</a>
         <a href="#" data-open="0">Визитки</a>
         <a href="#" data-open="4">Наклейки для маркетплейсов</a>
         <a href="#" data-open="2">Баннеры и Roll-Up</a>
       </nav>
-      <div class="calcbtn mk-btn mk-btn--ghost mk-btn--md">
+      <button type="button" class="calcbtn mk-btn mk-btn--ghost mk-btn--md">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><circle cx="8.5" cy="17.3" r="1" fill="currentColor"/><circle cx="12" cy="17.3" r="1" fill="currentColor"/><circle cx="15.5" cy="17.3" r="1" fill="currentColor"/></svg>
         Калькулятор
         <span class="mk-btn__badge">−5%</span>
-      </div>
+      </button>
     </div>
 
     <!-- МЕГАМЕНЮ -->
@@ -1645,7 +1717,7 @@
             <div class="panel" data-sec="m3">
               <div class="phead"><h3>Набор каталогов «Look &amp; Print»</h3></div>
               <div class="group">
-                <p style="font-size:13.5px;color:#5a5f68;line-height:1.6;max-width:420px;margin-bottom:14px">Образцы всех материалов и видов отделки в руки. Поможет выбрать бумагу, ламинацию и эффекты до заказа тиража.</p>
+                <p style="font-size:13.5px;color:var(--text-secondary);line-height:1.6;max-width:420px;margin-bottom:14px">Образцы всех материалов и видов отделки в руки. Поможет выбрать бумагу, ламинацию и эффекты до заказа тиража.</p>
                 <a href="#" class="order" style="display:inline-flex;width:auto;padding:0 18px;text-decoration:none">Заказать набор образцов <span class="arr-ico"></span></a>
               </div>
             </div>
@@ -1751,7 +1823,7 @@
                   <rect x="34" y="34" width="132" height="78" rx="8" fill="#fff" stroke="#E9D9A6" stroke-width="1.5" transform="rotate(-7 100 73)"/>
                   <rect x="24" y="22" width="132" height="78" rx="8" fill="#fff" stroke="#EBDCAA" stroke-width="1.5" transform="rotate(4 90 61)"/>
                   <rect x="38" y="30" width="124" height="72" rx="8" fill="#fff" stroke="#1a1a1a" stroke-width="1.6"/>
-                  <rect x="50" y="42" width="26" height="26" rx="5" fill="#FFC829"/>
+                  <rect x="50" y="42" width="26" height="26" rx="5" fill="#FFC100"/>
                   <rect x="86" y="46" width="60" height="6" rx="3" fill="#1a1a1a"/>
                   <rect x="86" y="58" width="44" height="5" rx="2.5" fill="#c9cdd3"/>
                   <rect x="50" y="80" width="96" height="5" rx="2.5" fill="#dfe2e6"/>
@@ -1767,7 +1839,7 @@
               <div class="promo-cover">
                 <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg" width="60%">
                   <rect x="38" y="30" width="124" height="72" rx="8" fill="#fff" stroke="#1a1a1a" stroke-width="1.6"/>
-                  <rect x="50" y="42" width="26" height="26" rx="5" fill="#FFC829"/>
+                  <rect x="50" y="42" width="26" height="26" rx="5" fill="#FFC100"/>
                   <rect x="86" y="46" width="60" height="6" rx="3" fill="#1a1a1a"/>
                   <rect x="86" y="58" width="44" height="5" rx="2.5" fill="#c9cdd3"/>
                   <rect x="50" y="80" width="96" height="5" rx="2.5" fill="#dfe2e6"/>
@@ -1783,7 +1855,7 @@
               <div class="promo-cover">
                 <svg viewBox="0 0 200 110" fill="none" xmlns="http://www.w3.org/2000/svg" width="55%">
                   <rect x="40" y="22" width="120" height="66" rx="8" fill="#fff" stroke="#1a1a1a" stroke-width="1.6"/>
-                  <rect x="52" y="34" width="24" height="24" rx="5" fill="#FFC829"/>
+                  <rect x="52" y="34" width="24" height="24" rx="5" fill="#FFC100"/>
                   <rect x="86" y="38" width="58" height="6" rx="3" fill="#1a1a1a"/>
                   <rect x="86" y="50" width="40" height="5" rx="2.5" fill="#c9cdd3"/>
                   <rect x="52" y="70" width="92" height="5" rx="2.5" fill="#dfe2e6"/>
@@ -1947,7 +2019,7 @@
   </div>
 
   <!-- ============ СТРАНИЦА УСЛУГИ: ТИСНЕНИЕ ============ -->
-  <main class="usl">
+  <main class="usl" id="content" tabindex="-1">
 
     <!-- HERO -->
     <section class="usl-hero" id="obzor">
@@ -2004,7 +2076,7 @@
     </section>
 
     <!-- STICKY SUBNAV -->
-    <nav class="usl-subnav">
+    <nav class="usl-subnav" aria-label="Разделы страницы">
       <div class="wrap">
         <a href="#obzor" class="active">Обзор</a>
         <a href="#preim">Преимущества</a>
@@ -2013,6 +2085,10 @@
         <a href="#primery">Примеры</a>
         <a href="#trebovaniya">Требования</a>
         <a href="#faq">Вопросы</a>
+        <a href="#products">Применение</a>
+        <a href="#combo">Сочетается</a>
+        <a href="#otzyvy">Отзывы</a>
+        <a href="#stati">Статьи</a>
       </div>
     </nav>
 
@@ -2136,7 +2212,7 @@
         <div class="mk-tabpanel is-active" data-panel="video">
           <div class="mk-scroller port-grid port-grid--video" data-scroller>
             <button type="button" class="mk-scroller__nav mk-scroller__nav--prev" data-dir="-1" aria-label="Назад"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-            <div class="mk-scroller__track">
+            <div class="mk-scroller__track" tabindex="0" role="group" aria-label="Видеоработы, лента с прокруткой">
               <button type="button" class="mk-mcard mk-mcard--bare mk-mcard--story mk-mcard--video mk-mcard--link">
                 <div class="mk-mcard__media"><span class="mk-mcard__play" aria-hidden="true"><svg viewBox="0 0 48 48" fill="currentColor"><path d="M17 11l22 13-22 13z"/></svg></span><span class="mk-mcard__dur">0:32</span></div>
                 <div class="mk-mcard__body">
@@ -2188,7 +2264,7 @@
         <div class="mk-tabpanel" data-panel="photo">
           <div class="mk-scroller port-grid port-grid--photo" data-scroller>
             <button type="button" class="mk-scroller__nav mk-scroller__nav--prev" data-dir="-1" aria-label="Назад"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-            <div class="mk-scroller__track">
+            <div class="mk-scroller__track" tabindex="0" role="group" aria-label="Фотоработы, лента с прокруткой">
               <button type="button" class="mk-mcard mk-mcard--bare mk-mcard--link">
                 <div class="mk-mcard__media"></div>
                 <div class="mk-mcard__body">
@@ -2253,7 +2329,7 @@
 
         <div class="req-grid">
           <div class="req-main mk-card mk-card--gray">
-            <div class="mk-tabs" role="tablist" data-tabs>
+            <div class="mk-tabs" role="tablist" aria-label="Требования к макету" data-tabs>
               <button class="mk-tab is-active" role="tab" aria-selected="true" data-tab="check">Чек-лист</button>
               <button class="mk-tab" role="tab" aria-selected="false" data-tab="params">Параметры</button>
               <button class="mk-tab" role="tab" aria-selected="false" data-tab="detail">Подробные требования</button>
@@ -2434,7 +2510,8 @@
                   <span>Я даю согласие на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a></span>
                 </label>
                 <label class="cbm-check">
-                  <input type="checkbox" name="promo" checked>
+                  <!-- согласие на рекламу не может быть предзаполнено: только активное действие -->
+                  <input type="checkbox" name="promo">
                   <span>Согласен получать новости, спецпредложения и информацию об акциях <em>(необязательно)</em></span>
                 </label>
                 <button type="submit" class="cbm-submit mk-btn mk-btn--primary" disabled>Задать вопрос</button>
@@ -2513,7 +2590,7 @@
     </section>
 
     <!-- С ЧЕМ СОЧЕТАЕТСЯ -->
-    <section class="usl-combo">
+    <section class="usl-combo" id="combo">
       <div class="wrap">
         <div class="sec-head">
           <h2>С чем сочетается тиснение</h2>
@@ -2566,7 +2643,7 @@
     </section>
 
     <!-- ОТЗЫВЫ -->
-    <section class="usl-rev">
+    <section class="usl-rev" id="otzyvy">
       <div class="wrap">
         <div class="sec-head">
           <h2>Отзывы</h2>
@@ -2588,7 +2665,7 @@
         </div>
         <div class="mk-scroller revs" data-scroller>
           <button class="mk-scroller__nav mk-scroller__nav--prev" data-dir="-1" type="button" aria-label="Предыдущие отзывы"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-          <div class="mk-scroller__track">
+          <div class="mk-scroller__track" tabindex="0" role="group" aria-label="Отзывы клиентов, лента с прокруткой">
             <figure class="rev mk-card mk-review">
               <div class="mk-review__head">
                 <span class="mk-review__stars" role="img" aria-label="Оценка 5 из 5">★★★★★</span>
@@ -2651,7 +2728,7 @@
          Ведущая статья — карточкой с фото, остальные — строками (заголовок + рубрика/время).
          В теге рубрика + время чтения; заголовок наборный, не капс: название читают, а не опознают.
          ФОТО-РЫБА: превью нет — на сайте у статей свои картинки, нужна выгрузка. -->
-    <section class="usl-art">
+    <section class="usl-art" id="stati">
       <div class="wrap">
         <div class="sec-head"><h2>Статьи о тиснении</h2></div>
         <div class="arts">
@@ -2708,48 +2785,13 @@
   <!-- ФУТЕР — продолжение той же тёмной поверхности; разделители зон идут от края до края.
        Состав рубрик взят из мегаменю этой же страницы (Каталог 10 разделов, Услуги, Материалы,
        Готовые решения), контакты и реквизиты — с mdmprint.ru.
-       Мессенджеры и соцсети РАЗВЕДЕНЫ: мессенджеры — канал связи (кнопки «написать», рядом
+       Мессенджеры и соцсети РАЗВЕДЕНЫ: мессенджеры — канал связи (строки контактов, рядом
        с телефоном), соцсети — подписка на контент (внизу, рядом с формой рассылки). -->
   <footer class="usl-foot">
-    <div class="fmain">
-     <div class="wrap">
-      <div class="fcols">
-        <div class="fbrand">
-          <a href="#" class="flogo"><img src="../assets/mdmprint-logo-dark.svg" alt="MDMprint — заводская типография"></a>
-          <p class="fabout">Типография полного цикла: печать, постпечать и брендирование под ключ. Работаем с 2012 года.</p>
-
-          <div class="fcontacts">
-            <div class="fcontact">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>
-              <a href="tel:+74952561000">+7 (495) 256-10-00</a>
-            </div>
-            <div class="fcontact">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
-              <a href="mailto:zakaz@mdmprint.ru">zakaz@mdmprint.ru</a>
-            </div>
-            <div class="fcontact">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-              <p class="fnote">Москва, ул. Орджоникидзе, 11с1А, подъезд 29</p>
-            </div>
-            <div class="fcontact">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-              <p class="fnote">Пн–Вс: 09:00–22:00</p>
-            </div>
-          </div>
-
-          <!-- мессенджеры: официальные иконки из assets/. У компании Telegram и MAX. -->
-          <div class="fmsg">
-            <a class="mk-btn mk-btn--ghost-inverse mk-btn--sm" href="#"><img src="../assets/telegram.svg" alt="" width="18" height="18">Telegram</a>
-            <a class="mk-btn mk-btn--ghost-inverse mk-btn--sm" href="#"><img src="../assets/max.png" alt="" width="18" height="18">MAX</a>
-          </div>
-
-          <!-- ЗАГЛУШКА: официальный бейдж Яндекс.Бизнеса. Свой рисовать нельзя — товарный знак. -->
-          <div class="fbadge">
-            <b>Хорошее место</b>
-            <span>Яндекс · 4,9 из 5</span>
-          </div>
-        </div>
-
+    <!-- НАВИГАЦИЯ — своя зона во всю ширину: 4 колонки.
+         Главные заголовки на одной линии; подзаголовки живут внутри своей колонки. -->
+    <div class="fnav-bleed">
+      <div class="wrap">
         <div class="flinks">
           <div>
             <h5 class="mk-label">Каталог</h5>
@@ -2762,56 +2804,118 @@
             <h5 class="mk-label">Услуги</h5>
             <a href="#">Брошюровка и переплёт</a><a href="#">Способы печати</a><a href="#">Нанесение</a>
             <a href="#">Постпечатная обработка</a><a href="#">Резка и сверление</a><a href="#">Другие услуги</a>
-
-            <h5 class="mk-label">Материалы</h5>
-            <a href="#">Бумага</a><a href="#">Пластик</a><a href="#">Ламинация</a><a href="#">Набор каталогов</a>
           </div>
           <div>
+            <h5 class="mk-label">Материалы</h5>
+            <a href="#">Бумага</a><a href="#">Пластик</a><a href="#">Ламинация</a><a href="#">Набор каталогов</a>
+
             <h5 class="mk-label">Готовые решения</h5>
             <a href="#">Бизнесу</a><a href="#">Рекламным агентствам</a>
-
-            <h5 class="mk-label">Компания</h5>
-            <a href="#">Контакты</a><a href="#">Блог</a><a href="#">Новости</a>
-            <a href="#">Экскурсия по производству</a><a href="#">Вакансии</a>
           </div>
           <div>
             <h5 class="mk-label">Информация</h5>
             <a href="#">Доставка</a><a href="#">Оплата</a><a href="#">Требования к макетам</a>
             <a href="#">Скидки и акции</a><a href="#">Портфолио</a>
+
+            <h5 class="mk-label">Компания</h5>
+            <a href="#">Контакты</a><a href="#">Блог</a><a href="#">Новости</a>
+            <a href="#">Экскурсия по производству</a><a href="#">Вакансии</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="fmain">
+     <div class="wrap">
+      <div class="ftop">
+        <div class="fbrand">
+          <!-- временно скрыты: на их месте заголовок «Контакты» -->
+          <a href="#" class="flogo" hidden><img src="../assets/mdmprint-logo-dark.svg" alt="MDMprint — заводская типография"></a>
+          <p class="fabout" hidden>Типография полного цикла: печать, постпечать и брендирование под ключ. Работаем с 2012 года.</p>
+          <h5 class="mk-label">Контакты</h5>
+
+          <!-- Контакты столбиком -->
+          <div class="fcontacts">
+            <div class="fcont-col">
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 2a7.5 7.5 0 0 0-7.5 7.5c0 5.4 6.6 12 6.9 12.3a.85.85 0 0 0 1.2 0c.3-.3 6.9-6.9 6.9-12.3A7.5 7.5 0 0 0 12 2Zm0 10a2.6 2.6 0 1 1 0-5.2 2.6 2.6 0 0 1 0 5.2Z"/></svg></span>
+                <div class="fcontact__body">
+                  <a class="fmap" href="https://yandex.ru/maps/?text=Москва,%20улица%20Орджоникидзе,%2011с1А" target="_blank" rel="noopener noreferrer">Москва, ул. Орджоникидзе, 11с1А, подъезд 29<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg><span class="mk-sr">Откроется на Яндекс.Картах в новой вкладке</span></a>
+                  <p class="fnote">Офис открыт Пн–Вс, 09:00–22:00</p>
+                </div>
+              </div>
+            </div>
+            <div class="fcont-col">
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2Z"/></svg></span>
+                <a href="tel:+74952561000" class="fcopy-link" data-copy="+7 (495) 256-10-00" data-hint="Нажмите, чтобы скопировать">+7 (495) 256-10-00</a>
+                <button type="button" class="fcopy" data-copy="+7 (495) 256-10-00" title="Скопировать" aria-label="Скопировать телефон"><svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+              </div>
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg></span>
+                <a href="mailto:zakaz@mdmprint.ru" class="fcopy-link" data-copy="zakaz@mdmprint.ru" data-hint="Нажмите, чтобы скопировать">zakaz@mdmprint.ru</a>
+                <button type="button" class="fcopy" data-copy="zakaz@mdmprint.ru" title="Скопировать" aria-label="Скопировать e-mail"><svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+              </div>
+            </div>
+            <div class="fcont-col">
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg></span>
+                <a href="#">Написать в Телеграме</a>
+              </div>
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></span>
+                <a href="#">Написать в Максе</a>
+              </div>
+            </div>
+          </div>
+          <p class="mk-sr js-copy-status" role="status" aria-live="polite"></p>
+
+          <!-- ЗАГЛУШКА: официальный бейдж Яндекс.Бизнеса. Свой рисовать нельзя — товарный знак. -->
+          <div class="fbadge" hidden>
+            <b>Хорошее место</b>
+            <span>Яндекс · 4,9 из 5</span>
+          </div>
+        </div>
+
+        <div class="fsub">
+          <h5 class="mk-label">Дайджест раз в месяц</h5>
+          <p class="fsub-note">Новые технологии печати, разборы макетов и акции. Без спама, отписка в один клик.</p>
+          <!-- novalidate снят, чекбокс внутри form: иначе required его не проверит -->
+          <form onsubmit="return false">
+            <div class="fsub-form">
+              <input type="email" name="email" placeholder="you@example.ru" autocomplete="email" required aria-label="E-mail для рассылки">
+              <button type="submit" class="mk-btn mk-btn--primary mk-btn--sm">Подписаться</button>
+            </div>
+            <label class="fsub-check">
+              <input type="checkbox" name="subscribe_consent" required>
+              <span>Я согласен получать рекламные материалы по e-mail и даю согласие на обработку
+                <a href="#">персональных данных</a> в соответствии с
+                <a href="#">политикой обработки персональных данных</a>. Отписаться можно в любой момент.</span>
+            </label>
+          </form>
+        </div>
+
+        <div class="fsoc-col">
+          <h5 class="mk-label">Мы в соцсетях</h5>
+          <div class="fsoc">
+            <a href="#">ВКонтакте</a><a href="#">YouTube</a><a href="#">Rutube</a>
+            <a href="#">Дзен</a><a href="#">Одноклассники</a><a href="#">Pinterest</a>
           </div>
         </div>
       </div>
      </div>
     </div>
 
-    <div class="fsub-bleed">
-      <div class="wrap">
-        <div class="fsub">
-          <div>
-            <h5 class="mk-label">Дайджест раз в месяц</h5>
-            <p class="fsub-note">Новые технологии печати, разборы макетов и акции. Без спама, отписка в один клик.</p>
-            <form class="fsub-form" onsubmit="return false" novalidate>
-              <input type="email" name="email" placeholder="you@example.ru" autocomplete="email" required aria-label="E-mail для рассылки">
-              <button type="submit" class="mk-btn mk-btn--primary">Подписаться</button>
-            </form>
-            <p class="fsub-legal">Нажимая «Подписаться», вы соглашаетесь с <a href="#">политикой обработки персональных данных</a>.</p>
-          </div>
-          <div>
-            <h5 class="mk-label">Мы в соцсетях</h5>
-            <div class="fsoc">
-              <a href="#">ВКонтакте</a><a href="#">YouTube</a><a href="#">Rutube</a>
-              <a href="#">Дзен</a><a href="#">Одноклассники</a><a href="#">Pinterest</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="fbot-bleed">
       <div class="wrap">
         <div class="fbot">
-          <p>© 2012–2026 ООО «МДМпринт» · ИНН 7704815108</p>
+          <div class="fbot-co">
+            <p>© 2012–2026 ООО «МДМпринт»</p>
+            <!-- сведения о продавце: наименование, ИНН, ОГРН, юридический адрес -->
+            <p>ИНН 7704815108 · ОГРН 1127746679587 · 115419, г. Москва, ул. Орджоникидзе, д. 11, стр. 1А</p>
+          </div>
           <div class="flegal">
+            <a href="#">Политика обработки персональных данных</a>
             <a href="#">Публичная оферта</a>
             <a href="#">Пользовательское соглашение</a>
             <a href="#">Обработка cookies</a>
@@ -2842,12 +2946,14 @@
     mega.classList.add('open');
     catbtn.classList.add('active');
     hcat.classList.add('active');
+    [catbtn, hcat].forEach(b => b.setAttribute('aria-expanded','true'));
     overlay.classList.add('show');
   }
   function closeMega(){
     mega.classList.remove('open');
     catbtn.classList.remove('active');
     hcat.classList.remove('active');
+    [catbtn, hcat].forEach(b => b.setAttribute('aria-expanded','false'));
     overlay.classList.remove('show');
     showSec('0');                                   // сброс панелей/рельсы к разделу по умолчанию
     quick.forEach(a=>a.classList.remove('active'));  // ...после сброса гасим подсветку таба (showSec её ставит)
@@ -3065,6 +3171,17 @@
     back.addEventListener('click', e=>{ if(e.target===back) closeModal(); });
     document.addEventListener('keydown', e=>{ if(e.key==='Escape' && back.classList.contains('show')) closeModal(); });
 
+    // фокус-ловушка: aria-modal сам по себе не держит Tab — без неё фокус уходит на страницу под модалкой
+    back.addEventListener('keydown', e=>{
+      if(e.key!=='Tab') return;
+      const items = [...back.querySelectorAll('a[href],button:not(:disabled),input:not([type=hidden]),select,textarea')]
+        .filter(el => el.tabIndex >= 0 && el.offsetParent !== null);  // honeypot и скрытые поля (контакт, .cbm-done) не в счёт
+      if(!items.length) return;
+      const first = items[0], last = items[items.length-1];
+      if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+    });
+
     phone.addEventListener('input', ()=>{ phone.value = fmt(phone.value); pField.classList.remove('invalid'); });
     phone.addEventListener('blur', ()=>{ if(phone.value && !phoneValid()) pField.classList.add('invalid'); });
     form.addEventListener('input', refresh);
@@ -3145,21 +3262,38 @@
 
   // ===== СТРАНИЦА УСЛУГИ: табы «Требования к макету» =====
   (function(){
-    // табы: контейнер [data-tabs] + панели [data-panel] в общем родителе-секции
+    // табы: контейнер [data-tabs] + панели [data-panel] в общем родителе-секции.
+    // Паттерн WAI-ARIA Tabs: связь tab↔panel через aria-controls/aria-labelledby,
+    // в таб-порядке ровно один таб (roving tabindex), переключение — стрелками.
+    let uid = 0;
     document.querySelectorAll('[data-tabs]').forEach(bar => {
       const btns   = [...bar.querySelectorAll('.mk-tab, .mk-segment__btn')];
       const scope  = bar.closest('section') || document;
       const panels = [...scope.querySelectorAll('.mk-tabpanel')];
       const box = scope.querySelector('.mk-tabpanels');
-      btns.forEach(b => b.addEventListener('click', () => {
-        if (b.classList.contains('is-active')) return;
-        // фиксируем текущую высоту, меняем панель, тянемся к новой
-        const from = box && box.offsetHeight;
+      const ns = 'mk-tabs-' + (++uid);
+
+      // разметку связываем здесь: id-шники синтетические, в HTML их держать нечего
+      btns.forEach(b => {
+        const p = panels.find(p => p.dataset.panel === b.dataset.tab);
+        if (!p) return;
+        b.id = b.id || `${ns}-tab-${b.dataset.tab}`;
+        p.id = p.id || `${ns}-panel-${b.dataset.tab}`;
+        b.setAttribute('aria-controls', p.id);
+        p.setAttribute('role', 'tabpanel');
+        p.setAttribute('aria-labelledby', b.id);
+        p.tabIndex = 0;   // содержимое панели может быть нефокусируемым — иначе до него не дойти
+      });
+
+      const select = (b, focus) => {
+        const from = box && box.offsetHeight;   // фиксируем высоту до смены панели
         btns.forEach(x => {
           const on = x === b;
           x.classList.toggle('is-active', on);
           x.setAttribute('aria-selected', on);
+          x.tabIndex = on ? 0 : -1;
         });
+        if (focus) b.focus();
         panels.forEach(p => p.classList.toggle('is-active', p.dataset.panel === b.dataset.tab));
         scope.querySelectorAll('[data-scroller]')
              .forEach(x => x.dispatchEvent(new CustomEvent('mk:sync')));
@@ -3179,7 +3313,84 @@
         };
         box.addEventListener('transitionend', finish);
         setTimeout(finish, dur * 1000 + 100);               // страховка, если событие не придёт
-      }));
+      };
+
+      btns.forEach(b => {
+        b.tabIndex = b.classList.contains('is-active') ? 0 : -1;
+        b.addEventListener('click', () => { if (!b.classList.contains('is-active')) select(b, false); });
+      });
+
+      bar.addEventListener('keydown', e => {
+        const i = btns.indexOf(document.activeElement);
+        if (i < 0) return;
+        const last = btns.length - 1;
+        const to = e.key === 'ArrowRight' ? (i === last ? 0 : i + 1)
+                 : e.key === 'ArrowLeft'  ? (i === 0 ? last : i - 1)
+                 : e.key === 'Home'       ? 0
+                 : e.key === 'End'        ? last : -1;
+        if (to < 0) return;
+        e.preventDefault();
+        select(btns[to], true);
+      });
+    });
+  })();
+
+  // ===== ФУТЕР: копирование телефона и почты =====
+  (function(){
+    const btns = [...document.querySelectorAll('.usl-foot .fcopy')];
+    if(!btns.length) return;
+    // статус берём в том футере, где нажали: на странице их может быть два (сравнение композиций)
+    const statusOf = el => el.closest('.usl-foot').querySelector('.js-copy-status');
+
+    // Скрытое поле + execCommand: работает и по file://, и без пользовательской активации,
+    // и когда документ не в фокусе — там, где navigator.clipboard отказывает.
+    const legacyCopy = text => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly','');
+      ta.style.cssText = 'position:fixed;top:-9999px;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand && document.execCommand('copy');
+      ta.remove();
+      return ok;
+    };
+
+    // Clipboard API — основной путь, но он отклоняет запрос без активации и вне защищённого
+    // контекста (прототип открывают с диска). Отказ гасим откатом, а не сообщением об ошибке.
+    const copy = text => {
+      const fallback = () => legacyCopy(text) ? Promise.resolve() : Promise.reject();
+      if(navigator.clipboard && window.isSecureContext)
+        return navigator.clipboard.writeText(text).catch(fallback);
+      return fallback();
+    };
+
+    const feedback = el => {
+      const status = statusOf(el);
+      clearTimeout(el.__t);
+      el.classList.add('is-done');
+      // сообщение перезаписываем всегда: два клика подряд по одному элементу
+      // при неизменном тексте скринридер бы не озвучил
+      if(status) status.textContent = el.dataset.copy + ' — скопировано';
+      el.__t = setTimeout(() => {
+        el.classList.remove('is-done');
+        if(status) status.textContent = '';
+      }, 1800);
+    };
+    const fail = el => { const st = statusOf(el); if(st) st.textContent = 'Не удалось скопировать'; };
+
+    // вариант А — кнопка-иконка рядом с номером
+    btns.forEach(b => b.addEventListener('click', () => copy(b.dataset.copy).then(() => feedback(b), () => fail(b))));
+
+    // вариант Б — клик по самой ссылке. Перехватываем только при наличии мыши:
+    // на тач-устройстве tel:/mailto: должны отработать штатно.
+    document.querySelectorAll('.usl-foot .fcopy-link').forEach(a => {
+      a.addEventListener('click', e => {
+        if(!document.body.classList.contains('fcopy-hint')) return;
+        if(!window.matchMedia('(hover:hover)').matches) return;
+        e.preventDefault();
+        copy(a.dataset.copy).then(() => feedback(a), () => fail(a));
+      });
     });
   })();
 
@@ -3342,8 +3553,9 @@
     let rendered = false;                              // рисуем один раз — фолбэки не должны затирать карточки
     const render = () => {
       if (rendered) return true;
-      const box = window.swapp_data && window.swapp_data.WidgetReviewsAll;
-      const w   = box && box[KEY];
+      // не `box`: внешний box — элемент ленты (.usl-rev .revs), затенение ломало dispatchEvent ниже
+      const all = window.swapp_data && window.swapp_data.WidgetReviewsAll;
+      const w   = all && all[KEY];
       if (!w || !Array.isArray(w.items) || !w.items.length) return false;
 
       const good = w.items.filter(r => r.rating === 5 && r.text

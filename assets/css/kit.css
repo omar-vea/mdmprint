@@ -3,9 +3,34 @@
    Подключать после tokens.css и fonts.css.
    ============================================================ */
 
+/* ---- Иконка-стрелка ----
+   Не токен, а ассет кита: SVG-маска, наследует цвет текста.
+   Правила кита (.mk-chip, .mk-tilelink) на неё уже ссылались — определение жило в прототипе.
+   .arr-ico — legacy-имя: за него держатся usluga.html, header-catalog.html, technology-template.html. */
+:root{--arr:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h10M9 4.5 12.5 8 9 11.5'/%3E%3C/svg%3E")}
+.mk-arr,.arr-ico{display:inline-block;width:14px;height:14px;background:currentColor;
+  -webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat;
+  flex-shrink:0;transition:transform .15s}
+@media (prefers-reduced-motion:reduce){.mk-arr,.arr-ico{transition:none}}
+
 /* ---- Раскладка ---- */
 .mk-container{width:min(100% - var(--container-pad) * 2, var(--container));margin-inline:auto}
 .mk-section{padding:var(--section-y) 0}
+
+/* ---- Только для скринридера: есть в дереве доступности, не занимает места ----
+   clip-path вместо display:none — скрытое через display содержимое screen reader не читает. */
+.mk-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0}
+
+/* ---- Ссылка «к содержимому»: не видна, пока не получит фокус ---- */
+.mk-skip{position:fixed;top:var(--sp-8);left:var(--sp-8);z-index:200;
+  transform:translateY(calc(-100% - var(--sp-16)));
+  padding:var(--sp-10) var(--sp-16);border-radius:var(--radius-md);
+  background:var(--surface-dark);color:var(--text-on-dark);text-decoration:none;
+  font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:500;
+  transition:transform .15s}
+.mk-skip:focus{transform:none;outline:2px solid var(--brand);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.mk-skip{transition:none}}
 
 /* ---- Типографика ---- */
 .mk-display,.mk-h1,.mk-h2,.mk-h3,.mk-h4{
@@ -50,7 +75,7 @@
 .mk-btn--primary:active,.mk-btn--primary.is-active{background:var(--brand-dark)}
 
 .mk-btn--dark{background:var(--surface-dark);color:var(--text-on-dark)}
-.mk-btn--dark:hover,.mk-btn--dark.is-hover{background:#000}
+.mk-btn--dark:hover,.mk-btn--dark.is-hover{background:var(--surface-dark-hover)}
 .mk-btn--dark:active,.mk-btn--dark.is-active{background:var(--surface-dark-2)}
 
 .mk-btn--ghost{background:var(--surface-card);border-color:var(--border);color:var(--text-primary)}
@@ -137,13 +162,15 @@
 .mk-scroller__track{display:flex;gap:var(--sp-20);overflow-x:auto;scroll-snap-type:x mandatory;
   scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
 .mk-scroller__track::-webkit-scrollbar{display:none}
+/* прокручиваемая область обязана принимать фокус: без стрелок мыши до неё не добраться с клавиатуры */
+.mk-scroller__track:focus-visible{outline:2px solid var(--brand-dark);outline-offset:4px;border-radius:var(--radius-md)}
 .mk-scroller__track > *{flex:0 0 var(--item-w);scroll-snap-align:start}
 .mk-scroller__nav{position:absolute;top:var(--nav-top,50%);transform:translateY(-50%);z-index:2;
   display:flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;
   background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius-pill);
   color:var(--text-primary);cursor:pointer;box-shadow:var(--shadow);
   opacity:0;transition:opacity .2s,background .15s}
-.mk-scroller:hover .mk-scroller__nav,.mk-scroller__nav:focus-visible{opacity:1}
+.mk-scroller:hover .mk-scroller__nav,.mk-scroller:focus-within .mk-scroller__nav{opacity:1}
 .mk-scroller__nav:hover{background:var(--surface-subtle)}
 .mk-scroller__nav:disabled{opacity:0!important;pointer-events:none}
 .mk-scroller__nav--prev{left:-20px}
@@ -380,6 +407,7 @@
 .mk-tab{font-family:var(--font-body);font-size:15px;color:var(--text-secondary);background:none;border:none;
   border-bottom:2px solid transparent;padding:0 2px 12px;cursor:pointer;transition:color .15s,border-color .15s}
 .mk-tab:hover{color:var(--text-primary)}
+.mk-tab:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px;border-radius:var(--radius-inside)}
 .mk-tab.is-active{color:var(--text-primary);font-weight:600;border-bottom-color:var(--brand)}
 /* обёртка панелей: плавно тянется под высоту активной, без скачка */
 .mk-tabpanels{position:relative;transition:height .3s cubic-bezier(.4,0,.2,1)}
@@ -387,6 +415,8 @@
 .mk-tabpanels.is-animating{overflow:hidden}
 .mk-tabpanel{display:none}
 .mk-tabpanel.is-active{display:block;animation:mk-tab-in .3s cubic-bezier(.4,0,.2,1) both}
+/* панель фокусируется (tabindex=0): по паттерну WAI-ARIA Tabs фокус уходит с таба в её содержимое */
+.mk-tabpanel:focus-visible{outline:2px solid var(--brand-dark);outline-offset:4px;border-radius:var(--radius-md)}
 @keyframes mk-tab-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 /* карточки внутри панели въезжают волной — задержка нарастает к правому краю */
