@@ -566,9 +566,10 @@
   /* Раскрытое состояние: .search-drop — внешняя карточка, обнимающая пилюлю сверху и уходящая
      вниз под список. Пилюля (.search__bar, z-index выше) остаётся со своей рамкой — она и отделяет
      ввод от списка, без разделительной линии. Отступ вокруг пилюли = --sp-8. */
-  .search-drop{position:absolute;top:calc(-1 * var(--sp-8));left:calc(-1 * var(--sp-8));right:calc(-1 * var(--sp-8));
-    padding:calc(42px + var(--sp-16)) var(--sp-8) var(--sp-8);
-    background:var(--surface-card);border:1px solid var(--border-strong);border-radius:var(--radius-outside);
+  .search-drop{position:absolute;top:0;left:0;right:0;
+    padding:42px 0 var(--sp-8);
+    background:var(--surface-card);border:1px solid var(--border-strong);
+    border-radius:21px 21px var(--radius-outside) var(--radius-outside);
     box-shadow:0 16px 40px -8px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.05);
     z-index:1;display:none;max-height:min(80vh,600px);overflow:hidden}
   .search.s-open{z-index:61}
@@ -602,7 +603,7 @@
   .sd-row .arr-ico{width:14px;height:14px;color:var(--text-secondary);flex-shrink:0;transition:transform .15s,color .15s}
   .sd-row:hover .arr-ico{color:var(--text-secondary);transform:translateX(2px)}
   /* .sd-all = .mk-rowlink; локально — только отбивка от списка (линия + вылет к стенкам панели) */
-  .sd-all{margin:5px calc(-1 * var(--sp-8)) 0;padding:11px var(--sp-20) 6px;border-top:1px solid var(--border)}
+  .sd-all{margin:5px 0 0;padding:11px var(--sp-12) 6px;border-top:1px solid var(--border)}
   .sd-none{padding:24px 18px;text-align:center}
   .sd-none-t{font-size:var(--t-body);line-height:var(--t-body-lh);font-weight:700;color:var(--text-primary);margin-bottom:6px}
   .sd-none-s{font-size:var(--t-caption);line-height:var(--t-caption-lh);color:var(--text-secondary)}
