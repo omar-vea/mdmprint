@@ -45,7 +45,8 @@
      раздел берёт бренд (--brand-text на --brand-soft). */
   --tag-article:      #3b6fb0;  --tag-article-bg: #edf3fb;
   --tag-portfolio:    #6b53b0;  --tag-portfolio-bg: #f1ecfb;
-  --tag-news:         #3f8a52;  --tag-news-bg: #e9f6ed;
+  --tag-news:         #357646;  --tag-news-bg: #e9f6ed;  /* затемнён: #3f8a52 давал 3.8:1 на своём фоне */
+  --tag-section:      #856200;  /* «Раздел»: тёмный бренд-текст на --brand-soft (5:1); --brand-text давал 3.4:1 */
 
   --danger:           #e0483a;   /* ошибки валидации, обязательные поля */
   --success:          #2ea64f;   /* маркер «плюсы» */
