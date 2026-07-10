@@ -312,7 +312,7 @@
   /* Верх обложки — на одной линии с заголовком, низ на 80px ниже секции. Высоту задают
      top/bottom, ширину — пропорция файла: при любой длине текста картинка не вылезет вверх. */
   .usl-final .cta-fig{position:absolute;right:0;top:0;
-    bottom:calc(-1 * (var(--sp-48) + var(--sp-80)));width:auto;aspect-ratio:710 / 900}
+    bottom:calc(-1 * (var(--sp-48) + var(--sp-80)));width:auto;aspect-ratio:840 / 1024}
   .usl-final .cta-fig img{width:100%;height:100%;display:block;object-fit:contain}
 
   /* Разделители зон идут от края до края — как .usl section{border-top} и .mk-statbar.
@@ -2830,11 +2830,12 @@
             </ol>
           </div>
 
-          <!-- Обложка с блинтовым тиснением: вырезана из assets/ctaimage.png по альфе
-               (порог + эрозия 1px, иначе от белого фона остаётся кайма). mix-blend-mode здесь
-               НЕЛЬЗЯ: на тёмном фоне darken даёт чёрные пятна. Нижние 80px срежет линия футера. -->
+          <!-- Обложка с блинтовым тиснением, кадр из assets/ctaimage.png КАК ЕСТЬ, вместе
+               с белым фоном и тенью. Рядом лежит cta-emboss.webp — тот же кадр с вырезанным
+               по альфе фоном (mix-blend-mode:darken на тёмной подложке не годится: он берёт
+               поканальный минимум и съедает сам предмет). Нижнюю часть срезает линия футера. -->
           <div class="cta-fig" aria-hidden="true">
-            <img src="../assets/img/cta-emboss.webp" alt="" width="710" height="900">
+            <img src="../assets/img/cta-photo.webp" alt="" width="840" height="1024">
           </div>
         </div>
       </div>
