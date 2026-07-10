@@ -276,12 +276,44 @@
      разделены линией --border-on-dark внутри контентной ширины.
      (Старые правила были на хардкодах — переписаны на токены, а не восстановлены.) */
   .usl-final{border-top:none!important;background:var(--surface-dark);color:var(--text-on-dark);
-    padding-bottom:var(--sp-48)!important}
-  .usl-final .cta-box{display:flex;align-items:center;justify-content:space-between;
-    gap:var(--sp-32);flex-wrap:wrap}
+    padding-bottom:var(--sp-48)!important;
+    /* фигура ныряет ниже секции, а низ секции — это и есть линия футера: она её и обрезает */
+    position:relative;overflow:hidden}
+  /* 436 + 356 + 336 + два гэпа по 24 = 1176 — та же сетка, что в нижней зоне футера */
+  .usl-final .cta-box{position:relative;display:grid;grid-template-columns:436fr 356fr 336fr;
+    gap:var(--sp-32) var(--sp-24);align-items:start}
   .usl-final h2{color:var(--text-on-dark);margin:0}
   /* класс обязателен: .usl p:not([class]) (0,2,1) перебил бы цвет и покрасил абзац в --text-secondary */
-  .usl-final .cta-sub{color:var(--text-on-dark-2);margin-top:var(--sp-10);max-width:520px}
+  .usl-final .cta-sub{color:var(--text-on-dark-2);margin:var(--sp-10) 0 var(--sp-24)}
+  /* снимает главный страх перед кнопкой — «оставлю заявку, и начнут звонить» */
+  .usl-final .cta-note{margin:var(--sp-12) 0 0;color:var(--text-tertiary);
+    font-size:var(--t-caption);line-height:var(--t-caption-lh)}
+
+  /* Оптическое выравнивание: заголовки выравниваются по верху БУКВ, а не по боксам.
+     Крупный h2 (32/44) несёт больше полулиньяжа, чем подпись (12/16), поэтому его
+     буквы начинаются на 18,6px ниже. Сдвигаем колонку вниз, а не поднимаем h2. */
+  .usl-final .cta-side{margin-top:var(--sp-18)}
+
+  /* «Как это будет» — те же кружки-плитки, что у иконок контактов в футере */
+  .usl-final .cta-steps{list-style:none;margin:var(--sp-14) 0 0;padding:0;
+    display:flex;flex-direction:column;gap:var(--sp-16)}
+  .usl-final .cta-steps li{display:flex;gap:var(--sp-12);align-items:flex-start;
+    color:var(--text-on-dark-2);font-size:var(--t-small);line-height:var(--t-small-lh)}
+  .usl-final .cta-steps li::before{counter-increment:step;content:counter(step);
+    flex-shrink:0;width:24px;height:24px;border-radius:50%;
+    background:var(--surface-on-dark);color:var(--text-on-dark);
+    display:flex;align-items:center;justify-content:center;
+    font-size:var(--t-label);line-height:1;font-weight:600}
+  .usl-final .cta-steps{counter-reset:step}
+
+  /* Фигура вынута из потока: иначе её высота задавала бы высоту строки и растягивала
+     секцию под картинку. Третья колонка сетки остаётся пустой — она держит для неё место.
+     Уходит на 80px ниже секции, а низ секции — линия футера: overflow:hidden режет по ней. */
+  /* Верх обложки — на одной линии с заголовком, низ на 80px ниже секции. Высоту задают
+     top/bottom, ширину — пропорция файла: при любой длине текста картинка не вылезет вверх. */
+  .usl-final .cta-fig{position:absolute;right:0;top:0;
+    bottom:calc(-1 * (var(--sp-48) + var(--sp-80)));width:auto;aspect-ratio:710 / 900}
+  .usl-final .cta-fig img{width:100%;height:100%;display:block;object-fit:contain}
 
   /* Разделители зон идут от края до края — как .usl section{border-top} и .mk-statbar.
      На .wrap линия обрывалась бы по контентной ширине и спорила с ритмом страницы. */
@@ -487,6 +519,9 @@
     .usl-port .port-grid--photo{--item-w:calc((100% - var(--sp-20)) / 2)}
     .usl-hero h1{font-size:34px}
     .usl h2{font-size:24px}
+    /* фигура рассчитана на свою колонку; в одну колонку она превращается в баннер — убираем */
+    .usl-final .cta-box{grid-template-columns:1fr}
+    .usl-final .cta-fig{display:none}
     .usl-foot .ftop,.usl-foot .fbot{grid-template-columns:1fr}
     .usl-foot .flinks{grid-template-columns:1fr 1fr}
   }
@@ -2780,10 +2815,27 @@
       <div class="wrap">
         <div class="cta-box">
           <div>
-            <h2 data-cms="cta_title">Рассчитайте свой тираж за 1 минуту</h2>
+            <h2 data-cms="cta_title">Рассчитайте свой тираж за&nbsp;1&nbsp;минуту</h2>
             <p class="cta-sub" data-cms="cta_text">Оставьте заявку — подберём вид тиснения, материал и рассчитаем стоимость под ваш проект.</p>
+            <button type="button" class="tb-cta mk-btn mk-btn--primary" data-cms="cta_button">Оставить заявку на расчёт</button>
+            <p class="cta-note">Отвечаем в рабочее время за 15 минут. Заявка ни к чему не обязывает.</p>
           </div>
-          <button type="button" class="tb-cta mk-btn mk-btn--primary" data-cms="cta_button">Оставить заявку на расчёт</button>
+
+          <div class="cta-side">
+            <h5 class="mk-label">Как это будет</h5>
+            <ol class="cta-steps">
+              <li>Присылаете макет или описываете задачу словами</li>
+              <li>Считаем стоимость и присылаем расчёт в течение часа</li>
+              <li>Согласуем образец до печати тиража</li>
+            </ol>
+          </div>
+
+          <!-- Обложка с блинтовым тиснением: вырезана из assets/ctaimage.png по альфе
+               (порог + эрозия 1px, иначе от белого фона остаётся кайма). mix-blend-mode здесь
+               НЕЛЬЗЯ: на тёмном фоне darken даёт чёрные пятна. Нижние 80px срежет линия футера. -->
+          <div class="cta-fig" aria-hidden="true">
+            <img src="../assets/img/cta-emboss.webp" alt="" width="710" height="900">
+          </div>
         </div>
       </div>
     </section>
