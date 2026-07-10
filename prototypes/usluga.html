@@ -188,6 +188,12 @@
   /* СОЧЕТАЕТСЯ */
   /* плитки-ссылки — из кита (.mk-tilelink); подзаголовок секции */
   .usl-combo .combo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-24)}
+  /* Снимки сняты на белом. darken = поканальный минимум: белый фон кадра схлопывается
+     в подложку плитки и белый прямоугольник исчезает. Работает только если под картинкой
+     светлая подложка — поэтому снимаем белый фон медиа и разделительную линию кита.
+     (Зеркало приёма в CTA: там подложка тёмная, и фон снимается через lighten.) */
+  .usl-combo .mk-tilelink__media{background:transparent;border-right:none}
+  .usl-combo .mk-tilelink__media img{mix-blend-mode:darken}
   .usl .sec-head .sub{margin-top:var(--sp-10);max-width:720px;  /* Figma: desc w=720 */
     font-size:var(--t-small);line-height:var(--t-small-lh);color:var(--text-secondary)}
 
@@ -233,42 +239,42 @@
     -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 1.6em),transparent);
     mask-image:linear-gradient(to bottom,#000 calc(100% - 1.6em),transparent)}
 
-  /* СТАТЬИ
-     Не сетка карточек: страница и так собрана из плиток (Виды, Портфолио, Продукты, Сочетается),
-     а у статьи ценность в заголовке, а не в картинке. Одна ведущая статья держит фото,
-     остальные идут строками-карточками.
-     4/8 — зеркало модуля req/faq (776fr 376fr). */
-  .usl-art .arts{display:grid;grid-template-columns:1fr;gap:var(--sp-24);align-items:stretch}
-  .usl-art .arts:has(.art-row){grid-template-columns:376fr 776fr}
-  /* Фото отдаёт фиксированный аспект и забирает остаток высоты: ведущая карточка сама встаёт
-     вровень со списком при любом числе статей. Жёсткие 4:3 (=282px) не сходятся ни при 4, ни при 9. */
-  .usl-art .art-lead .mk-mcard__media{aspect-ratio:auto;flex:1;min-height:140px}
+  /* СТАТЬИ — оглавление, а не плитки.
+     Причин две. Превью у статей нет (нужна выгрузка с сайта), поэтому любая карточная сетка —
+     это ряд серых заглушек. И страница уже собрана из плиток: Виды, Портфолио, Продукты,
+     Сочетается, Отзывы. Ценность статьи в заголовке, поэтому заголовок и есть вся карточка.
+     Строки держатся на волосяных линиях, а не на обводках: обводка = отдельный объект,
+     а здесь объект один — список. */
+  .usl-art .sec-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-24)}
+  .usl-art .arts{border-bottom:1px solid var(--border)}
 
-  .usl-art .art-list{display:flex;flex-direction:column;gap:var(--sp-8)}
-  /* Строка — карточка с полной обводкой, как .mk-acc--card в FAQ и .mk-filerow.
-     На этой странице ряды держатся на обводке, а не на линиях-разделителях.
-     Мета справа, а не под заголовком: иначе в строке 776px зияет дыра посередине. */
-  .usl-art .art-row{display:flex;align-items:center;gap:var(--sp-16);text-decoration:none;
-    background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius-outside);
-    padding:var(--sp-16) var(--sp-20);transition:border-color .15s}
-  .usl-art .art-row:hover{border-color:var(--border-strong)}
-  .usl-art .art-row:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
-  .usl-art .art-row__title{flex:1;min-width:0;margin:0;font-family:var(--font-body);font-weight:600;
+  .usl-art .art-item{position:relative;display:grid;
+    grid-template-columns:176px 1fr auto 14px;align-items:center;gap:var(--sp-24);
+    padding:var(--sp-20) 0;border-top:1px solid var(--border);text-decoration:none}
+  /* Подсветка строки шире контента на 16px с каждой стороны: иначе фон впритык к букве.
+     Псевдоэлемент, а не padding, — чтобы линии и текст остались на контентной сетке. */
+  .usl-art .art-item::before{content:"";position:absolute;inset:0 calc(-1 * var(--sp-16));
+    border-radius:var(--radius-md);background:transparent;transition:background .15s}
+  /* правило поверхностей: --surface-gray = подложка плашки, --surface-subtle = фон секции */
+  .usl-art .art-item:hover::before{background:var(--surface-gray)}
+  .usl-art .art-item:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px;
+    border-radius:var(--radius-md)}   /* тот же радиус, что у подсветки */
+  .usl-art .art-item > *{position:relative}   /* поверх подсветки */
+
+  .usl-art .art-item__cat{align-self:center}
+  /* Ровно .mk-mcard__title: наборный Roboto 16/600, не капс — имя статьи читают, а не опознают.
+     Roboto 18/600 в шкале нет, --t-lead — стиль абзаца-лида, не заголовка. */
+  .usl-art .art-item__title{margin:0;font-family:var(--font-body);font-weight:600;
     color:var(--text-primary);font-size:var(--t-body);line-height:var(--t-body-lh)}
-  /* мета-строка — кит: .mk-eyebrow (капс, --brand-text). Своего дубля не заводим. */
-  .usl-art .art-row__meta{flex-shrink:0}
-  .usl-art .art-row .arr-ico{flex-shrink:0;color:var(--text-tertiary);transition:transform .15s}
-  .usl-art .art-row:hover .arr-ico{transform:translateX(2px)}
+  /* --text-secondary, а не --text-tertiary: время чтения — осмысленный текст,
+     а третичный даёт 2.8:1 на белом и 2.6:1 на подсветке (норма 4.5:1). */
+  .usl-art .art-item__time{color:var(--text-secondary);
+    font-size:var(--t-small);line-height:var(--t-small-lh);white-space:nowrap}
+  .usl-art .art-item .mk-arr{color:var(--text-tertiary);transition:transform .15s}
+  .usl-art .art-item:hover .mk-arr{transform:translateX(3px);color:var(--text-primary)}
   @media (prefers-reduced-motion:reduce){
-    .usl-art .art-row,.usl-art .art-row .arr-ico{transition:none}
-    .usl-art .art-row:hover .arr-ico{transform:none}}
-
-  /* Единственная статья: списка нет, ведущая карточка ложится набок — иначе дыра справа.
-     Медиа возвращает фиксированную колонку и аспект: тянуться тут не за чем. */
-  .usl-art .arts:not(:has(.art-row)) .art-lead{flex-direction:row}
-  .usl-art .arts:not(:has(.art-row)) .art-lead .mk-mcard__media{
-    aspect-ratio:var(--mcard-aspect);flex:0 0 calc((100% - 2 * var(--sp-24)) / 3)}
-  .usl-art .arts:not(:has(.art-row)) .art-lead .mk-mcard__body{justify-content:center;padding:var(--sp-32)}
+    .usl-art .art-item::before,.usl-art .art-item .mk-arr{transition:none}
+    .usl-art .art-item:hover .mk-arr{transform:none}}
 
   /* ФИНАЛЬНЫЙ CTA + ФУТЕР — одна тёмная поверхность.
      Было: CTA — чёрная «коробка» #1b1b1d с радиусом на белом, под ней футер #141416.
@@ -313,7 +319,11 @@
      top/bottom, ширину — пропорция файла: при любой длине текста картинка не вылезет вверх. */
   .usl-final .cta-fig{position:absolute;right:0;top:0;
     bottom:calc(-1 * (var(--sp-48) + var(--sp-80)));width:auto;aspect-ratio:840 / 1024}
-  .usl-final .cta-fig img{width:100%;height:100%;display:block;object-fit:contain}
+  /* lighten = поканальный максимум с подложкой. Фон кадра (12–26) темнее --surface-dark
+     (34,34,32), поэтому схлопывается ровно в неё, а светлая обложка остаётся нетронутой.
+     Зеркало приёма с товарными фото: там белый фон и darken на белой карточке. */
+  .usl-final .cta-fig img{width:100%;height:100%;display:block;object-fit:contain;
+    mix-blend-mode:lighten}
 
   /* Разделители зон идут от края до края — как .usl section{border-top} и .mk-statbar.
      На .wrap линия обрывалась бы по контентной ширине и спорила с ритмом страницы. */
@@ -506,9 +516,12 @@
     .usl-stats{grid-template-columns:1fr 1fr}
     .usl-vidy .vidy-grid{grid-template-columns:1fr 1fr}
     .usl-rev .revs{--item-w:calc((100% - var(--sp-24)) / 2)}  /* на узких — 2 в кадре, не 3 крошечных */
-    /* одна колонка: тянуться не за чем — фото возвращает свой аспект, иначе схлопнется в min-height */
-    .usl-art .arts:has(.art-row){grid-template-columns:1fr}
-    .usl-art .art-lead .mk-mcard__media{aspect-ratio:var(--mcard-aspect);flex:none}
+    /* рубрика уходит под заголовок: в 176px колонке на узком экране она ломается на два слова */
+    .usl-art .art-item{grid-template-columns:1fr auto;gap:var(--sp-4) var(--sp-16)}
+    .usl-art .art-item__cat{grid-column:1;grid-row:1}
+    .usl-art .art-item__title{grid-column:1;grid-row:2}
+    .usl-art .art-item__time{grid-column:2;grid-row:1 / -1}
+    .usl-art .art-item .mk-arr{grid-column:3;grid-row:1 / -1}
     .usl-prod .pcards{grid-template-columns:1fr 1fr}
     .usl-adv .tiles,.usl-adv .pm{grid-template-columns:1fr}
     .usl-req .req-grid{grid-template-columns:1fr}
@@ -697,7 +710,10 @@
   .cbm-done .cbm-sub{margin:6px 0 20px}
   .cbm-done .cbm-submit{width:100%;margin-top:0}
 
-  .mega{position:absolute;left:0;right:0;top:100%;z-index:45;display:none;background:var(--surface-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);box-shadow:0 16px 30px -8px rgba(0,0,0,.12)}
+  /* border-top НЕТ: над меню всегда стоит либо .navbar с border-bottom, либо (при
+     body.scrolled, когда .nav скрыт) сам header с border-bottom. Своя линия давала две
+     соседние по 1px — знакомая «толстая граница». */
+  .mega{position:absolute;left:0;right:0;top:calc(100% + 1px);z-index:45;display:none;background:var(--surface-card);border-bottom:1px solid var(--border);box-shadow:0 16px 30px -8px rgba(0,0,0,.12)}
   .mega.open{display:block}
   .mega-inner{width:min(100% - var(--container-pad) * 2, var(--container));margin-inline:auto}
   .mega-box{border-left:1px solid var(--border);border-right:1px solid var(--border)}
@@ -901,6 +917,10 @@
   body.scrolled .hcalc{display:flex}
   /* скрыть 3-ю линию шапки, оставив навбар как опору для выпадающего каталога */
   body.scrolled .navbar{border-bottom:none}
+  /* Смещения абсолютного блока считаются от padding-box, поэтому top:100% ставит меню ПОВЕРХ
+     границы навбара и съедает её. +1px возвращает линию. При body.scrolled границы у навбара
+     нет (её рисует сам header), и сдвиг не нужен — иначе появится белая щель. */
+  body.scrolled .mega{top:100%}
   body.scrolled .navbar .nav{display:none}
 
 
@@ -2638,18 +2658,30 @@
           <h2>С чем сочетается тиснение</h2>
           <p class="sub">Эти виды отделки комбинируют с тиснением в одном изделии. Нажмите, чтобы открыть технологию.</p>
         </div>
-        <!-- ФОТО-РЫБА: снимки брошюровки. Нужны макро-рендеры самих отделок. -->
+        <!-- Конгрев — свой макро-рендер. Остальные плитки: ФОТО-РЫБА (снимки брошюровки),
+             нужны макро-рендеры самих отделок. -->
         <div class="combo-grid">
           <a href="#" class="mk-tilelink">
-            <span class="mk-tilelink__media"><img src="../assets/img/tech/broshurovka-skoba.webp" alt="" loading="lazy" width="400" height="267"></span>
+            <span class="mk-tilelink__media"><img src="../assets/img/tech/kongrev.webp" alt="" loading="lazy" width="1536" height="1024"></span>
             <span class="mk-tilelink__txt">
               <span class="mk-tilelink__title">Конгрев</span>
               <span class="mk-tilelink__note">Рельеф без фольги</span>
             </span>
             <i class="arr-ico"></i>
           </a>
+
+          <!-- ДЕМО, УДАЛИТЬ ПОСЛЕ ВЫБОРА КАДРА: та же плитка со старым, дальним планом.
+               Сравниваем читаемость силуэта в медиа 140×93. -->
           <a href="#" class="mk-tilelink">
-            <span class="mk-tilelink__media"><img src="../assets/img/tech/broshurovka-pruzhiny.webp" alt="" loading="lazy" width="400" height="267"></span>
+            <span class="mk-tilelink__media"><img src="../assets/img/tech/kongrev2.webp" alt="" loading="lazy" width="1536" height="1024"></span>
+            <span class="mk-tilelink__txt">
+              <span class="mk-tilelink__title">Конгрев (старый кадр)</span>
+              <span class="mk-tilelink__note">Рельеф без фольги</span>
+            </span>
+            <i class="arr-ico"></i>
+          </a>
+          <a href="#" class="mk-tilelink">
+            <span class="mk-tilelink__media"><img src="../assets/img/tech/uf-lak.webp" alt="" loading="lazy" width="1536" height="1024"></span>
             <span class="mk-tilelink__txt">
               <span class="mk-tilelink__title">Выборочный УФ-лак</span>
               <span class="mk-tilelink__note">Глянец на матовом фоне</span>
@@ -2767,42 +2799,45 @@
     </section>
 
     <!-- СТАТЬИ
-         Ведущая статья — карточкой с фото, остальные — строками (заголовок + рубрика/время).
-         В теге рубрика + время чтения; заголовок наборный, не капс: название читают, а не опознают.
-         ФОТО-РЫБА: превью нет — на сайте у статей свои картинки, нужна выгрузка. -->
+         Оглавление: рубрика — заголовок — время чтения. Фото нет намеренно, см. CSS.
+         Строки — ссылки целиком; стрелка декоративная, её роль играет сама ссылка. -->
     <section class="usl-art" id="stati">
       <div class="wrap">
-        <div class="sec-head"><h2>Статьи о тиснении</h2></div>
+        <div class="sec-head">
+          <h2>Статьи о тиснении</h2>
+          <a class="mk-chip" href="#">Все статьи<i class="mk-arr" aria-hidden="true"></i></a>
+        </div>
         <div class="arts">
-          <a class="art-lead mk-mcard mk-mcard--link" href="#">
-            <span class="mk-mcard__media"></span>
-            <span class="mk-mcard__body">
-              <span class="mk-mcard__tag">Тиснение · 5 мин</span>
-              <h3 class="mk-mcard__title">Виды тиснения: где применять каждый</h3>
-            </span>
+          <a class="art-item" href="#">
+            <span class="mk-eyebrow art-item__cat">Тиснение</span>
+            <h3 class="art-item__title">Виды тиснения: где применять каждый</h3>
+            <span class="art-item__time">5 мин чтения</span>
+            <i class="mk-arr" aria-hidden="true"></i>
           </a>
-          <div class="art-list">
-            <a class="art-row" href="#">
-              <h3 class="art-row__title">Как подготовить макет под фольгу</h3>
-              <span class="mk-eyebrow art-row__meta">Подготовка макета · 4 мин</span>
-              <i class="arr-ico"></i>
-            </a>
-            <a class="art-row" href="#">
-              <h3 class="art-row__title">Фольга и конгрев: как сочетать эффекты</h3>
-              <span class="mk-eyebrow art-row__meta">Отделка · 6 мин</span>
-              <i class="arr-ico"></i>
-            </a>
-            <a class="art-row" href="#">
-              <h3 class="art-row__title">На какой бумаге тиснение смотрится лучше</h3>
-              <span class="mk-eyebrow art-row__meta">Материалы · 4 мин</span>
-              <i class="arr-ico"></i>
-            </a>
-            <a class="art-row" href="#">
-              <h3 class="art-row__title">Сколько стоит тиснение и от чего зависит цена</h3>
-              <span class="mk-eyebrow art-row__meta">Тиснение · 3 мин</span>
-              <i class="arr-ico"></i>
-            </a>
-          </div>
+          <a class="art-item" href="#">
+            <span class="mk-eyebrow art-item__cat">Подготовка макета</span>
+            <h3 class="art-item__title">Как подготовить макет под фольгу</h3>
+            <span class="art-item__time">4 мин чтения</span>
+            <i class="mk-arr" aria-hidden="true"></i>
+          </a>
+          <a class="art-item" href="#">
+            <span class="mk-eyebrow art-item__cat">Отделка</span>
+            <h3 class="art-item__title">Фольга и конгрев: как сочетать эффекты</h3>
+            <span class="art-item__time">6 мин чтения</span>
+            <i class="mk-arr" aria-hidden="true"></i>
+          </a>
+          <a class="art-item" href="#">
+            <span class="mk-eyebrow art-item__cat">Материалы</span>
+            <h3 class="art-item__title">На какой бумаге тиснение смотрится лучше</h3>
+            <span class="art-item__time">4 мин чтения</span>
+            <i class="mk-arr" aria-hidden="true"></i>
+          </a>
+          <a class="art-item" href="#">
+            <span class="mk-eyebrow art-item__cat">Тиснение</span>
+            <h3 class="art-item__title">Сколько стоит тиснение и от чего зависит цена</h3>
+            <span class="art-item__time">3 мин чтения</span>
+            <i class="mk-arr" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
     </section>
@@ -2830,12 +2865,11 @@
             </ol>
           </div>
 
-          <!-- Обложка с блинтовым тиснением, кадр из assets/ctaimage.png КАК ЕСТЬ, вместе
-               с белым фоном и тенью. Рядом лежит cta-emboss.webp — тот же кадр с вырезанным
-               по альфе фоном (mix-blend-mode:darken на тёмной подложке не годится: он берёт
-               поканальный минимум и съедает сам предмет). Нижнюю часть срезает линия футера. -->
+          <!-- Светлая обложка на почти чёрном фоне — фон снимается блендом lighten,
+               альфа не нужна. Рядом лежат cta-photo.webp (тот же кадр на белом) и
+               cta-emboss.webp (тёмная обложка с вырезанной альфой). Низ срезает линия футера. -->
           <div class="cta-fig" aria-hidden="true">
-            <img src="../assets/img/cta-photo.webp" alt="" width="840" height="1024">
+            <img src="../assets/img/cta-photo-dark.webp" alt="" width="840" height="1024">
           </div>
         </div>
       </div>
@@ -3010,11 +3044,16 @@
   function showSec(sec){
     panels.forEach(p=>p.classList.toggle('show', p.dataset.sec===sec));
     ris.forEach(r=>r.classList.toggle('active', r.dataset.sec===sec));
-    quick.forEach(a=>a.classList.toggle('active', a.dataset.open===sec));
     document.getElementById('pane').scrollTop = 0;
+  }
+  // Подсветка в навбаре = «я пришёл отсюда», а не «этот раздел открыт». Иначе кнопка
+  // «Каталог» открывает раздел по умолчанию (0) и заодно зажигает «Визитки», хотя её не нажимали.
+  function markQuick(sec){
+    quick.forEach(a=>a.classList.toggle('active', sec!==undefined && a.dataset.open===sec));
   }
   function openMega(sec){
     showSec(sec!==undefined ? sec : '0');
+    markQuick(sec);
     mega.classList.add('open');
     catbtn.classList.add('active');
     hcat.classList.add('active');
@@ -3027,8 +3066,8 @@
     hcat.classList.remove('active');
     [catbtn, hcat].forEach(b => b.setAttribute('aria-expanded','false'));
     overlay.classList.remove('show');
-    showSec('0');                                   // сброс панелей/рельсы к разделу по умолчанию
-    quick.forEach(a=>a.classList.remove('active'));  // ...после сброса гасим подсветку таба (showSec её ставит)
+    showSec('0');       // сброс панелей/рельсы к разделу по умолчанию
+    markQuick();        // и гасим подсветку в навбаре
   }
 
   catbtn.addEventListener('click', e=>{
@@ -3041,8 +3080,10 @@
   });
 
   ris.forEach(r=>{
-    r.addEventListener('mouseenter', ()=>showSec(r.dataset.sec));
-    r.addEventListener('click', ()=>showSec(r.dataset.sec));
+    // ушли в другой раздел по рельсе — подсветка «откуда пришли» больше не верна
+    const go = ()=>{ showSec(r.dataset.sec); markQuick(); };
+    r.addEventListener('mouseenter', go);
+    r.addEventListener('click', go);
   });
 
   quick.forEach(a=>{
