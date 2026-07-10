@@ -546,8 +546,12 @@
   .logo{display:flex;align-items:center;flex-shrink:0}
   .logo img{height:26px;width:auto;display:block}
 
-  .search{flex:1;display:flex;align-items:center;height:42px;border:1px solid var(--border-strong);border-radius:var(--radius-pill);padding:0 5px 0 16px;transition:border-color .15s;background:var(--surface-card)}
-  .search:focus-within{border-color:var(--text-primary)}
+  /* Поле поиска = внешняя карточка (видна только раскрытой). Строка ввода — .search__bar (пилюля) */
+  .search{flex:1;position:relative}
+  .search__bar{position:relative;z-index:2;display:flex;align-items:center;height:42px;
+    border:1px solid var(--border-strong);border-radius:var(--radius-pill);padding:0 5px 0 16px;
+    background:var(--surface-card);transition:border-color .15s}
+  .search__bar:focus-within{border-color:var(--text-primary)}
   .search .si{color:var(--text-secondary);flex-shrink:0;margin-right:8px}
   .search input{flex:1;border:none;outline:none;font-size:var(--t-small);line-height:var(--t-small-lh);background:transparent;color:var(--text-primary)}
   .search input::placeholder{color:var(--text-secondary)}
@@ -555,18 +559,19 @@
   .search .s-go{flex-shrink:0}
 
   /* ===== ПОИСК: кнопка очистки + дропдаун подсказок (состояния) ===== */
-  .search{position:relative}
   .search .s-clear{display:none;width:28px;height:28px;align-items:center;justify-content:center;border:none;background:none;color:var(--text-tertiary);cursor:pointer;border-radius:50%;flex-shrink:0;margin-right:2px;transition:.12s}
   .search.has-val .s-clear{display:flex}
   .search .s-clear:hover{background:var(--surface-subtle);color:var(--text-primary)}
   body.search-open header{z-index:60}/* поднять шапку над навбаром, чтобы блок поиска был сверху */
-  /* активное состояние: поле + дропдаун = ЕДИНЫЙ приподнятый блок (поле «утоплено» в верх панели),
-     одна рамка + одна тень отделяют весь блок от шапки */
-  .search-drop{position:absolute;top:-1px;left:-1px;right:-1px;background:var(--surface-card);border:1px solid var(--border-strong);border-radius:21px 21px var(--radius-outside) var(--radius-outside);box-shadow:0 16px 40px -8px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.05);padding:47px 8px 9px;z-index:1;display:none;max-height:min(80vh,620px);overflow:hidden}
-  /* тонкий разделитель строки поиска от подсказок внутри блока */
-  .search-drop::before{content:"";position:absolute;top:45px;left:0;right:0;height:1px;background:var(--border)}
-  .search.s-open{border-color:transparent;background:transparent;z-index:61}
-  .search.s-open > :not(.search-drop){position:relative;z-index:2}/* контролы поля поверх панели */
+  /* Раскрытое состояние: .search-drop — внешняя карточка, обнимающая пилюлю сверху и уходящая
+     вниз под список. Пилюля (.search__bar, z-index выше) остаётся со своей рамкой — она и отделяет
+     ввод от списка, без разделительной линии. Отступ вокруг пилюли = --sp-8. */
+  .search-drop{position:absolute;top:calc(-1 * var(--sp-8));left:calc(-1 * var(--sp-8));right:calc(-1 * var(--sp-8));
+    padding:calc(42px + var(--sp-16)) var(--sp-8) var(--sp-8);
+    background:var(--surface-card);border:1px solid var(--border-strong);border-radius:var(--radius-outside);
+    box-shadow:0 16px 40px -8px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.05);
+    z-index:1;display:none;max-height:min(80vh,600px);overflow:hidden}
+  .search.s-open{z-index:61}
   .search.s-open .search-drop{display:block}
   .search-drop .sd-pane{display:none}
   .search-drop[data-state="empty"] .sd-empty{display:block}
@@ -596,10 +601,8 @@
   .sd-tag.t-news{color:var(--tag-news)}
   .sd-row .arr-ico{width:14px;height:14px;color:var(--text-secondary);flex-shrink:0;transition:transform .15s,color .15s}
   .sd-row:hover .arr-ico{color:var(--text-secondary);transform:translateX(2px)}
-  .sd-all{display:flex;align-items:center;gap:9px;margin:5px calc(-1 * var(--sp-8)) 0;padding:11px var(--sp-20) 6px;border-top:1px solid var(--border);font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:600;color:var(--text-primary);cursor:pointer}
-  .sd-all b{font-weight:700}
-  .sd-all .arr-ico{width:14px;height:14px;margin-left:auto;transition:transform .15s}
-  .sd-all:hover .arr-ico{transform:translateX(2px)}
+  /* .sd-all = .mk-rowlink; локально — только отбивка от списка (линия + вылет к стенкам панели) */
+  .sd-all{margin:5px calc(-1 * var(--sp-8)) 0;padding:11px var(--sp-20) 6px;border-top:1px solid var(--border)}
   .sd-none{padding:24px 18px;text-align:center}
   .sd-none-t{font-size:var(--t-body);line-height:var(--t-body-lh);font-weight:700;color:var(--text-primary);margin-bottom:6px}
   .sd-none-s{font-size:var(--t-caption);line-height:var(--t-caption-lh);color:var(--text-secondary)}
@@ -912,7 +915,8 @@
   .logo img,.search,.search .s-go,.hphone,.hphone .ph-ic,.hphone .num,.hbtn,.hbtn .ci{transition:all .2s ease}
   body.scrolled .hbar{height:54px;gap:12px}
   body.scrolled .logo img{height:22px}
-  body.scrolled .search{height:36px;min-width:280px}
+  body.scrolled .search{min-width:280px}
+  body.scrolled .search__bar{height:36px}
   body.scrolled .search .s-go{height:28px;padding:0 14px;font-size:12.5px}
   body.scrolled .search input{font-size:13px}
   body.scrolled .hphone{padding:3px 8px;gap:8px}
@@ -993,12 +997,14 @@
         Каталог
       </button>
       <form class="search" id="searchForm" onsubmit="return false" autocomplete="off">
+        <div class="search__bar">
         <span class="si"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
         <input type="text" id="searchInput" placeholder="Поиск по 2000+ услугам: визитки, наклейки, коробки…">
         <button type="button" class="s-clear" id="searchClear" aria-label="Очистить" title="Очистить">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </button>
         <button type="submit" class="s-go mk-btn mk-btn--dark mk-btn--sm">Найти</button>
+        </div>
 
         <!-- ДРОПДАУН ПОИСКА: состояния empty / results / none -->
         <div class="search-drop" id="searchDrop" data-state="empty">
@@ -1017,7 +1023,7 @@
           </div>
           <div class="sd-pane sd-results">
             <ul class="sd-list" id="sdList"></ul>
-            <a class="sd-all" id="sdAll" href="#">Все результаты по «<b id="sdQ"></b>»<span class="arr-ico"></span></a>
+            <a class="mk-rowlink sd-all" id="sdAll" href="#">Все результаты по «<b id="sdQ"></b>»<i class="mk-arr" aria-hidden="true"></i></a>
           </div>
           <div class="sd-pane sd-none">
             <div class="sd-none-t">Ничего не найдено</div>
@@ -2737,7 +2743,7 @@
           </div>
         </div>
         <div class="mk-scroller revs" data-scroller>
-          <button class="mk-scroller__nav mk-scroller__nav--prev" data-dir="-1" type="button" aria-label="Предыдущие отзывы"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="mk-scroller__nav mk-scroller__nav--prev" data-dir="-1" type="button" aria-label="Предыдущие отзывы"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
           <div class="mk-scroller__track" tabindex="0" role="group" aria-label="Отзывы клиентов, лента с прокруткой">
             <figure class="rev mk-card mk-review">
               <div class="mk-review__head">
@@ -2792,7 +2798,7 @@
               </figcaption>
             </figure>
           </div>
-          <button class="mk-scroller__nav mk-scroller__nav--next" data-dir="1" type="button" aria-label="Следующие отзывы"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          <button class="mk-scroller__nav mk-scroller__nav--next" data-dir="1" type="button" aria-label="Следующие отзывы"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
         </div>
       </div>
     </section>

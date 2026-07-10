@@ -402,6 +402,19 @@
 @media (prefers-reduced-motion:reduce){.mk-chip .arr-ico{transition:none}
   .mk-chip:hover .arr-ico{transform:none}}
 
+/* ---- Строка-действие во всю ширину (ссылка + стрелка справа) --------
+   «Все результаты по…», «Смотреть все» и т.п. Отделение линией/паддингом —
+   на стороне контекста; компонент отвечает за типографику, стрелку и фокус. */
+.mk-rowlink{display:flex;align-items:center;gap:var(--sp-10);width:100%;
+  font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);
+  font-weight:600;color:var(--text-primary);text-decoration:none;cursor:pointer;transition:color .15s}
+.mk-rowlink b{font-weight:700}
+.mk-rowlink .mk-arr{margin-left:auto}
+.mk-rowlink:hover .mk-arr{transform:translateX(2px)}
+.mk-rowlink:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px;border-radius:var(--radius-inside)}
+@media (prefers-reduced-motion:reduce){.mk-rowlink .mk-arr{transition:none}
+  .mk-rowlink:hover .mk-arr{transform:none}}
+
 /* ---- Табы (подчёркивание активного — единый паттерн с навигацией) ---- */
 .mk-tabs{display:flex;gap:28px;border-bottom:1px solid var(--border)}
 .mk-tab{font-family:var(--font-body);font-size:15px;color:var(--text-secondary);background:none;border:none;
