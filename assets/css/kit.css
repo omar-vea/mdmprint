@@ -87,6 +87,20 @@
 .mk-btn--ghost-inverse:hover,.mk-btn--ghost-inverse.is-hover{border-color:#fff}
 .mk-btn--ghost-inverse:active,.mk-btn--ghost-inverse.is-active{background:rgba(255,255,255,.08);border-color:#fff}
 
+/* soft — тональная (полупрозрачная) вторичная: заливка вместо контура, видна в покое, но тише solid.
+   Без рамки (база даёт прозрачную). --soft для светлого фона, --soft-inverse для тёмного. */
+.mk-btn--soft{background:var(--surface-on-light);color:var(--text-primary)}
+.mk-btn--soft:hover,.mk-btn--soft.is-hover{background:var(--surface-on-light-2)}
+.mk-btn--soft:active,.mk-btn--soft.is-active{background:var(--surface-on-light-2)}
+.mk-btn--soft-inverse{background:var(--surface-on-dark);color:var(--text-on-dark)}
+.mk-btn--soft-inverse:hover,.mk-btn--soft-inverse.is-hover{background:var(--surface-on-dark-2)}
+.mk-btn--soft-inverse:active,.mk-btn--soft-inverse.is-active{background:var(--surface-on-dark-2)}
+
+/* inverse — белая сплошная на тёмном: яркая вторичная / промо-CTA (заполняет пробел ДС) */
+.mk-btn--inverse{background:var(--surface-card);color:var(--text-primary)}
+.mk-btn--inverse:hover,.mk-btn--inverse.is-hover{background:var(--surface-gray-2)}
+.mk-btn--inverse:active,.mk-btn--inverse.is-active{background:var(--surface-gray-2)}
+
 /* текстовая — для второстепенных действий («Заказать звонок») */
 .mk-btn--link{height:auto;padding:0;background:none;border:none;color:var(--text-secondary);font-weight:400;
   border-bottom:1px dashed var(--border-strong);border-radius:0}
@@ -104,6 +118,18 @@
 /* бейдж внутри кнопки («−5%») */
 .mk-btn__badge{background:var(--brand);color:var(--on-brand);font-size:11px;font-weight:700;
   padding:2px 6px;border-radius:var(--radius-inside);line-height:1.2}
+
+/* ---- Бейдж — компактный акцент-ярлык (статус/скидка). Одна форма (radius-inside), цвет под фон.
+   default — жёлтый (Хит/скидка), --dark — тёмный (Новое), --soft — светлый с рамкой,
+   --lg — крупнее (промо), --inline — прилипает к слову после текста. ---- */
+.mk-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-body);
+  font-size:9px;font-weight:800;line-height:1;letter-spacing:.4px;text-transform:uppercase;
+  padding:3px 6px;border-radius:var(--radius-inside);white-space:nowrap;
+  background:var(--brand);color:var(--on-brand)}
+.mk-badge--dark{background:var(--text-primary);color:var(--text-on-dark)}
+.mk-badge--soft{background:var(--surface-card);color:var(--text-primary);border:1px solid var(--brand-soft-2)}
+.mk-badge--lg{font-size:var(--t-label);font-weight:700;letter-spacing:var(--t-label-ls);padding:4px 9px}
+.mk-badge--inline{margin-left:6px;vertical-align:1px}
 
 /* ---- Карточка ---- */
 .mk-card{background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius-outside)}
@@ -368,6 +394,9 @@
   width:10px;height:5px;transform:translate(-50%,-50%) rotate(-45deg);
   border-left:2px solid var(--on-brand);border-bottom:2px solid var(--on-brand)}
 .mk-check:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
+/* мелкий вариант — строки согласий (12px набор): базовые 22px давят мелкий текст */
+.mk-check--sm{width:18px;height:18px}
+.mk-check--sm:checked::after{width:8px;height:4px}
 
 /* ---- Таблица «ключ — значение» ---- */
 .mk-kv{display:flex;flex-direction:column;gap:var(--sp-8)}
