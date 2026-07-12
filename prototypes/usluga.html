@@ -243,22 +243,15 @@
     -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 1.6em),transparent);
     mask-image:linear-gradient(to bottom,#000 calc(100% - 1.6em),transparent)}
 
-  /* СТАТЬИ — карточки кита (.mk-mcard--link) без медиа: у статьи нет кадра,
-     ценность в заголовке. Ряд из 5 — тег/имя сверху, время+стрелка прижаты вниз.
+  /* СТАТЬИ — карточки кита (.mk-mcard--link) как в «Видах», без медиа: у статьи нет кадра,
+     ценность в заголовке. 4 в ряд — рубрика/имя сверху, время чтения прижато вниз.
      Заголовок наборный (.mk-mcard__title, Roboto 16/600) — имя статьи читают, а не опознают. */
-  .usl-art .art-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-24)}
+  .usl-art .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-24)}
   .usl-art .art-card{height:100%}
   .usl-art .art-card .mk-mcard__body{flex:1;padding:var(--sp-20)}
-  .usl-art .art-card__meta{display:flex;align-items:center;justify-content:space-between;
-    gap:var(--sp-12);margin-top:auto;padding-top:var(--sp-12)}
   /* --text-secondary, а не --text-tertiary: время чтения — осмысленный текст (норма 4.5:1) */
-  .usl-art .art-card__time{color:var(--text-secondary);
-    font-size:var(--t-small);line-height:var(--t-small-lh);white-space:nowrap}
-  .usl-art .art-card .mk-arr{color:var(--text-tertiary);transition:transform .15s}
-  .usl-art .art-card:hover .mk-arr{transform:translateX(2px);color:var(--text-primary)}
-  @media (prefers-reduced-motion:reduce){
-    .usl-art .art-card .mk-arr{transition:none}
-    .usl-art .art-card:hover .mk-arr{transform:none}}
+  .usl-art .art-card__time{margin-top:auto;padding-top:var(--sp-12);
+    color:var(--text-secondary);font-size:var(--t-small);line-height:var(--t-small-lh)}
 
   /* ФИНАЛЬНЫЙ CTA + ФУТЕР — одна тёмная поверхность.
      Было: CTA — чёрная «коробка» #1b1b1d с радиусом на белом, под ней футер #141416.
@@ -2768,50 +2761,28 @@
             <span class="mk-mcard__body">
               <span class="mk-mcard__tag">Тиснение</span>
               <h3 class="mk-mcard__title">Виды тиснения: где применять каждый</h3>
-              <span class="art-card__meta">
-                <span class="art-card__time">5 мин чтения</span>
-                <i class="mk-arr" aria-hidden="true"></i>
-              </span>
+              <span class="art-card__time">5 мин чтения</span>
             </span>
           </a>
           <a class="mk-mcard mk-mcard--link art-card" href="#">
             <span class="mk-mcard__body">
               <span class="mk-mcard__tag">Подготовка макета</span>
               <h3 class="mk-mcard__title">Как подготовить макет под фольгу</h3>
-              <span class="art-card__meta">
-                <span class="art-card__time">4 мин чтения</span>
-                <i class="mk-arr" aria-hidden="true"></i>
-              </span>
+              <span class="art-card__time">4 мин чтения</span>
             </span>
           </a>
           <a class="mk-mcard mk-mcard--link art-card" href="#">
             <span class="mk-mcard__body">
               <span class="mk-mcard__tag">Отделка</span>
               <h3 class="mk-mcard__title">Фольга и конгрев: как сочетать эффекты</h3>
-              <span class="art-card__meta">
-                <span class="art-card__time">6 мин чтения</span>
-                <i class="mk-arr" aria-hidden="true"></i>
-              </span>
+              <span class="art-card__time">6 мин чтения</span>
             </span>
           </a>
           <a class="mk-mcard mk-mcard--link art-card" href="#">
             <span class="mk-mcard__body">
               <span class="mk-mcard__tag">Материалы</span>
               <h3 class="mk-mcard__title">На какой бумаге тиснение смотрится лучше</h3>
-              <span class="art-card__meta">
-                <span class="art-card__time">4 мин чтения</span>
-                <i class="mk-arr" aria-hidden="true"></i>
-              </span>
-            </span>
-          </a>
-          <a class="mk-mcard mk-mcard--link art-card" href="#">
-            <span class="mk-mcard__body">
-              <span class="mk-mcard__tag">Тиснение</span>
-              <h3 class="mk-mcard__title">Сколько стоит тиснение и от чего зависит цена</h3>
-              <span class="art-card__meta">
-                <span class="art-card__time">3 мин чтения</span>
-                <i class="mk-arr" aria-hidden="true"></i>
-              </span>
+              <span class="art-card__time">4 мин чтения</span>
             </span>
           </a>
         </div>
