@@ -909,15 +909,63 @@
   /* ═══ конец временного теста ═══ */
 </style>
 <style id="sandbox-mega-c">
-/* ПЕСОЧНИЦА: чистовой концепт C мегаменю (линии убраны, промо-aside, скруглённый актив).
+/* ПЕСОЧНИЦА C2: линии → фланг-панели. Рельса и промо становятся скруглёнными панелями
+   («скобки» слева/справа), центр — белая «деталь» выбора между ними. Master-detail
+   держится на: (1) структуре скобок, (2) бренд-эхе активный пункт ↔ тик у заголовка центра.
    Наложено поверх usluga.html через inject — оригинал не изменён. */
   .mega-box{border:0}
-  .rail{border-right:0}
-  .pane{border-right:0}
-  .rail .ri.active{border-radius:8px}
-  .rail .ri.active::before{display:none}
-  .mega-card{padding:0 0 14px}
-  .promo{margin:14px 14px 14px 4px;border-radius:14px}
+  .mega-card{grid-template-columns:280px 1fr 240px;height:540px;padding:14px 0}
+
+  /* РЕЛЬСА — нейтральная панель-навигация (левый фланг). Раньше «висела» на белом.
+     surface-subtle неотличим от белого (проверено, конц. B), gray-2 был тяжеловат →
+     завели токен --surface-panel (тёплый off-white). Панель со скруглением = контейнер. */
+  .rail{border:0;border-radius:var(--radius-outside);background:var(--surface-panel);padding:8px 4px;margin:0 8px 0 0;height:100%;max-height:none;scrollbar-gutter:stable}
+  .rail .lbl{padding:8px 10px 4px}
+  .rail .ri{padding:9px 10px;border-radius:var(--radius-md);white-space:nowrap;gap:9px}/* одна строка + чуть плотнее иконка↔текст (было 12) */
+  .rail .ri:hover{background:var(--surface-card)}/* наведение = выбор раздела (mouseenter → active) */
+  /* активный/выбранный (он же — состояние наведения): белая карточка + бренд-бар слева.
+     Светло-жёлтая заливка на тёплой панели читалась «грязно» → ушли от неё. */
+  .rail .ri.active{background:var(--surface-card);border-radius:var(--radius-md);box-shadow:0 1px 4px rgba(20,15,0,.06)}
+  /* бренд-акцент активного = вертикальный аналог таб-подчёркивания ДС (.usl-subnav a.active): 2px, заподлицо, инсет по радиусу карточки (radius-md 8px) */
+  .rail .ri.active::before{display:block;content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;background:var(--brand)}
+  .rail .sep{margin:6px 10px}
+
+  /* ЦЕНТР — «деталь». Подчёркивание заголовка убрано (усиливало несвязанность);
+     бренд-тик у заголовка эхом связывает с активным пунктом рельсы.
+     Мягкий фейд сверху и снизу вместо резкого «невидимого» белого обреза скролла.
+     Паддинг центра (18/22px) держит заголовок чётким в покое — фейд его не задевает. */
+  .pane{border-right:0;height:100%;max-height:none;scrollbar-gutter:stable;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(to bottom,transparent 0,#000 16px,#000 calc(100% - 16px),transparent)}
+  .pane .phead{border-bottom:0;margin:0 0 16px;padding:0;justify-content:flex-start;gap:9px;width:fit-content;cursor:pointer}
+  .pane .phead h3{display:inline-flex;align-items:center}
+  .pane .phead h3::before{display:none}/* бренд-тик убран — акцент у заголовка теперь даёт кружок-стрелка */
+  /* «Все услуги раздела» → контурный кружок-стрелка у заголовка (текст скрыт font-size:0).
+     Паттерн ДС = ghost-кнопка (.mk-btn--ghost): белый фон + 1px var(--border), на hover
+     бордер и контент → --text-primary. Иконочный размер, вторичный вид (просто обводка).
+     align-self:center + сдвиг −1px — оптическое выравнивание с прописным заголовком. */
+  /* мягкая серая заливка без обводки — паттерн ДС .mk-btn--soft (--surface-on-light). Вторичный вид. */
+  .pane .phead a{font-size:0;flex:0 0 auto;align-self:center;margin-top:-1px;position:relative;width:22px;height:22px;border-radius:50%;background:var(--surface-on-light);color:var(--text-secondary);display:inline-block;transition:background .15s,color .15s}
+  /* ОБЩИЙ hover на весь заголовок (текст+круг = один элемент): круг мягко темнеет (ДС soft-hover), стрелка темнеет. Без слайда. */
+  .pane .phead:hover a{background:var(--surface-on-light-2);color:var(--text-primary)}
+  /* стрелку центрируем абсолютно: скрытый текст (font-size:0) остаётся флекс-элементом и сдвигал её вправо */
+  .pane .phead a .arr-ico{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;display:block;transition:none}
+  /* без анимации: гасим унаследованный слайд .arr-ico{translateX(2px)} на hover — стрелка статична по центру */
+  .pane .phead a:hover .arr-ico{transform:translate(-50%,-50%)}
+
+  /* подразделы (.group h4): общий hover в серый — весь заголовок (текст+стрелка) сереет вместе.
+     currentColor держит стрелку в цвет текста; оригинальную плавную анимацию появления (fade+лёгкий слайд) НЕ трогаем. */
+  .pane .group h4 .ha{background:currentColor}
+  .pane .group h4:hover{color:var(--text-secondary)}
+
+  /* «Показать все» → текст как у ссылок списка + справа КРУЖОК С ЗАЛИВКОЙ (бренд-жёлтый) со стрелкой.
+     Бренд-акцент (по просьбе маркетолога) живёт в кружке, текст нейтральный. */
+  .pane .group li .more{display:inline-flex;align-items:center;gap:8px;margin-top:0;padding:0;background:none;border-radius:0;font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:400;color:var(--text-secondary);white-space:nowrap;transition:color .12s}
+  .pane .group li .more:hover{color:var(--text-primary);text-decoration:underline;text-underline-offset:2px}
+  .pane .group li .more .arr-ico{width:20px;height:20px;margin:0;border-radius:50%;background:var(--brand);-webkit-mask:none;mask:none;position:relative;flex:0 0 auto;vertical-align:0}
+  .pane .group li .more .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;background:var(--text-primary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat}
+  .pane .group li .more:hover .arr-ico{transform:none}
+
+  /* ПРОМО — акцент-панель (правый фланг), симметрично рельсе: тот же контур/скругление */
+  .promo{margin:0 0 0 8px;border:1px solid var(--brand-soft-2);border-radius:var(--radius-outside)}
 </style>
 </head>
 <!-- fcopy-hint = вариант Б (подсказка при наведении). Убрать класс → вариант А (кнопки-иконки). -->
