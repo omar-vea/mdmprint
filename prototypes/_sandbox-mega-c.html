@@ -81,7 +81,7 @@
   /* HERO */
   .usl-hero{padding:var(--sp-40) 0 var(--sp-64)!important;background:var(--surface-subtle)}
   .usl-hero .hero-grid{display:grid;grid-template-columns:619fr 557fr;align-items:start}
-  .usl-hero .hero-left{padding-top:50px}
+  .usl-hero .hero-left{padding-top:20px}
   .usl-hero h1{font-family:var(--font-head);font-size:var(--t-h1);font-weight:700;letter-spacing:var(--t-h1-ls);text-transform:uppercase;line-height:var(--t-h1-lh);margin:var(--sp-10) 0 var(--sp-20)}
   .usl-hero .hero-bullets{margin-top:var(--sp-20)}
   .usl-hero .hero-cta{display:flex;gap:var(--sp-16);margin-top:var(--sp-32);flex-wrap:wrap}
@@ -644,9 +644,13 @@
   .quick a.active{color:var(--text-primary);font-weight:600;border-bottom-color:var(--brand)}
 
   /* светлая кнопка расчёта + бейдж выгоды поверх */
-  /* .calcbtn = .mk-btn--ghost --md; своё — только иконка */
-  .calcbtn{flex-shrink:0}
-  .calcbtn svg{color:var(--brand-hover)}
+  /* .calcbtn — горизонтально, БЕЗ фона в покое и БЕЗ паддингов (снимаем md-паддинги и фикс-высоту),
+     фон появляется только на hover (мягкая подложка --surface-subtle). Иконка в цвет текста. */
+  .calcbtn{flex-shrink:0;padding:0 12px;height:36px;background:transparent}/* высота 36px = как у «Каталог» (mk-btn--md); фон в покое прозрачный (иначе серый UA-фон <button>), горизонт. паддинг — под hover-подложку */
+  .calcbtn:hover{background:var(--surface-subtle)}
+  .calcbtn .calc-ic{display:inline-flex;flex-shrink:0}
+  /* жёлтый круглый бейдж со скидкой справа — бренд-акцент + информативность */
+  .calcbtn .calc-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--brand);color:var(--on-brand);font-size:13px;font-weight:800;line-height:1;flex-shrink:0}
 
   /* ===== МЕГАМЕНЮ ===== */
   .overlay{position:fixed;inset:0;background:rgba(17,17,17,.35);opacity:0;visibility:hidden;transition:.2s;z-index:30}
@@ -959,13 +963,38 @@
   /* «Показать все» → текст как у ссылок списка + справа КРУЖОК С ЗАЛИВКОЙ (бренд-жёлтый) со стрелкой.
      Бренд-акцент (по просьбе маркетолога) живёт в кружке, текст нейтральный. */
   .pane .group li .more{display:inline-flex;align-items:center;gap:8px;margin-top:0;padding:0;background:none;border-radius:0;font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:400;color:var(--text-secondary);white-space:nowrap;transition:color .12s}
-  .pane .group li .more:hover{color:var(--text-primary);text-decoration:underline;text-underline-offset:2px}
-  .pane .group li .more .arr-ico{width:20px;height:20px;margin:0;border-radius:50%;background:var(--brand);-webkit-mask:none;mask:none;position:relative;flex:0 0 auto;vertical-align:0}
-  .pane .group li .more .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;background:var(--text-primary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat}
-  .pane .group li .more:hover .arr-ico{transform:none}
+  /* без подчёркивания: ховер живёт в кружке+стрелке (кружок темнеет, стрелка едет вправо) */
+  .pane .group li .more:hover{color:var(--text-primary);text-decoration:none}
+  /* кружок — как у заголовка раздела: серая soft-заливка (--surface-on-light) + приглушённая стрелка; на hover темнеет (общий hover) */
+  .pane .group li .more .arr-ico{width:20px;height:20px;margin:0;border-radius:50%;background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;flex:0 0 auto;vertical-align:0;transition:background .15s}
+  .pane .group li .more .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;background:var(--text-secondary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat;transition:background .15s,transform .15s}
+  /* кружок стоит на месте (transform:none гасит унаследованный слайд), только темнеет; едет — стрелка внутри */
+  .pane .group li .more:hover .arr-ico{transform:none;background:var(--surface-on-light-2)}
+  .pane .group li .more:hover .arr-ico::before{background:var(--text-primary);transform:translate(-50%,-50%) translateX(2px)}
 
-  /* ПРОМО — акцент-панель (правый фланг), симметрично рельсе: тот же контур/скругление */
-  .promo{margin:0 0 0 8px;border:1px solid var(--brand-soft-2);border-radius:var(--radius-outside)}
+  /* ВНЕШНЯЯ ССЫЛКА mdmgifts (.extli) → тот же вид, что «Показать все» (нейтральный текст + кружок),
+     но стрелка ДИАГОНАЛЬНАЯ «в угол» (↗) — маркер ухода на внешний домен. Тот же стиль линии (1.7). */
+  :root{--arr-ne:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 11.5 11.5 4.5M6 4.5h5.5V10'/%3E%3C/svg%3E")}
+  /* строчный поток (НЕ inline-flex): длинный текст переносится на 2 строки, кружок липнет к последнему слову */
+  .pane .group li .extli{display:inline;margin:0;padding:0;background:none;font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:400;color:var(--text-secondary);transition:color .12s}
+  .pane .group li .extli:hover{color:var(--text-primary);text-decoration:none}
+  .pane .group li .extli .arr-ico{display:inline-flex;width:20px;height:20px;margin:0 0 0 6px;border-radius:50%;background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;vertical-align:middle;transition:background .15s}
+  .pane .group li .extli .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;background:var(--text-secondary);-webkit-mask:var(--arr-ne) center/contain no-repeat;mask:var(--arr-ne) center/contain no-repeat;transition:background .15s,transform .15s}
+  /* кружок статичен, темнеет; стрелка едет в угол (вправо-вверх) */
+  .pane .group li .extli:hover .arr-ico{transform:none;background:var(--surface-on-light-2)}
+  .pane .group li .extli:hover .arr-ico::before{background:var(--text-primary);transform:translate(-50%,-50%) translate(1.5px,-1.5px)}
+
+  /* ХОВЕР УСЛУГ по ДС: вместо плоского подчёркивания — мягкая скруглённая подсветка строки
+     (тот же язык тональной заливки, что у рельсы/кружков: --surface-on-light). Весь список
+     читается как интерактивное меню. inline + box-decoration-break:clone — переносы и бейджи ХИТ
+     не ломаются; padding гасится отрицательным margin, вертикальный не двигает строку. */
+  /* только конечные услуги; .more (Показать все) и .extli (внешняя) — со своим видом, плашку не даём */
+  .pane .group li a:not(.more):not(.extli){border-radius:6px;transition:color .12s,background .12s}
+  .pane .group li a:not(.more):not(.extli):hover{color:var(--text-primary);text-decoration:none;background:var(--surface-on-light);padding:2px 7px;margin:0 -7px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+  /* ПРОМО — акцент-панель (правый фланг). Короче рельсы/центра и прижата к верху:
+     промо-CTA не обязан тянуться на всю высоту master-detail (иначе «вытянут» и пустует). */
+  .promo{margin:0 0 0 8px;border:1px solid var(--brand-soft-2);border-radius:var(--radius-outside);align-self:start;height:470px}
 </style>
 </head>
 <!-- fcopy-hint = вариант Б (подсказка при наведении). Убрать класс → вариант А (кнопки-иконки). -->
@@ -1063,7 +1092,7 @@
       <div class="hphone">
         <div class="ph-txt">
           <a href="tel:+74952561000" class="num" data-copy="+7 (495) 256-10-00"><span class="pre">+7 (495) 256-</span><span class="l4">10-00</span></a>
-          <div class="psub"><span class="day">Ежедневно с 9 до 21</span></div>
+          <div class="psub"><span class="day">Ответим с 9 до 22</span></div>
         </div>
       </div>
       <div class="hactions">
@@ -1112,10 +1141,10 @@
         <a href="#" data-open="4">Наклейки для маркетплейсов</a>
         <a href="#" data-open="2">Баннеры и Roll-Up</a>
       </nav>
-      <button type="button" class="calcbtn mk-btn mk-btn--ghost mk-btn--md">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><circle cx="8.5" cy="17.3" r="1" fill="currentColor"/><circle cx="12" cy="17.3" r="1" fill="currentColor"/><circle cx="15.5" cy="17.3" r="1" fill="currentColor"/></svg>
+      <button type="button" class="calcbtn mk-btn mk-btn--md">
+        <span class="calc-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v17l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 8h6M9 11.5h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         Калькулятор
-        <span class="mk-btn__badge">−5%</span>
+        <span class="calc-badge">%</span>
       </button>
     </div>
 
@@ -1133,8 +1162,8 @@
             <div class="ri active" data-sec="0"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M7 14h5M7 10.5h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span> Визитки <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="1"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2M7 15h10v5H7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Печать полиграфии <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="2"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m6 14 3.5-4 2.5 3 2-2.5L18 14" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Широкоформатная печать <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="ri" data-sec="3"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="11" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M9 9h1M9 16h1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="m16 6 4 1.4-3 12L13 18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Карты и настольные игры <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="ri" data-sec="4"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M5 4h9l5 5v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2zM14 4v5h5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Наклейки, стикеры, этикетки <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="3"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="12.4" y="5.5" width="8.5" height="13" rx="1.8" transform="rotate(12 16.6 12)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="4" y="5" width="9.5" height="14.5" rx="1.8" fill="var(--surface-page)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.7 9.6 10 11.3 8.7 13 7.4 11.3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span> Карты и настольные игры <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="4"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 21a9 9 0 1 1 9-9c0 1-1.2 2.2-3 4l-2 2c-1.8 1.8-3 3-4 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M21 12c-3.3 0-5.6.8-7 2.2S12 18 12 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Наклейки, стикеры, этикетки <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="5"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 4 7v10l8 4 8-4V7zM4 7l8 4 8-4M12 11v10" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Упаковка и коробки <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="6"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 8h16v3H4zM5 11h14v9H5zM12 8v12M12 8S10.5 3 8 4.5 9.5 8 12 8ZM12 8s1.5-5 4-3.5S14.5 8 12 8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Сувениры и мерч <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="7"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M8 4 4 6v4l2.5-1V20h11V9l2.5 1V6l-4-2-2 2H10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Нанесение <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -1143,11 +1172,11 @@
             <div class="sep"></div>
             <div class="lbl">Готовые решения</div>
             <div class="ri" data-sec="10"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 20V9l8-5 8 5v11" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="9" y="13" width="6" height="7" stroke="currentColor" stroke-width="1.7"/></svg></span> Бизнесу <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="ri" data-sec="11"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 11l16-6-3 14-5-4-3 3v-5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Рекламным агентствам <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="11"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 10.5v3A1.5 1.5 0 0 0 5.5 15H8l6 4V5L8 9H5.5A1.5 1.5 0 0 0 4 10.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M8 15v3a1.2 1.2 0 0 0 2.4 0v-2.3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M17 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span> Рекламным агентствам <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="rail-v1">
               <div class="sep"></div>
               <div class="ri" data-sec="svc"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.2 2.2-2-2 2.2-2.2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Услуги <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-              <div class="ri" data-sec="mat"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v12H4zM4 17l4 2 4-2 4 2 4-2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span> Материалы <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+              <div class="ri" data-sec="mat"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 3 8l9 5 9-5-9-5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 12l9 5 9-5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 16l9 5 9-5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span> Материалы <span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             </div>
           </div>
 
