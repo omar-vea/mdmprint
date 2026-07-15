@@ -1031,6 +1031,127 @@
      промо-CTA не обязан тянуться на всю высоту master-detail (иначе «вытянут» и пустует). */
   body.v-after .promo{margin:0 0 0 8px;border:1px solid var(--brand-soft-2);border-radius:var(--radius-outside);align-self:start;height:470px}
 
+  /* ============================================================
+     МОБИЛЬНАЯ ШАПКА + КАТАЛОГ-DRAWER (drill-down, ≤900px).
+     Переиспользуем #mega: .rail = уровень 0, #pane/.panel = уровень 1.
+     ============================================================ */
+  .m-dhead,.m-back,.m-callbar,.m-dsearch,.hactions .m-search{display:none}   /* по умолчанию (десктоп) скрыты */
+  @keyframes mDrawerFade{from{opacity:0}to{opacity:1}}
+
+  @media(max-width:900px){
+    html,body{overflow-x:hidden;max-width:100%}
+    body.nav-open{overflow:hidden}
+
+    /* топбар (утилитарные ссылки) уезжает за экран — прячем */
+    .topbar{display:none}
+    /* навбар: прячем десктопный ряд, #mega внутри оставляем */
+    .navbar{border:none;background:none}
+    .navbar .nav{display:none}
+    /* шапка липкая — остаётся видимой, меню открывается ПОД ней */
+    header{position:sticky;top:0;z-index:1002}
+    .usl-subnav{top:58px}
+
+    /* --- HBAR: logo слева · [поиск · войти · корзина · меню] справа --- */
+    .hbar{gap:2px;height:58px}
+    .logo{order:1;margin-right:auto}
+    .logo img{height:22px}
+    /* поле поиска убрано из шапки — оно внутри drawer (каталога) */
+    .search{display:none}
+    /* телефон живёт в call-bar (2-й уровень) — из hbar убираем */
+    .hphone{display:none}
+    /* правый блок иконок: поиск + войти + корзина (все — плоские иконки одного размера) */
+    .hactions{order:2;gap:2px}
+    .hactions>*{display:none!important}
+    .hactions>.m-search,.hactions>.m-keep{display:flex!important}
+    /* ЕДИНЫЙ СТИЛЬ иконок-кнопок шапки: поиск · войти · корзина · бургер —
+       40×40, плоские, глиф строго по центру (font-size:0 + flex-center вместо text-indent),
+       общий тёплый ховер (в т.ч. у бургера) */
+    .hbar .hcat,body.scrolled .hbar .hcat,.hactions .hbtn{
+      width:40px;min-width:40px;height:40px;min-height:40px;padding:0;gap:0;
+      display:flex;align-items:center;justify-content:center;font-size:0;line-height:0;
+      background:none;border:none;border-radius:var(--radius-md);
+      position:relative;flex-shrink:0;color:var(--text-primary);cursor:pointer;transition:background .15s}
+    .hbar .hcat{order:3}
+    .hbar .hcat:hover,.hactions .hbtn:hover{background:var(--surface-on-light)}
+    /* бургер: тонкие ровные полосы под вес соседних глифов (не тяжелее) */
+    .hbar .hcat .ic{position:static;margin:0;display:flex;flex-direction:column;gap:3.5px;align-items:center;justify-content:center}
+    .hbar .hcat .ic i{width:16px;height:1.5px;border-radius:2px;background:var(--text-primary)}
+    /* крестик: полосы 1.5px, gap 3.5 → центры на ±5px */
+    .hbar .hcat.active .ic i:nth-child(1){transform:translateY(5px) rotate(45deg)}
+    .hbar .hcat.active .ic i:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+    .hactions .hbtn .ci{position:static;margin:0;width:auto;height:auto;display:flex;align-items:center;justify-content:center}
+    .hactions .hbtn .ci svg{width:22px;height:22px}
+    .hactions .hbtn .badge{font-size:9px;line-height:1;right:1px;top:1px}
+
+    /* --- CALL-BAR (2-й уровень): телефон крупно (приоритет заказчика) --- */
+    .m-callbar{display:flex;align-items:center;gap:11px;padding:9px 16px;background:var(--surface-subtle);border-bottom:1px solid var(--border);color:var(--text-primary)}
+    .m-callbar .cb-ic{width:30px;height:30px;flex-shrink:0;border-radius:50%;background:var(--brand);color:var(--on-brand);display:flex;align-items:center;justify-content:center}
+    .m-callbar .cb-ic svg{width:16px;height:16px}
+    .m-callbar .cb-num{font-weight:800;font-size:16px;letter-spacing:.01em}
+    .m-callbar .cb-hours{margin-left:auto;font-size:12px;color:var(--text-secondary);white-space:nowrap}
+
+    /* --- #MEGA → выпадающее меню ПОД шапкой (шапка липкая, остаётся видимой) --- */
+    /* закрытый = display:none (fixed+transform давал оверфлоу и раздувал ICB). top=высота hbar */
+    #mega{position:fixed;top:58px;left:0;right:0;bottom:0;z-index:1001;background:var(--surface-page);
+      width:100%;max-width:none;box-shadow:none;border:none;display:none;transform:none}
+    #mega.open{display:block;animation:mDrawerFade .18s ease}
+    #mega .m-dhead .m-dh-x{display:none}   /* закрывает бургер-крестик в шапке, отдельный × не нужен */
+    /* #mega-префикс: перебивает body.v-after .mega-card/.pane (иначе остаётся десктоп-грид 280/1fr/240 и .pane 1400px → оверфлоу страницы) */
+    #mega .mega-inner,#mega .mega-box,#mega .mega-card{display:block;padding:0;margin:0;max-width:none;width:auto;background:none;border:none;box-shadow:none;height:auto;min-height:0}
+    #mega .mega-box{height:100%;display:flex;flex-direction:column}
+    #mega .mega-card{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;grid-template-columns:none}
+    #mega .promo{display:none}   /* десктопный промо-фланг на мобиле убираем */
+
+    /* шапка drawer */
+    #mega .m-dhead{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+    #mega .m-dhead .m-dh-t{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.02em;font-size:17px;font-weight:700}
+    #mega .m-dhead .m-dh-x{margin-left:auto;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--text-secondary)}
+    #mega .m-dhead .m-dh-x svg{width:22px;height:22px}
+    /* поиск внутри drawer */
+    #mega .m-dsearch{display:flex;align-items:center;gap:9px;flex-shrink:0;margin:12px 14px 8px;padding:0 14px;height:44px;background:var(--surface-subtle);border:1px solid var(--border);border-radius:var(--radius-md)}
+    #mega .m-dsearch svg{width:19px;height:19px;color:var(--text-secondary);flex-shrink:0}
+    #mega .m-dsearch input{flex:1;min-width:0;border:none;background:none;outline:none;font-size:15px;color:var(--text-primary)}
+    #mega .m-dsearch input::placeholder{color:var(--text-tertiary)}
+
+    /* рельса = уровень 0 */
+    #mega .rail{display:block;width:100%;flex:1;overflow-y:auto;padding:0;border:none;background:none;box-shadow:none}
+    #mega .rail .lbl{padding:16px 16px 6px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-tertiary)}
+    #mega .rail .sep{display:none}
+    #mega .rail-v1{display:block}
+    #mega .rail .ri{display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;min-height:52px;
+      border:none;border-bottom:1px solid var(--border);border-radius:0;background:none;
+      font-size:16px;font-weight:500;color:var(--text-primary);cursor:pointer}
+    #mega .rail .ri.active{background:none;box-shadow:none}
+    #mega .rail .ri.active::before,#mega .rail .ri::before{display:none}   /* бренд-акцент активного не нужен на мобиле */
+    #mega .rail .ri .em{width:24px;height:24px;flex-shrink:0;color:var(--text-secondary);display:flex;align-items:center;justify-content:center}
+    #mega .rail .ri .em svg{width:24px;height:24px}
+    #mega .rail .ri .arr{margin-left:auto;color:var(--text-tertiary);display:flex;transform:none;opacity:1}
+    #mega .rail .ri .arr svg{width:9px;height:14px}
+
+    /* #pane = уровень 1 (наезжает поверх рельсы) */
+    #mega .pane{position:absolute;inset:0;transform:translateX(100%);width:auto;max-height:none;
+      transition:transform .28s cubic-bezier(.4,0,.2,1);border-right:0;-webkit-mask:none;mask:none;
+      background:var(--surface-page);overflow-y:auto;padding:0;display:block}
+    #mega.detail-open .pane{transform:translateX(0)}
+    #mega .m-back{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:6px;width:100%;
+      padding:12px;min-height:48px;background:var(--surface-page);border:none;border-bottom:1px solid var(--border);
+      font-size:15px;font-weight:600;color:var(--text-primary);cursor:pointer}
+    #mega .m-back svg{width:22px;height:22px}
+    #mega .pane .panel{display:none;padding:0 0 24px}
+    #mega .pane .panel.show{display:block}
+    #mega .pane .phead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:14px 16px 4px;border:none;width:auto;cursor:default}
+    #mega .pane .phead h3{font-family:var(--font-head);text-transform:uppercase;font-size:18px}
+    #mega .pane .phead a{display:inline-flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;width:auto;height:auto;background:none;border-radius:0;color:var(--brand-text)}
+    #mega .pane .phead a .arr-ico{position:static;transform:none;left:auto;top:auto;width:12px;height:12px;margin:0}
+    #mega .pane .cols-flow{display:block;column-count:auto;columns:auto;padding:0}
+    #mega .pane .group{padding:6px 0;break-inside:auto}
+    #mega .pane .group h4{padding:12px 16px 4px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-tertiary)}
+    #mega .pane .group ul{margin:0}
+    #mega .pane .group li a{display:block;padding:12px 16px;min-height:44px;font-size:16px;color:var(--text-secondary);border-bottom:1px solid var(--border)}
+
+    /* временные dev-тумблеры компактнее, чтобы не мешали */
+    #editToggle{transform:scale(.88);transform-origin:bottom right}
+  }
 </style>
 </head>
 <!-- fcopy-hint = вариант Б (подсказка при наведении). Убрать класс → вариант А (кнопки-иконки). -->
@@ -1132,6 +1253,10 @@
         </div>
       </div>
       <div class="hactions">
+        <button type="button" class="hbtn m-search" id="mSearch" title="Поиск" aria-label="Поиск">
+          <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          Поиск
+        </button>
         <button type="button" class="hbtn cb" title="Заказать звонок">
           <span class="ci"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M18.7 5.3 13 11M13 7.4V11h3.6"/></svg></span>
           Перезвоним
@@ -1149,11 +1274,11 @@
           <span class="ci"><svg class="v-before" width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><circle cx="8.5" cy="17.3" r="1" fill="currentColor"/><circle cx="12" cy="17.3" r="1" fill="currentColor"/><circle cx="15.5" cy="17.3" r="1" fill="currentColor"/></svg><svg class="v-after-el" width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
           Калькулятор
         </a>
-        <button type="button" class="hbtn" title="Войти">
+        <button type="button" class="hbtn m-keep" title="Войти">
           <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c.5-3.4 3.3-5.4 7-5.4s6.5 2 7 5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
           Войти
         </button>
-        <button type="button" class="hbtn" title="Корзина">
+        <button type="button" class="hbtn m-keep" title="Корзина">
           <span class="ci"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 4h2.2l1.8 11.5a1.5 1.5 0 0 0 1.5 1.3h8.4a1.5 1.5 0 0 0 1.5-1.2L20.5 8H6.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20" r="1.3" fill="currentColor"/><circle cx="17.5" cy="20" r="1.3" fill="currentColor"/></svg></span>
           <span class="badge">3</span>
           Корзина
@@ -1161,6 +1286,13 @@
       </div>
     </div>
   </header>
+
+  <!-- CALL-BAR (мобилка): телефон крупно — приоритет заказчика -->
+  <a class="m-callbar" href="tel:+74952561000">
+    <span class="cb-ic"><svg viewBox="0 0 24 24" fill="none"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span>
+    <span class="cb-num">+7 (495) 256-10-00</span>
+    <span class="cb-hours">Ежедневно 9–22</span>
+  </a>
 
   <!-- НАВИГАЦИЯ -->
   <div class="navbar">
@@ -1191,6 +1323,14 @@
       <div class="mega-inner">
       <div class="mega-box">
 
+        <!-- мобильная шапка drawer (видна ≤900px) -->
+        <div class="m-dhead"><span class="m-dh-t">Каталог</span></div>
+        <!-- поиск внутри каталога (мобилка) -->
+        <form class="m-dsearch" onsubmit="return false" autocomplete="off">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input type="text" placeholder="Поиск по каталогу…" aria-label="Поиск по каталогу">
+        </form>
+
         <!-- ЕДИНАЯ СЕТКА: рельса (Каталог/Услуги/Материалы) + центр + промо -->
         <div class="mega-card">
 
@@ -1220,6 +1360,7 @@
 
           <!-- КОНТЕНТ -->
           <div class="pane" id="pane">
+            <button type="button" class="m-back" id="megaBack"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Все разделы</button>
 
             <!-- 0 ВИЗИТКИ -->
             <div class="panel show" data-sec="0">
@@ -3146,16 +3287,36 @@
     hcat.classList.add('active');
     [catbtn, hcat].forEach(b => b.setAttribute('aria-expanded','true'));
     overlay.classList.add('show');
+    document.body.classList.add('nav-open');   // мобилка: блок скролла фона
   }
   function closeMega(){
     mega.classList.remove('open');
+    mega.classList.remove('detail-open');      // мобилка: сброс на уровень 0
     catbtn.classList.remove('active');
     hcat.classList.remove('active');
     [catbtn, hcat].forEach(b => b.setAttribute('aria-expanded','false'));
     overlay.classList.remove('show');
+    document.body.classList.remove('nav-open');
     showSec('0');       // сброс панелей/рельсы к разделу по умолчанию
     markQuick();        // и гасим подсветку в навбаре
   }
+
+  // ===== Мобильный drill-down: тап по разделу → уровень 1, «назад»/× → обратно =====
+  const isMobileNav = () => window.matchMedia('(max-width:900px)').matches;
+  ris.forEach(r=> r.addEventListener('click', ()=>{ if(isMobileNav()) mega.classList.add('detail-open'); }));
+  const megaBack = document.getElementById('megaBack');
+  const megaClose = document.getElementById('megaClose');
+  if(megaBack)  megaBack.addEventListener('click', ()=> mega.classList.remove('detail-open'));
+  if(megaClose) megaClose.addEventListener('click', closeMega);
+
+  // мобильный поиск (лупа в шапке): открывает каталог-меню и фокусит поле поиска внутри
+  const mSearchBtn = document.getElementById('mSearch');
+  if(mSearchBtn) mSearchBtn.addEventListener('click', e=>{
+    e.preventDefault(); e.stopPropagation();
+    if(!mega.classList.contains('open')) openMega();
+    const inp = mega.querySelector('.m-dsearch input');
+    if(inp) inp.focus();
+  });
 
   catbtn.addEventListener('click', e=>{
     e.stopPropagation();
