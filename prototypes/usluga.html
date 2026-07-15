@@ -1124,10 +1124,11 @@
     /* шапка drawer: назад (появляется при drill) + заголовок уровня */
     #mega .m-dhead{display:none;align-items:center;gap:6px;padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
     #mega.cat-open .m-dhead{display:flex}   /* шапка drawer (назад + «Каталог») — только внутри каталога, в корне не нужна */
-    #mega .m-dhead .m-dh-back{display:none;width:30px;height:30px;margin-left:-4px;flex-shrink:0;align-items:center;justify-content:center;background:none;border:none;color:var(--text-primary);cursor:pointer}
+    #mega .m-dhead .m-dh-back{display:none;height:32px;margin-left:-4px;padding:0 4px 0 0;flex-shrink:0;align-items:center;gap:1px;background:none;border:none;color:var(--text-secondary);cursor:pointer}
     #mega .m-dhead .m-dh-back svg{width:24px;height:24px}
+    #mega .m-dhead .m-dh-back .m-dh-bl{font-size:14px;font-weight:500}   /* куда вернёт «назад»: родительский экран */
     #mega.cat-open .m-dhead .m-dh-back{display:flex}
-    #mega .m-dhead .m-dh-t{font-size:16px;font-weight:600;color:var(--text-primary)}   /* тот же body-шрифт, что и список (без отдельного display-шрифта) */
+    #mega .m-dhead .m-dh-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:16px;font-weight:600;color:var(--text-primary)}   /* текущий экран (тот же body-шрифт, что и список) */
     #mega .m-dhead .m-dh-x{margin-left:auto;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--text-secondary)}
     #mega .m-dhead .m-dh-x svg{width:22px;height:22px}
     /* корень мобильного меню: Каталог › + ссылки топбара (уровень 0) */
@@ -1136,8 +1137,8 @@
     /* «Каталог» — как строка категории (та же плашка-квадрат + заголовок), только плашка жёлтая = главный вход */
     #mega .m-root .mr-cat{display:flex;align-items:center;gap:14px;width:100%;padding:12px 16px;min-height:60px;border:none;border-bottom:1px solid var(--border);background:none;font-size:15px;font-weight:500;color:var(--text-primary);cursor:pointer;text-align:left}
     #mega .m-root .mr-cat:active{background:var(--surface-subtle)}
-    #mega .m-root .mr-cat .mr-cat-ic{width:42px;height:42px;flex-shrink:0;border-radius:var(--radius-md);background:var(--brand);color:var(--on-brand);display:flex;align-items:center;justify-content:center}
-    #mega .m-root .mr-cat .mr-cat-ic svg{width:22px;height:22px}
+    #mega .m-root .mr-cat .mr-cat-ic{width:34px;height:34px;flex-shrink:0;border-radius:var(--radius-md);background:var(--brand);color:var(--on-brand);display:flex;align-items:center;justify-content:center}
+    #mega .m-root .mr-cat .mr-cat-ic svg{width:18px;height:18px}
     #mega .m-root .mr-cat .mr-arr{margin-left:auto;color:var(--text-tertiary);display:flex}
     #mega .m-root .mr-links{display:flex;flex-direction:column}
     #mega .m-root .mr-links a{display:block;padding:13px 16px;min-height:46px;font-size:15px;color:var(--text-primary);border-bottom:1px solid var(--border)}
@@ -1162,8 +1163,8 @@
     #mega .rail .ri.active{background:none;box-shadow:none}
     #mega .rail .ri.active::before,#mega .rail .ri::before{display:none}   /* бренд-акцент активного не нужен на мобиле */
     /* иконка в тональной плашке (Вариант 2) */
-    #mega .rail .ri .em{width:42px;height:42px;flex-shrink:0;border-radius:var(--radius-md);background:var(--surface-subtle);color:var(--text-secondary);display:flex;align-items:center;justify-content:center}
-    #mega .rail .ri .em svg{width:23px;height:23px}
+    #mega .rail .ri .em{width:26px;flex-shrink:0;color:var(--text-secondary);display:flex;align-items:center;justify-content:center}
+    #mega .rail .ri .em svg{width:24px;height:24px}
     /* заголовок + подсказка-подкатегории (2 строки) */
     #mega .rail .ri .ri-tx{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
     #mega .rail .ri .ri-title{font-size:15px;font-weight:500;line-height:1.25;color:var(--text-primary)}
@@ -1179,15 +1180,21 @@
     #mega .m-back{display:none}   /* назад — в общей шапке drawer (m-dh-back) */
     #mega .pane .panel{display:none;padding:0 0 24px}
     #mega .pane .panel.show{display:block}
-    #mega .pane .phead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:14px 16px 4px;border:none;width:auto;cursor:default}
-    #mega .pane .phead h3{font-family:var(--font-head);text-transform:uppercase;font-size:18px}
-    #mega .pane .phead a{display:inline-flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap;width:auto;height:auto;background:none;border-radius:0;color:var(--brand-text)}
-    #mega .pane .phead a .arr-ico{position:static;transform:none;left:auto;top:auto;width:12px;height:12px;margin:0}
+    /* раздел уже показан в шапке drawer (m-dhead) — заголовок панели дублирует его, прячем */
+    #mega .pane .phead{display:flex;align-items:center;margin:0;padding:0;border:none;width:auto;cursor:pointer}
+    #mega .pane .phead h3{display:none}
+    #mega .pane .phead a{display:flex;align-items:center;gap:8px;width:100%;padding:14px 16px;min-height:52px;font-size:15px;font-weight:500;white-space:nowrap;background:none;border:none;border-bottom:1px solid var(--border);border-radius:0;color:var(--brand-text)}
+    #mega .pane .phead a:active{background:var(--surface-subtle)}
+    #mega .pane .phead a .arr-ico{position:static;transform:none;left:auto;top:auto;width:14px;height:14px;margin:0 0 0 auto}
     #mega .pane .cols-flow{display:block;column-count:auto;columns:auto;padding:0}
     #mega .pane .group{padding:6px 0;break-inside:auto}
-    #mega .pane .group h4{padding:12px 16px 4px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-tertiary)}
+    #mega .pane .group h4{padding:14px 16px 4px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-tertiary)}
     #mega .pane .group ul{margin:0}
-    #mega .pane .group li a{display:block;padding:12px 16px;min-height:44px;font-size:16px;color:var(--text-secondary);border-bottom:1px solid var(--border)}
+    #mega .pane .group li a{display:flex;align-items:center;gap:8px;padding:12px 16px;min-height:44px;font-size:16px;color:var(--text-primary);border-bottom:1px solid var(--border)}
+    #mega .pane .group li a:active{background:var(--surface-subtle)}
+    /* «Показать все» / внешние — тише основного списка */
+    #mega .pane .group li .more,#mega .pane .group li .extli{color:var(--text-secondary);font-size:15px}
+    #mega .pane .group li .more .arr-ico,#mega .pane .group li .extli .arr-ico{margin:0 0 0 auto}
   }
 </style>
 </head>
@@ -1364,8 +1371,8 @@
 
         <!-- мобильная шапка drawer (видна ≤900px) -->
         <div class="m-dhead">
-          <button type="button" class="m-dh-back" id="mDhBack" aria-label="Назад"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <span class="m-dh-t" id="mDhTitle">Меню</span>
+          <button type="button" class="m-dh-back" id="mDhBack" aria-label="Назад"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="m-dh-bl" id="mDhBackLbl">Меню</span></button>
+          <span class="m-dh-t" id="mDhTitle">Каталог</span>
         </div>
 
         <!-- ЕДИНАЯ СЕТКА: рельса (Каталог/Услуги/Материалы) + центр + промо -->
@@ -3327,10 +3334,12 @@
   // ===== Мобильный drawer, 3 уровня: Меню(корень) → Каталог(рельса) → Раздел(панель) =====
   const isMobileNav = () => window.matchMedia('(max-width:900px)').matches;
   const dhTitle = document.getElementById('mDhTitle');
-  const setDhTitle = t => { if(dhTitle) dhTitle.textContent = t; };
-  const drawerRoot    = () => { mega.classList.remove('cat-open','detail-open'); setDhTitle('Меню'); };
-  const drawerCatalog = () => { mega.classList.add('cat-open'); mega.classList.remove('detail-open'); setDhTitle('Каталог'); };
-  const drawerSection = name => { mega.classList.add('cat-open','detail-open'); setDhTitle(name || 'Каталог'); };
+  const dhBackLbl = document.getElementById('mDhBackLbl');
+  // шапка: заголовок = текущий экран, метка у «назад» = куда вернёт (родитель)
+  const setDh = (title, back) => { if(dhTitle) dhTitle.textContent = title; if(dhBackLbl) dhBackLbl.textContent = back; };
+  const drawerRoot    = () => { mega.classList.remove('cat-open','detail-open'); setDh('Меню','Меню'); };
+  const drawerCatalog = () => { mega.classList.add('cat-open'); mega.classList.remove('detail-open'); setDh('Каталог','Меню'); };
+  const drawerSection = name => { mega.classList.add('cat-open','detail-open'); setDh(name || 'Каталог','Каталог'); };
 
   const mrCat = document.getElementById('mrCat');
   if(mrCat) mrCat.addEventListener('click', drawerCatalog);
