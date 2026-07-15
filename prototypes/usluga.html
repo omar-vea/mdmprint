@@ -1139,8 +1139,8 @@
     #mega .m-root .mr-cat .mr-arr{margin-left:auto;color:var(--text-tertiary);display:flex}
     #mega .m-root .mr-links{display:flex;flex-direction:column}
     #mega .m-root .mr-links a{display:block;padding:13px 16px;min-height:46px;font-size:15px;color:var(--text-secondary);border-bottom:1px solid var(--border)}
-    /* поиск в корне drawer — общий поиск по сайту, над «Каталог» */
-    #mega .m-root .m-dsearch{display:flex;align-items:center;gap:9px;flex-shrink:0;margin:14px 16px 6px;padding:0 14px;height:44px;background:var(--surface-subtle);border:1px solid var(--border);border-radius:var(--radius-md)}
+    /* поиск в корне drawer — общий поиск по сайту, над «Каталог»; на всю ширину, без рамки (бар заподлицо + нижний разделитель) */
+    #mega .m-root .m-dsearch{display:flex;align-items:center;gap:10px;flex-shrink:0;margin:0;padding:0 16px;height:52px;background:var(--surface-subtle);border:none;border-bottom:1px solid var(--border);border-radius:0}
     #mega .m-dsearch svg{width:19px;height:19px;color:var(--text-secondary);flex-shrink:0}
     #mega .m-dsearch input{flex:1;min-width:0;border:none;background:none;outline:none;font-size:15px;color:var(--text-primary)}
     #mega .m-dsearch input::placeholder{color:var(--text-tertiary)}
