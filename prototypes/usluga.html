@@ -147,28 +147,32 @@
      Строки требований и параметров — белые плашки на серой карточке (язык прайс-листа). */
   .usl-req .req-grid{display:grid;grid-template-columns:776fr 376fr;gap:var(--sp-24);align-items:start}
   .usl-req .req-main{padding:var(--sp-28);min-width:0}
-  .usl-req .mk-tabs{margin-bottom:var(--sp-20)}
-  .usl-req .req-art{display:flex;flex-direction:column;gap:var(--sp-16)}
-  .usl-req .req-art .src{font-size:var(--t-caption);color:var(--text-tertiary)}
-  .usl-req .req-art h3{margin:0}
-  .usl-req .req-art ol{margin:0;padding-left:var(--sp-20);display:flex;flex-direction:column;gap:var(--sp-4)}
-  .usl-req .req-art ol li{font-size:var(--t-small);line-height:var(--t-small-lh);color:var(--text-secondary)}
-  .usl-req .req-art .pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-16)}
-  .usl-req .req-art .imgph{aspect-ratio:16/10;align-items:flex-start;justify-content:flex-start;padding:var(--sp-12)}
-  .usl-req .req-art .st-ok,.usl-req .req-art .st-no{display:flex;align-items:center;gap:var(--sp-6);
-    font-size:var(--t-caption);font-weight:600}
-  .usl-req .req-art .st-ok{color:var(--success)}
-  .usl-req .req-art .st-no{color:var(--danger)}
-  .usl-req .req-note{margin-top:var(--sp-16);font-size:var(--t-caption);line-height:1.5;color:var(--text-secondary)}
-  .usl-req .req-note a{color:var(--brand-text);border-bottom:1px dashed currentColor}
-  .usl-req .req-note a:hover{border-bottom-style:solid}
+  .usl-req .req-head{margin:0 0 var(--sp-18)}
+  .usl-req .req-head h3{margin:0;font-family:var(--font-head);text-transform:uppercase;font-size:19px}
+  /* статичный чек-лист: галочки как маркеры (не интерактив) */
+  .usl-req .reqs-check{display:flex;flex-direction:column;gap:var(--sp-8)}
+  /* белая плашка на серой карточке: обводка прозрачная в покое (как .mk-filerow); статична — без hover */
+  .usl-req .reqs-check__item{display:flex;gap:var(--sp-14);align-items:flex-start;
+    padding:var(--sp-14) var(--sp-16);border:1px solid transparent;border-radius:var(--radius-md);background:var(--surface-card)}
+  .usl-req .reqs-check__ic{width:22px;height:22px;flex-shrink:0;margin-top:1px;border-radius:50%;
+    background:var(--surface-on-light);color:var(--success);display:flex;align-items:center;justify-content:center}
+  .usl-req .reqs-check__ic svg{width:13px;height:13px}
+  .usl-req .reqs-check__txt{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .usl-req .reqs-check__title{font-weight:500;font-size:15px;color:var(--text-primary)}
+  .usl-req .reqs-check__note{font-size:var(--t-caption);line-height:1.45;color:var(--text-secondary)}
+  .usl-req .req-cta{margin-top:var(--sp-20);display:flex;flex-direction:column;align-items:center;gap:var(--sp-14)}
+  .usl-req .req-cta .mk-btn--primary{width:100%}
+  /* пунктирная ссылка-кнопка ДС: гасим скругление, которое навязывает body.shape-rounded .mk-btn */
+  .usl-req .req-cta .mk-btn--link{border-radius:0;display:inline-flex;align-items:center;gap:var(--sp-6)}
+  .usl-req .req-cta .mk-btn--link:hover .mk-arr{transform:translateX(2px)}
 
   .usl-req .files{position:sticky;top:calc(var(--stack-top) + var(--sp-16));display:flex;flex-direction:column;gap:var(--sp-16);padding:var(--sp-24)}
-  .usl-req .files .fhead{display:flex;gap:var(--sp-10);align-items:flex-start}
-  .usl-req .files .fhead svg{width:20px;height:20px;margin-top:2px;color:var(--brand-text);flex-shrink:0}
+  .usl-req .files .fhead{display:flex;gap:var(--sp-12);align-items:center}
+  .usl-req .files .fhead .fh-ic{width:38px;height:38px;flex-shrink:0;border-radius:50%;
+    background:var(--surface-on-light);color:var(--text-secondary);display:flex;align-items:center;justify-content:center}
+  .usl-req .files .fhead .fh-ic svg{width:20px;height:20px}
   .usl-req .files .fnote{font-size:var(--t-small);line-height:var(--t-small-lh);color:var(--text-secondary);margin-top:var(--sp-4)}
   .usl-req .files .flist{display:flex;flex-direction:column;gap:var(--sp-8)}
-  .usl-req .files .mk-btn{width:100%}
 
   /* FAQ — 2 колонки как в блоке «Требования»: аккордеоны (узкие) слева + форма-вопрос справа (sticky).
      Аккордеоны — из кита (.mk-acc). Набор полей формы — как в блоке FAQ на mdmprint.ru, оформление на ките (.cbm-*). */
@@ -934,11 +938,20 @@
   /* ЧАВО — форма как тёплая карточка (не терялась), аккордеоны из «коробок» в тихий список
      с разделителями (карточный вариант кита — «для коротких/одиночных», а не для списка из 5) */
   body.v-after .faq-form{background:var(--surface-subtle);border-color:transparent}
-  /* один общий контейнер-карточка; вопросы внутри разделены линиями от края до края */
-  body.v-after .usl-faq .mk-acclist--card{gap:0;border:1px solid var(--border);border-radius:var(--radius-outside);background:var(--surface-card);overflow:hidden}
-  body.v-after .usl-faq .mk-acc--card{border:0;border-bottom:1px solid var(--border);border-radius:0;background:transparent;padding:0 var(--sp-20)}
-  body.v-after .usl-faq .mk-acc--card:last-child{border-bottom:0}
-  body.v-after .usl-faq .mk-acc--card:hover{border-color:var(--border)}
+  /* отдельные карточки: тёплый фон БЕЗ обводки (как у форм); компактнее и hover фоном, а не бордером */
+  body.v-after .usl-faq .mk-acc--card,
+  body.v-after .usl-faq .mk-acc--card:hover,
+  body.v-after .usl-faq .mk-acc--card[open]{border-color:transparent}
+  body.v-after .usl-faq .mk-acc--card{background:var(--surface-subtle)}
+  body.v-after .usl-faq .mk-acc--card:hover{background:var(--surface-gray)}
+  body.v-after .usl-faq .mk-acc__q{padding:var(--sp-16) 0}
+  body.v-after .usl-faq .mk-acc[open] .mk-acc__q{padding-bottom:var(--sp-8)}
+  /* маркер +/× в тональном кружке (аффорданс + крупнее цель) */
+  body.v-after .usl-faq .mk-acc__q::after{width:26px;height:26px;flex-shrink:0;border-radius:50%;
+    background:var(--surface-on-light);color:var(--text-secondary);
+    display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;
+    transition:background .15s,color .15s,transform .2s}
+  body.v-after .usl-faq .mk-acc__q:hover::after{background:var(--surface-on-light-2);color:var(--text-primary)}
   /* disabled CTA на тёплой подложке: gray сливается с subtle → плотнее (gray-2) */
   body.v-after .faq-form .cbm-submit:disabled{background:var(--surface-gray-2)}
 
@@ -2661,91 +2674,47 @@
 
         <div class="req-grid">
           <div class="req-main mk-card mk-card--gray">
-            <div class="mk-tabs" role="tablist" aria-label="Требования к макету" data-tabs>
-              <button class="mk-tab is-active" role="tab" aria-selected="true" data-tab="check">Чек-лист</button>
-              <button class="mk-tab" role="tab" aria-selected="false" data-tab="params">Параметры</button>
-              <button class="mk-tab" role="tab" aria-selected="false" data-tab="detail">Подробные требования</button>
-            </div>
+            <div class="req-head"><h3>Проверьте макет перед отправкой</h3></div>
 
-            <div class="mk-tabpanels">
-              <div class="mk-tabpanel is-active" data-panel="check">
-                <div class="mk-reqlist" id="reqChecklist">
-                  <div class="mk-reqlist__bar">
-                    <span class="mk-reqlist__count">0 из 4 проверено</span>
-                    <button type="button" class="mk-btn mk-btn--link" data-req-reset hidden>Сбросить</button>
-                  </div>
-                  <label class="mk-reqlist__item">
-                    <input type="checkbox" class="mk-check">
-                    <span class="mk-reqlist__txt">
-                      <span class="mk-reqlist__title">Поля и вылеты</span>
-                      <span class="mk-reqlist__note">3–5 мм с каждой стороны под обрезку. Важные элементы — не ближе 5 мм от края.</span>
-                    </span>
-                  </label>
-                  <label class="mk-reqlist__item">
-                    <input type="checkbox" class="mk-check">
-                    <span class="mk-reqlist__txt">
-                      <span class="mk-reqlist__title">Слой под фольгу</span>
-                      <span class="mk-reqlist__note">Отдельным слоем, плашка 100% Magenta. Без градиентов и полутонов.</span>
-                    </span>
-                  </label>
-                  <label class="mk-reqlist__item">
-                    <input type="checkbox" class="mk-check">
-                    <span class="mk-reqlist__txt">
-                      <span class="mk-reqlist__title">Изображения</span>
-                      <span class="mk-reqlist__note">Разрешение 300 dpi, цветовая модель CMYK.</span>
-                    </span>
-                  </label>
-                  <label class="mk-reqlist__item">
-                    <input type="checkbox" class="mk-check">
-                    <span class="mk-reqlist__txt">
-                      <span class="mk-reqlist__title">Шрифты</span>
-                      <span class="mk-reqlist__note">Переведите в кривые или вложите в файл.</span>
-                    </span>
-                  </label>
-                </div>
+            <div class="reqs-check">
+              <div class="reqs-check__item">
+                <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="reqs-check__txt">
+                  <span class="reqs-check__title">Поля и вылеты</span>
+                  <span class="reqs-check__note">3–5 мм с каждой стороны под обрезку. Важные элементы — не ближе 5 мм от края.</span>
+                </span>
               </div>
-
-              <div class="mk-tabpanel" data-panel="params">
-                <div class="mk-kv">
-              <div class="mk-kv__row"><span class="mk-kv__k">Минимальный тираж</span><span class="mk-kv__v">от 50 шт</span></div>
-              <div class="mk-kv__row"><span class="mk-kv__k">Максимальный формат тиснения</span><span class="mk-kv__v">320 × 480 мм</span></div>
-              <div class="mk-kv__row"><span class="mk-kv__k">Виды фольги</span><span class="mk-kv__v">золото, серебро, металлик, голография</span></div>
-              <div class="mk-kv__row"><span class="mk-kv__k">Минимальная толщина линии</span><span class="mk-kv__v">0,5 мм</span></div>
-              <div class="mk-kv__row"><span class="mk-kv__k">Минимальный кегль шрифта</span><span class="mk-kv__v">от 6 пт</span></div>
-              <div class="mk-kv__row"><span class="mk-kv__k">Материалы</span><span class="mk-kv__v">бумага и картон от 250 г</span></div>
-              <div class="mk-kv__row"><span class="mk-kv__k">Совмещение эффектов</span><span class="mk-kv__v">фольга + конгрев в один прогон</span></div>
-                </div>
+              <div class="reqs-check__item">
+                <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="reqs-check__txt">
+                  <span class="reqs-check__title">Слой под фольгу</span>
+                  <span class="reqs-check__note">Отдельным слоем, плашка 100% Magenta. Без градиентов и полутонов.</span>
+                </span>
               </div>
-              <div class="mk-tabpanel" data-panel="detail">
-                <div class="req-art">
-                  <span class="src">Полные требования · раздел «Требования к макетам»</span>
-
-                  <h3 class="mk-h4">Поля, вылеты и безопасная зона</h3>
-                  <div class="pair">
-                    <div class="imgph mk-ph"><span class="st-ok">✓ Правильно</span></div>
-                    <div class="imgph mk-ph"><span class="st-no">✕ Неправильно</span></div>
-                  </div>
-
-                  <h3 class="mk-h4">Слой под фольгу</h3>
-                  <ol>
-                    <li>Отдельный слой «Foil», заливка 100%</li>
-                    <li>Минимальная толщина линии — 0,5 мм</li>
-                    <li>Мелкий текст — от 6 пт, без тонких засечек</li>
-                  </ol>
-                  <div class="pair">
-                    <div class="imgph mk-ph"><span class="st-ok">✓ Подходит</span></div>
-                    <div class="imgph mk-ph"><span class="st-no">✕ Не подходит</span></div>
-                  </div>
-                </div>
+              <div class="reqs-check__item">
+                <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="reqs-check__txt">
+                  <span class="reqs-check__title">Изображения</span>
+                  <span class="reqs-check__note">Разрешение 300 dpi, цветовая модель CMYK.</span>
+                </span>
+              </div>
+              <div class="reqs-check__item">
+                <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="reqs-check__txt">
+                  <span class="reqs-check__title">Шрифты</span>
+                  <span class="reqs-check__note">Переведите в кривые или вложите в файл.</span>
+                </span>
               </div>
             </div>
 
-            <p class="req-note">Не уверены в макете? Пришлите файл — проверим бесплатно.
-              Полные правила — в разделе <a href="#">«Требования к макетам»</a>.</p>
+            <div class="req-cta">
+              <button type="button" class="mk-btn mk-btn--primary">Отправить заявку на расчёт</button>
+              <a class="mk-btn mk-btn--link" href="#">Параметры и полные требования к тиснению <span class="mk-arr" aria-hidden="true"></span></a>
+            </div>
           </div>
 
           <div class="files mk-card mk-card--gray">
-            <div class="fhead"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M13.5 3v5.5H19"/></svg>
+            <div class="fhead"><span class="fh-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M13.5 3v5.5H19"/></svg></span>
               <div>
                 <h4 class="mk-h4">Готовые материалы</h4>
                 <p class="fnote">Скачайте и соберите макет без ошибок</p>
@@ -2774,7 +2743,6 @@
                 <span class="mk-filerow__ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 11l4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/></svg></span>
               </a>
             </div>
-            <button type="button" class="tb-cta mk-btn mk-btn--primary">Проверить мой макет</button>
           </div>
         </div>
       </div>
@@ -3870,26 +3838,6 @@
     sc.addEventListener('mk:sync', sync);
     sync();
   });
-
-  /* ── Чек-лист требований: счётчик проверенных пунктов ── */
-  (function(){
-    const root = document.getElementById('reqChecklist');
-    if (!root) return;
-    const boxes = [...root.querySelectorAll('.mk-check')];
-    const count = root.querySelector('.mk-reqlist__count');
-    const reset = root.querySelector('[data-req-reset]');
-
-    const sync = () => {
-      const n = boxes.filter(b => b.checked).length;
-      const all = n === boxes.length;
-      count.textContent = all ? 'Макет готов — можно отправлять' : `${n} из ${boxes.length} проверено`;
-      count.classList.toggle('mk-reqlist__done', all);
-      reset.hidden = n === 0;
-    };
-    boxes.forEach(b => b.addEventListener('change', sync));
-    reset.addEventListener('click', () => { boxes.forEach(b => b.checked = false); sync(); });
-    sync();
-  })();
 
 
   /* ── Отзывы: подсказка прокрутки ──
