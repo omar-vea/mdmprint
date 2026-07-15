@@ -1183,18 +1183,21 @@
     /* заголовок раздела — отдельная кликабельная строка (стрелка справа); «Все услуги раздела» — растянутая невидимая ссылка поверх строки */
     #mega .pane .phead{position:relative;display:flex;align-items:center;margin:0;padding:15px 16px;min-height:56px;border:none;border-bottom:1px solid var(--border);width:auto;cursor:pointer}   /* лесенка: раздел 16 → подраздел 32 → товар 48 (отступ слева) */
     #mega .pane .phead:active{background:var(--surface-subtle)}
-    #mega .pane .phead h3{display:flex;align-items:center;font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:19px;font-weight:700;line-height:1.2;color:var(--text-primary)}
+    #mega .pane .phead h3{display:flex;align-items:center;font-family:var(--font-body);text-transform:none;letter-spacing:0;font-size:16px;font-weight:400;line-height:1.3;color:var(--text-primary)}   /* иерархия ТОЛЬКО отступом — шрифт единый везде */
     #mega .pane .phead a{position:absolute;inset:0;width:auto;height:auto;padding:0;margin:0;font-size:0;background:none;border:none;border-radius:0}
     #mega .pane .phead a .arr-ico{position:absolute;right:16px;top:50%;left:auto;transform:translateY(-50%);width:15px;height:15px;margin:0;color:var(--text-tertiary)}
     #mega .pane .cols-flow{display:block;column-count:auto;columns:auto;padding:0}
+    /* панель «Печать полиграфии» — единственная на сетке .cols3/.col: расплющиваем в один столбец (иначе 2 колонки + скругления от десктоп-карточек) */
+    #mega .pane .cols3{display:block;column-count:auto;columns:auto;gap:0;padding:0;margin:0}
+    #mega .pane .cols3 .col{display:block;width:auto;padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none}
     #mega .pane .group{padding:0;break-inside:auto}
     /* подраздел — тоже кликабельная строка со стрелкой, но тише раздела */
-    #mega .pane .group h4{position:relative;display:block;margin:0;padding:14px 40px 14px 32px;min-height:20px;font-family:var(--font-body);font-size:15px;font-weight:700;line-height:1.3;letter-spacing:0;text-transform:none;color:var(--text-primary);border-bottom:1px solid var(--border);cursor:pointer}
+    #mega .pane .group h4{position:relative;display:block;margin:0;padding:14px 40px 14px 32px;min-height:20px;font-family:var(--font-body);font-size:16px;font-weight:400;line-height:1.3;letter-spacing:0;text-transform:none;color:var(--text-primary);border-bottom:1px solid var(--border);cursor:pointer}
     #mega .pane .group h4:active{background:var(--surface-subtle)}
     #mega .pane .group h4 .nw{display:inline}
     #mega .pane .group h4 .ha{display:none}
     #mega .pane .group h4::after{content:"";position:absolute;right:16px;top:50%;transform:translateY(-50%);width:14px;height:14px;background:var(--text-tertiary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat}
-    #mega .pane .group ul{margin:0}
+    #mega .pane .group ul{margin:0;column-count:1!important;columns:auto!important;column-gap:normal!important}   /* !important — перебивает инлайн style="column-count:2/3" у POS и «Готовых решений» */
     #mega .pane .group li a{display:flex;align-items:center;gap:8px;padding:12px 16px 12px 48px;min-height:44px;font-size:16px;font-weight:400;color:var(--text-primary);border-bottom:1px solid var(--border)}
     #mega .pane .group li a:active{background:var(--surface-subtle)}
     /* «Показать все» / внешние — тише основного списка */
