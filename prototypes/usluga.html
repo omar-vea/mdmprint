@@ -1109,8 +1109,8 @@
 
     /* --- #MEGA → выпадающее меню ПОД шапкой (шапка липкая, остаётся видимой) --- */
     /* закрытый = display:none (fixed+transform давал оверфлоу и раздувал ICB). top=высота hbar */
-    #mega{position:fixed;top:58px;left:0;right:0;bottom:0;z-index:1001;background:var(--surface-page);
-      width:100%;max-width:none;box-shadow:none;border:none;display:none;transform:none}
+    #mega{position:fixed;top:58px;left:0;right:0;bottom:0;height:calc(100dvh - 58px);z-index:1001;background:var(--surface-page);
+      width:100%;max-width:none;box-shadow:none;border:none;display:none;transform:none}   /* dvh: иначе на iOS Safari bottom:0 уходит под нижний тулбар и обрезает список */
     #mega.open{display:block;animation:mDrawerFade .18s ease}
     #mega .m-dhead .m-dh-x{display:none}   /* закрывает бургер-крестик в шапке, отдельный × не нужен */
     /* #mega-префикс: перебивает body.v-after .mega-card/.pane (иначе остаётся десктоп-грид 280/1fr/240 и .pane 1400px → оверфлоу страницы) */
@@ -1122,10 +1122,10 @@
     #mega .promo{display:none}   /* десктопный промо-фланг на мобиле убираем */
 
     /* шапка drawer: назад (появляется при drill) + заголовок уровня */
-    #mega .m-dhead{display:none;align-items:center;gap:6px;padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+    #mega .m-dhead{display:none;align-items:center;gap:6px;padding:6px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
     #mega.cat-open .m-dhead{display:flex}   /* шапка drawer (назад + «Каталог») — только внутри каталога, в корне не нужна */
-    #mega .m-dhead .m-dh-back{display:none;height:36px;margin-left:-2px;padding:0 4px 0 0;flex-shrink:0;align-items:center;gap:8px;background:none;border:none;color:var(--text-secondary);cursor:pointer}
-    #mega .m-dhead .m-dh-back svg{width:32px;height:32px;padding:7px;border-radius:50%;background:var(--surface-on-light);box-sizing:border-box;transition:background .15s}
+    #mega .m-dhead .m-dh-back{display:none;height:26px;margin-left:-2px;padding:0 4px 0 0;flex-shrink:0;align-items:center;gap:8px;background:none;border:none;color:var(--text-secondary);cursor:pointer}
+    #mega .m-dhead .m-dh-back svg{width:26px;height:26px;padding:6px;border-radius:50%;background:var(--surface-on-light);box-sizing:border-box;transition:background .15s}
     #mega .m-dhead .m-dh-back:active svg{background:var(--surface-on-light-2)}
     #mega .m-dhead .m-dh-back .m-dh-bl{font-size:14px;font-weight:500}   /* куда вернёт «назад»: родительский экран */
     #mega.cat-open .m-dhead .m-dh-back{display:flex}
@@ -1133,7 +1133,7 @@
     #mega .m-dhead .m-dh-x{margin-left:auto;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--text-secondary)}
     #mega .m-dhead .m-dh-x svg{width:22px;height:22px}
     /* корень мобильного меню: Каталог › + ссылки топбара (уровень 0) */
-    #mega .m-root{display:flex;flex-direction:column;position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;background:var(--surface-page);z-index:1}
+    #mega .m-root{display:flex;flex-direction:column;position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:env(safe-area-inset-bottom);background:var(--surface-page);z-index:1}
     /* «Каталог» — текст как у остальных пунктов; отличает только иконка в кружке + шеврон */
     /* «Каталог» — как строка категории (та же плашка-квадрат + заголовок), только плашка жёлтая = главный вход */
     #mega .m-root .mr-cat{display:flex;align-items:center;gap:14px;width:100%;padding:12px 16px;min-height:60px;border:none;border-bottom:1px solid var(--border);background:none;font-size:15px;font-weight:500;color:var(--text-primary);cursor:pointer;text-align:left}
@@ -1151,7 +1151,7 @@
     #mega .m-dsearch input::placeholder{color:var(--text-tertiary)}
 
     /* рельса = уровень 1 (наезжает поверх корня по «Каталог ›») */
-    #mega .rail{display:block;position:absolute;inset:0;z-index:2;width:auto;overflow-y:auto;overscroll-behavior:contain;padding:0;margin:0;border:none;border-radius:0;
+    #mega .rail{display:block;position:absolute;inset:0;z-index:2;width:auto;overflow-y:auto;overscroll-behavior:contain;padding:0 0 env(safe-area-inset-bottom);margin:0;border:none;border-radius:0;
       background:var(--surface-page);box-shadow:none;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
     #mega.cat-open .rail{transform:translateX(0)}
     #mega .rail .lbl{padding:16px 16px 6px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-tertiary)}
@@ -1175,7 +1175,7 @@
     /* #pane = уровень 2 (наезжает поверх рельсы) */
     #mega .pane{position:absolute;inset:0;z-index:3;transform:translateX(100%);width:auto;max-height:none;
       transition:transform .28s cubic-bezier(.4,0,.2,1);border-right:0;-webkit-mask:none;mask:none;
-      background:var(--surface-page);overflow-y:auto;overscroll-behavior:contain;padding:0;display:block}
+      background:var(--surface-page);overflow-y:auto;overscroll-behavior:contain;padding:0 0 env(safe-area-inset-bottom);display:block}
     #mega.detail-open .pane{transform:translateX(0)}
     #mega .m-back{display:none}   /* назад — в общей шапке drawer (m-dh-back) */
     #mega .pane .panel{display:none;padding:0 0 24px}
