@@ -1124,8 +1124,9 @@
     /* шапка drawer: назад (появляется при drill) + заголовок уровня */
     #mega .m-dhead{display:none;align-items:center;gap:6px;padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
     #mega.cat-open .m-dhead{display:flex}   /* шапка drawer (назад + «Каталог») — только внутри каталога, в корне не нужна */
-    #mega .m-dhead .m-dh-back{display:none;height:32px;margin-left:-4px;padding:0 4px 0 0;flex-shrink:0;align-items:center;gap:1px;background:none;border:none;color:var(--text-secondary);cursor:pointer}
-    #mega .m-dhead .m-dh-back svg{width:24px;height:24px}
+    #mega .m-dhead .m-dh-back{display:none;height:36px;margin-left:-2px;padding:0 4px 0 0;flex-shrink:0;align-items:center;gap:8px;background:none;border:none;color:var(--text-secondary);cursor:pointer}
+    #mega .m-dhead .m-dh-back svg{width:32px;height:32px;padding:7px;border-radius:50%;background:var(--surface-on-light);box-sizing:border-box;transition:background .15s}
+    #mega .m-dhead .m-dh-back:active svg{background:var(--surface-on-light-2)}
     #mega .m-dhead .m-dh-back .m-dh-bl{font-size:14px;font-weight:500}   /* куда вернёт «назад»: родительский экран */
     #mega.cat-open .m-dhead .m-dh-back{display:flex}
     #mega .m-dhead .m-dh-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:16px;font-weight:600;color:var(--text-primary)}   /* текущий экран (тот же body-шрифт, что и список) */
@@ -3337,7 +3338,7 @@
   // шапка: заголовок = текущий экран, метка у «назад» = куда вернёт (родитель)
   const setDh = (title, back) => { if(dhTitle) dhTitle.textContent = title; if(dhBackLbl) dhBackLbl.textContent = back; };
   const drawerRoot    = () => { mega.classList.remove('cat-open','detail-open'); setDh('Меню','Меню'); };
-  const drawerCatalog = () => { mega.classList.add('cat-open'); mega.classList.remove('detail-open'); setDh('Каталог','Меню'); };
+  const drawerCatalog = () => { mega.classList.add('cat-open'); mega.classList.remove('detail-open'); setDh('','Меню'); };   /* заголовок пуст — в списке уже есть лейбл «Каталог» */
   const drawerSection = name => { mega.classList.add('cat-open','detail-open'); setDh(name || 'Каталог','Каталог'); };
 
   const mrCat = document.getElementById('mrCat');
