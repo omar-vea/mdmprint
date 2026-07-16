@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260716">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716b">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716b">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260716b">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -1152,10 +1152,15 @@
   body.v-after .usl-faq .mk-acc--card[open]{border-color:transparent}
   body.v-after .usl-faq .mk-acc--card{background:var(--surface-subtle)}
   body.v-after .usl-faq .mk-acc--card:hover{background:var(--surface-gray)}
-  body.v-after .usl-faq .mk-acc__q{padding:var(--sp-16) 0}
+  /* боковые поля обязаны остаться: шорткат padding:16px 0 обнулял их и бил китовое
+     .mk-acc--card > .mk-acc__q — текст ложился на самый край карточки */
+  body.v-after .usl-faq .mk-acc__q{padding:var(--sp-16) var(--sp-20)}
   body.v-after .usl-faq .mk-acc[open] .mk-acc__q{padding-bottom:var(--sp-8)}
-  /* маркер +/× в тональном кружке (аффорданс + крупнее цель) */
-  body.v-after .usl-faq .mk-acc__q::after{width:26px;height:26px;flex-shrink:0;border-radius:var(--radius-md);
+  /* Маркер +/× в тональном КРУЖКЕ. Круг, а не квадрат правила форм: форма несёт аффорданс —
+     округлость роднит элемент с кнопкой-пилюлей («нажимается»), квадрат читается как статичный
+     контейнер. Поэтому правило форм действует на НЕинтерактивные плашки (шапки карточек, галочки,
+     бейджи), а контролы — круглые: этот маркер и стрелки скроллера. */
+  body.v-after .usl-faq .mk-acc__q::after{width:26px;height:26px;flex-shrink:0;border-radius:50%;
     background:var(--surface-on-light);color:var(--text-secondary);
     display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;
     transition:background .15s,color .15s,transform .2s}
