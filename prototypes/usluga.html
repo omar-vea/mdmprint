@@ -175,10 +175,16 @@
   .usl-req .req-cta .mk-btn--link:hover .mk-arr{transform:translateX(2px)}
 
   .usl-req .files{position:sticky;top:calc(var(--stack-top) + var(--sp-16));display:flex;flex-direction:column;gap:var(--sp-16);padding:var(--sp-24)}
-  .usl-req .files .fhead{display:flex;gap:var(--sp-12);align-items:center}
-  .usl-req .files .fhead .fh-ic{width:38px;height:38px;flex-shrink:0;border-radius:50%;
+  /* Шапка карточки-помощника: кружок-иконка + заголовок с подписью. Одна на два блока —
+     «Готовые материалы» и «Онлайн-калькулятор»: обе живут в правой колонке и играют одну роль,
+     поэтому классы общие, а не скопированные. Кандидат в кит (как .mk-subnav): пока два
+     применения на одной странице, выносим, когда паттерн повторится на другой. */
+  .usl .fhead{display:flex;gap:var(--sp-12);align-items:center}
+  .usl .fhead .fh-ic{width:38px;height:38px;flex-shrink:0;border-radius:50%;
     background:var(--surface-on-light);color:var(--text-secondary);display:flex;align-items:center;justify-content:center}
-  .usl-req .files .fhead .fh-ic svg{width:20px;height:20px}
+  .usl .fhead .fh-ic svg{width:20px;height:20px}
+  /* на тёмной карточке кружок берёт поверхность своей стороны */
+  .usl-price .calc .fh-ic{background:var(--surface-on-dark);color:var(--text-on-dark)}
   .usl-req .files .fnote{font-size:var(--t-small);line-height:var(--t-small-lh);color:var(--text-secondary);margin-top:var(--sp-4)}
   .usl-req .files .flist{display:flex;flex-direction:column;gap:var(--sp-8)}
 
@@ -544,6 +550,9 @@
     .usl-price .calc{background:none;border-radius:0;margin-inline:0;padding:0;
       color:var(--text-primary)}
     .usl-price .calc .calc-sub{color:var(--text-secondary)}
+    /* фона нет — кружок возвращается к светлой поверхности, как у «Готовых материалов»:
+       на мобилке оба блока становятся одним и тем же (шапка с кружком + строки/кнопка) */
+    .usl-price .calc .fh-ic{background:var(--surface-on-light);color:var(--text-secondary)}
     .usl-price .calc .mk-btn--soft-inverse{background:var(--surface-card);
       border-color:var(--border);color:var(--text-primary)}
     /* СТАТБАР 4-в-ряд → сетка 2×2: в четверть экрана цифра не влезает, а подпись рассыпается
@@ -598,8 +607,39 @@
        отчего коробка схлопывалась по горизонтали и справа зияла пустота. Явная ширина убирает
        развилку: высота однозначно считается от неё. */
     .usl-adv .adv-media{min-height:0;aspect-ratio:4/3;width:100%;align-self:start}
-    .usl-req .req-grid{grid-template-columns:1fr}
-    .usl-req .files{position:static}
+    /* ТРЕБОВАНИЯ — та же болезнь и то же лекарство, что в «Ценах»: белая секция → СЕРАЯ карточка
+       → внутри БЕЛЫЕ плашки (чек-лист и файлы). Три слоя, рамка в рамке.
+       Секция становится бежевой (--surface-subtle — по токену «фон СЕКЦИИ»), карточки теряют
+       заливку и радиус, а плашки внутри разворачиваются в строки с разделителями во всю ширину
+       экрана. Слоёв один вместо трёх. */
+    .usl-req{background:var(--surface-subtle)}
+    .usl-req .req-grid{grid-template-columns:1fr;gap:var(--sp-32)}   /* внешние > внутренних (12/14) */
+    .usl-req .req-main,.usl-req .files{background:none;border-radius:0;padding:0}
+    /* чек-лист: плашки → строки. Разделители от края до края экрана — тот же приём, что у цен,
+       статбара и подшапки: строка уезжает в отрицательные поля, свой padding возвращает текст
+       на сетку 16. Первой строке верхняя линия не нужна: её отделяет заголовок. */
+    .usl-req .reqs-check{gap:0}
+    .usl-req .reqs-check__item{background:none;border:0;border-radius:0;
+      margin-inline:calc(var(--container-pad) * -1);padding:var(--sp-12) var(--container-pad)}
+    .usl-req .reqs-check__item + .reqs-check__item{border-top:1px solid var(--border)}
+    /* Граница групп. Раз в блоке всё стало строками с линейками, линейка — единственный принятый
+       тут разделитель, а между «Параметры…» и «Готовыми материалами» её не было: только 32px
+       пустоты, да ещё и после мелкой текстовой ссылки, которая на конец группы не похожа.
+       Линию даём псевдоэлементом: border-top на самой .files потребовал бы отрицательных полей,
+       а её строки уже в них — сложилось бы вдвое и вылезло за экран. Воздух 32 сверху и снизу. */
+    /* top:auto обязателен: у .files от десктопной липкости остался top:calc(--stack-top + 16)=123px.
+       При position:static он игнорировался, а relative его оживляет — группа уезжала на 123px вниз
+       (замер показывал 155px зазора вместо 32). Классика: смена position включает чужой offset. */
+    .usl-req .files{position:relative;top:auto;padding-top:var(--sp-32)}
+    .usl-req .files::before{content:"";position:absolute;top:0;height:1px;background:var(--border);
+      left:calc(var(--container-pad) * -1);right:calc(var(--container-pad) * -1)}
+    /* файлы — те же строки: заливку и рамку снимаем, кружок-иконка справа остаётся как есть */
+    .usl-req .files .flist{gap:0}
+    .usl-req .mk-filerow{background:none;border:0;border-radius:0;
+      margin-inline:calc(var(--container-pad) * -1);padding:var(--sp-12) var(--container-pad)}
+    .usl-req .mk-filerow + .mk-filerow{border-top:1px solid var(--border)}
+    /* :active красил фон плашки — плашки нет, отклик даёт кружок-иконка (он и так на :active) */
+    .usl-req .mk-filerow:active{background:none}
     .usl-faq .faq-grid{grid-template-columns:1fr}
     .faq-form{position:static}
     /* 3 в кадре = ролик 106px шириной: подпись ломается в лесенку, а превью не разглядеть.
@@ -2826,8 +2866,16 @@
             <button class="tb-cta mk-btn mk-btn--primary">Оставить заявку на расчёт</button>
           </div>
           <div class="calc mk-card mk-card--dark">
-            <h3 class="mk-h3">Онлайн-калькулятор тиража</h3>
-            <p class="calc-sub">Рассчитайте свой тираж за 1 минуту в нашем калькуляторе</p>
+            <!-- та же шапка, что у «Готовых материалов» (.fhead/.fh-ic): оба блока — карточки-
+                 помощники в правой колонке, значит и паттерн один. Иконка взята из шапки
+                 (.calcbtn), новую не рисуем -->
+            <div class="fhead">
+              <span class="fh-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
+              <div>
+                <h3 class="mk-h3">Онлайн-калькулятор тиража</h3>
+                <p class="calc-sub">Рассчитайте свой тираж за 1 минуту в нашем калькуляторе</p>
+              </div>
+            </div>
             <a class="mk-btn mk-btn--soft-inverse" href="#">Онлайн-калькулятор <span class="mk-arr" aria-hidden="true"></span></a>
           </div>
         </div>
