@@ -112,19 +112,6 @@
   .usl-adv .adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-24);align-items:stretch}
   .usl-adv .adv-media{min-height:300px}
   .usl-adv .tiles{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-24)}
-  .usl-adv .pm{margin-top:var(--sp-24)}
-  /* залитая бежевая плашка без обводки — язык форм и ЧАВО. Белая карточка держалась на тонкой
-     обводке (страница тоже белая), от чего читалась как пустой контур. */
-  .usl-adv .pm .card{padding:var(--sp-24);background:var(--surface-subtle);border-color:transparent}
-  .usl-adv .pm h4{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-12)}
-  .usl-adv .pm .badge{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-  .usl-adv .pm .badge.is-note{background:var(--brand)}
-  /* карточка теперь во всю ширину: 4 коротких пункта в одну колонку растянулись бы в редкую
-     строчку через весь экран — двумя колонками мера остаётся в норме */
-  /* display:block обязателен: .mk-list в ките — флекс, а на флекс-контейнере колонки не работают.
-     Заодно пропадает его flex-gap, поэтому интервал возвращаем маргином. */
-  .usl-adv .pm .mk-list{display:block;column-count:2;column-gap:var(--sp-32)}
-  .usl-adv .pm .mk-list li{break-inside:avoid;margin-bottom:var(--sp-8)}
 
   /* ВИДЫ */
   /* ВИДЫ — карточки из кита (.mk-mcard); фото пока плейсхолдер-градиент */
@@ -529,7 +516,6 @@
     .usl-art .art-grid{grid-template-columns:1fr 1fr}
     .usl-prod .pcards{grid-template-columns:1fr 1fr}
     .usl-adv .tiles{grid-template-columns:1fr}
-    .usl-adv .pm .mk-list{column-count:1}   /* две колонки — только на десктопе, тут мера не позволит */
     /* ПРЕИМУЩЕСТВА. Сетка 2×2 проверена рендером и отвергнута: мера падает до 20 знаков (норма
        35–50), текст разваливается в лесенку и плитка отрастает ровно на столько, на сколько
        сузилась — той же высоты, но нечитаемая. Карусель короче, но прячет 3 плитки из 4 за
@@ -2628,19 +2614,6 @@
             <div class="mk-tile"><span class="mk-tile__ico"></span><h3 class="mk-tile__title">Тактильность</h3><p class="mk-tile__text">Фольгу и рельеф чувствуешь на ощупь. Изделие хочется взять в руки.</p></div>
             <div class="mk-tile"><span class="mk-tile__ico"></span><h3 class="mk-tile__title">Стойкость</h3><p class="mk-tile__text">Не выцветает и не стирается — эффект держится весь срок службы.</p></div>
             <div class="mk-tile"><span class="mk-tile__ico"></span><h3 class="mk-tile__title">Контраст на тёмном</h3><p class="mk-tile__text">Металлик ярко работает там, где обычная краска почти не видна.</p></div>
-          </div>
-        </div>
-        <!-- «Плюсы» убраны: список дословно повторял плитки выше и буллеты героя, нового факта не давал.
-             Плитки и есть плюсы, только в более сильном формате. Осталось то, чего нет больше нигде. -->
-        <div class="pm">
-          <div class="card mk-card">
-            <h4 class="mk-h4"><span class="badge is-note"></span>Что учесть</h4>
-            <ul class="mk-list">
-              <li>Не для мелких деталей и тонких линий</li>
-              <li>Нужен отдельный слой под фольгу в макете</li>
-              <li>Стоимость считается отдельно от печати</li>
-              <li>Минимальный тираж — от 50 шт</li>
-            </ul>
           </div>
         </div>
       </div>
