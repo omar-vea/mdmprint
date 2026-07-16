@@ -1032,7 +1032,7 @@
      МОБИЛЬНАЯ ШАПКА + КАТАЛОГ-DRAWER (drill-down, ≤900px).
      Переиспользуем #mega: .rail = уровень 0, #pane/.panel = уровень 1.
      ============================================================ */
-  .m-dhead,.m-back,.m-callbar,.m-dsearch,.m-root,.rail .ri-desc,.hactions .m-search{display:none}   /* по умолчанию (десктоп) скрыты; .ri-desc — только мобильная подсказка */
+  .m-dhead,.m-back,.m-callbar,.m-dsearch,.m-root,.rail .ri-desc,.hactions .m-search{display:none}   /* по умолчанию (десктоп) скрыты; .ri-desc — только мобильная подсказка. .m-cta живёт внутри .m-callbar → скрыт вместе с ним */
   @keyframes mDrawerFade{from{opacity:0}to{opacity:1}}
 
   @media(max-width:900px){
@@ -1066,6 +1066,8 @@
     .hactions{order:2;gap:2px}
     .hactions>*{display:none!important}
     .hactions>.m-search,.hactions>.m-keep{display:flex!important}
+    /* CTA — в слим-строке справа от номера (в фикс-ряд не влезает: лого + 4 иконки уже занимают всю ширину) */
+    .m-callbar .m-cta{display:inline-flex;height:36px;min-height:36px;padding:0 14px;font-size:13.5px;font-weight:600;white-space:nowrap;flex-shrink:0}
     /* ЕДИНЫЙ СТИЛЬ иконок-кнопок шапки: поиск · войти · корзина · бургер —
        40×40, плоские, глиф строго по центру (font-size:0 + flex-center вместо text-indent),
        общий тёплый ховер (в т.ч. у бургера) */
@@ -1090,10 +1092,10 @@
     .hactions .hbtn .badge{font-size:9px;line-height:1;right:1px;top:1px}
 
     /* --- CALL-BAR (2-й уровень): телефон крупно (приоритет заказчика) --- */
-    .m-callbar{display:flex;flex-direction:column;gap:10px;padding:10px 16px 12px;background:var(--surface-subtle);border-bottom:1px solid var(--border);color:var(--text-primary)}
-    .m-callbar .cb-row{display:flex;align-items:center;gap:8px}
-    .m-callbar .cb-cta{display:flex;gap:8px}
-    .m-callbar .cb-cta .mk-btn{flex:1;justify-content:center}
+    /* второй уровень = слим-строка с номером: белая, разделитель снизу, уезжает со скроллом.
+       Мессенджеры/почта/обратный звонок переехали в меню — в шапке остаётся только «позвонить». */
+    .m-callbar{display:flex;align-items:center;padding:7px 16px;background:var(--surface-page);border-bottom:1px solid var(--border);color:var(--text-primary)}
+    .m-callbar .cb-row{display:flex;align-items:center;gap:8px;width:100%}
     .m-callbar .cb-main{display:flex;align-items:center;gap:11px;margin-right:auto;color:inherit}
     .m-callbar .cb-ic{width:30px;height:30px;flex-shrink:0;border-radius:50%;background:var(--brand);color:var(--on-brand);display:flex;align-items:center;justify-content:center}
     .m-callbar .cb-ic svg{width:16px;height:16px}
@@ -1152,7 +1154,8 @@
     #mega .m-root .mr-calc .mr-cat-d{font-size:12.5px;line-height:1.3;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     #mega .m-root .mr-calc .mr-go{margin-left:auto;flex-shrink:0;width:14px;height:14px;background:var(--text-tertiary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat}
     #mega .m-root .mr-links{display:flex;flex-direction:column}
-    #mega .m-root .mr-links a{display:block;padding:13px 16px;min-height:46px;font-size:15px;color:var(--text-primary);border-bottom:1px solid var(--border)}
+    #mega .m-root .mr-links a,#mega .m-root .mr-contacts button{display:block;width:100%;padding:13px 16px;min-height:46px;font-size:15px;color:var(--text-primary);border:none;border-bottom:1px solid var(--border);background:none;text-align:left;font-family:inherit;cursor:pointer}
+    #mega .m-root .mr-contacts button:active{background:var(--surface-subtle)}
     #mega .m-root .mr-links a:active{background:var(--surface-subtle)}
     /* поиск в корне drawer — общий поиск по сайту, над «Каталог»; на всю ширину, без рамки (бар заподлицо + нижний разделитель) */
     #mega .m-root .m-dsearch{display:flex;align-items:center;gap:10px;flex-shrink:0;margin:0;padding:0 16px;height:52px;background:var(--surface-subtle);border:none;border-bottom:1px solid var(--border);border-radius:0}
@@ -1379,13 +1382,8 @@
       <span class="cb-ic"><svg viewBox="0 0 24 24" fill="none"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span>
       <span class="cb-tx"><span class="cb-num">+7 (495) 256-10-00</span><span class="cb-hours">Ежедневно 9–22</span></span>
     </a>
-    <a class="cb-msg cb-tg" href="#" aria-label="Написать в Телеграме" title="Телеграм"><svg viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg></a>
-    <a class="cb-msg cb-mx" href="#" aria-label="Написать в Максе" title="Макс"><svg viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></a>
-    </div>
-    <!-- конверсионная пара: видна при заходе, уезжает со скроллом (не фиксируется) -->
-    <div class="cb-cta">
-      <button type="button" class="mk-btn mk-btn--ghost mk-btn--md cb">Заказать звонок</button>
-      <button type="button" class="mk-btn mk-btn--primary mk-btn--md tb-cta">Оставить заявку</button>
+    <!-- CTA не помещается в фикс-ряд (лого + 4 иконки + кнопка > ширины экрана), поэтому живёт здесь -->
+    <button type="button" class="m-cta tb-cta mk-btn mk-btn--primary">Заявка</button>
     </div>
   </div>
 
@@ -1460,7 +1458,11 @@
               <a href="#">Блог</a>
               <a href="#">Новости</a>
             </nav>
-            <nav class="mr-links" aria-label="Связь">
+            <!-- меню = хаб контактов: всё «мелкое» из шапки живёт здесь -->
+            <nav class="mr-links mr-contacts" aria-label="Связь">
+              <button type="button" class="cb">Заказать звонок</button>
+              <a href="#">Телеграм</a>
+              <a href="#">Макс</a>
               <a href="mailto:info@mdmprint.ru">info@mdmprint.ru</a>
             </nav>
           </div>
@@ -3402,6 +3404,9 @@
 
   const mrCat = document.getElementById('mrCat');
   if(mrCat) mrCat.addEventListener('click', drawerCatalog);
+
+  // формы из меню: сначала закрыть drawer, иначе модалка ляжет поверх открытого меню
+  mega.querySelectorAll('.cb,.tb-cta').forEach(b=> b.addEventListener('click', closeMega));
 
   // тап по разделу рельсы → уровень 2 (панель) + заголовок = имя раздела
   ris.forEach(r=> r.addEventListener('click', ()=>{ if(isMobileNav()) drawerSection((r.textContent||'').trim()); }));
