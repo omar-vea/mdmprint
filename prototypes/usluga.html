@@ -74,9 +74,11 @@
   /* кнопки — из кита (.mk-btn), локальных больше нет */
 
   /* breadcrumbs */
-  .usl .crumbs{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--text-secondary);margin-bottom:22px}
+  .usl .crumbs{display:flex;gap:var(--sp-8);align-items:center;font-size:var(--t-caption);line-height:var(--t-caption-lh);color:var(--text-secondary);margin-bottom:var(--sp-24)}
+  .usl .crumbs a{transition:color .12s}
   .usl .crumbs a:hover{color:var(--text-primary)}
-  .usl .crumbs span{color:var(--text-on-dark-2)}
+  .usl .crumbs span{color:var(--text-tertiary)}   /* был --text-on-dark-2: токен ТЁМНЫХ поверхностей + холодный серый на светлом тёплом фоне */
+  .usl .crumbs b{color:var(--text-primary);font-weight:600}   /* текущая страница — акцент, а не просто bold от браузера */
 
   /* HERO */
   .usl-hero{padding:var(--sp-40) 0 var(--sp-64)!important;background:var(--surface-subtle)}
@@ -1050,6 +1052,15 @@
     .navbar{border:none;background:none}
     .navbar .nav{display:none}
     /* шапка зафиксирована (не sticky: html/body overflow-x:hidden ломает sticky на iOS) — меню открывается ПОД ней */
+    /* КРОШКИ: путь бывает длинным, перенос на 2 строки некрасив → горизонтальный скролл.
+       Трек во всю ширину экрана (margin -pad), но контент держит сетку (padding pad) — крошки
+       не обрываются посреди контейнера. Автоскролл к концу (JS): текущая страница важнее корня. */
+    .usl .crumbs{margin:0 calc(var(--container-pad) * -1) var(--sp-18);padding:0 var(--container-pad) var(--sp-10);
+      border-bottom:1px solid var(--border);overflow-x:auto;overscroll-behavior-x:contain;
+      flex-wrap:nowrap;white-space:nowrap;scrollbar-width:none;-ms-overflow-style:none}
+    .usl .crumbs::-webkit-scrollbar{display:none}
+    .usl .crumbs>*{flex-shrink:0}
+
     /* шапка зафиксирована (не sticky: html/body overflow-x:hidden ломает sticky на iOS) — меню открывается ПОД ней.
        Номер и CTA временно убраны из шапки — живут в меню (согласуем с маркетологом). */
     header{position:fixed;top:0;left:0;right:0;z-index:1002}
@@ -2454,7 +2465,7 @@
     <!-- HERO -->
     <section class="usl-hero" id="obzor">
       <div class="wrap">
-        <div class="crumbs">
+        <div class="crumbs" id="crumbs">
           <a href="#">Главная</a><span>/</span>
           <a href="#">Технологии</a><span>/</span>
           <a href="#">Постпечатная обработка</a><span>/</span>
@@ -3456,6 +3467,15 @@
     e.stopPropagation();
     mega.classList.contains('open') ? closeMega() : openMega();
   });
+
+  // крошки на мобилке скроллятся горизонтально: показываем ХВОСТ (текущую страницу), а не «Главную»
+  (function(){
+    const cr = document.getElementById('crumbs');
+    if(!cr) return;
+    const toEnd = ()=>{ if(window.matchMedia('(max-width:900px)').matches) cr.scrollLeft = cr.scrollWidth; };
+    toEnd();
+    window.addEventListener('resize', toEnd);
+  })();
 
   // hover-выбор раздела — только для мыши. На тач-устройстве mouseenter менял бы панель по «наведению»,
   // и Safari трактует первый тап как ховер, откладывая переход на второй тап.
