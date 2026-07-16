@@ -234,8 +234,13 @@
 /* кликабельная карточка: приподнимается, с подложкой — ещё и темнеет фон */
 .mk-mcard--link{border:none;padding:0;cursor:pointer;font:inherit;
   transition:background .15s,transform .2s}
-.mk-mcard--link:hover{background:var(--surface-gray-2);transform:translateY(-2px)}
-.mk-mcard--bare.mk-mcard--link:hover{background:none}
+@media (hover:hover){
+  .mk-mcard--link:hover{background:var(--surface-gray-2);transform:translateY(-2px)}
+  .mk-mcard--bare.mk-mcard--link:hover{background:none}
+}
+/* тач: у --bare подложки нет, красить нечего — отклик даёт лёгкое приглушение самого кадра */
+.mk-mcard--link:active{background:var(--surface-gray-2)}
+.mk-mcard--bare.mk-mcard--link:active{background:none;opacity:.85}
 .mk-mcard--link:focus-visible{outline:2px solid var(--brand-dark);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.mk-mcard--link{transition:none}
   .mk-mcard--link:hover{transform:none}}
@@ -266,7 +271,8 @@
 .mk-review__source{display:inline-flex;align-items:center;gap:var(--sp-6);flex-shrink:0;
   font-family:var(--font-body);font-size:var(--t-label);line-height:var(--t-label-lh);
   color:var(--text-tertiary);text-decoration:none}
-.mk-review__source:hover{color:var(--text-secondary)}
+@media (hover:hover){.mk-review__source:hover{color:var(--text-secondary)}}
+.mk-review__source:active{color:var(--text-secondary)}
 .mk-review__source::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--text-tertiary)}
 .mk-review__source--yandex::before{background:var(--src-yandex)}
 .mk-review__source--2gis::before{background:var(--src-2gis)}
@@ -299,7 +305,8 @@
 .mk-tilelink{display:flex;align-items:center;gap:var(--sp-16);text-decoration:none;
   background:var(--surface-gray);border-radius:var(--radius-outside);overflow:hidden;
   transition:background .15s,transform .2s}
-.mk-tilelink:hover{background:var(--surface-gray-2);transform:translateY(-2px)}
+@media (hover:hover){.mk-tilelink:hover{background:var(--surface-gray-2);transform:translateY(-2px)}}
+.mk-tilelink:active{background:var(--surface-gray-2)}
 .mk-tilelink:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
 /* картинка вплотную к краям плитки: тянется на всю высоту слева, левые углы клипует сама плитка (overflow:hidden) */
 .mk-tilelink__media{flex-shrink:0;width:140px;align-self:stretch;
@@ -311,7 +318,7 @@
 .mk-tilelink__note{font-family:var(--font-body);font-size:var(--t-caption);line-height:1.45;
   color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mk-tilelink .arr-ico{flex-shrink:0;margin-right:var(--sp-12);color:var(--text-tertiary);transition:transform .15s}
-.mk-tilelink:hover .arr-ico{transform:translateX(2px)}
+@media (hover:hover){.mk-tilelink:hover .arr-ico{transform:translateX(2px)}}
 @media (prefers-reduced-motion:reduce){.mk-tilelink,.mk-tilelink .arr-ico{transition:none}
   .mk-tilelink:hover{transform:none} .mk-tilelink:hover .arr-ico{transform:none}}
 
@@ -326,7 +333,8 @@
 .mk-acc__q::after{content:"+";flex-shrink:0;margin-left:auto;
   font-size:24px;font-weight:400;line-height:1;color:var(--text-tertiary);
   transition:transform .2s,color .2s}
-.mk-acc__q:hover::after{color:var(--text-primary)}
+@media (hover:hover){.mk-acc__q:hover::after{color:var(--text-primary)}}
+.mk-acc__q:active::after{color:var(--text-primary)}
 .mk-acc[open] .mk-acc__q::after{transform:rotate(45deg)}
 /* открытый вопрос — ближе к своему ответу: гасим нижний отступ summary; закрытый ритм 20/20 не трогаем */
 .mk-acc[open] .mk-acc__q{padding-bottom:var(--sp-10)}
@@ -348,7 +356,8 @@
 .mk-filerow{display:flex;align-items:center;gap:var(--sp-12);text-decoration:none;
   background:var(--surface-card);border:1px solid transparent;border-radius:var(--radius-md);
   padding:var(--sp-10) var(--sp-12);transition:border-color .15s}
-.mk-filerow:hover{border-color:var(--border-strong)}
+@media (hover:hover){.mk-filerow:hover{border-color:var(--border-strong)}}
+.mk-filerow:active{border-color:var(--border-strong);background:var(--surface-subtle)}
 .mk-filerow:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
 .mk-filerow__txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
 .mk-filerow__name{font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);
@@ -359,7 +368,8 @@
   width:32px;height:32px;border-radius:var(--radius-pill);
   border:1px solid var(--border);background:var(--surface-card);color:var(--text-secondary);
   transition:background .15s,color .15s,border-color .15s}
-.mk-filerow:hover .mk-filerow__ico{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+@media (hover:hover){.mk-filerow:hover .mk-filerow__ico{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}}
+.mk-filerow:active .mk-filerow__ico{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
 .mk-filerow__ico svg{width:16px;height:16px;display:block}
 
 /* ---- Список требований (галочка + заголовок + пояснение) ----
@@ -448,7 +458,8 @@
 .mk-tabs{display:flex;gap:28px;border-bottom:1px solid var(--border)}
 .mk-tab{font-family:var(--font-body);font-size:15px;color:var(--text-secondary);background:none;border:none;
   border-bottom:2px solid transparent;padding:0 2px 12px;cursor:pointer;transition:color .15s,border-color .15s}
-.mk-tab:hover{color:var(--text-primary)}
+@media (hover:hover){.mk-tab:hover{color:var(--text-primary)}}
+.mk-tab:active{color:var(--text-primary)}
 .mk-tab:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px;border-radius:var(--radius-inside)}
 .mk-tab.is-active{color:var(--text-primary);font-weight:600;border-bottom-color:var(--brand)}
 /* обёртка панелей: плавно тянется под высоту активной, без скачка */
@@ -496,3 +507,14 @@
 
 /* ---- Разделитель ---- */
 .mk-divider{height:1px;background:var(--border);border:none}
+
+/* ---- Тач: нажатие вместо наведения ----
+   iOS рисует свою вспышку (-webkit-tap-highlight-color) серым ПРЯМОУГОЛЬНИКОМ, игнорируя
+   border-radius, — на скруглённых карточках это читается как дефект. Гасим её, но не даром:
+   у каждого компонента выше добавлен собственный :active, иначе тап остался бы без отклика.
+   Второе (там же, выше): все :hover обёрнуты в @media(hover:hover). На тач-экране hover
+   срабатывает от тапа и ЗАЛИПАЕТ — подсветка остаётся висеть после перехода. Обёртка честнее
+   гашения: правило просто не существует там, где нет мыши, и нечего держать в синхроне.
+   Список явный: гасить вспышку у всех a/button значило бы задеть и чужую разметку страниц. */
+.mk-btn,.mk-mcard--link,.mk-tilelink,.mk-acc__q,.mk-tab,.mk-segment__btn,.mk-filerow,
+.mk-chip,.mk-rowlink,.mk-scroller__nav,.mk-review__source{-webkit-tap-highlight-color:transparent}

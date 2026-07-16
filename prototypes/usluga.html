@@ -76,7 +76,8 @@
   /* breadcrumbs */
   .usl .crumbs{display:flex;gap:var(--sp-8);align-items:center;font-size:var(--t-caption);line-height:var(--t-caption-lh);color:var(--text-secondary);margin-bottom:var(--sp-24)}
   .usl .crumbs a{transition:color .12s}
-  .usl .crumbs a:hover{color:var(--text-primary)}
+  @media (hover:hover){.usl .crumbs a:hover{color:var(--text-primary)}}
+  .usl .crumbs a:active{color:var(--text-primary)}
   .usl .crumbs span{color:var(--text-tertiary)}   /* был --text-on-dark-2: токен ТЁМНЫХ поверхностей + холодный серый на светлом тёплом фоне */
   .usl .crumbs b{color:var(--text-primary);font-weight:600}   /* текущая страница — акцент, а не просто bold от браузера */
 
@@ -101,8 +102,19 @@
   .usl-subnav{position:sticky;top:54px;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0!important}
   .usl-subnav + section{border-top:none}
   .usl-subnav .wrap{display:flex;gap:28px;height:52px;align-items:stretch;overflow-x:auto}
-  .usl-subnav a{display:inline-flex;align-items:center;font-size:14px;color:var(--text-secondary);border-bottom:2px solid transparent;white-space:nowrap;transition:.15s}
-  .usl-subnav a:hover{color:var(--text-primary)}
+  /* -webkit-tap-highlight-color: iOS рисует свою вспышку серым ПРЯМОУГОЛЬНИКОМ, игнорируя радиус.
+     В ките гасим явным списком компонентов (чужую разметку он трогать не вправе), а тут — страница
+     целиком наша, поэтому одним правилом: иначе список пришлось бы вести вручную и он бы отставал
+     (так и вышло: лого, крошки, согласие и весь футер вспышку сохранили). Взамен — свой :active. */
+  a,button{-webkit-tap-highlight-color:transparent}
+  .logo:active{opacity:.7}
+  .usl .cbm-check a:active{opacity:.6}
+
+  /* подшапка — не компонент кита, поэтому под его правило не попадала,
+     и на ней оставалась родная вспышка iOS (серый прямоугольник поверх пункта). Гасим и даём :active. */
+  .usl-subnav a{display:inline-flex;align-items:center;font-size:14px;color:var(--text-secondary);border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;-webkit-tap-highlight-color:transparent}
+  @media (hover:hover){.usl-subnav a:hover{color:var(--text-primary)}}
+  .usl-subnav a:active{color:var(--text-primary)}
   .usl-subnav a.active{color:var(--text-primary);font-weight:600;border-bottom-color:var(--brand)}
 
   /* generic card */
@@ -329,7 +341,8 @@
     font-size:var(--t-small);line-height:var(--t-small-lh)}
   .usl-foot a{display:block;color:var(--text-on-dark-2);padding:var(--sp-4) 0;
     font-size:var(--t-small);line-height:var(--t-small-lh);transition:color .15s}
-  .usl-foot a:hover{color:var(--text-on-dark)}
+  @media (hover:hover){.usl-foot a:hover{color:var(--text-on-dark)}}
+  .usl-foot a:active{color:var(--text-on-dark)}
   .usl-foot a:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:2px}
 
   .usl-foot .flogo{display:block;margin-bottom:var(--sp-16)}
