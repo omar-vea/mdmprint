@@ -1065,7 +1065,7 @@
     .usl-subnav{top:58px}
 
     /* --- HBAR: logo слева · [поиск · войти · корзина · меню] справа --- */
-    .hbar{gap:2px;height:58px}
+    .hbar,body.scrolled .hbar{gap:2px;height:58px}   /* компакт-шапка при скролле — только десктоп, на мобилке ничего не меняется */
     .logo{order:1;margin-right:auto}
     .logo img{height:22px}
     /* поле поиска убрано из шапки — оно внутри drawer (каталога) */
@@ -1079,7 +1079,7 @@
     /* ЕДИНЫЙ СТИЛЬ иконок-кнопок шапки: поиск · войти · корзина · бургер —
        40×40, плоские, глиф строго по центру (font-size:0 + flex-center вместо text-indent),
        общий тёплый ховер (в т.ч. у бургера) */
-    .hbar .hcat,body.scrolled .hbar .hcat,.hactions .hbtn{
+    .hbar .hcat,body.scrolled .hbar .hcat,.hactions .hbtn,body.scrolled .hactions .hbtn{
       width:40px;min-width:40px;height:40px;min-height:40px;padding:0;gap:0;
       display:flex;align-items:center;justify-content:center;font-size:0;line-height:0;
       background:none;border:none;border-radius:var(--radius-md);
@@ -1095,12 +1095,15 @@
     /* крестик: полосы 1.5px, gap 3.5 → центры на ±5px */
     .hbar .hcat.active .ic i:nth-child(1){transform:translateY(6px) rotate(45deg)}
     .hbar .hcat.active .ic i:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-    .hactions .hbtn .ci{position:static;margin:0;width:auto;height:auto;display:flex;align-items:center;justify-content:center}
+    .hactions .hbtn .ci,body.scrolled .hactions .hbtn .ci{position:static;margin:0;width:auto;height:auto;display:flex;align-items:center;justify-content:center}
     .hactions .hbtn .ci svg{width:22px;height:22px}
     .hactions .hbtn .badge{font-size:9px;line-height:1;right:1px;top:1px}
 
     /* --- CALL-BAR (2-й уровень): телефон крупно (приоритет заказчика) --- */
-    .m-callbar{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--surface-subtle);border-bottom:1px solid var(--border);color:var(--text-primary)}
+    .m-callbar{display:flex;flex-direction:column;gap:10px;padding:10px 16px 12px;background:var(--surface-subtle);border-bottom:1px solid var(--border);color:var(--text-primary)}
+    .m-callbar .cb-row{display:flex;align-items:center;gap:8px}
+    .m-callbar .cb-cta{display:flex;gap:8px}
+    .m-callbar .cb-cta .mk-btn{flex:1;justify-content:center}
     .m-callbar .cb-main{display:flex;align-items:center;gap:11px;margin-right:auto;color:inherit}
     .m-callbar .cb-ic{width:30px;height:30px;flex-shrink:0;border-radius:50%;background:var(--brand);color:var(--on-brand);display:flex;align-items:center;justify-content:center}
     .m-callbar .cb-ic svg{width:16px;height:16px}
@@ -1149,6 +1152,15 @@
     #mega .m-root .mr-cat .mr-cat-t{font-size:15px;font-weight:600;line-height:1.25;color:var(--text-primary)}   /* главный вход — жирнее вторичных ссылок */
     #mega .m-root .mr-cat .mr-cat-d{font-size:12.5px;line-height:1.3;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     #mega .m-root .mr-cat .mr-arr{margin-left:auto;color:var(--text-tertiary);display:flex}
+    /* калькулятор — та же анатомия строки, но тональная плашка (инструмент, не главный вход) и стрелка → (переход на страницу) */
+    #mega .m-root .mr-calc{display:flex;align-items:center;gap:14px;width:100%;padding:12px 16px;min-height:60px;border:none;border-bottom:1px solid var(--border);background:none;color:var(--text-primary);cursor:pointer;text-align:left}
+    #mega .m-root .mr-calc:active{background:var(--surface-subtle)}
+    #mega .m-root .mr-calc .mr-calc-ic{width:34px;height:34px;flex-shrink:0;border-radius:var(--radius-md);background:var(--surface-on-light);color:var(--text-secondary);display:flex;align-items:center;justify-content:center}
+    #mega .m-root .mr-calc .mr-calc-ic svg{width:18px;height:18px}
+    #mega .m-root .mr-calc .mr-cat-tx{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+    #mega .m-root .mr-calc .mr-cat-t{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:500;line-height:1.25;color:var(--text-primary)}
+    #mega .m-root .mr-calc .mr-cat-d{font-size:12.5px;line-height:1.3;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    #mega .m-root .mr-calc .mr-go{margin-left:auto;flex-shrink:0;width:14px;height:14px;background:var(--text-tertiary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat}
     #mega .m-root .mr-links{display:flex;flex-direction:column}
     #mega .m-root .mr-links a{display:block;padding:13px 16px;min-height:46px;font-size:15px;color:var(--text-primary);border-bottom:1px solid var(--border)}
     #mega .m-root .mr-links a:active{background:var(--surface-subtle)}
@@ -1223,6 +1235,7 @@
     #mega .pane .group h4:hover{color:var(--text-primary)}
     #mega .pane .group li a:not(.more):not(.extli),
     #mega .pane .group li a:not(.more):not(.extli):hover{border-radius:0;margin:0;padding:12px 16px 12px 48px;background:none;-webkit-box-decoration-break:slice;box-decoration-break:slice}
+    #mega .pane .group li a:not(.more):not(.extli):active{background:var(--surface-subtle)}   /* той же специфичности, что гашение hover — иначе тап-подсветка листьев пропадает */
     #mega .pane .group li .more:hover,#mega .pane .group li .extli:hover{background:none}
     #mega .rail .ri:active{background:var(--surface-subtle)}
     #mega .pane .group li a:active{background:var(--surface-subtle)}
@@ -1369,12 +1382,19 @@
 
   <!-- CALL-BAR (мобилка): телефон крупно — приоритет заказчика -->
   <div class="m-callbar">
+    <div class="cb-row">
     <a class="cb-main" href="tel:+74952561000">
       <span class="cb-ic"><svg viewBox="0 0 24 24" fill="none"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span>
       <span class="cb-tx"><span class="cb-num">+7 (495) 256-10-00</span><span class="cb-hours">Ежедневно 9–22</span></span>
     </a>
     <a class="cb-msg cb-tg" href="#" aria-label="Написать в Телеграме" title="Телеграм"><svg viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg></a>
     <a class="cb-msg cb-mx" href="#" aria-label="Написать в Максе" title="Макс"><svg viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></a>
+    </div>
+    <!-- конверсионная пара: видна при заходе, уезжает со скроллом (не фиксируется) -->
+    <div class="cb-cta">
+      <button type="button" class="mk-btn mk-btn--ghost mk-btn--md cb">Заказать звонок</button>
+      <button type="button" class="mk-btn mk-btn--primary mk-btn--md tb-cta">Оставить заявку</button>
+    </div>
   </div>
 
   <!-- НАВИГАЦИЯ -->
@@ -1425,6 +1445,12 @@
               <span class="mr-cat-tx"><span class="mr-cat-t">Каталог</span><span class="mr-cat-d">Продукция, материалы, услуги, готовые решения</span></span>
               <span class="mr-arr"><svg width="9" height="14" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
+            <!-- калькулятор = инструмент (не контакт): пункт меню с промо-бейджем; ведёт на страницу → стрелка, не шеврон -->
+            <a class="mr-calc" href="#">
+              <span class="mr-calc-ic"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
+              <span class="mr-cat-tx"><span class="mr-cat-t">Калькулятор <span class="mk-btn__badge">−5%</span></span><span class="mr-cat-d">Онлайн-расчёт тиража со скидкой</span></span>
+              <span class="mr-go"></span>
+            </a>
             <nav class="mr-links" aria-label="Информация">
               <a href="#">Оплата</a>
               <a href="#">Доставка</a>
@@ -1441,6 +1467,9 @@
               <a href="#">Отзывы</a>
               <a href="#">Блог</a>
               <a href="#">Новости</a>
+            </nav>
+            <nav class="mr-links" aria-label="Связь">
+              <a href="mailto:info@mdmprint.ru">info@mdmprint.ru</a>
             </nav>
           </div>
 
@@ -3347,6 +3376,7 @@
   function openMega(sec){
     showSec(sec!==undefined ? sec : '0');
     markQuick(sec);
+    ['.m-root','.rail','.pane'].forEach(s=>{ const el=mega.querySelector(s); if(el) el.scrollTop=0; });   // меню всегда открывается с начала
     mega.classList.add('open');
     catbtn.classList.add('active');
     hcat.classList.add('active');
@@ -3378,7 +3408,7 @@
   const mSearchOff = () => { if(mSearchBtn) mSearchBtn.classList.remove('active'); };   /* лупа горит, только пока поиск на экране */
   const drawerRoot    = () => { mega.classList.remove('cat-open','detail-open'); setDh('Меню','Меню'); };
   const drawerCatalog = () => { mega.classList.add('cat-open'); mega.classList.remove('detail-open'); setDh('','Меню'); mSearchOff(); };   /* заголовок пуст — в списке уже есть лейбл «Каталог» */
-  const drawerSection = () => { mega.classList.add('cat-open','detail-open'); setDh('','Каталог'); mSearchOff(); };   /* имя раздела теперь отдельной строкой в панели, в шапке — только «‹ Каталог» */
+  const drawerSection = () => { mega.classList.add('cat-open','detail-open'); setDh('','Каталог'); mSearchOff(); const p=mega.querySelector('.pane'); if(p) p.scrollTop=0; };   /* имя раздела теперь отдельной строкой в панели (панель — с начала), в шапке — только «‹ Каталог» */
 
   const mrCat = document.getElementById('mrCat');
   if(mrCat) mrCat.addEventListener('click', drawerCatalog);
