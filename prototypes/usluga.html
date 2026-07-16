@@ -636,17 +636,13 @@
     .usl-req .reqs-check__item{background:none;border:0;border-radius:0;
       margin-inline:calc(var(--container-pad) * -1);padding:var(--sp-12) var(--container-pad)}
     .usl-req .reqs-check__item + .reqs-check__item{border-top:1px solid var(--border)}
-    /* Граница групп. Раз в блоке всё стало строками с линейками, линейка — единственный принятый
-       тут разделитель, а между «Параметры…» и «Готовыми материалами» её не было: только 32px
-       пустоты, да ещё и после мелкой текстовой ссылки, которая на конец группы не похожа.
-       Линию даём псевдоэлементом: border-top на самой .files потребовал бы отрицательных полей,
-       а её строки уже в них — сложилось бы вдвое и вылезло за экран. Воздух 32 сверху и снизу. */
-    /* top:auto обязателен: у .files от десктопной липкости остался top:calc(--stack-top + 16)=123px.
-       При position:static он игнорировался, а relative его оживляет — группа уезжала на 123px вниз
-       (замер показывал 155px зазора вместо 32). Классика: смена position включает чужой offset. */
-    .usl-req .files{position:relative;top:auto;padding-top:var(--sp-32)}
-    .usl-req .files::before{content:"";position:absolute;top:0;height:1px;background:var(--border);
-      left:calc(var(--container-pad) * -1);right:calc(var(--container-pad) * -1)}
+    /* Линии между группами тут нет и не нужно: группу замыкает жёлтая кнопка во всю ширину —
+       ровно как в «Ценах», где калькулятор отделён от цен ею же. Линия понадобилась, только пока
+       после кнопки висела мелкая пунктирная ссылка; ссылка ушла выше CTA — граница снова читается
+       сама. Порядок вместо декорации.
+       top:auto — от десктопной липкости у .files остался top:calc(--stack-top + 16)=123px, и
+       position:static его игнорирует, а любое другое значение оживило бы (ловили: −123px). */
+    .usl-req .files{position:static}
     /* файлы — те же строки: заливку и рамку снимаем, кружок-иконка справа остаётся как есть */
     .usl-req .files .flist{gap:0}
     .usl-req .mk-filerow{background:none;border:0;border-radius:0;
@@ -3068,9 +3064,12 @@
               </div>
             </div>
 
+            <!-- Порядок: третичная ссылка ВЫШЕ главного CTA. Стояла ниже — и жёлтая кнопка
+                 переставала замыкать группу, ссылка висела хвостом, границу приходилось подпирать
+                 линией. Теперь кнопка закрывает блок и сама работает разделителем, как в «Ценах». -->
             <div class="req-cta">
-              <button type="button" class="mk-btn mk-btn--primary">Отправить заявку на расчёт</button>
               <a class="mk-btn mk-btn--link" href="#">Параметры и полные требования к тиснению <span class="mk-arr" aria-hidden="true"></span></a>
+              <button type="button" class="mk-btn mk-btn--primary">Отправить заявку на расчёт</button>
             </div>
           </div>
 
