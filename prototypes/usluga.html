@@ -1039,8 +1039,11 @@
      конвертирует — залитый брендом, он конкурировал с настоящим CTA. */
   body.v-after .port-head .mk-segment__btn{width:auto;padding:0 14px;gap:8px}
   body.v-after .port-head .mk-segment__btn .seg-txt{font-size:var(--t-small);line-height:1;font-weight:600}
-  /* hover-заливка по ДС — тёплый тональный тинт (роль --surface-on-light), а не «серый» фон секции (--surface-subtle) */
-  body.v-after .port-head .mk-segment__btn:hover{background:var(--surface-on-light)}
+  /* hover-заливка по ДС — тёплый тональный тинт (роль --surface-on-light), а не «серый» фон секции (--surface-subtle).
+     :not(.is-active) обязателен: этот селектор (0,4,1) перебивает тёмную заливку кита у .is-active (0,2,0),
+     и активная вкладка при наведении светлела до неактивной. Ховера у активной нет и по ДС: она уже
+     выбрана, нажимать её незачем — кит для .is-active ховер не описывает. */
+  body.v-after .port-head .mk-segment__btn:not(.is-active):hover{background:var(--surface-on-light)}
 
   /* ЧАВО — форма как тёплая карточка (не терялась), аккордеоны из «коробок» в тихий список
      с разделителями (карточный вариант кита — «для коротких/одиночных», а не для списка из 5) */
@@ -1391,6 +1394,14 @@
        специфичностью (0,3,0 против 0,2,0), и порядком подключения. Из-за этого на мобилке
        карточки шли в 5 колонок по ~75px — текст растирало в столбики по 4 буквы. */
     body.v-after .usl-art .art-grid{grid-template-columns:1fr}
+
+    /* СЕГМЕНТ видео/фото. Подписи раздували вторичный переключатель до ~190px, и он спорил с
+       заголовком секции. На мобилке возвращаем кит: иконка-квадрат 36×36. Доступность не
+       страдает — у кнопок есть aria-label и title.
+       Префикс body.v-after и место во ВТОРОМ брейкпоинте обязательны: десктопное правило
+       (0,3,1) сидит в этом же <style id="port-after"> и иначе перебьёт и специфичностью, и порядком. */
+    body.v-after .port-head .mk-segment__btn{width:36px;padding:0;gap:0}
+    body.v-after .port-head .mk-segment__btn .seg-txt{display:none}
   }
   /* тач-устройства: hover не существует — гасим, чтобы тап не оставлял «залипшую» подсветку на иконках шапки */
   @media(max-width:900px) and (hover:none){
