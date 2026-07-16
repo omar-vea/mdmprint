@@ -521,8 +521,11 @@
     .usl-hero .hero-left{display:contents}
     .usl-hero .eyebrow{order:1}
     .usl-hero h1{order:2;font-size:34px}
-    .usl-hero .hero-media{order:3;margin-bottom:var(--sp-20)}
-    .usl-hero .lead{order:4}
+    .usl-hero .lead{order:3}
+    /* картинка ПОСЛЕ лида: заголовок и лид дешёвые по высоте и отвечают «что это»,
+       картинка идёт подтверждением к ним; связку «буллеты + CTA» не разрываем.
+       Отступ снизу не нужен — у .hero-bullets свой margin-top:20 */
+    .usl-hero .hero-media{order:4;margin-top:var(--sp-20)}
     .usl-hero .hero-bullets{order:5}
     /* CTA во всю ширину: крупная цель для пальца и однозначный якорь конверсии
        (тот же приём, что у кнопки в «Требованиях к макету») */
