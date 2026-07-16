@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716g">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716g">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260716g">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716h">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716h">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260716h">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -605,7 +605,34 @@
     .usl-rev .revs{--item-w:calc((100% - var(--gap-card)) / 2)}  /* на узких — 2 в кадре, не 3 крошечных */
     /* .usl-art .art-grid — см. второй брейкпоинт в <style id="port-after">: здесь правило
        бесполезно, его перебивает body.v-after .usl-art .art-grid из более позднего блока */
-    .usl-prod .pcards{grid-template-columns:1fr 1fr}
+    /* ГДЕ ПРИМЕНЯЕТСЯ — 3 в ряд (решение Omar). Подписи набраны как плитки технологий
+       («Сочетается»): дефолтный .mk-mcard__title = Roboto 600, модификатор --label снят.
+       Текст прижат к низу, как на десктопе: прижим даёт justify-content:flex-end из десктопного
+       правила, а запас в две строки — min-height (без него прижимать не к чему, и короткие
+       подписи всплывают вверх). */
+    .usl-prod .pcards{grid-template-columns:repeat(3,1fr)}
+    /* Плитка ниже за счёт двух вещей: кадр 16:10 вместо 4:3 (кроп «снизу» это допускает — он и
+       рисовался с запасом) и леадинг подписи 18 вместо 20. Леадинг тут не ступень, а роль:
+       ярлык в две строки не проза, 1.28 ему хватает. min-height считается от того же числа —
+       иначе прижим к низу перестанет совпадать с текстом. */
+    .usl-prod .mk-mcard{--mcard-aspect:16/10}
+    /* flex:1 — тело забирает весь остаток высоты плитки. Без него в рядах, где у соседа подпись
+       в три строки, плитка растягивалась до высоты ряда, а тело оставалось по контенту: текст
+       висел выше низа (замер: отступ 28 против 10). Прижим держится на паре flex:1 + flex-end. */
+    .usl-prod .mk-mcard__body{flex:1;padding:var(--sp-10) var(--sp-12);
+      min-height:calc(2 * 18px + 2 * var(--sp-10))}
+    /* Кегль --t-small (14) и ПЕРЕНОСЫ. Roboto строчными шире узкого капса: «Многостраничная» =
+       118px против доступных 87 — не спасает никакой кегль (при 13 всё ещё 110). Слово в строку
+       физически не влезает, значит его переносят по слогам: hyphens:auto работает от lang="ru".
+       LINE-CLAMP УБРАН, и намеренно: подпись лежит внутри display:flex тела карточки, а флекс
+       БЛОКИФИЦИРУЕТ display — -webkit-box превращался в блок, clamp не работал вовсе, и текст
+       резался по overflow:hidden насухо, без многоточия (замер: scrollHeight 54 при clientHeight 36).
+       Вместо обрезки даём вырасти: min-height держит запас в две строки (короткие подписи прижаты
+       к низу, ритм есть), а «Многостраничная полиграфия» и «Проектная документация» берут третью —
+       их строка сетки просто выше на 18px. Лучше ровный текст, чем ровная сетка с обрубками.
+       РЕДАКТОРСКИЙ ЛИМИТ: при 3 в ряд в две строки укладывается ~20 знаков. */
+    .usl-prod .mk-mcard__title{font-size:var(--t-small);line-height:18px;
+      -webkit-hyphens:auto;hyphens:auto}
     /* «Сочетается»: 3 в ряд оставались и на мобилке — плитка 103px на 390. Дело не только в
        зазоре: три колонки при поле 16 физически не дают плитке ширины. Два в ряд, как у
        «Где применяется» — единый ритм плиточных сеток на мобилке. */
@@ -3236,51 +3263,51 @@
         <div class="pcards">
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/vizitki.webp" alt="Визитки" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Визитки</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Визитки</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/kalendari.webp" alt="Календари" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Календари</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Календари</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/stikery.webp" alt="Стикеры" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Стикеры</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Стикеры</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/etiketki.webp" alt="Печать этикеток" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Печать этикеток</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Печать этикеток</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/mnogostranichnaya.webp" alt="Многостраничная полиграфия" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Многостраничная полиграфия</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Многостраничная полиграфия</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/naruzhnaya.webp" alt="Наружная печать" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Наружная печать</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Наружная печать</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/papki.webp" alt="Папки" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Папки</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Папки</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/pos.webp" alt="POS-материалы" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">POS-материалы</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">POS-материалы</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/dokumentaciya.webp" alt="Проектная документация" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Проектная документация</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Проектная документация</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/listovaya.webp" alt="Листовая полиграфия" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Листовая полиграфия</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Листовая полиграфия</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/plastikovye-karty.webp" alt="Пластиковые карты" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Пластиковые карты</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Пластиковые карты</span></span>
           </a>
           <a href="#" class="mk-mcard mk-mcard--link">
             <span class="mk-mcard__media"><img src="../assets/img/products/korobki.webp" alt="Коробки и упаковка" loading="lazy" width="704" height="528"></span>
-            <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Коробки и упаковка</span></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Коробки и упаковка</span></span>
           </a>
         </div>
       </div>
