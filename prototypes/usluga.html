@@ -1003,7 +1003,8 @@
      Паттерн ДС = ghost-кнопка (.mk-btn--ghost): белый фон + 1px var(--border), на hover
      бордер и контент → --text-primary. Иконочный размер, вторичный вид (просто обводка).
      align-self:center + сдвиг −1px — оптическое выравнивание с прописным заголовком. */
-  /* мягкая серая заливка без обводки — паттерн ДС .mk-btn--soft (--surface-on-light). Вторичный вид. */
+  /* мягкая тональная заливка без обводки — токен --surface-on-light (не кнопка: у кружка есть
+     своя форма и стрелка, ему контур не нужен). */
   body.v-after .pane .phead a{font-size:0;flex:0 0 auto;align-self:center;margin-top:-1px;position:relative;width:22px;height:22px;border-radius:50%;background:var(--surface-on-light);color:var(--text-secondary);display:inline-block;transition:background .15s,color .15s}
   /* ОБЩИЙ hover на весь заголовок (текст+круг = один элемент): круг мягко темнеет (ДС soft-hover), стрелка темнеет. Без слайда. */
   body.v-after .pane .phead:hover a{background:var(--surface-on-light-2);color:var(--text-primary)}
@@ -2512,7 +2513,7 @@
             </ul>
             <div class="hero-cta">
               <button class="tb-cta mk-btn mk-btn--primary">Оставить заявку на расчёт</button>
-              <a class="cb mk-btn mk-btn--soft">Заказать образец</a>
+              <a class="cb mk-btn mk-btn--ghost">Заказать образец</a>
             </div>
           </div>
           <div class="hero-media">

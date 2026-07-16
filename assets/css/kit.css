@@ -87,11 +87,11 @@
 .mk-btn--ghost-inverse:hover,.mk-btn--ghost-inverse.is-hover{border-color:#fff}
 .mk-btn--ghost-inverse:active,.mk-btn--ghost-inverse.is-active{background:rgba(255,255,255,.08);border-color:#fff}
 
-/* soft — тональная (полупрозрачная) вторичная: заливка вместо контура, видна в покое, но тише solid.
-   Без рамки (база даёт прозрачную). --soft для светлого фона, --soft-inverse для тёмного. */
-.mk-btn--soft{background:var(--surface-on-light);color:var(--text-primary)}
-.mk-btn--soft:hover,.mk-btn--soft.is-hover{background:var(--surface-on-light-2)}
-.mk-btn--soft:active,.mk-btn--soft.is-active{background:var(--surface-on-light-2)}
+/* soft — тональная (полупрозрачная) вторичная: заливка вместо контура, тише solid.
+   ТОЛЬКО для тёмного фона: на тёмном светлая вуаль даёт видимый силуэт.
+   Светлого близнеца (--soft) НЕТ намеренно: --surface-on-light поверх белого даёт #f5f4f1,
+   а disabled-кнопка — #f5f3ed, то есть вторичная кнопка была неотличима от выключенной.
+   Вторичная на светлом = .mk-btn--ghost (белая + рамка): контур и есть affordance. */
 .mk-btn--soft-inverse{background:var(--surface-on-dark);color:var(--text-on-dark)}
 .mk-btn--soft-inverse:hover,.mk-btn--soft-inverse.is-hover{background:var(--surface-on-dark-2)}
 .mk-btn--soft-inverse:active,.mk-btn--soft-inverse.is-active{background:var(--surface-on-dark-2)}
