@@ -508,19 +508,44 @@
     :root{--t-lead:16px;--t-lead-lh:24px}
     .usl-hero .hero-grid,.usl-adv .adv-grid,.usl-price .price-grid{grid-template-columns:1fr}
     /* ЦЕНЫ. Была «рамка в рамке»: скруглённая карточка, а внутри скруглённые плашки (рамок ни
-       одной — замер border 0, так читались два вложенных радиуса). Бежевая полоса внутри белой
-       секции чинила вложенность, но сама смотрелась заплаткой.
-       Решение: бежевой становится ВСЯ секция — тем же --surface-subtle, что у героя (по токену
-       это «фон СЕКЦИИ»). Тогда заливка у .ptable не нужна вовсе: белые плашки ложатся прямо на
-       фон секции — паттерн сгруппированного списка iOS. Слоёв остаётся один вместо трёх. */
-    .usl-price{background:var(--surface-subtle);padding-bottom:0}
-    .usl-price .ptable{background:none;border-radius:0;margin-inline:0;padding:0 0 var(--sp-24)}
-    /* калькулятор — тёмная полоса впритык к бежевому и заподлицо с низом секции
-       (оттого padding-bottom:0 у секции): без зазоров, как две сплошные зоны */
-    .usl-price .price-grid{gap:0}
-    .usl-price .calc{border-radius:0;
-      margin-inline:calc(var(--container-pad) * -1);
-      padding:var(--sp-24) var(--container-pad)}
+       одной — замер border 0, так читались два вложенных радиуса).
+       Решение: бежевой становится ВСЯ секция (--surface-subtle — по токену это «фон СЕКЦИИ»),
+       а внутри ОДНА белая карточка: заголовок + строки цен, разделённые линиями. Вложенность
+       снята не отменой контейнера, а отменой радиусов внутри него — слоёв два вместо трёх,
+       и заголовок оказывается внутри своей карточки, а не висит над плашками. */
+    .usl-price{background:var(--surface-subtle)}
+    .usl-price .ptable{background:none;border-radius:0;margin-inline:0;padding:0;gap:var(--sp-12)}
+    /* строки вместо плашек: заливку и радиус снимаем, границу групп держит разделитель.
+       Первой строке border-top не нужен — её от заголовка отделяет уже gap списка.
+       Линии идут ОТ КРАЯ ДО КРАЯ экрана — как border-top секций и разделители статбара: строка
+       уезжает в отрицательные поля, а её собственный padding возвращает текст на сетку 16px.
+       align-self:stretch + width:auto обязательны: при width:100% отрицательные поля просто
+       сдвинули бы строку влево, не расширив её. */
+    .usl-price .mk-pricelist{flex-direction:column;gap:0}
+    .usl-price .mk-pcard{flex:0 0 auto;align-self:stretch;width:auto;background:none;border-radius:0;
+      margin-inline:calc(var(--container-pad) * -1);padding:var(--sp-12) var(--container-pad)}
+    .usl-price .mk-pcard + .mk-pcard{border-top:1px solid var(--border)}
+    /* цена — к правому краю строки: слева название и срок в столбик, справа цена по центру пары.
+       В ките карточка вертикальная (имя/срок/цена стопкой), тут строка прайс-листа: две колонки,
+       правая по содержимому. */
+    .usl-price .mk-pcard{display:grid;grid-template-columns:1fr auto;column-gap:var(--sp-12)}
+    .usl-price .mk-pcard__name,.usl-price .mk-pcard__term{grid-column:1}
+    .usl-price .mk-pcard__val{grid-column:2;grid-row:1 / span 2;align-self:center;
+      text-align:right;margin-top:0}
+    /* КАЛЬКУЛЯТОР без тёмной плашки: просто группа внутри бежевой секции, после кнопки.
+       Отступы по правилу «внешние > внутренних»: внутри группы 12 (заголовок/подпись/кнопка),
+       между группами 32 — граница групп держится расстоянием, раз её больше не держит фон.
+       ДС: .mk-card--dark и .mk-btn--soft-inverse привязаны к ТЁМНОЙ поверхности, и без фона оба
+       неверны, но подменить класс на брейкпоинте CSS не умеет — поэтому переопределяем на светлые
+       эквиваленты: карточка → без заливки и с обычным цветом текста, кнопка → ghost (наш стандарт
+       вторичной). Три строки ghost продублированы из кита осознанно, альтернатива — второй набор
+       классов в разметке под мобилку. */
+    .usl-price .price-grid{gap:var(--sp-32)}
+    .usl-price .calc{background:none;border-radius:0;margin-inline:0;padding:0;
+      color:var(--text-primary)}
+    .usl-price .calc .calc-sub{color:var(--text-secondary)}
+    .usl-price .calc .mk-btn--soft-inverse{background:var(--surface-card);
+      border-color:var(--border);color:var(--text-primary)}
     /* СТАТБАР 4-в-ряд → сетка 2×2: в четверть экрана цифра не влезает, а подпись рассыпается
        в лесенку из 4–5 слов по одному. Кит без брейкпоинтов (все его @media — про
        reduced-motion), поэтому мобильная раскладка живёт здесь.
@@ -643,7 +668,8 @@
     .usl-final .cta-box{grid-template-columns:1fr}
     .usl-final .cta-fig{display:none}
     /* главный CTA на мобилке — во всю ширину: одна кнопка-цель во всех блоках (герой, цены, финал) */
-    .usl-final .cta-box .mk-btn,.usl-price .ptable .mk-btn--primary{width:100%}
+    .usl-final .cta-box .mk-btn,.usl-price .ptable .mk-btn--primary,
+    .usl-price .calc .mk-btn{width:100%}
     .usl-foot .ftop,.usl-foot .fbot{grid-template-columns:1fr}
     .usl-foot .flinks{grid-template-columns:1fr 1fr}
   }
@@ -2793,7 +2819,7 @@
           <div class="calc mk-card mk-card--dark">
             <h3 class="mk-h3">Онлайн-калькулятор тиража</h3>
             <p class="calc-sub">Рассчитайте свой тираж за 1 минуту в нашем калькуляторе</p>
-            <a class="mk-btn mk-btn--soft-inverse" href="#">Онлайн-калькулятор</a>
+            <a class="mk-btn mk-btn--soft-inverse" href="#">Онлайн-калькулятор <span class="mk-arr" aria-hidden="true"></span></a>
           </div>
         </div>
       </div>
