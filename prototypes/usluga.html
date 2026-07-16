@@ -140,7 +140,10 @@
   .usl-price .price-grid{display:grid;grid-template-columns:776fr 376fr;gap:var(--sp-24);align-items:stretch}
   .usl-price .ptable{display:flex;flex-direction:column;gap:var(--sp-16);align-items:flex-start;padding:var(--sp-28)}
   .usl-price .calc{display:flex;flex-direction:column;gap:var(--sp-12);align-items:flex-start;padding:var(--sp-28)}
-  .usl-price .calc .calc-sub{color:var(--text-on-dark-2);font-size:var(--t-small);line-height:var(--t-small-lh)}
+  /* один в один с .fnote «Готовых материалов», включая margin-top: два блока-помощника
+     набраны одинаково, различает их только сторона — тёмная или светлая */
+  .usl-price .calc .calc-sub{color:var(--text-on-dark-2);font-size:var(--t-small);
+    line-height:var(--t-small-lh);margin-top:var(--sp-4)}
 
   /* ПОРТФОЛИО */
   /* ПОРТФОЛИО — одна карточка (.mk-mcard) в обоих видах; отличаются только пропорция и число колонок.
@@ -2885,7 +2888,10 @@
             <div class="fhead">
               <span class="fh-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
               <div>
-                <h3 class="mk-h3">Онлайн-калькулятор тиража</h3>
+                <!-- .mk-h4, как у «Готовых материалов»: оба — карточки-помощники правой колонки,
+                     значит и ступень одна. Тег h3 остаётся: уровень в структуре тут ни при чём,
+                     класс задаёт только вид. -->
+                <h3 class="mk-h4">Онлайн-калькулятор тиража</h3>
                 <p class="calc-sub">Рассчитайте свой тираж за 1 минуту в нашем калькуляторе</p>
               </div>
             </div>
