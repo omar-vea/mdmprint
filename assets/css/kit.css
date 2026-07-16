@@ -461,18 +461,22 @@
 .mk-tabpanel:focus-visible{outline:2px solid var(--brand-dark);outline-offset:4px;border-radius:var(--radius-md)}
 @keyframes mk-tab-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* карточки внутри панели въезжают волной — задержка нарастает к правому краю */
-.mk-tabpanel.is-active [class*="mk-mcard"]{animation:mk-tab-in .3s cubic-bezier(.4,0,.2,1) both}
-.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(1){animation-delay:.02s}
-.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(2){animation-delay:.05s}
-.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(3){animation-delay:.08s}
-.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(4){animation-delay:.11s}
-.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(5){animation-delay:.14s}
-.mk-tabpanel.is-active [class*="mk-mcard"]:nth-child(6){animation-delay:.17s}
+/* Карточки внутри панели въезжают волной — задержка нарастает к правому краю.
+   Селектор именно .mk-mcard, а не [class*="mk-mcard"]: подстрочный ловил и BEM-потомков
+   (__play, __media, __dur), а `both` фиксировал у них конечный transform:none и затирал
+   собственные трансформы — у плей-иконки убивало translate(-50%,-50%) из её центровки,
+   и она уезжала на пол-ширины вправо и вниз. Базовый класс есть у всех модификаторов. */
+.mk-tabpanel.is-active .mk-mcard{animation:mk-tab-in .3s cubic-bezier(.4,0,.2,1) both}
+.mk-tabpanel.is-active .mk-mcard:nth-child(1){animation-delay:.02s}
+.mk-tabpanel.is-active .mk-mcard:nth-child(2){animation-delay:.05s}
+.mk-tabpanel.is-active .mk-mcard:nth-child(3){animation-delay:.08s}
+.mk-tabpanel.is-active .mk-mcard:nth-child(4){animation-delay:.11s}
+.mk-tabpanel.is-active .mk-mcard:nth-child(5){animation-delay:.14s}
+.mk-tabpanel.is-active .mk-mcard:nth-child(6){animation-delay:.17s}
 
 @media (prefers-reduced-motion:reduce){
   .mk-tabpanels{transition:none}
-  .mk-tabpanel.is-active,.mk-tabpanel.is-active [class*="mk-mcard"]{animation:none}
+  .mk-tabpanel.is-active,.mk-tabpanel.is-active .mk-mcard{animation:none}
 }
 
 /* ---- Переключатель вида (сегмент из иконок) ----
