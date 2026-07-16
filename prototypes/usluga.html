@@ -494,6 +494,11 @@
   .sw-app{display:none!important}
 
   @media(max-width:900px){
+    /* Мобильная типошкала. Lead 18px — десктопное значение: там он в колонке ~600px и набирает
+       ~60 знаков. На 390px та же строка даёт ~34 знака — ниже комфортной меры (45–75 по
+       Брингхерсту; на мобилке практический таргет 35–50), отсюда «крупно и рыхло».
+       16px возвращает меру в норму и совпадает с Material Body Large / iOS body. */
+    :root{--t-lead:16px;--t-lead-lh:24px}
     .usl-hero .hero-grid,.usl-adv .adv-grid,.usl-price .price-grid{grid-template-columns:1fr}
     .usl-stats{grid-template-columns:1fr 1fr}
     .usl-vidy .vidy-grid{grid-template-columns:1fr 1fr}
@@ -507,7 +512,22 @@
     .faq-form{position:static}
     .usl-port .port-grid--video{--item-w:calc((100% - 2 * var(--sp-20)) / 3)}
     .usl-port .port-grid--photo{--item-w:calc((100% - var(--sp-20)) / 2)}
-    .usl-hero h1{font-size:34px}
+    /* ГЕРОЙ. Картинка в разметке идёт ПОСЛЕ всего левого блока, поэтому уезжала под буллеты
+       и кнопки — не видна без скролла и оторвана от заголовка. display:contents распускает
+       .hero-left в тот же поток, что и .hero-media → порядок переставляется через order,
+       разметку и десктоп не трогаем. */
+    .usl-hero{padding-top:0!important;padding-bottom:var(--sp-40)!important}   /* крошки — вплотную к шапке */
+    .usl-hero .hero-grid{display:flex;flex-direction:column;align-items:stretch}   /* базовый align-items:start в колонке сжимал бы всё по контенту */
+    .usl-hero .hero-left{display:contents}
+    .usl-hero .eyebrow{order:1}
+    .usl-hero h1{order:2;font-size:34px}
+    .usl-hero .hero-media{order:3;margin-bottom:var(--sp-20)}
+    .usl-hero .lead{order:4}
+    .usl-hero .hero-bullets{order:5}
+    /* CTA во всю ширину: крупная цель для пальца и однозначный якорь конверсии
+       (тот же приём, что у кнопки в «Требованиях к макету») */
+    .usl-hero .hero-cta{order:6;flex-direction:column;gap:var(--sp-10);margin-top:var(--sp-24)}
+    .usl-hero .hero-cta .mk-btn{width:100%}
     .usl h2{font-size:24px}
     /* фигура рассчитана на свою колонку; в одну колонку она превращается в баннер — убираем */
     .usl-final .cta-box{grid-template-columns:1fr}
