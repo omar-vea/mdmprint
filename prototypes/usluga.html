@@ -1110,8 +1110,8 @@
 
     /* --- #MEGA → выпадающее меню ПОД шапкой (шапка липкая, остаётся видимой) --- */
     /* закрытый = display:none (fixed+transform давал оверфлоу и раздувал ICB). top=высота hbar */
-    #mega{position:fixed;top:58px;left:0;right:0;bottom:0;height:calc(100dvh - 58px);z-index:1001;background:var(--surface-page);
-      width:100%;max-width:none;box-shadow:none;border:none;display:none;transform:none}   /* dvh: иначе на iOS Safari bottom:0 уходит под нижний тулбар и обрезает список */
+    #mega{position:fixed;top:58px;left:0;right:0;bottom:0;height:calc(100dvh - 58px);height:calc(100lvh - 58px);z-index:1001;background:var(--surface-page);
+      width:100%;max-width:none;box-shadow:none;border:none;display:none;transform:none}   /* lvh: тянем фон дравера ПОД тулбар Safari (иначе там белая полоса и список «обрезан»); контент поднят запасом 96px */
     #mega.open{display:block;animation:mDrawerFade .18s ease}
     #mega .m-dhead .m-dh-x{display:none}   /* закрывает бургер-крестик в шапке, отдельный × не нужен */
     /* #mega-префикс: перебивает body.v-after .mega-card/.pane (иначе остаётся десктоп-грид 280/1fr/240 и .pane 1400px → оверфлоу страницы) */
