@@ -1032,7 +1032,7 @@
      МОБИЛЬНАЯ ШАПКА + КАТАЛОГ-DRAWER (drill-down, ≤900px).
      Переиспользуем #mega: .rail = уровень 0, #pane/.panel = уровень 1.
      ============================================================ */
-  .m-dhead,.m-back,.m-callbar,.m-dsearch,.m-root,.rail .ri-desc,.hactions .m-search,.m-topbar{display:none}   /* по умолчанию (десктоп) скрыты; .ri-desc — только мобильная подсказка. .m-cta живёт внутри .m-callbar → скрыт вместе с ним */
+  .m-dhead,.m-back,.m-dsearch,.m-root,.rail .ri-desc,.hactions .m-search{display:none}   /* по умолчанию (десктоп) скрыты; .ri-desc — только мобильная подсказка */
   @keyframes mDrawerFade{from{opacity:0}to{opacity:1}}
 
   @media(max-width:900px){
@@ -1050,16 +1050,11 @@
     .navbar{border:none;background:none}
     .navbar .nav{display:none}
     /* шапка зафиксирована (не sticky: html/body overflow-x:hidden ломает sticky на iOS) — меню открывается ПОД ней */
-    /* топ-уровень над шапкой: белый, разделитель снизу. Размеры — нижняя граница ДС-шкалы:
-       номер --t-small 14px (минимум для интерактивного текста), часы --t-label 12px (низ шкалы). */
-    .m-topbar{display:flex;align-items:center;gap:8px;position:fixed;top:0;left:0;right:0;z-index:1003;
-      height:36px;padding:0 var(--container-pad);background:var(--surface-page);border-bottom:1px solid var(--border)}
-    .m-topbar .tb-num{font-size:var(--t-small);line-height:1;font-weight:600;color:var(--text-primary)}
-    .m-topbar .tb-hours{font-size:var(--t-label);line-height:1;color:var(--text-secondary);
-      background:var(--surface-on-light);padding:4px 8px;border-radius:var(--radius-inside);white-space:nowrap}
-    header{position:fixed;top:36px;left:0;right:0;z-index:1002}
-    body{padding-top:94px}   /* компенсация fixed: топ-уровень 36 + шапка 58 */
-    .usl-subnav{top:94px}
+    /* шапка зафиксирована (не sticky: html/body overflow-x:hidden ломает sticky на iOS) — меню открывается ПОД ней.
+       Номер и CTA временно убраны из шапки — живут в меню (согласуем с маркетологом). */
+    header{position:fixed;top:0;left:0;right:0;z-index:1002}
+    body{padding-top:58px}   /* компенсация fixed-шапки */
+    .usl-subnav{top:58px}
 
     /* --- HBAR: logo слева · [поиск · войти · корзина · меню] справа --- */
     .hbar,body.scrolled .hbar{gap:2px;height:58px}   /* компакт-шапка при скролле — только десктоп, на мобилке ничего не меняется */
@@ -1073,8 +1068,6 @@
     .hactions{order:2;gap:2px}
     .hactions>*{display:none!important}
     .hactions>.m-search,.hactions>.m-keep{display:flex!important}
-    /* CTA — в строке под шапкой (в фикс-ряд не влезает: лого + 4 иконки уже занимают всю ширину) */
-    .m-callbar .m-cta{display:inline-flex;width:100%;justify-content:center;height:40px;min-height:40px;font-size:14px;font-weight:600}
     /* ЕДИНЫЙ СТИЛЬ иконок-кнопок шапки: поиск · войти · корзина · бургер —
        40×40, плоские, глиф строго по центру (font-size:0 + flex-center вместо text-indent),
        общий тёплый ховер (в т.ч. у бургера) */
@@ -1099,14 +1092,10 @@
     .hactions .hbtn .badge{font-size:9px;line-height:1;right:1px;top:1px}
 
     /* --- CALL-BAR (2-й уровень): телефон крупно (приоритет заказчика) --- */
-    /* второй уровень = слим-строка с номером: белая, разделитель снизу, уезжает со скроллом.
-       Мессенджеры/почта/обратный звонок переехали в меню — в шапке остаётся только «позвонить». */
-    .m-callbar{display:flex;align-items:center;padding:7px 16px;background:var(--surface-page);border-bottom:1px solid var(--border);color:var(--text-primary)}
-    .m-callbar .cb-row{display:flex;align-items:center;gap:8px;width:100%}
 
     /* --- #MEGA → выпадающее меню ПОД шапкой (шапка липкая, остаётся видимой) --- */
     /* закрытый = display:none (fixed+transform давал оверфлоу и раздувал ICB). top=высота hbar */
-    #mega{position:fixed;top:94px;left:0;right:0;bottom:0;height:calc(100dvh - 94px);height:calc(100lvh - 94px);z-index:1001;background:var(--surface-page);
+    #mega{position:fixed;top:58px;left:0;right:0;bottom:0;height:calc(100dvh - 58px);height:calc(100lvh - 58px);z-index:1001;background:var(--surface-page);
       width:100%;max-width:none;box-shadow:none;border:none;display:none;transform:none}   /* lvh: тянем фон дравера ПОД тулбар Safari (иначе там белая полоса и список «обрезан»); контент поднят запасом 96px */
     #mega.open{display:block;animation:mDrawerFade .18s ease}
     #mega .m-dhead .m-dh-x{display:none}   /* закрывает бургер-крестик в шапке, отдельный × не нужен */
@@ -1151,8 +1140,23 @@
     #mega .m-root .mr-calc .mr-cat-d{font-size:12.5px;line-height:1.3;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     #mega .m-root .mr-calc .mr-go{margin-left:auto;flex-shrink:0;width:14px;height:14px;background:var(--text-tertiary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat}
     #mega .m-root .mr-links{display:flex;flex-direction:column}
-    #mega .m-root .mr-links a,#mega .m-root .mr-contacts button{display:block;width:100%;padding:13px 16px;min-height:46px;font-size:15px;color:var(--text-primary);border:none;border-bottom:1px solid var(--border);background:none;text-align:left;font-family:inherit;cursor:pointer}
-    #mega .m-root .mr-contacts button:active{background:var(--surface-subtle)}
+    #mega .m-root .mr-links a{display:block;padding:13px 16px;min-height:46px;font-size:15px;color:var(--text-primary);border-bottom:1px solid var(--border)}
+
+    /* КОНТАКТЫ: строки с иконками — иконка отличает их от навигационных ссылок */
+    #mega .m-root .mr-contacts{display:flex;flex-direction:column}
+    #mega .m-root .mr-contacts .mc-row{display:flex;align-items:center;gap:8px;padding-right:16px;border-bottom:1px solid var(--border)}
+    #mega .m-root .mr-contacts .mc-row .mc-item{flex:1;min-width:0;border-bottom:none}
+    #mega .m-root .mr-contacts .mc-row .cb{flex-shrink:0;height:32px;min-height:32px;padding:0 12px;font-size:13px;font-weight:500}
+    #mega .m-root .mr-contacts .mc-item{display:flex;align-items:center;gap:14px;padding:11px 16px;min-height:52px;color:var(--text-primary);border-bottom:1px solid var(--border)}
+    #mega .m-root .mr-contacts .mc-item:active{background:var(--surface-subtle)}
+    #mega .m-root .mr-contacts .mc-ic{width:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-secondary)}
+    #mega .m-root .mr-contacts .mc-ic svg{width:20px;height:20px}
+    #mega .m-root .mr-contacts .mc-tx{display:flex;flex-direction:column;gap:2px;min-width:0}
+    #mega .m-root .mr-contacts .mc-t{font-size:15px;font-weight:500;line-height:1.25;color:var(--text-primary)}
+    #mega .m-root .mr-contacts .mc-d{font-size:12.5px;line-height:1.3;color:var(--text-secondary)}
+    /* заявка — тот же вход, что калькулятор (бежевая плашка); жёлтый в меню ровно один — у Каталога.
+       Акцент CTA держит жирный заголовок, а не цвет плашки. */
+    #mega .m-root .mr-req .mr-cat-t{font-weight:600}
     #mega .m-root .mr-links a:active{background:var(--surface-subtle)}
     /* поиск в корне drawer — общий поиск по сайту, над «Каталог»; на всю ширину, без рамки (бар заподлицо + нижний разделитель) */
     #mega .m-root .m-dsearch{display:flex;align-items:center;gap:10px;flex-shrink:0;margin:0;padding:0 16px;height:52px;background:var(--surface-subtle);border:none;border-bottom:1px solid var(--border);border-radius:0}
@@ -1217,7 +1221,7 @@
 
     /* ТАЧ: гасим десктопные :hover — после тапа они залипают. Главное — у товаров hover давал margin:0 -7px (→ горизонтальный скролл и дёрганье) и сдвиг padding. Взаимодействие оставляем только на :active. */
     /* нативная вспышка тапа браузера бывает лишь у ссылок/кнопок (потому на h4 «Материал визиток» её нет, а на «Шелкография» есть) — глушим, свой :active уже даёт фидбек */
-    #mega a,#mega button,.hbar .hcat,.hactions .hbtn,.m-callbar a,.m-callbar button{-webkit-tap-highlight-color:transparent}
+    #mega a,#mega button,.hbar .hcat,.hactions .hbtn{-webkit-tap-highlight-color:transparent}
     #mega .m-root,#mega .rail,#mega .pane{overflow-x:hidden}
     #mega .rail .ri:hover{background:none}
     #mega .rail .ri:hover .em{color:var(--text-secondary)}
@@ -1289,12 +1293,6 @@
   </div>
 
   <!-- ШАПКА -->
-  <!-- мобильный топ-уровень над шапкой: номер + часы (десктоп — свой .topbar) -->
-  <div class="m-topbar">
-    <a class="tb-num" href="tel:+74952561000">+7 (495) 256-10-00</a>
-    <span class="tb-hours">Ежедневно с 9 до 22</span>
-  </div>
-
   <header>
     <div class="wrap hbar">
       <a href="#" class="logo">
@@ -1378,13 +1376,6 @@
     </div>
   </header>
 
-  <!-- CALL-BAR (мобилка): телефон крупно — приоритет заказчика -->
-  <div class="m-callbar">
-    <div class="cb-row">
-    <!-- номер уехал в топ-уровень над шапкой; здесь остаётся только CTA -->
-    <button type="button" class="m-cta tb-cta mk-btn mk-btn--primary">Оставить заявку</button>
-    </div>
-  </div>
 
   <!-- НАВИГАЦИЯ -->
   <div class="navbar">
@@ -1440,6 +1431,36 @@
               <span class="mr-cat-tx"><span class="mr-cat-t">Калькулятор <span class="mk-btn__badge">−5%</span></span><span class="mr-cat-d">Онлайн-расчёт тиража со скидкой</span></span>
               <span class="mr-go"></span>
             </a>
+            <!-- заявка = не кнопка, а строка-вход в том же языке, что Каталог/Калькулятор (CTA не теряется) -->
+            <button type="button" class="mr-calc mr-req tb-cta">
+              <span class="mr-calc-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3v4h4" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.5 13.5l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="mr-cat-tx"><span class="mr-cat-t">Оставить заявку</span><span class="mr-cat-d">Расчёт тиража — ответим за 15 минут</span></span>
+              <span class="mr-go"></span>
+            </button>
+
+            <!-- КОНТАКТЫ: с иконками, чтобы не терялись среди навигационных ссылок -->
+            <nav class="mr-contacts" aria-label="Контакты">
+              <div class="mc-row">
+                <a class="mc-item mc-tel" href="tel:+74952561000">
+                  <span class="mc-ic"><svg viewBox="0 0 24 24" fill="none"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span>
+                  <span class="mc-tx"><span class="mc-t">+7 (495) 256-10-00</span><span class="mc-d">Ежедневно с 9 до 22</span></span>
+                </a>
+                <button type="button" class="cb mk-btn mk-btn--ghost">Заказать звонок</button>
+              </div>
+              <a class="mc-item" href="#">
+                <span class="mc-ic"><svg viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg></span>
+                <span class="mc-tx"><span class="mc-t">Телеграм</span></span>
+              </a>
+              <a class="mc-item" href="#">
+                <span class="mc-ic"><svg viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></span>
+                <span class="mc-tx"><span class="mc-t">Макс</span></span>
+              </a>
+              <a class="mc-item" href="mailto:info@mdmprint.ru">
+                <span class="mc-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16a2 2 0 0 1 2 2v.35l-10 5.9-10-5.9V6a2 2 0 0 1 2-2Zm18 4.67V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.67l9.49 5.6a1 1 0 0 0 1.02 0L22 8.67Z"/></svg></span>
+                <span class="mc-tx"><span class="mc-t">info@mdmprint.ru</span></span>
+              </a>
+            </nav>
+
             <nav class="mr-links" aria-label="Информация">
               <a href="#">Оплата</a>
               <a href="#">Доставка</a>
@@ -1456,13 +1477,6 @@
               <a href="#">Отзывы</a>
               <a href="#">Блог</a>
               <a href="#">Новости</a>
-            </nav>
-            <!-- меню = хаб контактов: всё «мелкое» из шапки живёт здесь -->
-            <nav class="mr-links mr-contacts" aria-label="Связь">
-              <button type="button" class="cb">Заказать звонок</button>
-              <a href="#">Телеграм</a>
-              <a href="#">Макс</a>
-              <a href="mailto:info@mdmprint.ru">info@mdmprint.ru</a>
             </nav>
           </div>
 
