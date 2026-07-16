@@ -1033,13 +1033,14 @@
   body.v-after .calcbtn .calc-ic{display:inline-flex;flex-shrink:0}
   body.v-after .calcbtn .calc-ic svg{width:20px;height:20px;color:currentColor}
 
-  /* ПОРТФОЛИО — сегмент видео/фото: иконка + текст, активная вкладка бренд-жёлтая (комментарий маркетолога) */
+  /* ПОРТФОЛИО — сегмент видео/фото: иконка + текст. Своё здесь только это.
+     Активная вкладка — тёмная заливка кита (.mk-segment__btn.is-active): жёлтый в ДС значит
+     «нажми, это цель» (заявка, подписка, расчёт), а переключатель представления ничего не
+     конвертирует — залитый брендом, он конкурировал с настоящим CTA. */
   body.v-after .port-head .mk-segment__btn{width:auto;padding:0 14px;gap:8px}
   body.v-after .port-head .mk-segment__btn .seg-txt{font-size:var(--t-small);line-height:1;font-weight:600}
   /* hover-заливка по ДС — тёплый тональный тинт (роль --surface-on-light), а не «серый» фон секции (--surface-subtle) */
   body.v-after .port-head .mk-segment__btn:hover{background:var(--surface-on-light)}
-  body.v-after .port-head .mk-segment__btn.is-active{background:var(--brand);color:var(--on-brand)}
-  body.v-after .port-head .mk-segment__btn.is-active:hover{background:var(--brand-hover)}
 
   /* ЧАВО — форма как тёплая карточка (не терялась), аккордеоны из «коробок» в тихий список
      с разделителями (карточный вариант кита — «для коротких/одиночных», а не для списка из 5) */
