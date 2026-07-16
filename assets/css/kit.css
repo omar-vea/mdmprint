@@ -192,7 +192,7 @@
    Нативный скролл + snap. Стрелки — вспомогательные: трекпад/колесо работают и без них.
    --item-w задаёт, сколько карточек влезает в кадр. */
 .mk-scroller{position:relative}
-.mk-scroller__track{display:flex;gap:var(--sp-20);overflow-x:auto;scroll-snap-type:x mandatory;
+.mk-scroller__track{display:flex;gap:var(--gap-card);overflow-x:auto;scroll-snap-type:x mandatory;
   scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
 .mk-scroller__track::-webkit-scrollbar{display:none}
 /* прокручиваемая область обязана принимать фокус: без стрелок мыши до неё не добраться с клавиатуры */

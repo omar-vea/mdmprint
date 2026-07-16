@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716f">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716f">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260716f">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716g">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716g">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260716g">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -130,7 +130,7 @@
 
   /* ВИДЫ */
   /* ВИДЫ — карточки из кита (.mk-mcard); фото пока плейсхолдер-градиент */
-  .usl-vidy .vidy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-24)}
+  .usl-vidy .vidy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-card)}
   .usl-vidy .mk-mcard__media{background:linear-gradient(135deg,#faf8f3,#eee9df)}
   .usl-vidy .mk-mcard__media.gold{background:linear-gradient(135deg,#fff6da,#f3d488)}
   .usl-vidy .vidy-note{margin-top:var(--sp-24);font-size:var(--t-small);line-height:var(--t-small-lh);color:var(--text-secondary)}
@@ -150,8 +150,8 @@
      Видео — вертикали 9:16 по 5 в ряд, фото — 4:3 по 3 в ряд. Медиа пока плейсхолдеры-градиенты. */
   .usl-port .port-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-16)}
   /* сколько карточек в кадре: 5 вертикалей / 3 горизонтали. Стрелки — по центру медиа, не всей карточки */
-  .usl-port .port-grid--video{--item-w:calc((100% - 4 * var(--sp-20)) / 5);--nav-top:calc((100% - 74px) / 2)}
-  .usl-port .port-grid--photo{--item-w:calc((100% - 2 * var(--sp-20)) / 3);--nav-top:calc((100% - 104px) / 2)}
+  .usl-port .port-grid--video{--item-w:calc((100% - 4 * var(--gap-card)) / 5);--nav-top:calc((100% - 74px) / 2)}
+  .usl-port .port-grid--photo{--item-w:calc((100% - 2 * var(--gap-card)) / 3);--nav-top:calc((100% - 104px) / 2)}
   .usl-port .mk-mcard__media{background:linear-gradient(135deg,#33414f,#151c22)}
   .usl-port .mk-mcard:nth-child(3n+1) .mk-mcard__media{background:linear-gradient(135deg,#8a1f2b,#4a0f16)}
   .usl-port .mk-mcard:nth-child(3n+2) .mk-mcard__media{background:linear-gradient(135deg,#2a2a2a,#0b0b0b)}
@@ -213,12 +213,12 @@
   /* ГДЕ ПРИМЕНЯЕТСЯ / продукты */
   /* ПРОДУКТЫ — .mk-mcard из кита. Figma: 176px × 6 в ряд (176*6 + 24*5 = 1176),
      текстовый блок p16 + заголовок h40 с выравниванием по низу → одинаковая высота при 1 и 2 строках. */
-  .usl-prod .pcards{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--sp-24)}
+  .usl-prod .pcards{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--gap-card)}
   .usl-prod .mk-mcard__body{padding:var(--sp-16);min-height:72px;justify-content:flex-end}
 
   /* СОЧЕТАЕТСЯ */
   /* плитки-ссылки — из кита (.mk-tilelink); подзаголовок секции */
-  .usl-combo .combo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-24)}
+  .usl-combo .combo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-card)}
   /* Снимки сняты на белом. darken = поканальный минимум: белый фон кадра схлопывается
      в подложку плитки и белый прямоугольник исчезает. Работает только если под картинкой
      светлая подложка — поэтому снимаем белый фон медиа и разделительную линию кита.
@@ -234,9 +234,10 @@
      Виджет рендерит в обычный DOM (#sw-app-<key>), данные лежат в window.swapp_data
      после события swAppComplite → рисуем своей разметкой, чужой свайпер не используем. */
   /* лента: 2 карточки в кадре (Figma: 576 + 24 + 576 = 1176) */
-  .usl-rev .revs{--item-w:calc((100% - 2 * var(--sp-24)) / 3)}
+  .usl-rev .revs{--item-w:calc((100% - 2 * var(--gap-card)) / 3)}
   /* align-items:stretch выравнивает карточки по самой высокой; height:100% его бы отменил */
-  .usl-rev .mk-scroller__track{gap:var(--sp-24);align-items:stretch;padding-block:2px}
+  /* зазор — от кита (--gap-card); свой был 24 против китовых 20, отчего ленты жили по разным законам */
+  .usl-rev .mk-scroller__track{align-items:stretch;padding-block:2px}
   .usl-rev .rev-head{display:flex;align-items:baseline;gap:var(--sp-12);flex-wrap:wrap;margin-top:var(--sp-12)}
   .usl-rev .rev-score{font-family:var(--font-head);font-weight:700;font-size:var(--t-h2);
     line-height:1;color:var(--text-primary)}
@@ -593,7 +594,7 @@
        Режем по ЭКРАНУ, а не по контейнеру: поля уезжают в padding самой ленты, поэтому первая
        карточка стоит на сетке страницы, а лента уходит за край. */
     .usl-vidy .vidy-grid{--item-w:80%;
-      display:flex;gap:var(--sp-20);overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+      display:flex;gap:var(--gap-card);overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
       scrollbar-width:none;-ms-overflow-style:none;
       margin-inline:calc(var(--container-pad) * -1);
       padding-inline:var(--container-pad);scroll-padding-left:var(--container-pad)}
@@ -601,10 +602,14 @@
     .usl-vidy .vidy-grid > *{flex:0 0 var(--item-w);scroll-snap-align:start}
     /* хвост: padding-inline-end у флекс-скроллера игнорируется, последняя карточка липла бы к краю */
     .usl-vidy .vidy-grid::after{content:"";flex:0 0 1px}
-    .usl-rev .revs{--item-w:calc((100% - var(--sp-24)) / 2)}  /* на узких — 2 в кадре, не 3 крошечных */
+    .usl-rev .revs{--item-w:calc((100% - var(--gap-card)) / 2)}  /* на узких — 2 в кадре, не 3 крошечных */
     /* .usl-art .art-grid — см. второй брейкпоинт в <style id="port-after">: здесь правило
        бесполезно, его перебивает body.v-after .usl-art .art-grid из более позднего блока */
     .usl-prod .pcards{grid-template-columns:1fr 1fr}
+    /* «Сочетается»: 3 в ряд оставались и на мобилке — плитка 103px на 390. Дело не только в
+       зазоре: три колонки при поле 16 физически не дают плитке ширины. Два в ряд, как у
+       «Где применяется» — единый ритм плиточных сеток на мобилке. */
+    .usl-combo .combo-grid{grid-template-columns:1fr 1fr}
     .usl-adv .tiles{grid-template-columns:1fr}
     /* ПРЕИМУЩЕСТВА. Сетка 2×2 проверена рендером и отвергнута: мера падает до 20 знаков (норма
        35–50), текст разваливается в лесенку и плитка отрастает ровно на столько, на сколько
@@ -661,7 +666,7 @@
        Дробь по конвенции файла: зазоров на один меньше числа карточек (2.2 → 1.2 гэпа).
        Даёт ролик 152px и сливер третьего ~30px. Фото — по-прежнему 2 в кадре: у них кадр 4:3,
        и та же дробь ужала бы их сильнее, чем нужно (на десктопе у видео и фото тоже разное число). */
-    .usl-port .port-grid--video{--item-w:calc((100% - 1.2 * var(--sp-20)) / 2.2)}
+    .usl-port .port-grid--video{--item-w:calc((100% - 1.2 * var(--gap-card)) / 2.2)}
     /* фото — по принципу «Видов»: карточка в 80% контейнера, соседняя подглядывает.
        Кадр 4:3 против вертикального 9:16 у роликов, поэтому две в ряд делали их мелкими;
        у видео своя дробь (2.2) — там кадр узкий и в ту же ширину влезает больше. */
