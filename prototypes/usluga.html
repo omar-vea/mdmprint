@@ -1050,6 +1050,7 @@
   @media(max-width:900px){
     :root{--container-pad:16px}
     html,body{overflow-x:hidden;max-width:100%}
+    input,select,textarea{font-size:16px}   /* iOS зумит страницу при фокусе на поле со шрифтом <16px */
     body.nav-open{overflow:hidden}
     html:has(body.nav-open){overflow:hidden}   /* прокрутка часто на html — лочим и его, иначе фон скроллится за меню */
 
@@ -1151,7 +1152,7 @@
     /* поиск в корне drawer — общий поиск по сайту, над «Каталог»; на всю ширину, без рамки (бар заподлицо + нижний разделитель) */
     #mega .m-root .m-dsearch{display:flex;align-items:center;gap:10px;flex-shrink:0;margin:0;padding:0 16px;height:52px;background:var(--surface-subtle);border:none;border-bottom:1px solid var(--border);border-radius:0}
     #mega .m-dsearch svg{width:19px;height:19px;color:var(--text-secondary);flex-shrink:0}
-    #mega .m-dsearch input{flex:1;min-width:0;border:none;background:none;outline:none;font-size:15px;color:var(--text-primary)}
+    #mega .m-dsearch input{flex:1;min-width:0;border:none;background:none;outline:none;font-size:16px;color:var(--text-primary)}
     #mega .m-dsearch input::placeholder{color:var(--text-tertiary)}
 
     /* рельса = уровень 1 (наезжает поверх корня по «Каталог ›») */
@@ -1194,7 +1195,8 @@
     /* панель «Печать полиграфии» — единственная на сетке .cols3/.col: расплющиваем в один столбец (иначе 2 колонки + скругления от десктоп-карточек) */
     #mega .pane .cols3{display:block;column-count:auto;columns:auto;gap:0;padding:0;margin:0}
     #mega .pane .cols3 .col{display:block;width:auto;padding:0;margin:0;background:none;border:none;border-radius:0;box-shadow:none}
-    #mega .pane .group{padding:0;break-inside:auto}
+    #mega .pane .group{padding:0;margin:0;break-inside:auto}   /* margin-bottom:20px — десктопный, в сплошном листе дыру между группами убираем */
+    #mega .pane .group li{padding:0}   /* базовые 3.5px 0 давали щели между строками → подсветка :active «не доставала» до разделителей */
     /* подраздел — тоже кликабельная строка со стрелкой, но тише раздела */
     #mega .pane .group h4{position:relative;display:block;margin:0;padding:14px 40px 14px 32px;min-height:20px;font-family:var(--font-body);font-size:16px;font-weight:500;line-height:1.3;letter-spacing:0;text-transform:none;color:var(--text-primary);border-bottom:1px solid var(--border);cursor:pointer}
     #mega .pane .group h4:active{background:var(--surface-subtle)}
