@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716d">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716d">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260716d">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716e">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716e">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260716e">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -875,8 +875,10 @@
   .cbm-sub{font-size:var(--t-caption);color:var(--text-secondary);margin-top:var(--sp-6);line-height:var(--t-caption-lh)}
   .cbm form{margin-top:18px;display:flex;flex-direction:column;gap:13px}
   .cbm-field{display:flex;flex-direction:column;gap:6px}
-  /* 12.5px — ступени с таким кеглем нет ни в шкале, ни в природе: лейбл поля = --t-label */
-  .cbm-lbl{font-size:var(--t-label);line-height:var(--t-label-lh);font-weight:600;color:var(--text-primary)}
+  /* Было 12.5px — такого кегля нет ни в шкале, ни в природе. Ступень --t-small (14/20), а не
+     --t-label: label — ступень КАПСА (теги, eyebrow), а лейбл поля набран строчными, и 12 для него
+     мелко. Пара «лейбл 14 / поле 16» — обычная для форм: подпись тише ввода, но читается. */
+  .cbm-lbl{font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:600;color:var(--text-primary)}
   .cbm-lbl i{color:var(--danger);font-style:normal}
   .cbm-lbl em{color:var(--text-tertiary);font-weight:500;font-style:normal}
   .cbm input[type=tel],.cbm input.cbm-tf,.faq-form input[type=tel],.faq-form input.cbm-tf{height:46px;border:1px solid var(--border-strong);border-radius:var(--radius-md);padding:0 14px;font-family:inherit;font-size:var(--t-ui);color:var(--text-primary);outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
@@ -1521,13 +1523,11 @@
     /* ФОРМА ВОПРОСА. Выглядела как десктопная, ужатая в мини-версию, и по делу:
        1) «Способ связи» и «Телефон» стояли парой в строку — это раскладка колонки 376px; на 390
           каждому доставалось ~155px, и «+7 (999) 000-00-00» влезал впритык → в столбик;
-       2) двойные поля: контейнер 16 + padding карточки 24 = 40 с каждой стороны, под контент
-          оставалось 310 из 390. Форма перестаёт быть карточкой — тот же приём, что у .ptable в
-          «Ценах» и .files в «Требованиях»;
-       3) поля 46 против кнопки 48 — два почти одинаковых, но разных размера рядом. Ровняем на 48
+       2) поля 46 против кнопки 48 — два почти одинаковых, но разных размера рядом. Ровняем на 48
           (он же тач-минимум Apple).
-       Префикс body.v-after обязателен: фон формы задан как body.v-after .faq-form (0,2,1). */
-    body.v-after .faq-form{background:none;border:0;border-radius:0;padding:0}
+       Карточку (фон + поля 24) НЕ снимаем: в отличие от .ptable в «Ценах» и .files в
+       «Требованиях», форма — самостоятельный объект среди аккордеонов, и подложка отделяет её
+       от них (решение Omar, 16.07). Плата за это — контент 310 из 390: контейнер 16 + карточка 24. */
     .faq-form .cbm-row{flex-direction:column;gap:var(--sp-12)}
     .faq-form input[type=tel],.faq-form input.cbm-tf,.faq-form .cbm-sel select{height:48px}
     /* ПОДПИСИ КАРТОЧЕК. Замер: заголовок 16/24 — это леадинг ПРОЗЫ (1.5), а тут 1–2 строки,
