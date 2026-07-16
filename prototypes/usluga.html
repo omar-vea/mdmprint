@@ -3453,10 +3453,13 @@
     mega.classList.contains('open') ? closeMega() : openMega();
   });
 
+  // hover-выбор раздела — только для мыши. На тач-устройстве mouseenter менял бы панель по «наведению»,
+  // и Safari трактует первый тап как ховер, откладывая переход на второй тап.
+  const canHover = window.matchMedia('(hover:hover)').matches;
   ris.forEach(r=>{
     // ушли в другой раздел по рельсе — подсветка «откуда пришли» больше не верна
     const go = ()=>{ showSec(r.dataset.sec); markQuick(); };
-    r.addEventListener('mouseenter', go);
+    if(canHover) r.addEventListener('mouseenter', go);
     r.addEventListener('click', go);
   });
 
