@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716b">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716b">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260716b">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716c">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716c">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260716c">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -3119,11 +3119,11 @@
         <div class="sec-head"><h2>Частые вопросы</h2></div>
         <div class="faq-grid">
           <div class="mk-acclist--card">
-            <details class="mk-acc mk-acc--card" open><summary class="mk-acc__q">Чем тиснение отличается от печати золотой краской?</summary><p class="mk-acc__a">Тиснение — это перенос металлизированной фольги под давлением и температурой. В отличие от краски, оно даёт настоящий металлический блеск, рельеф и стойкость к истиранию.</p></details>
-            <details class="mk-acc mk-acc--card"><summary class="mk-acc__q">Какой минимальный тираж?</summary><p class="mk-acc__a">От 50 штук. На меньших тиражах стоимость за штуку выше из-за подготовки штампа.</p></details>
-            <details class="mk-acc mk-acc--card"><summary class="mk-acc__q">Нужен ли отдельный макет под фольгу?</summary><p class="mk-acc__a">Да. Зону тиснения выносят отдельным слоем и заливают плашкой 100% Magenta или spot-цветом. Мы пришлём шаблон.</p></details>
-            <details class="mk-acc mk-acc--card"><summary class="mk-acc__q">Можно ли совместить фольгу и конгрев?</summary><p class="mk-acc__a">Да, фольга и конгрев выполняются в один прогон — получается объёмный блестящий элемент.</p></details>
-            <details class="mk-acc mk-acc--card"><summary class="mk-acc__q">На каких материалах делается тиснение?</summary><p class="mk-acc__a">Лучше всего на дизайнерской бумаге и картоне от 250 г. Подойдём к выбору материала под ваш проект.</p></details>
+            <details name="faq" class="mk-acc mk-acc--card" open><summary class="mk-acc__q">Чем тиснение отличается от печати золотой краской?</summary><p class="mk-acc__a">Тиснение — это перенос металлизированной фольги под давлением и температурой. В отличие от краски, оно даёт настоящий металлический блеск, рельеф и стойкость к истиранию.</p></details>
+            <details name="faq" class="mk-acc mk-acc--card"><summary class="mk-acc__q">Какой минимальный тираж?</summary><p class="mk-acc__a">От 50 штук. На меньших тиражах стоимость за штуку выше из-за подготовки штампа.</p></details>
+            <details name="faq" class="mk-acc mk-acc--card"><summary class="mk-acc__q">Нужен ли отдельный макет под фольгу?</summary><p class="mk-acc__a">Да. Зону тиснения выносят отдельным слоем и заливают плашкой 100% Magenta или spot-цветом. Мы пришлём шаблон.</p></details>
+            <details name="faq" class="mk-acc mk-acc--card"><summary class="mk-acc__q">Можно ли совместить фольгу и конгрев?</summary><p class="mk-acc__a">Да, фольга и конгрев выполняются в один прогон — получается объёмный блестящий элемент.</p></details>
+            <details name="faq" class="mk-acc mk-acc--card"><summary class="mk-acc__q">На каких материалах делается тиснение?</summary><p class="mk-acc__a">Лучше всего на дизайнерской бумаге и картоне от 250 г. Подойдём к выбору материала под ваш проект.</p></details>
           </div>
 
           <!-- Форма «Задайте свой вопрос» — набор полей как в блоке FAQ на mdmprint.ru.
@@ -4171,6 +4171,23 @@
       if(!window.matchMedia('(hover:hover)').matches) return;
       e.preventDefault();
       copy(hphNum.dataset.copy).then(() => feedback(hphNum), () => fail(hphNum));
+    });
+  })();
+
+  // ===== ЧАВО: тап по ОТВЕТУ тоже сворачивает =====
+  // Тач-зона аккордеона — вся карточка, а не только шапка: нативно <summary> ловит клик,
+  // а <p class="mk-acc__a"> — нет. Группу «открыт только один» делает не этот код, а атрибут
+  // name= у <details> (браузер закрывает соседей сам, без JS).
+  // Защита от выделения: если пользователь выделял текст, клик — конец выделения, не переключение.
+  (function(){
+    document.querySelectorAll('.mk-acc__a').forEach(a => {
+      a.style.cursor = 'pointer';
+      a.addEventListener('click', e => {
+        if(e.target.closest('a,button')) return;              // ссылка внутри ответа важнее
+        if((window.getSelection()+'').length) return;          // шло выделение текста
+        const d = a.closest('details');
+        if(d) d.open = false;
+      });
     });
   })();
 
