@@ -1226,6 +1226,8 @@
     #mega .pane .group li .more .arr-ico,#mega .pane .group li .extli .arr-ico{margin:0 0 0 auto}
 
     /* ТАЧ: гасим десктопные :hover — после тапа они залипают. Главное — у товаров hover давал margin:0 -7px (→ горизонтальный скролл и дёрганье) и сдвиг padding. Взаимодействие оставляем только на :active. */
+    /* нативная вспышка тапа браузера бывает лишь у ссылок/кнопок (потому на h4 «Материал визиток» её нет, а на «Шелкография» есть) — глушим, свой :active уже даёт фидбек */
+    #mega a,#mega button,.hbar .hcat,.hactions .hbtn,.m-callbar a,.m-callbar button{-webkit-tap-highlight-color:transparent}
     #mega .m-root,#mega .rail,#mega .pane{overflow-x:hidden}
     #mega .rail .ri:hover{background:none}
     #mega .rail .ri:hover .em{color:var(--text-secondary)}
