@@ -498,9 +498,7 @@
        ~60 знаков. На 390px та же строка даёт ~34 знака — ниже комфортной меры (45–75 по
        Брингхерсту; на мобилке практический таргет 35–50), отсюда «крупно и рыхло».
        16px возвращает меру в норму и совпадает с Material Body Large / iOS body. */
-    :root{--t-lead:16px;--t-lead-lh:24px;
-      /* шеврон «влево» — тот же росчерк, что у кнопки «назад» в drawer */
-      --chev-l:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 5l-7 7 7 7'/%3E%3C/svg%3E")}
+    :root{--t-lead:16px;--t-lead-lh:24px}
     .usl-hero .hero-grid,.usl-adv .adv-grid,.usl-price .price-grid{grid-template-columns:1fr}
     .usl-stats{grid-template-columns:1fr 1fr}
     .usl-vidy .vidy-grid{grid-template-columns:1fr 1fr}
@@ -1074,15 +1072,19 @@
     .navbar{border:none;background:none}
     .navbar .nav{display:none}
     /* шапка зафиксирована (не sticky: html/body overflow-x:hidden ломает sticky на iOS) — меню открывается ПОД ней */
-    /* КРОШКИ: полный путь на мобилке не читают и не скроллят — у крошек остаётся одна реальная
-       задача: «на уровень вверх». Показываем только родителя (последняя ссылка перед текущей
-       страницей), остальное прячем. Путь целиком остаётся в разметке — для SEO и десктопа. */
-    .usl .crumbs{margin:0 calc(var(--container-pad) * -1) var(--sp-18);
+    /* КРОШКИ: полный путь в одну строку не влезает, скролл на мобилке не находят. Схлопываем
+       середину пути в «…» — остаются корень, родитель и текущая страница. Путь целиком остаётся
+       в разметке (для SEO и десктопа), середина только скрыта. */
+    .usl .crumbs{gap:var(--sp-6);flex-wrap:nowrap;overflow:hidden;
+      margin:0 calc(var(--container-pad) * -1) var(--sp-18);
       padding:var(--sp-10) var(--container-pad);border-bottom:1px solid var(--border)}
-    .usl .crumbs>*{display:none}
-    .usl .crumbs a:last-of-type{display:inline-flex;align-items:center;gap:var(--sp-6);color:var(--text-secondary)}
-    .usl .crumbs a:last-of-type::before{content:"";width:13px;height:13px;flex-shrink:0;background:currentColor;
-      -webkit-mask:var(--chev-l) center/contain no-repeat;mask:var(--chev-l) center/contain no-repeat}
+    .usl .crumbs>*{flex-shrink:0;white-space:nowrap}
+    .usl .crumbs a:nth-of-type(n+2):not(:last-of-type){display:none}   /* середина пути */
+    .usl .crumbs span:nth-of-type(2){font-size:0}                       /* её «/» → «… /» */
+    .usl .crumbs span:nth-of-type(2)::before{content:"…";font-size:var(--t-caption)}
+    .usl .crumbs span:nth-of-type(2)::after{content:"/";font-size:var(--t-caption);margin-left:var(--sp-6)}
+    .usl .crumbs span:nth-of-type(n+3):not(:last-of-type){display:none}  /* «/» скрытой середины */
+    .usl .crumbs b{flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 
     /* шапка зафиксирована (не sticky: html/body overflow-x:hidden ломает sticky на iOS) — меню открывается ПОД ней.
        Номер и CTA временно убраны из шапки — живут в меню (согласуем с маркетологом). */
