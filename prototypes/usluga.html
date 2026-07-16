@@ -371,8 +371,11 @@
   /* Иконка на плитке: текст контактов теперь ничем не отличается от прочих ссылок,
      поэтому опознаваемость строки держит именно плитка. Фон белый @10% (1.36:1 к футеру):
      заметен, но не спорит с текстом. --surface-dark-2 здесь не годится — он даёт 1.12:1. */
+  /* Круг, а не r=8: правило форм — круг у глифа-иконки (действие/маркер), скруглённый квадрат
+     у картинки-сущности (логотип, превью, тайл каталога). Тут глиф телефона, значит круг.
+     Было единственным исключением на всю страницу: остальные шесть контейнеров-иконок круглые. */
   .usl-foot .fcontact__ic{display:flex;align-items:center;justify-content:center;flex-shrink:0;
-    width:32px;height:32px;border-radius:var(--radius-md);
+    width:32px;height:32px;border-radius:50%;
     background:var(--surface-on-dark);color:var(--text-on-dark-2);
     transition:background .15s,color .15s}
   .usl-foot .fcontact:hover .fcontact__ic{background:var(--surface-on-dark-2);color:var(--text-on-dark)}
