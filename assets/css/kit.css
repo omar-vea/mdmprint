@@ -375,7 +375,7 @@
 .mk-filerow__meta{font-family:var(--font-body);font-size:var(--t-micro);line-height:var(--t-micro-lh);color:var(--text-tertiary);
   text-transform:uppercase;letter-spacing:var(--t-micro-ls)}
 .mk-filerow__ico{flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  width:32px;height:32px;border-radius:var(--radius-pill);
+  width:32px;height:32px;border-radius:var(--radius-md);
   border:1px solid var(--border);background:var(--surface-card);color:var(--text-secondary);
   transition:background .15s,color .15s,border-color .15s}
 @media (hover:hover){.mk-filerow:hover .mk-filerow__ico{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}}

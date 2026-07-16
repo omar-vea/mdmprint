@@ -168,7 +168,7 @@
   /* белая плашка на серой карточке: обводка прозрачная в покое (как .mk-filerow); статична — без hover */
   .usl-req .reqs-check__item{display:flex;gap:var(--sp-14);align-items:flex-start;
     padding:var(--sp-14) var(--sp-16);border:1px solid transparent;border-radius:var(--radius-md);background:var(--surface-card)}
-  .usl-req .reqs-check__ic{width:22px;height:22px;flex-shrink:0;margin-top:1px;border-radius:50%;
+  .usl-req .reqs-check__ic{width:22px;height:22px;flex-shrink:0;margin-top:1px;border-radius:var(--radius-inside);
     background:var(--surface-on-light);color:var(--success);display:flex;align-items:center;justify-content:center}
   .usl-req .reqs-check__ic svg{width:13px;height:13px}
   .usl-req .reqs-check__txt{display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -186,7 +186,7 @@
      поэтому классы общие, а не скопированные. Кандидат в кит (как .mk-subnav): пока два
      применения на одной странице, выносим, когда паттерн повторится на другой. */
   .usl .fhead{display:flex;gap:var(--sp-12);align-items:center}
-  .usl .fhead .fh-ic{width:38px;height:38px;flex-shrink:0;border-radius:50%;
+  .usl .fhead .fh-ic{width:38px;height:38px;flex-shrink:0;border-radius:var(--radius-md);
     background:var(--surface-on-light);color:var(--text-secondary);display:flex;align-items:center;justify-content:center}
   .usl .fhead .fh-ic svg{width:20px;height:20px}
   /* на тёмной карточке кружок берёт поверхность своей стороны */
@@ -307,7 +307,7 @@
   .usl-final .cta-steps li{display:flex;gap:var(--sp-12);align-items:flex-start;
     color:var(--text-on-dark-2);font-size:var(--t-small);line-height:var(--t-small-lh)}
   .usl-final .cta-steps li::before{counter-increment:step;content:counter(step);
-    flex-shrink:0;width:24px;height:24px;border-radius:50%;
+    flex-shrink:0;width:24px;height:24px;border-radius:var(--radius-inside);
     background:var(--surface-on-dark);color:var(--text-on-dark);
     display:flex;align-items:center;justify-content:center;
     font-size:var(--t-label);line-height:1;font-weight:600}
@@ -371,11 +371,13 @@
   /* Иконка на плитке: текст контактов теперь ничем не отличается от прочих ссылок,
      поэтому опознаваемость строки держит именно плитка. Фон белый @10% (1.36:1 к футеру):
      заметен, но не спорит с текстом. --surface-dark-2 здесь не годится — он даёт 1.12:1. */
-  /* Круг, а не r=8: правило форм — круг у глифа-иконки (действие/маркер), скруглённый квадрат
-     у картинки-сущности (логотип, превью, тайл каталога). Тут глиф телефона, значит круг.
-     Было единственным исключением на всю страницу: остальные шесть контейнеров-иконок круглые. */
+  /* ПРАВИЛО ФОРМ (16.07): контейнер с глифом — скруглённый квадрат, как вся страница
+     (--radius-md от 26px, --radius-inside у мелких бейджей ≤24: 8 на 22px даёт уже не квадрат,
+     а кляксу). Кружок остаётся только там, где круг — суть элемента: точки-маркеры списков
+     (5–8px) и аватар в отзывах. Раньше форма выбиралась по месту: шесть кружков, квадрат в
+     футере, жёлтый тайл в каталоге — три языка без правила. */
   .usl-foot .fcontact__ic{display:flex;align-items:center;justify-content:center;flex-shrink:0;
-    width:32px;height:32px;border-radius:50%;
+    width:32px;height:32px;border-radius:var(--radius-md);
     background:var(--surface-on-dark);color:var(--text-on-dark-2);
     transition:background .15s,color .15s}
   .usl-foot .fcontact:hover .fcontact__ic{background:var(--surface-on-dark-2);color:var(--text-on-dark)}
@@ -738,7 +740,7 @@
 
   /* ===== ПОИСК: кнопка очистки + дропдаун подсказок (состояния) ===== */
   .search{position:relative}
-  .search .s-clear{display:none;width:28px;height:28px;align-items:center;justify-content:center;border:none;background:none;color:var(--text-tertiary);cursor:pointer;border-radius:50%;flex-shrink:0;margin-right:2px;transition:.12s}
+  .search .s-clear{display:none;width:28px;height:28px;align-items:center;justify-content:center;border:none;background:none;color:var(--text-tertiary);cursor:pointer;border-radius:var(--radius-inside);flex-shrink:0;margin-right:2px;transition:.12s}
   .search.has-val .s-clear{display:flex}
   .search .s-clear:hover{background:var(--surface-subtle);color:var(--text-primary)}
   body.search-open header{z-index:60}/* поднять шапку над навбаром, чтобы блок поиска был сверху */
@@ -829,7 +831,7 @@
   .hbtn .ci{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
   .hbtn .badge{position:absolute;top:2px;right:10px;background:var(--brand);color:var(--on-brand);font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;padding:0 4px}
   /* акцентный кружок с самолётиком */
-  .hbtn .accent-ic{width:22px;height:22px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center}
+  .hbtn .accent-ic{width:22px;height:22px;border-radius:var(--radius-inside);background:var(--brand);display:flex;align-items:center;justify-content:center}
 
   /* ===== ПОЛОСА НАВИГАЦИИ ===== */
   .navbar{background:var(--surface-page);border-bottom:1px solid var(--border);position:relative;z-index:46}
@@ -861,7 +863,7 @@
   .cbm-back.show{opacity:1;visibility:visible}
   .cbm{position:relative;width:100%;max-width:384px;background:var(--surface-card);border-radius:var(--radius-outside);box-shadow:var(--shadow-lg);padding:28px 26px 22px;transform:translateY(8px) scale(.985);transition:transform .2s}
   .cbm-back.show .cbm{transform:none}
-  .cbm-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border:none;background:var(--surface-subtle);border-radius:50%;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s}
+  .cbm-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border:none;background:var(--surface-subtle);border-radius:var(--radius-md);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s}
   .cbm-x:hover{background:var(--border);color:var(--text-primary)}
   .cbm-title{font-size:20px;font-weight:700;letter-spacing:-.2px;color:var(--text-primary)}
   .cbm-sub{font-size:var(--t-caption);color:var(--text-secondary);margin-top:6px;line-height:1.4}
@@ -906,7 +908,7 @@
   .cbm-submit{width:100%;margin-top:3px}
   .cbm-fine{font-size:10.5px;color:var(--text-tertiary);line-height:1.4;text-align:center}
   .cbm-done{text-align:center;padding:8px 4px 4px}
-  .cbm-done-ic{width:56px;height:56px;border-radius:50%;background:var(--brand);color:var(--text-primary);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  .cbm-done-ic{width:56px;height:56px;border-radius:var(--radius-md);background:var(--brand);color:var(--text-primary);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
   .cbm-done .cbm-sub{margin:6px 0 20px}
   .cbm-done .cbm-submit{width:100%;margin-top:0}
 
@@ -1154,7 +1156,7 @@
   body.v-after .usl-faq .mk-acc__q{padding:var(--sp-16) 0}
   body.v-after .usl-faq .mk-acc[open] .mk-acc__q{padding-bottom:var(--sp-8)}
   /* маркер +/× в тональном кружке (аффорданс + крупнее цель) */
-  body.v-after .usl-faq .mk-acc__q::after{width:26px;height:26px;flex-shrink:0;border-radius:50%;
+  body.v-after .usl-faq .mk-acc__q::after{width:26px;height:26px;flex-shrink:0;border-radius:var(--radius-md);
     background:var(--surface-on-light);color:var(--text-secondary);
     display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;
     transition:background .15s,color .15s,transform .2s}
@@ -1199,8 +1201,8 @@
      align-self:center + сдвиг −1px — оптическое выравнивание с прописным заголовком. */
   /* мягкая тональная заливка без обводки — токен --surface-on-light (не кнопка: у кружка есть
      своя форма и стрелка, ему контур не нужен). */
-  body.v-after .pane .phead a{font-size:0;flex:0 0 auto;align-self:center;margin-top:-1px;position:relative;width:22px;height:22px;border-radius:50%;background:var(--surface-on-light);color:var(--text-secondary);display:inline-block;transition:background .15s,color .15s}
-  /* ОБЩИЙ hover на весь заголовок (текст+круг = один элемент): круг мягко темнеет (ДС soft-hover), стрелка темнеет. Без слайда. */
+  body.v-after .pane .phead a{font-size:0;flex:0 0 auto;align-self:center;margin-top:-1px;position:relative;width:22px;height:22px;border-radius:var(--radius-inside);background:var(--surface-on-light);color:var(--text-secondary);display:inline-block;transition:background .15s,color .15s}
+  /* ОБЩИЙ hover на весь заголовок (текст+плашка = один элемент): плашка мягко темнеет (ДС soft-hover), стрелка темнеет. Без слайда. */
   body.v-after .pane .phead:hover a{background:var(--surface-on-light-2);color:var(--text-primary)}
   /* стрелку центрируем абсолютно: скрытый текст (font-size:0) остаётся флекс-элементом и сдвигал её вправо */
   body.v-after .pane .phead a .arr-ico{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;display:block;transition:none}
@@ -1218,7 +1220,7 @@
   /* без подчёркивания: ховер живёт в кружке+стрелке (кружок темнеет, стрелка едет вправо) */
   body.v-after .pane .group li .more:hover{color:var(--text-primary);text-decoration:none}
   /* кружок — как у заголовка раздела: серая soft-заливка (--surface-on-light) + приглушённая стрелка; на hover темнеет (общий hover) */
-  body.v-after .pane .group li .more .arr-ico{width:20px;height:20px;margin:0;border-radius:50%;background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;flex:0 0 auto;vertical-align:0;transition:background .15s}
+  body.v-after .pane .group li .more .arr-ico{width:20px;height:20px;margin:0;border-radius:var(--radius-inside);background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;flex:0 0 auto;vertical-align:0;transition:background .15s}
   body.v-after .pane .group li .more .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;background:var(--text-secondary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat;transition:background .15s,transform .15s}
   /* кружок стоит на месте (transform:none гасит унаследованный слайд), только темнеет; едет — стрелка внутри */
   body.v-after .pane .group li .more:hover .arr-ico{transform:none;background:var(--surface-on-light-2)}
@@ -1230,7 +1232,7 @@
   /* строчный поток (НЕ inline-flex): длинный текст переносится на 2 строки, кружок липнет к последнему слову */
   body.v-after .pane .group li .extli{display:inline;margin:0;padding:0;background:none;font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:400;color:var(--text-secondary);transition:color .12s}
   body.v-after .pane .group li .extli:hover{color:var(--text-primary);text-decoration:none}
-  body.v-after .pane .group li .extli .arr-ico{display:inline-flex;width:20px;height:20px;margin:0 0 0 6px;border-radius:50%;background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;vertical-align:middle;transition:background .15s}
+  body.v-after .pane .group li .extli .arr-ico{display:inline-flex;width:20px;height:20px;margin:0 0 0 6px;border-radius:var(--radius-inside);background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;vertical-align:middle;transition:background .15s}
   body.v-after .pane .group li .extli .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;background:var(--text-secondary);-webkit-mask:var(--arr-ne) center/contain no-repeat;mask:var(--arr-ne) center/contain no-repeat;transition:background .15s,transform .15s}
   /* кружок статичен, темнеет; стрелка едет в угол (вправо-вверх) */
   body.v-after .pane .group li .extli:hover .arr-ico{transform:none;background:var(--surface-on-light-2)}
@@ -1364,7 +1366,7 @@
     #mega .m-dhead{display:none;align-items:center;gap:6px;padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
     #mega.cat-open .m-dhead{display:flex}   /* шапка drawer (назад + «Каталог») — только внутри каталога, в корне не нужна */
     #mega .m-dhead .m-dh-back{display:none;height:26px;margin-left:-2px;padding:0 4px 0 0;flex-shrink:0;align-items:center;gap:8px;background:none;border:none;color:var(--text-secondary);cursor:pointer}
-    #mega .m-dhead .m-dh-back svg{width:26px;height:26px;padding:6px;border-radius:50%;background:var(--surface-on-light);box-sizing:border-box;transition:background .15s}
+    #mega .m-dhead .m-dh-back svg{width:26px;height:26px;padding:6px;border-radius:var(--radius-md);background:var(--surface-on-light);box-sizing:border-box;transition:background .15s}
     #mega .m-dhead .m-dh-back:active svg{background:var(--surface-on-light-2)}
     #mega .m-dhead .m-dh-back .m-dh-bl{font-size:var(--t-small);font-weight:500}   /* куда вернёт «назад»: родительский экран */
     #mega.cat-open .m-dhead .m-dh-back{display:flex}
