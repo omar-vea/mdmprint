@@ -481,15 +481,18 @@
 
 /* ---- Переключатель вида (сегмент из иконок) ----
    Не действие, а смена представления одного и того же — поэтому сегмент, а не две кнопки. */
-.mk-segment{display:inline-flex;gap:var(--sp-4);padding:var(--sp-4);flex-shrink:0;
+/* Размер: вся плашка = 36px, ступень --md шкалы кнопок (lg48/md36/sm32). Было 46 (кнопка 36 +
+   паддинг 4×2 + бордер 1×2) — вторичный переключатель ростом почти с lg-кнопку, то есть тяжелее
+   заголовка секции рядом. Внутренняя кнопка считается от плашки: 36 − 2×2 − 1×2 = 30. */
+.mk-segment{display:inline-flex;gap:var(--sp-4);padding:2px;flex-shrink:0;
   background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius-pill)}
-.mk-segment__btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;
+.mk-segment__btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
   background:none;border:none;border-radius:var(--radius-pill);color:var(--text-secondary);cursor:pointer;
   transition:background .15s,color .15s}
 .mk-segment__btn:hover{background:var(--surface-subtle);color:var(--text-primary)}
 .mk-segment__btn.is-active{background:var(--surface-dark);color:var(--text-on-dark)}
 .mk-segment__btn:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}
-.mk-segment__btn svg{width:18px;height:18px;display:block}
+.mk-segment__btn svg{width:16px;height:16px;display:block}
 
 /* ---- Разделитель ---- */
 .mk-divider{height:1px;background:var(--border);border:none}
