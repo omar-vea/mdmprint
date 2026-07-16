@@ -522,6 +522,17 @@
     .usl-art .art-grid{grid-template-columns:1fr 1fr}
     .usl-prod .pcards{grid-template-columns:1fr 1fr}
     .usl-adv .tiles,.usl-adv .pm{grid-template-columns:1fr}
+    /* ПРЕИМУЩЕСТВА. Сетка 2×2 проверена рендером и отвергнута: мера падает до 20 знаков (норма
+       35–50), текст разваливается в лесенку и плитка отрастает ровно на столько, на сколько
+       сузилась — той же высоты, но нечитаемая. Карусель короче, но прячет 3 плитки из 4 за
+       свайпом, а преимущества должны сканироваться. Поэтому просто компактнее:
+       иконка уезжает в строку с заголовком, текст остаётся во всю ширину (мера 47). */
+    .usl-adv .tiles{gap:var(--sp-12)}
+    .usl-adv .mk-tile{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-8) var(--sp-10);align-items:center}
+    .usl-adv .mk-tile__title{grid-column:2}
+    .usl-adv .mk-tile__text{grid-column:1/-1}
+    /* 300px жёсткой высоты у плейсхолдера 4:3 — на мобилке лишние 30px и растянутая пропорция */
+    .usl-adv .adv-media{min-height:0;aspect-ratio:4/3}
     .usl-req .req-grid{grid-template-columns:1fr}
     .usl-req .files{position:static}
     .usl-faq .faq-grid{grid-template-columns:1fr}
@@ -547,7 +558,11 @@
        (тот же приём, что у кнопки в «Требованиях к макету») */
     .usl-hero .hero-cta{order:6;flex-direction:column;gap:var(--sp-10);margin-top:var(--sp-24)}
     .usl-hero .hero-cta .mk-btn{width:100%}
-    .usl h2{font-size:24px}
+    /* h2 был 32px против 34px у h1 — заголовок секции кричал наравне с заголовком страницы.
+       Правило .usl h2 в цель не попадало: база написана как .usl h2:not([class]), а :not([class])
+       добавляет специфичность (0,2,1 против 0,1,1) — оверрайд молча проигрывал.
+       Отдельной мобильной шкалы в токенах нет, поэтому мобильный h2 = ступень h3 (24/28). */
+    .usl h2:not([class]){font-size:var(--t-h3);line-height:var(--t-h3-lh);letter-spacing:var(--t-h3-ls)}
     /* фигура рассчитана на свою колонку; в одну колонку она превращается в баннер — убираем */
     .usl-final .cta-box{grid-template-columns:1fr}
     .usl-final .cta-fig{display:none}
@@ -3966,12 +3981,27 @@
   (function(){
     const links = [...document.querySelectorAll('.usl-subnav a')];
     if(!links.length) return;
+    const track = document.querySelector('.usl-subnav .wrap');
     const map = links.map(a=>({a, sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
+    const smooth = !window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    let active = null;
+    /* На мобилке лента не влезает целиком: юзер уже в «Отзывах», а лента показывает «Обзор» —
+       подсветка есть, но её не видно. Подтягиваем активный таб в кадр.
+       scrollIntoView не годится: он дёргает и вертикальный скролл страницы, поэтому считаем сами. */
+    const reveal = (a) => {
+      if(!track || track.scrollWidth <= track.clientWidth) return;   // лента не едет (десктоп) — двигать нечего
+      const t = track.getBoundingClientRect(), r = a.getBoundingClientRect();
+      const to = track.scrollLeft + (r.left - t.left) - (t.width - r.width) / 2;   // по центру ленты
+      track.scrollTo({left: Math.max(0, to), behavior: smooth ? 'smooth' : 'auto'});
+    };
     const spy = () => {
       const y = window.scrollY + 160;
       let cur = map[0];
       for(const m of map){ if(m.sec.offsetTop <= y) cur = m; }
+      if(cur.a === active) return;   // двигаем только при СМЕНЕ активного, иначе деремся с ручной прокруткой ленты
+      active = cur.a;
       links.forEach(a=>a.classList.toggle('active', a===cur.a));
+      reveal(cur.a);
     };
     window.addEventListener('scroll', spy, {passive:true});
     spy();
