@@ -511,11 +511,21 @@
     .usl-statbar .mk-statbar__item:nth-child(n+3){border-top:1px solid var(--border)}
     /* 40px десктопной цифры в полуколонке ломает «ОТ 2 ДНЕЙ» на две строки и перекрикивает h1 (34px) */
     .usl-statbar .mk-statbar__value{font-size:26px;line-height:30px}
-    /* «Виды» — карточки с прозой (2–3 предложения), а не метки: в полуколонке мера падает до
-       ~19 знаков, текст рассыпается в лесенку из 10 строк, «БЛИНТОВОЕ (СЛЕПОЕ) ТИСНЕНИЕ» ломается
-       на три, а третья карточка висит одна с дырой справа. В одну колонку. Ср. .usl-prod: там
-       у карточек только картинка и метка в 1–2 слова — им две колонки идут. */
-    .usl-vidy .vidy-grid{grid-template-columns:1fr}
+    /* «Виды» — лента. Карточка в 80% контейнера: соседняя подглядывает, и горизонтальная
+       прокрутка считывается сама, без стрелок и подписей.
+       Разметку не трогаем (на десктопе это сетка 3×1, а классы кита брейкпоинта не знают) —
+       повторяем механику .mk-scroller__track из кита: те же --item-w, flex:0 0 и snap.
+       Режем по ЭКРАНУ, а не по контейнеру: поля уезжают в padding самой ленты, поэтому первая
+       карточка стоит на сетке страницы, а лента уходит за край. */
+    .usl-vidy .vidy-grid{--item-w:80%;
+      display:flex;gap:var(--sp-20);overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+      scrollbar-width:none;-ms-overflow-style:none;
+      margin-inline:calc(var(--container-pad) * -1);
+      padding-inline:var(--container-pad);scroll-padding-left:var(--container-pad)}
+    .usl-vidy .vidy-grid::-webkit-scrollbar{display:none}
+    .usl-vidy .vidy-grid > *{flex:0 0 var(--item-w);scroll-snap-align:start}
+    /* хвост: padding-inline-end у флекс-скроллера игнорируется, последняя карточка липла бы к краю */
+    .usl-vidy .vidy-grid::after{content:"";flex:0 0 1px}
     .usl-rev .revs{--item-w:calc((100% - var(--sp-24)) / 2)}  /* на узких — 2 в кадре, не 3 крошечных */
     /* .usl-art .art-grid — см. второй брейкпоинт в <style id="port-after">: здесь правило
        бесполезно, его перебивает body.v-after .usl-art .art-grid из более позднего блока */
