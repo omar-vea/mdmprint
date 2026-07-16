@@ -1050,6 +1050,8 @@
   @media(max-width:900px){
     :root{--container-pad:16px}
     html,body{overflow-x:hidden;max-width:100%}
+    /* rubber-band: при оттяжке iOS тащит и fixed-шапку, сверху лезет полотно холста → гасим сам баунс страницы */
+    html{overscroll-behavior-y:none;background:var(--surface-page)}
     input,select,textarea{font-size:16px}   /* iOS зумит страницу при фокусе на поле со шрифтом <16px */
     body.nav-open{overflow:hidden}
     html:has(body.nav-open){overflow:hidden}   /* прокрутка часто на html — лочим и его, иначе фон скроллится за меню */
