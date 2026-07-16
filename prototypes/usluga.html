@@ -1086,6 +1086,9 @@
       position:relative;flex-shrink:0;color:var(--text-primary);cursor:pointer;transition:background .15s}
     .hbar .hcat{order:3}
     .hbar .hcat:hover,.hactions .hbtn:hover{background:var(--surface-on-light)}
+    .hbar .hcat:active,.hactions .hbtn:active{background:var(--surface-on-light)}
+    /* лупа: осознанное состояние «поиск открыт» (тональная плашка по ДС), а не залипший hover */
+    .hactions .m-search.active{background:var(--surface-on-light)}
     /* бургер: тонкие ровные полосы под вес соседних глифов (не тяжелее) */
     .hbar .hcat .ic{position:static;margin:0;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center}
     .hbar .hcat .ic i{width:18px;height:2px;border-radius:2px;background:var(--text-primary)}
@@ -1223,6 +1226,11 @@
     #mega .pane .group li .more:hover,#mega .pane .group li .extli:hover{background:none}
     #mega .rail .ri:active{background:var(--surface-subtle)}
     #mega .pane .group li a:active{background:var(--surface-subtle)}
+  }
+  /* тач-устройства: hover не существует — гасим, чтобы тап не оставлял «залипшую» подсветку на иконках шапки */
+  @media(max-width:900px) and (hover:none){
+    .hbar .hcat:hover,.hactions .hbtn:hover{background:none}
+    .hactions .m-search.active{background:var(--surface-on-light)}   /* состояние «открыто» — сильнее гашения hover */
   }
 </style>
 </head>
@@ -3349,6 +3357,7 @@
   function closeMega(){
     mega.classList.remove('open');
     mega.classList.remove('cat-open','detail-open');   // мобилка: сброс на корень
+    const _s=document.getElementById('mSearch'); if(_s) _s.classList.remove('active');   // лупа гаснет вместе с меню
     const _t=document.getElementById('mDhTitle'); if(_t) _t.textContent='Меню';
     catbtn.classList.remove('active');
     hcat.classList.remove('active');
@@ -3365,9 +3374,11 @@
   const dhBackLbl = document.getElementById('mDhBackLbl');
   // шапка: заголовок = текущий экран, метка у «назад» = куда вернёт (родитель)
   const setDh = (title, back) => { if(dhTitle) dhTitle.textContent = title; if(dhBackLbl) dhBackLbl.textContent = back; };
+  const mSearchBtn = document.getElementById('mSearch');
+  const mSearchOff = () => { if(mSearchBtn) mSearchBtn.classList.remove('active'); };   /* лупа горит, только пока поиск на экране */
   const drawerRoot    = () => { mega.classList.remove('cat-open','detail-open'); setDh('Меню','Меню'); };
-  const drawerCatalog = () => { mega.classList.add('cat-open'); mega.classList.remove('detail-open'); setDh('','Меню'); };   /* заголовок пуст — в списке уже есть лейбл «Каталог» */
-  const drawerSection = () => { mega.classList.add('cat-open','detail-open'); setDh('','Каталог'); };   /* имя раздела теперь отдельной строкой в панели, в шапке — только «‹ Каталог» */
+  const drawerCatalog = () => { mega.classList.add('cat-open'); mega.classList.remove('detail-open'); setDh('','Меню'); mSearchOff(); };   /* заголовок пуст — в списке уже есть лейбл «Каталог» */
+  const drawerSection = () => { mega.classList.add('cat-open','detail-open'); setDh('','Каталог'); mSearchOff(); };   /* имя раздела теперь отдельной строкой в панели, в шапке — только «‹ Каталог» */
 
   const mrCat = document.getElementById('mrCat');
   if(mrCat) mrCat.addEventListener('click', drawerCatalog);
@@ -3387,13 +3398,16 @@
   const megaClose = document.getElementById('megaClose');
   if(megaClose) megaClose.addEventListener('click', closeMega);
 
-  // мобильный поиск (лупа в шапке): открыть меню в корне → фокус в общее поле поиска
-  const mSearchBtn = document.getElementById('mSearch');
+  // мобильный поиск (лупа в шапке) — toggle: закрыто → корень+фокус; открыт корень → закрыть; открыт глубже → вернуть на корень+фокус
   if(mSearchBtn) mSearchBtn.addEventListener('click', e=>{
     e.preventDefault(); e.stopPropagation();
+    const atRoot = mega.classList.contains('open') && !mega.classList.contains('cat-open');
+    if(atRoot){ closeMega(); return; }   /* повторный тап = закрыть (не пере-фокус) */
     if(!mega.classList.contains('open')) openMega();
+    drawerRoot();   /* поиск живёт в корне — с глубины возвращаем */
     const inp = mega.querySelector('.m-dsearch input');
     if(inp) inp.focus();
+    mSearchBtn.classList.add('active');
   });
 
   catbtn.addEventListener('click', e=>{
