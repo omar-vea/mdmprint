@@ -617,7 +617,7 @@
   .sd-chip:focus-visible,.sd-row:focus-visible,
   .rail .ri:focus-visible,
   .svc-pane .phead a:focus-visible,.pane .phead a:focus-visible,
-  .mat-card:focus-visible,.group h4:focus-visible,.group li a:focus-visible,
+  .group h4:focus-visible,.group li a:focus-visible,
   .promo .promo-order:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px;border-radius:var(--radius-inside)}
   .hbtn .ci{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
   .hbtn .badge{position:absolute;top:2px;right:10px;background:var(--brand);color:var(--on-brand);font-size:9px;font-weight:800;min-width:15px;height:15px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;padding:0 4px}
@@ -728,18 +728,6 @@
   .svc-pane .phead a:hover .arr-ico{transform:translateX(2px)}
   .cols-flow--4{column-count:4}
 
-  /* карточки материалов */
-  .mat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-  .mat-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--border-strong);border-radius:var(--radius-outside);background:var(--surface-card);transition:border-color .15s,background .15s,box-shadow .15s}
-  .mat-card:hover{border-color:var(--border-strong);background:var(--surface-subtle);box-shadow:0 4px 14px rgba(0,0,0,.05)}
-  .mat-card .mat-ic{width:48px;height:48px;border-radius:var(--radius-md);background:var(--surface-gray);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);flex-shrink:0;transition:background .15s,color .15s}
-  .mat-card:hover .mat-ic{background:var(--brand-soft);color:var(--text-primary)}
-  .mat-card .mat-tx{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
-  .mat-card .mat-tx b{font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:600;color:var(--text-primary)}
-  .mat-card .mat-tx i{font-size:var(--t-caption);line-height:var(--t-caption-lh);font-style:normal;color:var(--text-secondary)}
-  .mat-card .arr-ico{width:14px;height:14px;color:var(--border-strong);flex-shrink:0;transition:transform .15s,color .15s}
-  .mat-card:hover .arr-ico{color:var(--text-secondary);transform:translateX(2px)}
-  .mat-card--accent .mat-ic{background:var(--brand);color:var(--text-primary)}
 
   /* левая колонка — рельса разделов */
   .rail{border-right:1px solid var(--border);padding:8px 0;overflow-y:auto;max-height:540px}
@@ -2213,27 +2201,25 @@
             <!-- ВАРИАНТ 1: общий вид «Материалы» -->
             <div class="panel" data-sec="mat">
               <div class="phead"><h3>Материалы</h3><a href="#">Все материалы<span class="arr-ico"></span></a></div>
-              <div class="mat-grid">
-                <a href="#" class="mat-card">
-                  <span class="mat-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v4h4M8 12h8M8 16h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-                  <span class="mat-tx"><b>Бумага</b><i>Мелованная, дизайнерская, крафт</i></span>
-                  <span class="arr-ico"></span>
-                </a>
-                <a href="#" class="mat-card">
-                  <span class="mat-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.6"/></svg></span>
-                  <span class="mat-tx"><b>Пластик</b><i>ПВХ, ПЭТ, для карт</i></span>
-                  <span class="arr-ico"></span>
-                </a>
-                <a href="#" class="mat-card">
-                  <span class="mat-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 9h16M9 4v16" stroke="currentColor" stroke-width="1.6"/></svg></span>
-                  <span class="mat-tx"><b>Ламинация</b><i>Глянец, мат, софт-тач</i></span>
-                  <span class="arr-ico"></span>
-                </a>
-                <a href="#" class="mat-card mat-card--accent">
-                  <span class="mat-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v12H4zM4 17l4 2 4-2 4 2 4-2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 9h8M8 12h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-                  <span class="mat-tx"><b>Набор каталогов «Look &amp; Print»</b><i>Образцы материалов в руки</i></span>
-                  <span class="arr-ico"></span>
-                </a>
+              <div class="cols-flow">
+                <div class="group"><h4><span class="nw">Бумага<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Мелованная</a></li>
+                  <li><a href="#">Дизайнерская</a></li>
+                  <li><a href="#">Крафт-бумага</a></li>
+                </ul></div>
+                <div class="group"><h4><span class="nw">Пластик<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">ПВХ</a></li>
+                  <li><a href="#">ПЭТ</a></li>
+                  <li><a href="#">Для пластиковых карт</a></li>
+                </ul></div>
+                <div class="group"><h4><span class="nw">Ламинация<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Глянцевая</a></li>
+                  <li><a href="#">Матовая</a></li>
+                  <li><a href="#">Софт-тач</a></li>
+                </ul></div>
+                <div class="group"><h4>Образцы <span class="nw">материалов<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Набор каталогов «Look &amp; Print» <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                </ul></div>
               </div>
             </div>
 
