@@ -112,12 +112,19 @@
   .usl-adv .adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-24);align-items:stretch}
   .usl-adv .adv-media{min-height:300px}
   .usl-adv .tiles{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-24)}
-  .usl-adv .pm{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-24);margin-top:var(--sp-24)}
-  .usl-adv .pm .card{padding:var(--sp-24)}
+  .usl-adv .pm{margin-top:var(--sp-24)}
+  /* залитая бежевая плашка без обводки — язык форм и ЧАВО. Белая карточка держалась на тонкой
+     обводке (страница тоже белая), от чего читалась как пустой контур. */
+  .usl-adv .pm .card{padding:var(--sp-24);background:var(--surface-subtle);border-color:transparent}
   .usl-adv .pm h4{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-12)}
   .usl-adv .pm .badge{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-  .usl-adv .pm .badge.is-plus{background:var(--success)}
   .usl-adv .pm .badge.is-note{background:var(--brand)}
+  /* карточка теперь во всю ширину: 4 коротких пункта в одну колонку растянулись бы в редкую
+     строчку через весь экран — двумя колонками мера остаётся в норме */
+  /* display:block обязателен: .mk-list в ките — флекс, а на флекс-контейнере колонки не работают.
+     Заодно пропадает его flex-gap, поэтому интервал возвращаем маргином. */
+  .usl-adv .pm .mk-list{display:block;column-count:2;column-gap:var(--sp-32)}
+  .usl-adv .pm .mk-list li{break-inside:avoid;margin-bottom:var(--sp-8)}
 
   /* ВИДЫ */
   /* ВИДЫ — карточки из кита (.mk-mcard); фото пока плейсхолдер-градиент */
@@ -521,7 +528,8 @@
     .usl-rev .revs{--item-w:calc((100% - var(--sp-24)) / 2)}  /* на узких — 2 в кадре, не 3 крошечных */
     .usl-art .art-grid{grid-template-columns:1fr 1fr}
     .usl-prod .pcards{grid-template-columns:1fr 1fr}
-    .usl-adv .tiles,.usl-adv .pm{grid-template-columns:1fr}
+    .usl-adv .tiles{grid-template-columns:1fr}
+    .usl-adv .pm .mk-list{column-count:1}   /* две колонки — только на десктопе, тут мера не позволит */
     /* ПРЕИМУЩЕСТВА. Сетка 2×2 проверена рендером и отвергнута: мера падает до 20 знаков (норма
        35–50), текст разваливается в лесенку и плитка отрастает ровно на столько, на сколько
        сузилась — той же высоты, но нечитаемая. Карусель короче, но прячет 3 плитки из 4 за
@@ -531,8 +539,12 @@
     .usl-adv .mk-tile{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-8) var(--sp-10);align-items:center}
     .usl-adv .mk-tile__title{grid-column:2}
     .usl-adv .mk-tile__text{grid-column:1/-1}
-    /* 300px жёсткой высоты у плейсхолдера 4:3 — на мобилке лишние 30px и растянутая пропорция */
-    .usl-adv .adv-media{min-height:0;aspect-ratio:4/3}
+    /* 300px жёсткой высоты у плейсхолдера 4:3 — на мобилке лишние 30px и растянутая пропорция.
+       width:100% + align-self:start обязательны: у .adv-grid стоит align-items:stretch, и Safari
+       на растянутом элементе выводит ШИРИНУ из высоты (Chrome — наоборот, высоту из ширины),
+       отчего коробка схлопывалась по горизонтали и справа зияла пустота. Явная ширина убирает
+       развилку: высота однозначно считается от неё. */
+    .usl-adv .adv-media{min-height:0;aspect-ratio:4/3;width:100%;align-self:start}
     .usl-req .req-grid{grid-template-columns:1fr}
     .usl-req .files{position:static}
     .usl-faq .faq-grid{grid-template-columns:1fr}
@@ -2618,16 +2630,9 @@
             <div class="mk-tile"><span class="mk-tile__ico"></span><h3 class="mk-tile__title">Контраст на тёмном</h3><p class="mk-tile__text">Металлик ярко работает там, где обычная краска почти не видна.</p></div>
           </div>
         </div>
+        <!-- «Плюсы» убраны: список дословно повторял плитки выше и буллеты героя, нового факта не давал.
+             Плитки и есть плюсы, только в более сильном формате. Осталось то, чего нет больше нигде. -->
         <div class="pm">
-          <div class="card mk-card">
-            <h4 class="mk-h4"><span class="badge is-plus"></span>Плюсы</h4>
-            <ul class="mk-list">
-              <li>Премиальный вид и тактильный акцент</li>
-              <li>Стойкость к истиранию и времени</li>
-              <li>Сочетается с конгревом, лаком и ламинацией</li>
-              <li>Палитра: золото, серебро, цвет, голография</li>
-            </ul>
-          </div>
           <div class="card mk-card">
             <h4 class="mk-h4"><span class="badge is-note"></span>Что учесть</h4>
             <ul class="mk-list">
