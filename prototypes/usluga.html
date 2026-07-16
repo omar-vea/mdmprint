@@ -500,7 +500,19 @@
        16px возвращает меру в норму и совпадает с Material Body Large / iOS body. */
     :root{--t-lead:16px;--t-lead-lh:24px}
     .usl-hero .hero-grid,.usl-adv .adv-grid,.usl-price .price-grid{grid-template-columns:1fr}
-    .usl-stats{grid-template-columns:1fr 1fr}
+    /* СТАТБАР 4-в-ряд → сетка 2×2: в четверть экрана цифра не влезает, а подпись рассыпается
+       в лесенку из 4–5 слов по одному. Кит без брейкпоинтов (все его @media — про
+       reduced-motion), поэтому мобильная раскладка живёт здесь.
+       Разделители перекладываем под сетку: у кита они горизонтальные (item+item = border-left),
+       во второй ряд нужен ещё и верхний. */
+    .usl-statbar .mk-statbar__row{grid-template-columns:1fr 1fr}
+    .usl-statbar .mk-statbar__item{padding:var(--sp-20) var(--sp-16)}
+    .usl-statbar .mk-statbar__item + .mk-statbar__item{border-left:0}
+    .usl-statbar .mk-statbar__item:nth-child(odd){padding-left:0}
+    .usl-statbar .mk-statbar__item:nth-child(even){padding-right:0;border-left:1px solid var(--border)}
+    .usl-statbar .mk-statbar__item:nth-child(n+3){border-top:1px solid var(--border)}
+    /* 40px десктопной цифры в полуколонке ломает «ОТ 2 ДНЕЙ» на две строки и перекрикивает h1 (34px) */
+    .usl-statbar .mk-statbar__value{font-size:26px;line-height:30px}
     .usl-vidy .vidy-grid{grid-template-columns:1fr 1fr}
     .usl-rev .revs{--item-w:calc((100% - var(--sp-24)) / 2)}  /* на узких — 2 в кадре, не 3 крошечных */
     .usl-art .art-grid{grid-template-columns:1fr 1fr}
