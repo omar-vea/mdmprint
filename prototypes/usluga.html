@@ -156,7 +156,10 @@
   .usl-req .req-grid{display:grid;grid-template-columns:776fr 376fr;gap:var(--sp-24);align-items:start}
   .usl-req .req-main{padding:var(--sp-28);min-width:0}
   .usl-req .req-head{margin:0 0 var(--sp-18)}
-  .usl-req .req-head h3{margin:0;font-family:var(--font-head);text-transform:uppercase;font-size:19px}
+  /* Своего правила у h3 тут нет и не должно быть: базовое .usl h3:not([class]) даёт и гарнитуру,
+     и капс, и margin:0, и ступень --t-h3. Прежнее правило всё это дублировало ради font-size:19px —
+     кегля, которого в шкале нет вовсе, отчего заголовок был мельче равного себе по уровню
+     «Примерная стоимость и сроки» (.mk-h3 = 24), да ещё и с чужим леадингом 28. */
   /* статичный чек-лист: галочки как маркеры (не интерактив) */
   .usl-req .reqs-check{display:flex;flex-direction:column;gap:var(--sp-8)}
   /* белая плашка на серой карточке: обводка прозрачная в покое (как .mk-filerow); статична — без hover */
