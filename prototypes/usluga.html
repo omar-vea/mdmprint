@@ -1032,7 +1032,7 @@
      МОБИЛЬНАЯ ШАПКА + КАТАЛОГ-DRAWER (drill-down, ≤900px).
      Переиспользуем #mega: .rail = уровень 0, #pane/.panel = уровень 1.
      ============================================================ */
-  .m-dhead,.m-back,.m-callbar,.m-dsearch,.m-root,.rail .ri-desc,.hactions .m-search{display:none}   /* по умолчанию (десктоп) скрыты; .ri-desc — только мобильная подсказка. .m-cta живёт внутри .m-callbar → скрыт вместе с ним */
+  .m-dhead,.m-back,.m-callbar,.m-dsearch,.m-root,.rail .ri-desc,.hactions .m-search,.m-topbar{display:none}   /* по умолчанию (десктоп) скрыты; .ri-desc — только мобильная подсказка. .m-cta живёт внутри .m-callbar → скрыт вместе с ним */
   @keyframes mDrawerFade{from{opacity:0}to{opacity:1}}
 
   @media(max-width:900px){
@@ -1050,9 +1050,16 @@
     .navbar{border:none;background:none}
     .navbar .nav{display:none}
     /* шапка зафиксирована (не sticky: html/body overflow-x:hidden ломает sticky на iOS) — меню открывается ПОД ней */
-    header{position:fixed;top:0;left:0;right:0;z-index:1002}
-    body{padding-top:58px}   /* компенсация fixed-шапки */
-    .usl-subnav{top:58px}
+    /* топ-уровень над шапкой: белый, разделитель снизу. Размеры — нижняя граница ДС-шкалы:
+       номер --t-small 14px (минимум для интерактивного текста), часы --t-label 12px (низ шкалы). */
+    .m-topbar{display:flex;align-items:center;gap:8px;position:fixed;top:0;left:0;right:0;z-index:1003;
+      height:36px;padding:0 var(--container-pad);background:var(--surface-page);border-bottom:1px solid var(--border)}
+    .m-topbar .tb-num{font-size:var(--t-small);line-height:1;font-weight:600;color:var(--text-primary)}
+    .m-topbar .tb-hours{font-size:var(--t-label);line-height:1;color:var(--text-secondary);
+      background:var(--surface-on-light);padding:4px 8px;border-radius:var(--radius-inside);white-space:nowrap}
+    header{position:fixed;top:36px;left:0;right:0;z-index:1002}
+    body{padding-top:94px}   /* компенсация fixed: топ-уровень 36 + шапка 58 */
+    .usl-subnav{top:94px}
 
     /* --- HBAR: logo слева · [поиск · войти · корзина · меню] справа --- */
     .hbar,body.scrolled .hbar{gap:2px;height:58px}   /* компакт-шапка при скролле — только десктоп, на мобилке ничего не меняется */
@@ -1066,8 +1073,8 @@
     .hactions{order:2;gap:2px}
     .hactions>*{display:none!important}
     .hactions>.m-search,.hactions>.m-keep{display:flex!important}
-    /* CTA — в слим-строке справа от номера (в фикс-ряд не влезает: лого + 4 иконки уже занимают всю ширину) */
-    .m-callbar .m-cta{display:inline-flex;height:36px;min-height:36px;padding:0 14px;font-size:13.5px;font-weight:600;white-space:nowrap;flex-shrink:0}
+    /* CTA — в строке под шапкой (в фикс-ряд не влезает: лого + 4 иконки уже занимают всю ширину) */
+    .m-callbar .m-cta{display:inline-flex;width:100%;justify-content:center;height:40px;min-height:40px;font-size:14px;font-weight:600}
     /* ЕДИНЫЙ СТИЛЬ иконок-кнопок шапки: поиск · войти · корзина · бургер —
        40×40, плоские, глиф строго по центру (font-size:0 + flex-center вместо text-indent),
        общий тёплый ховер (в т.ч. у бургера) */
@@ -1096,20 +1103,10 @@
        Мессенджеры/почта/обратный звонок переехали в меню — в шапке остаётся только «позвонить». */
     .m-callbar{display:flex;align-items:center;padding:7px 16px;background:var(--surface-page);border-bottom:1px solid var(--border);color:var(--text-primary)}
     .m-callbar .cb-row{display:flex;align-items:center;gap:8px;width:100%}
-    .m-callbar .cb-main{display:flex;align-items:center;gap:11px;margin-right:auto;color:inherit}
-    .m-callbar .cb-ic{width:30px;height:30px;flex-shrink:0;border-radius:50%;background:var(--brand);color:var(--on-brand);display:flex;align-items:center;justify-content:center}
-    .m-callbar .cb-ic svg{width:16px;height:16px}
-    .m-callbar .cb-tx{display:flex;flex-direction:column;line-height:1.15}
-    .m-callbar .cb-num{font-weight:800;font-size:16px;letter-spacing:.01em}
-    .m-callbar .cb-hours{font-size:11px;color:var(--text-secondary);white-space:nowrap}
-    .m-callbar .cb-msg{width:38px;height:38px;flex-shrink:0;border-radius:50%;background:var(--surface-on-light);color:var(--text-primary);display:flex;align-items:center;justify-content:center;transition:background .15s}
-    .m-callbar .cb-msg:hover{background:var(--surface-on-light-2)}
-    .m-callbar .cb-msg svg{width:20px;height:20px}
-    .m-callbar .cb-mx svg{width:22px;height:22px}
 
     /* --- #MEGA → выпадающее меню ПОД шапкой (шапка липкая, остаётся видимой) --- */
     /* закрытый = display:none (fixed+transform давал оверфлоу и раздувал ICB). top=высота hbar */
-    #mega{position:fixed;top:58px;left:0;right:0;bottom:0;height:calc(100dvh - 58px);height:calc(100lvh - 58px);z-index:1001;background:var(--surface-page);
+    #mega{position:fixed;top:94px;left:0;right:0;bottom:0;height:calc(100dvh - 94px);height:calc(100lvh - 94px);z-index:1001;background:var(--surface-page);
       width:100%;max-width:none;box-shadow:none;border:none;display:none;transform:none}   /* lvh: тянем фон дравера ПОД тулбар Safari (иначе там белая полоса и список «обрезан»); контент поднят запасом 96px */
     #mega.open{display:block;animation:mDrawerFade .18s ease}
     #mega .m-dhead .m-dh-x{display:none}   /* закрывает бургер-крестик в шапке, отдельный × не нужен */
@@ -1292,6 +1289,12 @@
   </div>
 
   <!-- ШАПКА -->
+  <!-- мобильный топ-уровень над шапкой: номер + часы (десктоп — свой .topbar) -->
+  <div class="m-topbar">
+    <a class="tb-num" href="tel:+74952561000">+7 (495) 256-10-00</a>
+    <span class="tb-hours">Ежедневно с 9 до 22</span>
+  </div>
+
   <header>
     <div class="wrap hbar">
       <a href="#" class="logo">
@@ -1378,12 +1381,8 @@
   <!-- CALL-BAR (мобилка): телефон крупно — приоритет заказчика -->
   <div class="m-callbar">
     <div class="cb-row">
-    <a class="cb-main" href="tel:+74952561000">
-      <span class="cb-ic"><svg viewBox="0 0 24 24" fill="none"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></span>
-      <span class="cb-tx"><span class="cb-num">+7 (495) 256-10-00</span><span class="cb-hours">Ежедневно 9–22</span></span>
-    </a>
-    <!-- CTA не помещается в фикс-ряд (лого + 4 иконки + кнопка > ширины экрана), поэтому живёт здесь -->
-    <button type="button" class="m-cta tb-cta mk-btn mk-btn--primary">Заявка</button>
+    <!-- номер уехал в топ-уровень над шапкой; здесь остаётся только CTA -->
+    <button type="button" class="m-cta tb-cta mk-btn mk-btn--primary">Оставить заявку</button>
     </div>
   </div>
 
