@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717g">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717g">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717g">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717h">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717h">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717h">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -258,7 +258,7 @@
   /* СТАТЬИ — карточки кита (.mk-mcard--link) как в «Видах», без медиа: у статьи нет кадра,
      ценность в заголовке. 4 в ряд — рубрика/имя сверху, время чтения прижато вниз.
      Заголовок наборный (.mk-mcard__title, Roboto 16/600) — имя статьи читают, а не опознают. */
-  .usl-art .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-24)}
+  .usl-art .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap-card)}
   .usl-art .art-card{height:100%}
   .usl-art .art-card .mk-mcard__body{flex:1}   /* паддинг — китовый (16), см. лестницу в ДС */
   /* --text-secondary, а не --text-tertiary: время чтения — осмысленный текст (норма 4.5:1) */
@@ -1206,7 +1206,7 @@
   body.v-after .usl-hero .hero-left{padding-top:20px}
 
   /* СТАТЬИ — 5 в ряд + время/стрелка (meta-обёртка глобальна; в «До» стрелка и 5-я карточка скрыты) */
-  .usl-art .art-card__meta{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-12);margin-top:auto;padding-top:var(--sp-12)}
+  .usl-art .art-card__meta{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-12);margin-top:auto;padding-top:var(--sp-12);line-height:var(--t-small-lh)}
   .usl-art .art-card__time{margin-top:0;padding-top:0;white-space:nowrap}
   .usl-art .art-card .mk-arr{color:var(--text-tertiary);transition:transform .15s}
   .usl-art .art-card:hover .mk-arr{transform:translateX(2px);color:var(--text-primary)}
