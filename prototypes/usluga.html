@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717f">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717f">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717f">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717g">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717g">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717g">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -241,20 +241,6 @@
   .usl-rev .rev-score{font-family:var(--font-head);font-weight:700;font-size:var(--t-h2);
     line-height:1;color:var(--text-primary)}
   .usl-rev .rev-of{font-size:var(--t-small);color:var(--text-secondary)}
-  .usl-rev .rev-actions{margin-left:auto;display:flex;gap:var(--sp-8)}
-  /* «Оставить отзыв» → поповер с выбором площадки; точки-цвета те же, что у бейджей источника */
-  .usl-rev .rev-leave{position:relative}
-  .usl-rev .rev-leave-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:20;min-width:210px;
-    display:flex;flex-direction:column;gap:2px;padding:var(--sp-6);
-    background:var(--surface-card);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow)}
-  .usl-rev .rev-leave-menu[hidden]{display:none}   /* display:flex перебивает [hidden] — возвращаем */
-  .usl-rev .rev-leave-menu a{display:flex;align-items:center;gap:var(--sp-10);padding:8px 10px;
-    border-radius:var(--radius-inside);font-size:var(--t-small);line-height:1.3;color:var(--text-primary);text-decoration:none;white-space:nowrap}
-  .usl-rev .rev-leave-menu a:hover{background:var(--surface-gray)}
-  .usl-rev .rev-leave-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-  .usl-rev .rev-leave-dot--yandex{background:var(--src-yandex)}
-  .usl-rev .rev-leave-dot--2gis{background:var(--src-2gis)}
-  .usl-rev .rev-leave-dot--site{background:var(--brand)}
   /* карточки компактнее: 4 строки цитаты вместо 5, padding 24 вместо 28 */
   /* текст отзыва скроллится внутри карточки; max-height ≈ 5 строк, дальше — вертикальный скролл */
   .usl-rev .mk-review__text{font-size:var(--t-small);line-height:var(--t-small-lh);max-height:7.5em;
@@ -666,10 +652,6 @@
     .usl-rev .rev-head{display:contents}
     .usl-rev .rev-score::before{content:"·";margin-right:var(--sp-8);color:var(--text-tertiary)}
     .usl-rev .rev-of{width:100%;margin-top:var(--sp-4)}
-    /* Кнопку «Оставить отзыв» на мобилке пока прячем (решение Omar): в шапке ей тесно, а
-       действие второстепенное и уводит на чужой сайт. display:none, а не visibility —
-       скринридер её тоже не должен объявлять, раз её нет. */
-    .usl-rev .rev-actions{display:none}
     /* Косяк №3: ссылка-источник («Яндекс Карты») давала цель 16px по высоте. */
     .usl-rev .mk-review__source{min-height:32px;padding-block:var(--sp-8)}
     /* .usl-art .art-grid — см. второй брейкпоинт в <style id="port-after">: здесь правило
@@ -3428,24 +3410,6 @@
           <div class="rev-head">
             <span class="rev-score">4,9</span>
             <span class="rev-of">600 отзывов на Яндекс.Картах, 2ГИС и на сайте</span>
-            <div class="rev-actions">
-              <!-- «Оставить отзыв» → выбор площадки (Яндекс / 2ГИС / на сайте). Внешние ведут на страницы отзывов площадок. -->
-              <div class="rev-leave" data-leave>
-                <!-- --link (пунктирная текстовая), не primary и не ghost. Жёлтый = главное действие
-                     страницы, а это уводит НА ЧУЖОЙ САЙТ (Яндекс/2ГИС) — акцентировать выход нельзя.
-                     Ссылка вместо ghost: на мобилке в шапке рядом с оценкой кнопке тесно и она висит
-                     между строк, а текст встаёт в строку и просит минимум места. Класс один на оба
-                     экрана — переопределять вид на брейкпоинте не пришлось.
-                     Иконкой не делаем: узнаваемого глифа у «оставить отзыв» нет (карандаш прочтут как
-                     «редактировать», звезду — как «в избранное»), и это не действие, а триггер меню. -->
-                <button type="button" class="mk-btn mk-btn--link" data-leave-toggle aria-haspopup="true" aria-expanded="false">Оставить отзыв</button>
-                <div class="rev-leave-menu" data-leave-menu hidden>
-                  <a href="https://yandex.ru/maps/org/227012965480/reviews" target="_blank" rel="noopener"><span class="rev-leave-dot rev-leave-dot--yandex"></span>На Яндекс.Картах</a>
-                  <a href="https://2gis.ru/moscow/firm/70000001019036937/tab/reviews" target="_blank" rel="noopener"><span class="rev-leave-dot rev-leave-dot--2gis"></span>В 2ГИС</a>
-                  <a href="#"><span class="rev-leave-dot rev-leave-dot--site"></span>Написать на сайте</a>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <div class="mk-scroller revs" data-scroller>
@@ -4400,24 +4364,6 @@
   markReviewScroll();                                                          // статичные карточки
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => markReviewScroll());  // после свопа шрифтов высоты меняются
   window.addEventListener('resize', () => markReviewScroll(), { passive:true });
-
-  /* ── Отзывы: «Оставить отзыв» → поповер выбора площадки (Яндекс / 2ГИС / на сайте) ── */
-  (function(){
-    const wrap = document.querySelector('.rev-leave');
-    if (!wrap) return;
-    const btn  = wrap.querySelector('[data-leave-toggle]');
-    const menu = wrap.querySelector('[data-leave-menu]');
-    const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const open = menu.hidden;
-      menu.hidden = !open;
-      btn.setAttribute('aria-expanded', String(open));
-    });
-    menu.addEventListener('click', close);                                   // выбрал площадку — закрываем
-    document.addEventListener('click', e => { if (!wrap.contains(e.target)) close(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-  })();
 
   /* ── Отзывы: живые данные из виджета SmartWidgets ────────────────────────
      Виджет рендерит свой DOM в .sw-app, но нам нужна только его выдача:
