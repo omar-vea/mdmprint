@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717h">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717h">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717h">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717i">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717i">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717i">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -325,7 +325,11 @@
   /* Нижняя полоса: контакты | дайджест | соцсети.
      436 + 476 + 216 + два гэпа по 24 = 1176. Адрес встаёт в одну строку,
      а форма (max-width 420) не упирается в соседнюю колонку. */
-  .usl-foot .ftop{display:grid;grid-template-columns:436fr 476fr 216fr;
+  /* Колонки ПО СЕТКЕ (12 × 76, гаттер 24): 5 + 4 + 3. Было 436/476/216 — в сумме те же 1176,
+     но мимо колонок: последняя колонка начиналась на x=1092, а у ссылок выше — на 1032.
+     Взято 5+4+3, а не 4+5+3: при 376 контакты внутри .fbrand переставали помещаться (замер),
+     а 476 им даже просторнее прежних 436. Последняя колонка при обоих раскладах встаёт на 1032. */
+  .usl-foot .ftop{display:grid;grid-template-columns:476fr 376fr 276fr;
     gap:var(--sp-32) var(--sp-24);align-items:start}
   /* Навигация — своя зона во всю ширину. 6 колонок по 176px: 176*6 + 24*5 = 1176,
      та же сетка, что у блока «Продукты». По одному заголовку на колонку, поэтому
@@ -481,7 +485,9 @@
   .usl-foot .fbot-bleed{border-top:1px solid var(--border-on-dark)}
   /* Бренд встаёт под контакты (436 — та же колонка, что во втором уровне).
      Дальше сетка своя: реквизитам нужна ширина под адрес, документам её хватает и в 356. */
-  .usl-foot .fbot{display:grid;grid-template-columns:436fr 356fr 336fr;
+  /* Колонки по сетке: 5 + 4 + 3. Было 436/356/336 — сумма верная, колонки нет; последняя
+     начиналась на x=972. */
+  .usl-foot .fbot{display:grid;grid-template-columns:476fr 376fr 276fr;
     gap:var(--sp-32) var(--sp-24);align-items:start;padding:var(--sp-32) 0 var(--sp-40)}
   .usl-foot .fbot-brand .fabout{margin:0;max-width:300px}
   .usl-foot .fcopy-line{margin:var(--sp-8) 0 var(--sp-20);color:var(--text-tertiary);
@@ -798,7 +804,23 @@
     .usl-final .cta-box .mk-btn,.usl-price .ptable .mk-btn--primary,
     .usl-price .calc .mk-btn{width:100%}
     .usl-foot .ftop,.usl-foot .fbot{grid-template-columns:1fr}
-    .usl-foot .flinks{grid-template-columns:1fr 1fr}
+    /* ФУТЕР, колонки ссылок (схема Omar):
+         Каталог │ Услуги
+                 │ Материалы
+                 │ Готовые решения
+         Информация │ Компания        ← друг напротив друга, по верху
+       Было 2×2: Материалы попадали под Каталог, а «Информация + Компания» шли одной длинной
+       колонкой справа. Каталог растянут на два ряда — иначе «Материалы» ушли бы под него.
+       «Информация» и «Компания» лежат в ОДНОМ div, поэтому делим его многоколонкой, а не сеткой:
+       break-before:column у второго заголовка гонит «Компанию» в правую колонку. Разметку не
+       трогаем — она общая с десктопом. */
+    .usl-foot .flinks{grid-template-columns:1fr 1fr;align-items:start}
+    .usl-foot .flinks > div:nth-child(1){grid-column:1;grid-row:1 / span 2}
+    .usl-foot .flinks > div:nth-child(2){grid-column:2;grid-row:1}
+    .usl-foot .flinks > div:nth-child(3){grid-column:2;grid-row:2}
+    .usl-foot .flinks > div:nth-child(4){grid-column:1 / -1;grid-row:3;
+      columns:2;column-gap:var(--sp-24)}
+    .usl-foot .flinks > div:nth-child(4) h5:nth-of-type(2){break-before:column;margin-top:0}
   }
 
   /* ===== ОСНОВНАЯ ШАПКА ===== */
