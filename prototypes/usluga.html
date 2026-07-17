@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717d">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717d">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717d">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717e">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717e">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717e">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -179,8 +179,7 @@
   .usl-req .reqs-check__note{font-size:var(--t-caption);line-height:1.45;color:var(--text-secondary)}
   .usl-req .req-cta{margin-top:var(--sp-20);display:flex;flex-direction:column;align-items:center;gap:var(--sp-14)}
   .usl-req .req-cta .mk-btn--primary{width:100%}
-  /* пунктирная ссылка-кнопка ДС: гасим скругление, которое навязывает body.shape-rounded .mk-btn */
-  .usl-req .req-cta .mk-btn--link{border-radius:0;display:inline-flex;align-items:center;gap:var(--sp-6)}
+  .usl-req .req-cta .mk-btn--link{display:inline-flex;align-items:center;gap:var(--sp-6)}
   .usl-req .req-cta .mk-btn--link:hover .mk-arr{transform:translateX(2px)}
 
   .usl-req .files{position:sticky;top:calc(var(--stack-top) + var(--sp-16));display:flex;flex-direction:column;gap:var(--sp-16);padding:var(--sp-24)}
@@ -651,8 +650,12 @@
        две подачи у одной кнопки читаются как две разные. */
     .usl-rev .mk-review__text.is-open .rev-more{position:static;background:none;
       display:block;width:max-content;padding:var(--sp-12) 0}
-    /* Косяк №2: «Оставить отзыв» — 32px (mk-btn--sm) против тач-нормы 44. */
-    .usl-rev .rev-actions .mk-btn{min-height:44px}
+    /* Тач-цель ссылки: у --link height:auto, добираем полями до 44.
+       margin-left:auto снимаем: в шапку на 390 всё не влезает («607 отзывов на Яндекс.Картах и
+       2ГИС» — 315px из 358), кнопка переносится на вторую строку, и прижатая вправо повисает в
+       пустоте. На своей строке она встаёт по левому краю, под оценку — как обычная ссылка. */
+    .usl-rev .rev-actions{margin-left:0}
+    .usl-rev .rev-actions .mk-btn--link{min-height:44px;display:inline-flex;align-items:center}
     /* Косяк №3: ссылка-источник («Яндекс Карты») давала цель 16px по высоте. */
     .usl-rev .mk-review__source{min-height:32px;padding-block:var(--sp-8)}
     /* .usl-art .art-grid — см. второй брейкпоинт в <style id="port-after">: здесь правило
@@ -1182,7 +1185,11 @@
 
   /* ═══ ФОРМА КНОПОК/ПОЛЕЙ: скругление (--radius-md 8px) — выбранный вариант ═══
      Включено классом body.shape-rounded (тумблер выбора убран, форма зафиксирована). */
-  body.shape-rounded .mk-btn{border-radius:var(--radius-md)}
+  /* :not(--link) — форма меняется только у кнопок-ПЛАШЕК. --link это текст с пунктирным
+     подчёркиванием, у него в ките border-radius:0, и скруглять там нечего: радиус загибал концы
+     пунктира. Раньше это гасили по месту (в «Требованиях» стояла локальная заплатка с таким же
+     комментарием) — лечили симптом, а не причину. */
+  body.shape-rounded .mk-btn:not(.mk-btn--link){border-radius:var(--radius-md)}
   body.shape-rounded .search{border-radius:var(--radius-md)}
   body.shape-rounded .search-drop{border-radius:var(--radius-md) var(--radius-md) var(--radius-outside) var(--radius-outside)}
   body.shape-rounded .usl-foot .fsub-form{border-radius:var(--radius-md)}
@@ -3411,11 +3418,14 @@
             <div class="rev-actions">
               <!-- «Оставить отзыв» → выбор площадки (Яндекс / 2ГИС / на сайте). Внешние ведут на страницы отзывов площадок. -->
               <div class="rev-leave" data-leave>
-                <!-- ghost, не primary: жёлтый = главное действие страницы, а это уводит НА ЧУЖОЙ САЙТ
-                     (Яндекс/2ГИС) — акцентировать выход нельзя. Иконкой не делаем: узнаваемого глифа у
-                     «оставить отзыв» нет (карандаш = «редактировать», звезда = «в избранное»), да и это
-                     не кнопка-действие, а триггер меню выбора площадки. -->
-                <button type="button" class="mk-btn mk-btn--ghost mk-btn--sm" data-leave-toggle aria-haspopup="true" aria-expanded="false">Оставить отзыв</button>
+                <!-- --link (пунктирная текстовая), не primary и не ghost. Жёлтый = главное действие
+                     страницы, а это уводит НА ЧУЖОЙ САЙТ (Яндекс/2ГИС) — акцентировать выход нельзя.
+                     Ссылка вместо ghost: на мобилке в шапке рядом с оценкой кнопке тесно и она висит
+                     между строк, а текст встаёт в строку и просит минимум места. Класс один на оба
+                     экрана — переопределять вид на брейкпоинте не пришлось.
+                     Иконкой не делаем: узнаваемого глифа у «оставить отзыв» нет (карандаш прочтут как
+                     «редактировать», звезду — как «в избранное»), и это не действие, а триггер меню. -->
+                <button type="button" class="mk-btn mk-btn--link" data-leave-toggle aria-haspopup="true" aria-expanded="false">Оставить отзыв</button>
                 <div class="rev-leave-menu" data-leave-menu hidden>
                   <a href="https://yandex.ru/maps/org/227012965480/reviews" target="_blank" rel="noopener"><span class="rev-leave-dot rev-leave-dot--yandex"></span>На Яндекс.Картах</a>
                   <a href="https://2gis.ru/moscow/firm/70000001019036937/tab/reviews" target="_blank" rel="noopener"><span class="rev-leave-dot rev-leave-dot--2gis"></span>В 2ГИС</a>
