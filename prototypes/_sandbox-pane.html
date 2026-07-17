@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Песочница · Экран раздела (мобилка)</title>
+<link rel="stylesheet" href="../assets/css/fonts.css">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/kit.css">
+<style>
+  body{margin:0;background:#d9d3c9;color:var(--text-primary);font-family:var(--font-body);
+    display:flex;gap:28px;justify-content:center;align-items:flex-start;padding:28px;flex-wrap:wrap}
+  .col{width:412px}
+  .col > h3{font-family:var(--font-head);text-transform:uppercase;font-size:15px;color:#4a4235;margin:0 0 10px;text-align:center}
+  .phone{background:var(--surface-page);border-radius:18px;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.4)}
+
+  /* шапка drawer (как в usluga) */
+  .dhead{display:flex;align-items:center;gap:6px;padding:12px 14px;border-bottom:1px solid var(--border)}
+  .dhead .bk{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--text-secondary);cursor:pointer;padding:0}
+  .dhead .bk svg{width:26px;height:26px;padding:6px;border-radius:50%;background:var(--surface-on-light);box-sizing:border-box}
+  .dhead .bk .bl{font-size:14px;font-weight:500}
+  .dhead .tt{font-size:16px;font-weight:600;color:var(--text-primary)}
+
+  .arr{margin-left:auto;flex-shrink:0;color:var(--text-tertiary);display:flex}
+  .arr svg{width:9px;height:14px}
+
+  /* строка-ссылка «весь раздел» (название раздела) */
+  .sec-link{display:flex;align-items:center;gap:8px;width:100%;padding:15px 16px;min-height:54px;
+    background:none;border:none;border-bottom:1px solid var(--border);text-align:left;cursor:pointer;
+    font-size:17px;font-weight:600;color:var(--text-primary)}
+  .sec-link:active{background:var(--surface-subtle)}
+
+  /* строка-ссылка подраздела (кликабельный заголовок группы) */
+  .sub-link{display:flex;align-items:center;gap:8px;width:100%;padding:13px 16px;min-height:48px;margin-top:6px;
+    background:none;border:none;border-bottom:1px solid var(--border);text-align:left;cursor:pointer;
+    font-size:15px;font-weight:600;color:var(--text-primary)}
+  .sub-link:active{background:var(--surface-subtle)}
+
+  /* товарные ссылки (листья) */
+  .leaf{display:flex;align-items:center;gap:8px;padding:12px 16px 12px 16px;min-height:44px;
+    font-size:16px;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--border)}
+  .leaf:active{background:var(--surface-subtle)}
+  ul{list-style:none;margin:0;padding:0}
+
+  /* --- Вариант B: подраздел как тихая метка-ссылка (капсом, но кликабельная) --- */
+  .b .sub-link{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-secondary);
+    min-height:0;padding:16px 16px 6px;margin-top:4px;border-bottom:0}
+  .b .sub-link .arr svg{width:8px;height:12px}
+  .b .leaf{color:var(--text-primary)}
+</style>
+</head>
+<body>
+<script>
+  const CHEV = '<span class="arr"><svg viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+  const BACK = '<svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SUBS = [
+    ['Печать визиток', ['Премиальные визитки','Визитки дёшево','Многослойные','С тиснением']],
+    ['Материал визиток', ['Каландрированная бумага','Крафт-бумага','Лён','Пластик']],
+    ['Визитки по применению', ['Для автосервиса','Для бизнеса','Для такси','Для фотографа']],
+  ];
+  function pane(){
+    return SUBS.map(s=>`<button class="sub-link">${s[0]}${CHEV}</button><ul>${s[1].map(p=>`<li><a class="leaf" href="#">${p}</a></li>`).join('')}</ul>`).join('');
+  }
+  function screen(variantClass){
+    return `<div class="phone ${variantClass}">
+      <div class="dhead"><button class="bk">${BACK}<span class="bl">Каталог</span></button><span class="tt">Визитки</span></div>
+      <button class="sec-link">Все визитки${CHEV}</button>
+      ${pane()}
+    </div>`;
+  }
+  document.write(`
+    <div class="col"><h3>Вариант A · подраздел = крупная строка-ссылка</h3>${screen('a')}</div>
+    <div class="col"><h3>Вариант B · подраздел = тихая метка-ссылка</h3>${screen('b')}</div>
+  `);
+</script>
+</body>
+</html>

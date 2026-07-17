@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717j">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717j">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717j">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717k">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717k">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717k">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -2886,7 +2886,11 @@
             </div>
           </div>
           <div class="hero-media">
-            <img src="../assets/image.png" alt="Визитка с тиснением фольгой">
+            <!-- Кадр героя = LCP-элемент: без loading="lazy" (он и так первый экран) и с width/height,
+                   иначе при загрузке скачет раскладка. Был PNG 1374 КБ в корне ассетов под именем
+                   image.png — стал webp 53 КБ (−96%) в img/hero/ с осмысленным именем. -->
+              <img src="../assets/img/hero/tisnenie-vizitka.webp" alt="Визитка с тиснением фольгой"
+                   width="1356" height="1017" fetchpriority="high">
           </div>
         </div>
       </div>

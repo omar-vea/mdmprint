@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Песочница — блок «Характеристики» (шаблон материалов)</title>
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717j">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717j">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717j">
+<style>
+  body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-page);margin:0;
+    font-size:var(--t-small);line-height:1.45}
+  .wrap{width:min(100% - var(--container-pad) * 2, var(--container));margin-inline:auto}
+  section{padding:var(--section-y) 0;border-top:1px solid var(--border)}
+  h2{font-family:var(--font-head);font-size:var(--t-h2);line-height:var(--t-h2-lh);letter-spacing:var(--t-h2-ls);
+    font-weight:700;text-transform:uppercase;margin:0 0 var(--sp-20);max-width:27ch}
+  h3{font-family:var(--font-head);font-size:var(--t-h3);line-height:var(--t-h3-lh);letter-spacing:var(--t-h3-ls);
+    font-weight:700;text-transform:uppercase;margin:0}
+  .lab{position:sticky;top:0;z-index:5;background:var(--surface-dark);color:var(--text-on-dark);
+    padding:var(--sp-10) var(--sp-16);font-size:var(--t-caption);line-height:var(--t-caption-lh)}
+  .lab b{font-size:var(--t-small)}
+
+  /* ── Блок «Характеристики»: слот 7′ шаблона (у материала вместо «Требований к макету») ──
+     Собран из компонентов кита: .mk-kv (ключ-значение) + .mk-card. Своего CSS почти нет —
+     только раскладка секции, как у «Требований». */
+  .spec-grid{display:grid;grid-template-columns:776fr 376fr;gap:var(--gap-card);align-items:start}
+  .spec-main{padding:var(--sp-24)}
+  .spec-main .mk-kv{margin-top:var(--sp-16)}
+  .spec-note{margin:var(--sp-16) 0 0;font-size:var(--t-caption);line-height:var(--t-caption-lh);
+    color:var(--text-secondary)}
+  .files{position:sticky;top:var(--sp-16);display:flex;flex-direction:column;gap:var(--sp-16);padding:var(--sp-24)}
+  .fhead{display:flex;gap:var(--sp-12);align-items:flex-start}
+  .fh-ic{width:38px;height:38px;flex-shrink:0;border-radius:var(--radius-md);
+    background:var(--surface-on-light);color:var(--text-secondary);display:flex;align-items:center;justify-content:center}
+  .fh-ic svg{width:20px;height:20px}
+  .fnote{font-size:var(--t-small);line-height:var(--t-small-lh);color:var(--text-secondary);margin:var(--sp-4) 0 0}
+  .flist{display:flex;flex-direction:column;gap:var(--sp-8)}
+
+  @media(max-width:900px){
+    /* Та же схема, что у «Цен» и «Требований»: секция бежевая, карточки теряют заливку,
+       плашки разворачиваются в строки с разделителями во всю ширину экрана. */
+    section{background:var(--surface-subtle)}
+    h2{font-size:var(--t-h2);line-height:var(--t-h2-lh)}
+    .spec-grid{grid-template-columns:1fr;gap:var(--sp-32)}
+    .spec-main,.files{background:none;border:0;border-radius:0;padding:0}
+    .files{position:static}
+    .mk-kv{gap:0}
+    .mk-kv__row{background:none;border-radius:0;
+      margin-inline:calc(var(--container-pad) * -1);padding:var(--sp-12) var(--container-pad)}
+    .mk-kv__row + .mk-kv__row{border-top:1px solid var(--border)}
+    .mk-filerow{background:none;border:0;border-radius:0;
+      margin-inline:calc(var(--container-pad) * -1);padding:var(--sp-12) var(--container-pad)}
+    .mk-filerow + .mk-filerow{border-top:1px solid var(--border)}
+    .flist{gap:0}
+  }
+</style></head>
+<body>
+
+<div class="lab"><b>Слот 7′ — «Характеристики».</b> У материала вместо «Требований к макету». Собран из кита: .mk-kv + .mk-card + .mk-filerow. Смотреть и на мобилке.</div>
+
+<section>
+  <div class="wrap">
+    <h2>Характеристики бумаги</h2>
+    <div class="spec-grid">
+      <div class="spec-main mk-card mk-card--gray">
+        <h3>Дизайнерская бумага Touch Cover</h3>
+        <div class="mk-kv">
+          <div class="mk-kv__row"><span class="mk-kv__k">Плотность</span><span class="mk-kv__v">300 г/м²</span></div>
+          <div class="mk-kv__row"><span class="mk-kv__k">Толщина</span><span class="mk-kv__v">0,42 мм</span></div>
+          <div class="mk-kv__row"><span class="mk-kv__k">Оттенок</span><span class="mk-kv__v">Тёплый белый</span></div>
+          <div class="mk-kv__row"><span class="mk-kv__k">Фактура</span><span class="mk-kv__v">Софт-тач</span></div>
+          <div class="mk-kv__row"><span class="mk-kv__k">Форматы</span><span class="mk-kv__v">70×100, SRA3</span></div>
+          <div class="mk-kv__row"><span class="mk-kv__k">Тиснение фольгой</span><span class="mk-kv__v">Да</span></div>
+          <div class="mk-kv__row"><span class="mk-kv__k">Офсетная печать</span><span class="mk-kv__v">Да</span></div>
+          <div class="mk-kv__row"><span class="mk-kv__k">Цифровая печать</span><span class="mk-kv__v">С ограничениями</span></div>
+        </div>
+        <p class="spec-note">Значения справочные: партии бумаги отличаются по оттенку. Перед крупным тиражом закажите образец.</p>
+      </div>
+
+      <div class="files mk-card mk-card--gray">
+        <div class="fhead">
+          <span class="fh-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M13.5 3v5.5H19"/></svg></span>
+          <div>
+            <h4 class="mk-h4">Готовые материалы</h4>
+            <p class="fnote">Скачайте спецификацию и профиль печати</p>
+          </div>
+        </div>
+        <div class="flist">
+          <a class="mk-filerow" href="#" download>
+            <span class="mk-filerow__txt">
+              <span class="mk-filerow__name">Спецификация бумаги</span>
+              <span class="mk-filerow__meta">PDF · 480 КБ</span>
+            </span>
+            <span class="mk-filerow__ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 11l4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/></svg></span>
+          </a>
+          <a class="mk-filerow" href="#" download>
+            <span class="mk-filerow__txt">
+              <span class="mk-filerow__name">Цветовой профиль</span>
+              <span class="mk-filerow__meta">ICC · 12 КБ</span>
+            </span>
+            <span class="mk-filerow__ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 11l4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body></html>

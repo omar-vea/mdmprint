@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Песочница · Цены на мобилке</title>
+<link rel="stylesheet" href="../assets/css/fonts.css">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/kit.css">
+<style>
+  body{margin:0;padding:20px;background:#8a8378;font-family:var(--font-body);color:var(--text-primary);
+    display:flex;gap:16px;align-items:flex-start}
+  .col{width:390px}
+  .col > h4{font-family:var(--font-head);text-transform:uppercase;font-size:13px;color:#fff;margin:0 0 2px;text-align:center}
+  .col > p{font-size:11px;color:#e8e3d8;text-align:center;margin:0 0 8px;min-height:28px}
+  .phone{background:var(--surface-page);border-radius:14px;overflow:hidden;padding:16px 0}
+  .wrap{padding:0 16px}
+  h2{font-family:var(--font-head);font-size:24px;line-height:28px;letter-spacing:.02em;text-transform:uppercase;margin:0 0 24px}
+  .mk-h3{font-size:var(--t-h4);line-height:var(--t-h4-lh);letter-spacing:var(--t-h4-ls)}
+  .ptable{display:flex;flex-direction:column;gap:var(--sp-16);align-items:flex-start;padding:var(--sp-28)}
+  .mk-pcard{width:100%}
+
+  /* A · как сейчас */
+  /* (дефолт) */
+
+  /* B · полоса во всю ширину: карточка перестаёт быть карточкой */
+  .b .ptable{border-radius:0;padding:var(--sp-20) var(--sp-16);margin-inline:calc(var(--sp-16) * -1)}
+
+  /* C · без внешней заливки: плашки красим сами */
+  .c .ptable{background:none;padding:0;border-radius:0}
+  .c .mk-pcard{background:var(--surface-gray)}
+  .c .mk-pricelist{gap:var(--sp-8)}
+</style>
+</head>
+<body>
+<script>
+  const ROWS = [['Визитки с тиснением','2–3 дня','от 18 ₽/шт'],
+                ['Обложки каталогов','3–5 дней','от 60 ₽/шт'],
+                ['Упаковка с фольгой','от 5 дней','от 120 ₽/шт']];
+  const rows = () => ROWS.map(r=>`<div class="mk-pcard"><span class="mk-pcard__name">${r[0]}</span><span class="mk-pcard__term">${r[1]}</span><span class="mk-pcard__val">${r[2]}</span></div>`).join('');
+  const screen = (cls,lab,note) => `<div class="col ${cls}">
+      <h4>${lab}</h4><p>${note}</p>
+      <div class="phone"><div class="wrap"><h2>Рассчитайте стоимость тиснения</h2>
+        <div class="ptable mk-card mk-card--gray">
+          <h3 class="mk-h3">Примерная стоимость и сроки</h3>
+          <div class="mk-pricelist">${rows()}</div>
+          <button class="mk-btn mk-btn--primary" style="width:100%">Оставить заявку на расчёт</button>
+        </div>
+      </div></div></div>`;
+  document.write(
+    screen('a','A · как сейчас','бежевая карточка (радиус 14, padding 28) + белые плашки внутри') +
+    screen('b','B · полоса во всю ширину','та же заливка, но без радиуса и до краёв экрана — читается как фон секции, а не как карточка') +
+    screen('c','C · без внешней заливки','внешняя карточка убрана, плашки сами бежевые на белой странице')
+  );
+</script>
+</body>
+</html>

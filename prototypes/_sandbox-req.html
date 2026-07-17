@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Песочница · Требования к макету</title>
+<link rel="stylesheet" href="../assets/css/fonts.css">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/kit.css">
+<style>
+  body{margin:0;background:var(--surface-page);color:var(--text-primary);font-family:var(--font-body)}
+  .sbx-wrap{max-width:1120px;margin:0 auto;padding:48px 24px 96px}
+  .sbx-h{font-family:var(--font-head);text-transform:uppercase;font-size:26px;letter-spacing:.01em;margin:0 0 6px}
+  .sbx-lead{color:var(--text-secondary);font-size:15px;line-height:1.5;max-width:76ch;margin:0 0 40px}
+  .sbx-lead b{color:var(--text-primary)}
+
+  .sbx-variant{margin-bottom:56px}
+  .sbx-tag{display:inline-flex;align-items:center;gap:8px;margin-bottom:6px;
+    font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-tertiary)}
+  .sbx-tag b{color:var(--on-brand);background:var(--brand);padding:3px 9px;border-radius:999px;font-weight:800;letter-spacing:0}
+  .sbx-desc{color:var(--text-secondary);font-size:14px;line-height:1.5;margin:0 0 18px;max-width:74ch}
+
+  /* раскладка блока (как в usluga: главная карточка + материалы) */
+  .req-grid{display:grid;grid-template-columns:1.75fr 1fr;gap:var(--sp-24);align-items:start}
+  .req-main{padding:var(--sp-28);min-width:0}
+  .req-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-16);margin:0 0 var(--sp-18)}
+  .req-head h3{margin:0;font-family:var(--font-head);text-transform:uppercase;font-size:19px}
+  .req-params{margin-top:var(--sp-28)}
+  .req-params__h{margin:0 0 var(--sp-14);font-family:var(--font-head);text-transform:uppercase;font-size:19px}
+  .req-cta{margin-top:var(--sp-20);display:flex;flex-direction:column;align-items:center;gap:var(--sp-14)}
+  .req-cta .mk-btn--primary{width:100%}
+  .req-cta .mk-btn--link{border-radius:0;display:inline-flex;align-items:center;gap:var(--sp-6)}
+  .req-cta .mk-btn--link:hover .mk-arr{transform:translateX(2px)}
+
+  /* статичный чек-лист (галочки как маркеры, НЕ интерактив) */
+  .reqs-check{display:flex;flex-direction:column;gap:var(--sp-8)}
+  .reqs-check__item{display:flex;gap:var(--sp-14);align-items:flex-start;
+    padding:var(--sp-14) var(--sp-16);border:1px solid transparent;border-radius:var(--radius-md);background:var(--surface-card)}
+  .reqs-check__ic{width:22px;height:22px;flex-shrink:0;margin-top:1px;border-radius:50%;
+    background:var(--surface-on-light);color:var(--success);display:flex;align-items:center;justify-content:center}
+  .reqs-check__ic svg{width:13px;height:13px}
+  .reqs-check__txt{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .reqs-check__title{font-weight:500;font-size:15px;color:var(--text-primary)}
+  .reqs-check__note{font-size:var(--t-caption);line-height:1.45;color:var(--text-secondary)}
+
+  /* аккордеон подробностей внутри карточки */
+  .req-acc{margin-top:var(--sp-16);border-top:1px solid var(--border)}
+  .req-acc .mk-acc__a ol{margin:0;padding-left:var(--sp-20);display:flex;flex-direction:column;gap:var(--sp-4)}
+  .req-acc .mk-acc__a .pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-12);margin-top:var(--sp-12)}
+  .req-acc .imgph{aspect-ratio:16/10;padding:var(--sp-12);display:flex;align-items:flex-start}
+  .st-ok{color:var(--success);font-size:13px;font-weight:600}
+  .st-no{color:var(--danger);font-size:13px;font-weight:600}
+
+  /* материалы (правая карточка) */
+  .files{padding:var(--sp-24);display:flex;flex-direction:column;gap:var(--sp-16)}
+  .files .fhead{display:flex;gap:var(--sp-12);align-items:center}
+  .files .fhead .fh-ic{width:38px;height:38px;flex-shrink:0;border-radius:50%;
+    background:var(--surface-on-light);color:var(--text-secondary);display:flex;align-items:center;justify-content:center}
+  .files .fhead .fh-ic svg{width:20px;height:20px}
+  .files .fnote{font-size:var(--t-small);line-height:var(--t-small-lh);color:var(--text-secondary);margin-top:2px}
+  .files h4{margin:0}
+  .files .flist{display:flex;flex-direction:column;gap:var(--sp-8)}
+
+  @media(max-width:820px){ .req-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="sbx-wrap">
+  <h1 class="sbx-h">Требования к макету — как убрать «скачки»</h1>
+  <p class="sbx-lead">Страница прыгает, потому что таб <b>«Подробные требования»</b> (с картинками правильно/неправильно) намного выше «Чек-листа» — при переключении меняется высота контейнера, и всё под ним смещается. Ниже два способа это убрать. В обоих: галочки — <b>статичный чек-лист</b> (не интерактив), внизу — кнопка на проверку макета и ссылка на полные требования.</p>
+
+  <!-- ВАРИАНТ 1 -->
+  <section class="sbx-variant">
+    <div class="sbx-tag"><b>Вариант 1</b> Компактно — подробное ссылкой</div>
+    <p class="sbx-desc">На странице только короткий чек-лист (фикс. высота) + кнопка + ссылка. Всё длинное (подробные требования, параметры) — на странице «Требования к макетам». Скакать нечему. Проще всего в реализации.</p>
+
+    <div class="req-grid">
+      <div class="req-main mk-card mk-card--gray">
+        <div class="req-head"><h3>Проверьте макет перед отправкой</h3></div>
+
+        <div class="reqs-check">
+          <div class="reqs-check__item">
+            <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="reqs-check__txt"><span class="reqs-check__title">Поля и вылеты</span><span class="reqs-check__note">3–5 мм с каждой стороны под обрезку. Важные элементы — не ближе 5 мм от края.</span></span>
+          </div>
+          <div class="reqs-check__item">
+            <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="reqs-check__txt"><span class="reqs-check__title">Слой под фольгу</span><span class="reqs-check__note">Отдельным слоем, плашка 100% Magenta. Без градиентов и полутонов.</span></span>
+          </div>
+          <div class="reqs-check__item">
+            <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="reqs-check__txt"><span class="reqs-check__title">Изображения</span><span class="reqs-check__note">Разрешение 300 dpi, цветовая модель CMYK.</span></span>
+          </div>
+          <div class="reqs-check__item">
+            <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="reqs-check__txt"><span class="reqs-check__title">Шрифты</span><span class="reqs-check__note">Переведите в кривые или вложите в файл.</span></span>
+          </div>
+        </div>
+
+        <div class="req-cta">
+          <button type="button" class="mk-btn mk-btn--primary">Отправить заявку на расчёт</button>
+          <a class="mk-btn mk-btn--link" href="#">Параметры и полные требования к тиснению <span class="mk-arr" aria-hidden="true"></span></a>
+        </div>
+      </div>
+
+      <div class="files mk-card mk-card--gray">
+        <div class="fhead"><span class="fh-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M13.5 3v5.5H19"/></svg></span>
+          <div><h4 class="mk-h4">Готовые материалы</h4><p class="fnote">Скачайте и соберите макет без ошибок</p></div>
+        </div>
+        <div class="flist">
+          <a class="mk-filerow" href="#" download><span class="mk-filerow__txt"><span class="mk-filerow__name">Пример правильного макета</span><span class="mk-filerow__meta">PDF · 1,2 МБ</span></span><span class="mk-filerow__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 11l4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/></svg></span></a>
+          <a class="mk-filerow" href="#" download><span class="mk-filerow__txt"><span class="mk-filerow__name">Шаблон: поля и слой под фольгу</span><span class="mk-filerow__meta">AI, PDF · 840 КБ</span></span><span class="mk-filerow__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 11l4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/></svg></span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ВАРИАНТ 2 -->
+  <section class="sbx-variant">
+    <div class="sbx-tag"><b>Вариант 2</b> Аккордеон — подробное раскрывается на месте</div>
+    <p class="sbx-desc">Чек-лист виден сразу. Параметры и подробные требования — в аккордеоне: раскрываются прямо под своим заголовком (управляемо, не выглядит глюком), высота контейнера не «прыгает сама». Всё держим на странице.</p>
+
+    <div class="req-grid">
+      <div class="req-main mk-card mk-card--gray">
+        <div class="req-head"><h3>Проверьте макет перед отправкой</h3></div>
+
+        <div class="reqs-check">
+          <div class="reqs-check__item">
+            <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="reqs-check__txt"><span class="reqs-check__title">Поля и вылеты</span><span class="reqs-check__note">3–5 мм с каждой стороны под обрезку. Важные элементы — не ближе 5 мм от края.</span></span>
+          </div>
+          <div class="reqs-check__item">
+            <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="reqs-check__txt"><span class="reqs-check__title">Слой под фольгу</span><span class="reqs-check__note">Отдельным слоем, плашка 100% Magenta. Без градиентов и полутонов.</span></span>
+          </div>
+          <div class="reqs-check__item">
+            <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="reqs-check__txt"><span class="reqs-check__title">Изображения</span><span class="reqs-check__note">Разрешение 300 dpi, цветовая модель CMYK.</span></span>
+          </div>
+          <div class="reqs-check__item">
+            <span class="reqs-check__ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="reqs-check__txt"><span class="reqs-check__title">Шрифты</span><span class="reqs-check__note">Переведите в кривые или вложите в файл.</span></span>
+          </div>
+        </div>
+
+        <div class="req-acc">
+          <details class="mk-acc">
+            <summary class="mk-acc__q">Параметры тиснения</summary>
+            <div class="mk-acc__a">
+              <div class="mk-kv">
+                <div class="mk-kv__row"><span class="mk-kv__k">Минимальный тираж</span><span class="mk-kv__v">от 50 шт</span></div>
+                <div class="mk-kv__row"><span class="mk-kv__k">Максимальный формат</span><span class="mk-kv__v">320 × 480 мм</span></div>
+                <div class="mk-kv__row"><span class="mk-kv__k">Виды фольги</span><span class="mk-kv__v">золото, серебро, металлик, голография</span></div>
+                <div class="mk-kv__row"><span class="mk-kv__k">Мин. толщина линии</span><span class="mk-kv__v">0,5 мм</span></div>
+                <div class="mk-kv__row"><span class="mk-kv__k">Мин. кегль шрифта</span><span class="mk-kv__v">от 6 пт</span></div>
+              </div>
+            </div>
+          </details>
+          <details class="mk-acc" open>
+            <summary class="mk-acc__q">Подробные требования и примеры</summary>
+            <div class="mk-acc__a">
+              <ol>
+                <li>Отдельный слой «Foil», заливка 100%</li>
+                <li>Минимальная толщина линии — 0,5 мм</li>
+                <li>Мелкий текст — от 6 пт, без тонких засечек</li>
+              </ol>
+              <div class="pair">
+                <div class="imgph mk-ph"><span class="st-ok">✓ Подходит</span></div>
+                <div class="imgph mk-ph"><span class="st-no">✕ Не подходит</span></div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="req-cta">
+          <button type="button" class="mk-btn mk-btn--primary">Отправить макет на проверку</button>
+          <a class="req-link" href="#">Полные требования к макетам
+            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+
+      <div class="files mk-card mk-card--gray">
+        <div class="fhead"><span class="fh-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M13.5 3v5.5H19"/></svg></span>
+          <div><h4 class="mk-h4">Готовые материалы</h4><p class="fnote">Скачайте и соберите макет без ошибок</p></div>
+        </div>
+        <div class="flist">
+          <a class="mk-filerow" href="#" download><span class="mk-filerow__txt"><span class="mk-filerow__name">Пример правильного макета</span><span class="mk-filerow__meta">PDF · 1,2 МБ</span></span><span class="mk-filerow__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 11l4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/></svg></span></a>
+          <a class="mk-filerow" href="#" download><span class="mk-filerow__txt"><span class="mk-filerow__name">Шаблон: поля и слой под фольгу</span><span class="mk-filerow__meta">AI, PDF · 840 КБ</span></span><span class="mk-filerow__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7.5 11l4.5 4.5 4.5-4.5"/><path d="M5 19.5h14"/></svg></span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

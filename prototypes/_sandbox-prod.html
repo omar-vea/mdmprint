@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Песочница — «Где применяется» (мобилка)</title>
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260716g">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260716g">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260716g">
+<style>
+  body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-page);margin:0;
+    font-size:var(--t-small);line-height:1.45}
+  .wrap{width:min(100% - var(--container-pad) * 2, var(--container));margin-inline:auto}
+  section{padding:var(--section-y) 0;border-top:1px solid var(--border)}
+  h2{font-family:var(--font-head);font-size:var(--t-h2);line-height:var(--t-h2-lh);letter-spacing:var(--t-h2-ls);
+    font-weight:700;text-transform:uppercase;margin:0 0 var(--sp-20);max-width:27ch}
+  .lab{position:sticky;top:0;z-index:5;background:var(--surface-dark);color:var(--text-on-dark);
+    padding:var(--sp-10) var(--sp-16);font-size:var(--t-caption);line-height:var(--t-caption-lh)}
+  .lab b{font-size:var(--t-small)}
+  .note{color:var(--text-secondary);font-size:var(--t-caption);line-height:var(--t-caption-lh);margin:0 0 var(--sp-16)}
+  .pcards{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-card)}
+  .usl-prod .mk-mcard__body{padding:var(--sp-16);min-height:72px;justify-content:flex-end}
+
+  /* Б: плитка ниже — кроп «обрезаем снизу» рассчитан на высокую плитку, тут проверяем предел */
+  .v-b .mk-mcard{--mcard-aspect:16/10}
+  .v-b .mk-mcard__body{padding:var(--sp-10) var(--sp-12);min-height:0}
+
+  /* В: строки без картинок — ярлыки из закрытого списка читаются взглядом, картинка им не нужна */
+  .prows{display:flex;flex-direction:column}
+  .prow{display:flex;align-items:center;gap:var(--sp-12);text-decoration:none;color:var(--text-primary);
+    padding:var(--sp-12) var(--container-pad);min-height:48px;
+    margin-inline:calc(var(--container-pad) * -1);-webkit-tap-highlight-color:transparent}
+  .prow + .prow{border-top:1px solid var(--border)}
+  .prow__t{flex:1;min-width:0;font-size:var(--t-ui);line-height:var(--t-ui-lh)}
+  .prow .mk-arr{color:var(--text-tertiary)}
+  @media (hover:hover){.prow:hover{background:var(--surface-subtle)}}
+  .prow:active{background:var(--surface-subtle)}
+
+  /* Г: лента 80% — как в «Видах»; проверяем, не станет ли четвёртой лентой подряд */
+  .v-g .pcards{--item-w:80%;display:flex;gap:var(--gap-card);overflow-x:auto;scroll-snap-type:x mandatory;
+    scrollbar-width:none;margin-inline:calc(var(--container-pad) * -1);
+    padding-inline:var(--container-pad);scroll-padding-left:var(--container-pad)}
+  .v-g .pcards::-webkit-scrollbar{display:none}
+  .v-g .pcards > *{flex:0 0 var(--item-w);scroll-snap-align:start}
+  .v-g .pcards::after{content:"";flex:0 0 1px}
+
+  /* Д: чипы — предельно компактно */
+  .chips{display:flex;flex-wrap:wrap;gap:var(--sp-8)}
+</style></head>
+<body class="usl v-after shape-rounded">
+
+<div class="lab"><b>А — как сейчас.</b> 2 в ряд, аспект 4:3, зазор 12. Эталон для сравнения.</div>
+<section class="usl-prod"><div class="wrap">
+  <h2>Где применяется тиснение</h2>
+  <div class="pcards">
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/vizitki.webp" alt="Визитки" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Визитки</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/kalendari.webp" alt="Календари" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Календари</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/stikery.webp" alt="Стикеры" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Стикеры</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/etiketki.webp" alt="Печать этикеток" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Печать этикеток</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/mnogostranichnaya.webp" alt="Многостраничная полиграфия" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Многостраничная полиграфия</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/naruzhnaya.webp" alt="Наружная печать" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Наружная печать</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/papki.webp" alt="Папки" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Папки</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/pos.webp" alt="POS-материалы" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">POS-материалы</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/dokumentaciya.webp" alt="Проектная документация" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Проектная документация</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/listovaya.webp" alt="Листовая полиграфия" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Листовая полиграфия</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/plastikovye-karty.webp" alt="Пластиковые карты" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Пластиковые карты</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/korobki.webp" alt="Коробки и упаковка" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Коробки и упаковка</span></span>
+        </a>
+  </div>
+</div></section>
+
+<div class="lab"><b>Б — плитки ниже.</b> Тот же кроп, аспект 16:10. Блок короче примерно вдвое.</div>
+<section class="usl-prod v-b"><div class="wrap">
+  <h2>Где применяется тиснение</h2>
+  <p class="note">Смотреть, не «обрубает» ли объект: кроп рисовался под высокую плитку.</p>
+  <div class="pcards">
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/vizitki.webp" alt="Визитки" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Визитки</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/kalendari.webp" alt="Календари" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Календари</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/stikery.webp" alt="Стикеры" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Стикеры</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/etiketki.webp" alt="Печать этикеток" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Печать этикеток</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/mnogostranichnaya.webp" alt="Многостраничная полиграфия" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Многостраничная полиграфия</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/naruzhnaya.webp" alt="Наружная печать" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Наружная печать</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/papki.webp" alt="Папки" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Папки</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/pos.webp" alt="POS-материалы" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">POS-материалы</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/dokumentaciya.webp" alt="Проектная документация" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Проектная документация</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/listovaya.webp" alt="Листовая полиграфия" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Листовая полиграфия</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/plastikovye-karty.webp" alt="Пластиковые карты" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Пластиковые карты</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/korobki.webp" alt="Коробки и упаковка" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Коробки и упаковка</span></span>
+        </a>
+  </div>
+</div></section>
+
+<div class="lab"><b>В — строки, без картинок.</b> Перечень читается взглядом; блок в 5–6 раз короче.</div>
+<section class="usl-prod"><div class="wrap">
+  <h2>Где применяется тиснение</h2>
+  <p class="note">Другой тип подачи: на странице уже 4 сетки прямоугольников и 3 ленты.</p>
+  <div class="prows">
+        <a href="#" class="prow"><span class="prow__t">Визитки</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Календари</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Стикеры</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Печать этикеток</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Многостраничная полиграфия</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Наружная печать</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Папки</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">POS-материалы</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Проектная документация</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Листовая полиграфия</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Пластиковые карты</span><span class="mk-arr" aria-hidden="true"></span></a>
+        <a href="#" class="prow"><span class="prow__t">Коробки и упаковка</span><span class="mk-arr" aria-hidden="true"></span></a>
+  </div>
+</div></section>
+
+<div class="lab"><b>Г — лента 80%.</b> Твой вариант, но без точек: индикатор — подглядывающая карточка.</div>
+<section class="usl-prod v-g"><div class="wrap">
+  <h2>Где применяется тиснение</h2>
+  <p class="note">12 товаров = 12 «страниц». Точки тут были бы шумом, а не индикатором.</p>
+  <div class="pcards">
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/vizitki.webp" alt="Визитки" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Визитки</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/kalendari.webp" alt="Календари" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Календари</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/stikery.webp" alt="Стикеры" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Стикеры</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/etiketki.webp" alt="Печать этикеток" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Печать этикеток</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/mnogostranichnaya.webp" alt="Многостраничная полиграфия" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Многостраничная полиграфия</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/naruzhnaya.webp" alt="Наружная печать" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Наружная печать</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/papki.webp" alt="Папки" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Папки</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/pos.webp" alt="POS-материалы" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">POS-материалы</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/dokumentaciya.webp" alt="Проектная документация" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Проектная документация</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/listovaya.webp" alt="Листовая полиграфия" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Листовая полиграфия</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/plastikovye-karty.webp" alt="Пластиковые карты" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Пластиковые карты</span></span>
+        </a>
+        <a href="#" class="mk-mcard mk-mcard--link ">
+          <span class="mk-mcard__media"><img src="../assets/img/products/korobki.webp" alt="Коробки и упаковка" loading="lazy"></span>
+          <span class="mk-mcard__body"><span class="mk-mcard__title mk-mcard__title--label">Коробки и упаковка</span></span>
+        </a>
+  </div>
+</div></section>
+
+<div class="lab"><b>Д — чипы.</b> Предельно компактно, но теряется «витрина».</div>
+<section class="usl-prod"><div class="wrap">
+  <h2>Где применяется тиснение</h2>
+  <div class="chips">
+        <a href="#" class="mk-chip">Визитки</a>
+        <a href="#" class="mk-chip">Календари</a>
+        <a href="#" class="mk-chip">Стикеры</a>
+        <a href="#" class="mk-chip">Печать этикеток</a>
+        <a href="#" class="mk-chip">Многостраничная полиграфия</a>
+        <a href="#" class="mk-chip">Наружная печать</a>
+        <a href="#" class="mk-chip">Папки</a>
+        <a href="#" class="mk-chip">POS-материалы</a>
+        <a href="#" class="mk-chip">Проектная документация</a>
+        <a href="#" class="mk-chip">Листовая полиграфия</a>
+        <a href="#" class="mk-chip">Пластиковые карты</a>
+        <a href="#" class="mk-chip">Коробки и упаковка</a>
+  </div>
+</div></section>
+
+</body></html>

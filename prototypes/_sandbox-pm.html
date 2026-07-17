@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Песочница · «Что учесть» на десктопе</title>
+<link rel="stylesheet" href="../assets/css/fonts.css">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/kit.css">
+<style>
+  body{margin:0;padding:32px;background:#d9d3c9;font-family:var(--font-body);color:var(--text-primary)}
+  .lab{font-family:var(--font-head);text-transform:uppercase;font-size:14px;color:#4a4235;margin:0 0 2px}
+  .hint{font-size:12px;color:#5c5346;margin:0 0 10px}
+  .stage{background:var(--surface-page);border-radius:14px;padding:24px;margin-bottom:28px}
+  .wrap{width:1216px;margin:0 auto}
+
+  /* общая раскладка блока */
+  .adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-24);align-items:stretch}
+  .adv-media{min-height:300px}
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-24)}
+  .pm{margin-top:var(--sp-24)}
+  .pm .card{padding:var(--sp-24)}
+  .pm h4{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-12)}
+  .pm .badge{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--brand)}
+
+  /* A · как сейчас: 2 колонки */
+  .a .pm .mk-list{display:block;column-count:2;column-gap:var(--sp-32)}
+  .a .pm .mk-list li{break-inside:avoid;margin-bottom:var(--sp-8)}
+
+  /* B · полоса: метка слева, пункты в 4 колонки */
+  .b .pm .card{display:grid;grid-template-columns:200px 1fr;gap:var(--sp-32);align-items:start}
+  .b .pm h4{margin-bottom:0}
+  .b .pm .mk-list{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-16) var(--sp-24)}
+
+  /* C · в левой колонке под фото */
+  .c .adv-grid{grid-template-areas:"media tiles" "note tiles";grid-template-rows:auto auto;align-items:start}
+  .c .adv-media{grid-area:media}
+  .c .tiles{grid-area:tiles;align-content:start}
+  .c .pm{grid-area:note;margin-top:0}
+  .c .pm .mk-list{display:flex;flex-direction:column;gap:var(--sp-8)}
+</style>
+</head>
+<body>
+<script>
+  const NOTES = ['Не для мелких деталей и тонких линий','Нужен отдельный слой под фольгу в макете',
+                 'Стоимость считается отдельно от печати','Минимальный тираж — от 50 шт'];
+  const TILES = [['Премиальный вид','Мгновенно поднимает статус изделия — считывается как «дорого» ещё до прочтения.'],
+                 ['Тактильность','Фольгу и рельеф чувствуешь на ощупь. Изделие хочется взять в руки.'],
+                 ['Стойкость','Не выцветает и не стирается — эффект держится весь срок службы.'],
+                 ['Контраст на тёмном','Металлик ярко работает там, где обычная краска почти не видна.']];
+  const tiles = () => TILES.map(t=>`<div class="mk-tile"><span class="mk-tile__ico"></span><h3 class="mk-tile__title">${t[0]}</h3><p class="mk-tile__text">${t[1]}</p></div>`).join('');
+  const note = () => `<div class="pm"><div class="card mk-card mk-card--gray">
+      <h4 class="mk-h4"><span class="badge"></span>Что учесть</h4>
+      <ul class="mk-list">${NOTES.map(n=>`<li>${n}</li>`).join('')}</ul></div></div>`;
+  const stage = (cls, lab, hint, inGrid) => `
+    <p class="lab">${lab}</p><p class="hint">${hint}</p>
+    <div class="stage ${cls}"><div class="wrap">
+      <div class="adv-grid">
+        <div class="adv-media mk-ph"><b>Фото или видео тиснения</b><span>крупный план · 4:3</span></div>
+        <div class="tiles">${tiles()}</div>
+        ${inGrid ? note() : ''}
+      </div>
+      ${inGrid ? '' : note()}
+    </div></div>`;
+  document.write(
+    stage('a','A · как сейчас — 2 колонки','карточка во всю ширину, пункты жмутся влево, справа пусто', false) +
+    stage('b','B · полоса — метка слева, пункты в 4 колонки','ширина работает, ритм как у статбара', false) +
+    stage('c','C · в левой колонке под фото','встаёт в ритм блока: слева фото + оговорки, справа плитки', true)
+  );
+</script>
+</body>
+</html>
