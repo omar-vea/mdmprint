@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717b">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717b">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717b">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717c">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717c">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717c">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -625,7 +625,12 @@
     /* «Сочетается»: 3 в ряд оставались и на мобилке — плитка 103px на 390. Дело не только в
        зазоре: три колонки при поле 16 физически не дают плитке ширины. Два в ряд, как у
        «Где применяется» — единый ритм плиточных сеток на мобилке. */
-    .usl-combo .combo-grid{grid-template-columns:1fr 1fr}
+    /* 1 в ряд. .mk-tilelink горизонтальна по конструкции: кадр слева, текст справа, стрелка у
+       края — при 173px её сжимало поперёк собственной логики (кадр 140 из 173, тексту оставалось
+       чуть), и «Ламинация soft-touch» ломалась в две строки. Во всю ширину плитка встаёт в родную
+       форму. Ленту не берём: их шесть, это ссылки для просмотра всех, а не витрина, и лента на
+       странице была бы четвёртой. */
+    .usl-combo .combo-grid{grid-template-columns:1fr}
     .usl-adv .tiles{grid-template-columns:1fr}
     /* ПРЕИМУЩЕСТВА. Сетка 2×2 проверена рендером и отвергнута: мера падает до 20 знаков (норма
        35–50), текст разваливается в лесенку и плитка отрастает ровно на столько, на сколько
