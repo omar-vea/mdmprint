@@ -251,8 +251,9 @@
 .mk-mcard--link:focus-visible{outline:2px solid var(--brand-dark);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.mk-mcard--link{transition:none}
   .mk-mcard--link:hover{transform:none}}
-.mk-mcard__body{display:flex;flex-direction:column;gap:var(--sp-8);
-  padding:var(--sp-16) var(--sp-20) var(--sp-20)}
+/* Тело плитки — 16 со всех сторон. Было 16/20/20: асимметрия ниоткуда, из-за неё подпись
+   стояла не на той же сетке, что кадр над ней. */
+.mk-mcard__body{display:flex;flex-direction:column;gap:var(--sp-8);padding:var(--sp-16)}
 .mk-mcard__tag{font-family:var(--font-body);font-weight:500;text-transform:uppercase;color:var(--brand-text);
   font-size:var(--t-label);line-height:var(--t-label-lh);letter-spacing:var(--t-label-ls)}
 /* Заголовок карточки.
@@ -273,7 +274,9 @@
    Рамку/фон/радиус даёт .mk-card — здесь только внутренняя раскладка.
    Источник обязателен: отзывы приходят из Яндекс.Карт и 2ГИС (виджет SmartWidgets),
    плюс собственные с сайта. Все три вида — один поток, различаются бейджем. */
-.mk-review{display:flex;flex-direction:column;gap:var(--sp-16);padding:var(--sp-28)}
+/* Паддинг по ЛЕСТНИЦЕ (см. DESIGN_SYSTEM §4): крупная карточка — 24. Было 28 — число вне
+   лестницы, из-за него отзыв дышал иначе, чем соседняя форма (24). */
+.mk-review{display:flex;flex-direction:column;gap:var(--sp-16);padding:var(--sp-24)}
 .mk-review__head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-12)}
 .mk-review__stars{color:var(--brand);font-size:var(--t-body);line-height:var(--t-body-lh);letter-spacing:.08em}
 
@@ -370,7 +373,7 @@
    Иконка справа — аффорданс, загорается брендом при наведении на строку. */
 .mk-filerow{display:flex;align-items:center;gap:var(--sp-12);text-decoration:none;
   background:var(--surface-card);border:1px solid transparent;border-radius:var(--radius-md);
-  padding:var(--sp-10) var(--sp-12);transition:border-color .15s}
+  padding:var(--sp-12);transition:border-color .15s}   /* строка — 12; было 10/12 вне лестницы */
 @media (hover:hover){.mk-filerow:hover{border-color:var(--border-strong)}}
 .mk-filerow:active{border-color:var(--border-strong);background:var(--surface-subtle)}
 .mk-filerow:focus-visible{outline:2px solid var(--brand-dark);outline-offset:2px}

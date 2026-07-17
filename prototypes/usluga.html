@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717e">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717e">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717e">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717f">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717f">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717f">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -138,8 +138,8 @@
   /* ЦЕНЫ */
   /* ЦЕНЫ — карточки и прайс-строки из кита (.mk-card / .mk-pricelist) */
   .usl-price .price-grid{display:grid;grid-template-columns:776fr 376fr;gap:var(--sp-24);align-items:stretch}
-  .usl-price .ptable{display:flex;flex-direction:column;gap:var(--sp-16);align-items:flex-start;padding:var(--sp-28)}
-  .usl-price .calc{display:flex;flex-direction:column;gap:var(--sp-12);align-items:flex-start;padding:var(--sp-28)}
+  .usl-price .ptable{display:flex;flex-direction:column;gap:var(--sp-16);align-items:flex-start;padding:var(--sp-24)}
+  .usl-price .calc{display:flex;flex-direction:column;gap:var(--sp-12);align-items:flex-start;padding:var(--sp-24)}
   /* один в один с .fnote «Готовых материалов», включая margin-top: два блока-помощника
      набраны одинаково, различает их только сторона — тёмная или светлая */
   .usl-price .calc .calc-sub{color:var(--text-on-dark-2);font-size:var(--t-small);
@@ -160,7 +160,7 @@
   /* ТРЕБОВАНИЯ — композиция «Цен»: слева контент, справа липкая карточка с файлами.
      Строки требований и параметров — белые плашки на серой карточке (язык прайс-листа). */
   .usl-req .req-grid{display:grid;grid-template-columns:776fr 376fr;gap:var(--sp-24);align-items:start}
-  .usl-req .req-main{padding:var(--sp-28);min-width:0}
+  .usl-req .req-main{padding:var(--sp-24);min-width:0}
   .usl-req .req-head{margin:0 0 var(--sp-18)}
   /* Своего правила у h3 тут нет и не должно быть: базовое .usl h3:not([class]) даёт и гарнитуру,
      и капс, и margin:0, и ступень --t-h3. Прежнее правило всё это дублировало ради font-size:19px —
@@ -256,7 +256,6 @@
   .usl-rev .rev-leave-dot--2gis{background:var(--src-2gis)}
   .usl-rev .rev-leave-dot--site{background:var(--brand)}
   /* карточки компактнее: 4 строки цитаты вместо 5, padding 24 вместо 28 */
-  .usl-rev .mk-review{padding:var(--sp-20)}
   /* текст отзыва скроллится внутри карточки; max-height ≈ 5 строк, дальше — вертикальный скролл */
   .usl-rev .mk-review__text{font-size:var(--t-small);line-height:var(--t-small-lh);max-height:7.5em;
     scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent}
@@ -275,7 +274,7 @@
      Заголовок наборный (.mk-mcard__title, Roboto 16/600) — имя статьи читают, а не опознают. */
   .usl-art .art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-24)}
   .usl-art .art-card{height:100%}
-  .usl-art .art-card .mk-mcard__body{flex:1;padding:var(--sp-20)}
+  .usl-art .art-card .mk-mcard__body{flex:1}   /* паддинг — китовый (16), см. лестницу в ДС */
   /* --text-secondary, а не --text-tertiary: время чтения — осмысленный текст (норма 4.5:1) */
   .usl-art .art-card__time{margin-top:auto;padding-top:var(--sp-12);
     color:var(--text-secondary);font-size:var(--t-small);line-height:var(--t-small-lh)}
@@ -604,6 +603,13 @@
     /* Лента отзывов — как «Виды» и «Портфолио»: карточка 80% и обрезка ПО ЭКРАНУ, а не по
        контейнеру. Было 2 в кадре по 173px: в такую ширину отзыв не читается, а лента жила по
        своим правилам — единственная на странице клипалась контейнером. */
+    /* ПАДДИНГИ НА МОБИЛКЕ (лестница из ДС §4): крупная карточка — 16, то есть РОВНО поле
+       контейнера. Тогда текст внутри карточки стоит на той же сетке, что текст вне её, и полосы
+       во всю ширину экрана не спорят с карточками. Десктопные 24 на 390 съедали бы 13% ширины. */
+    .usl-rev .mk-review,.usl-faq .faq-form{padding:var(--container-pad)}
+    .usl-adv .mk-tile{padding:var(--container-pad)}
+    /* тело плитки — ступень ниже (12): плитка мельче карточки, ей 16 много */
+    .usl-prod .mk-mcard__body,.usl-vidy .mk-mcard__body,.usl-art .mk-mcard__body{padding:var(--sp-12)}
     .usl-rev .revs{--item-w:80%}
     .usl-rev .mk-scroller__track{margin-inline:calc(var(--container-pad) * -1);
       padding-inline:var(--container-pad);scroll-padding-left:var(--container-pad)}
@@ -650,12 +656,20 @@
        две подачи у одной кнопки читаются как две разные. */
     .usl-rev .mk-review__text.is-open .rev-more{position:static;background:none;
       display:block;width:max-content;padding:var(--sp-12) 0}
-    /* Тач-цель ссылки: у --link height:auto, добираем полями до 44.
-       margin-left:auto снимаем: в шапку на 390 всё не влезает («607 отзывов на Яндекс.Картах и
-       2ГИС» — 315px из 358), кнопка переносится на вторую строку, и прижатая вправо повисает в
-       пустоте. На своей строке она встаёт по левому краю, под оценку — как обычная ссылка. */
-    .usl-rev .rev-actions{margin-left:0}
-    .usl-rev .rev-actions .mk-btn--link{min-height:44px;display:inline-flex;align-items:center}
+    /* ШАПКА: «Отзывы · 4,9» одной строкой, «607 отзывов…» — под ними.
+       display:contents у .rev-head растворяет её как контейнер, и её дети (оценка, подпись,
+       кнопка) становятся прямыми элементами .sec-head — тогда заголовок и оценка встают в одну
+       строку без правки разметки. Точка-разделитель — псевдоэлементом у оценки: это ТИПОГРАФИКА
+       строки, а не отдельная сущность, в разметке ей делать нечего.
+       Строку «607 отзывов…» роняем вниз через width:100% — во флексе это честный перенос. */
+    .usl-rev .sec-head{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:var(--sp-8)}
+    .usl-rev .rev-head{display:contents}
+    .usl-rev .rev-score::before{content:"·";margin-right:var(--sp-8);color:var(--text-tertiary)}
+    .usl-rev .rev-of{width:100%;margin-top:var(--sp-4)}
+    /* Кнопку «Оставить отзыв» на мобилке пока прячем (решение Omar): в шапке ей тесно, а
+       действие второстепенное и уводит на чужой сайт. display:none, а не visibility —
+       скринридер её тоже не должен объявлять, раз её нет. */
+    .usl-rev .rev-actions{display:none}
     /* Косяк №3: ссылка-источник («Яндекс Карты») давала цель 16px по высоте. */
     .usl-rev .mk-review__source{min-height:32px;padding-block:var(--sp-8)}
     /* .usl-art .art-grid — см. второй брейкпоинт в <style id="port-after">: здесь правило
@@ -669,8 +683,7 @@
     /* flex:1 — тело забирает весь остаток высоты плитки. Без него в рядах, где у соседа подпись
        в три строки, плитка растягивалась до высоты ряда, а тело оставалось по контенту: текст
        висел выше низа (замер: отступ 28 против 10). Прижим держится на паре flex:1 + flex-end. */
-    .usl-prod .mk-mcard__body{flex:1;padding:var(--sp-10) var(--sp-12);
-      min-height:calc(2 * 20px + 2 * var(--sp-10))}
+    .usl-prod .mk-mcard__body{flex:1;min-height:calc(2 * 20px + 2 * var(--sp-12))}
     /* Кегль НЕ понижаем: при 2 в ряд плитка 173, бокс подписи 149 — родные 16/20 влезают в две
        строки у всех шести (замер). Понижение до 14 было костылём под плитку 111 при 3 в ряд.
        Переносы оставляем: hyphens:auto (от lang="ru") страхует длинные слова вроде
