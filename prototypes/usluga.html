@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717c">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717c">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717c">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717d">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717d">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717d">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -602,7 +602,59 @@
     .usl-vidy .vidy-grid > *{flex:0 0 var(--item-w);scroll-snap-align:start}
     /* хвост: padding-inline-end у флекс-скроллера игнорируется, последняя карточка липла бы к краю */
     .usl-vidy .vidy-grid::after{content:"";flex:0 0 1px}
-    .usl-rev .revs{--item-w:calc((100% - var(--gap-card)) / 2)}  /* на узких — 2 в кадре, не 3 крошечных */
+    /* Лента отзывов — как «Виды» и «Портфолио»: карточка 80% и обрезка ПО ЭКРАНУ, а не по
+       контейнеру. Было 2 в кадре по 173px: в такую ширину отзыв не читается, а лента жила по
+       своим правилам — единственная на странице клипалась контейнером. */
+    .usl-rev .revs{--item-w:80%}
+    .usl-rev .mk-scroller__track{margin-inline:calc(var(--container-pad) * -1);
+      padding-inline:var(--container-pad);scroll-padding-left:var(--container-pad)}
+    .usl-rev .mk-scroller__track::after{content:"";flex:0 0 1px}   /* padding-inline-end во флекс-ленте игнорируется */
+    /* Подпись автора — к низу карточки. Карточка это флекс-колонка, текст обрезан на 5 строках,
+       а карточки в ленте равной высоты: без прижима автор и кнопка «Показать полностью» повисали
+       посреди пустоты. Теперь текст сверху, автор снизу, кнопка — сразу под своим текстом. */
+    .usl-rev .mk-review__author{margin-top:auto;gap:var(--sp-10)}
+    /* Блок автора вдвое компактнее: 46 → 34. Имя было 16/24 — леадинг ПРОЗЫ на однострочном
+       имени; отсюда и мнимый зазор до даты (сам gap 2px, видимые ~9 дают полулеадинги двух
+       строк). Ступень ниже + плотный леадинг + gap:0. Аватар 32: он опознавательный знак, а не
+       фото-контент, и при 40 перевешивал две строки текста рядом. */
+    .usl-rev .mk-review__avatar{width:32px;height:32px}
+    .usl-rev .mk-review__who{gap:0}
+    .usl-rev .mk-review__name{font-size:var(--t-small);line-height:18px}
+    .usl-rev .mk-review__role{font-size:var(--t-caption);line-height:var(--t-caption-lh)}
+    /* ОТЗЫВЫ. Косяк №1: текст скроллился ВНУТРИ карточки (max-height + overflow:auto). На десктопе
+       это работает, на тач-экране даёт третью ось прокрутки — палец над отзывом листает текст, а
+       страница стоит. Убираем скролл; текст остаётся обрезан на 5 строках, но получает честный
+       выход — кнопку «Показать полностью» (ставит JS только тем, кто не влез).
+       Снять ограничение совсем нельзя: один отзыв в 27 строк растянул бы ВСЕ карточки ленты по
+       себе — 728px против 293 (замер). */
+    .usl-rev .mk-review__text{position:relative;overflow:hidden;max-height:calc(5 * var(--t-small-lh))}
+    /* Маску .has-more гасим: её ставит скрипт десктопного скролла, а на мобилке она растворяла
+       хвост последней строки ВМЕСТЕ с «…ещё». Признак продолжения тут даёт само многоточие. */
+    .usl-rev .mk-review__text.has-more{-webkit-mask-image:none;mask-image:none}
+    .usl-rev .mk-review__text.is-open{max-height:none}
+    /* «…ещё» ИНЛАЙНОМ — в конце пятой строки, поверх её хвоста, с растяжкой фона карточки под
+       собой. Обрыв текста и продолжение оказываются в одной точке: кнопка ничего не «висит»
+       посреди карточки, потому что она вообще не отдельный элемент композиции, а часть текста.
+       Паттерн привычный по соцсетям. Маску-растворение при этом не даём: она съела бы и ссылку,
+       а роль признака «есть продолжение» берёт на себя многоточие. */
+    .usl-rev .rev-more{position:absolute;right:0;bottom:0;
+      padding:0 0 0 var(--sp-28);border:0;cursor:pointer;
+      background:linear-gradient(90deg,transparent,var(--surface-card) var(--sp-20));
+      font-family:var(--font-body);font-size:var(--t-small);line-height:var(--t-small-lh);
+      color:var(--text-secondary);-webkit-tap-highlight-color:transparent}
+    .usl-rev .rev-more:active{color:var(--text-primary)}
+    /* Раскрытый: ссылка возвращается в поток ПОД текст.
+       display:block + width:max-content обязательны: inline-flex садился в одну строку с хвостом
+       текста и раздувал её строчный бокс до min-height (44) — последняя строка отъезжала вниз.
+       Блок такой строки не создаёт, а тач-цель набирается полями: 12 + 20 + 12 = 44.
+       Подчёркивания нет: свёрнутая «…ещё» не подчёркнута, и это тот же самый элемент —
+       две подачи у одной кнопки читаются как две разные. */
+    .usl-rev .mk-review__text.is-open .rev-more{position:static;background:none;
+      display:block;width:max-content;padding:var(--sp-12) 0}
+    /* Косяк №2: «Оставить отзыв» — 32px (mk-btn--sm) против тач-нормы 44. */
+    .usl-rev .rev-actions .mk-btn{min-height:44px}
+    /* Косяк №3: ссылка-источник («Яндекс Карты») давала цель 16px по высоте. */
+    .usl-rev .mk-review__source{min-height:32px;padding-block:var(--sp-8)}
     /* .usl-art .art-grid — см. второй брейкпоинт в <style id="port-after">: здесь правило
        бесполезно, его перебивает body.v-after .usl-art .art-grid из более позднего блока */
     /* ГДЕ ПРИМЕНЯЕТСЯ — 3 в ряд (решение Omar). Подписи набраны как плитки технологий
@@ -3359,7 +3411,11 @@
             <div class="rev-actions">
               <!-- «Оставить отзыв» → выбор площадки (Яндекс / 2ГИС / на сайте). Внешние ведут на страницы отзывов площадок. -->
               <div class="rev-leave" data-leave>
-                <button type="button" class="mk-btn mk-btn--primary mk-btn--sm" data-leave-toggle aria-haspopup="true" aria-expanded="false">Оставить отзыв</button>
+                <!-- ghost, не primary: жёлтый = главное действие страницы, а это уводит НА ЧУЖОЙ САЙТ
+                     (Яндекс/2ГИС) — акцентировать выход нельзя. Иконкой не делаем: узнаваемого глифа у
+                     «оставить отзыв» нет (карандаш = «редактировать», звезда = «в избранное»), да и это
+                     не кнопка-действие, а триггер меню выбора площадки. -->
+                <button type="button" class="mk-btn mk-btn--ghost mk-btn--sm" data-leave-toggle aria-haspopup="true" aria-expanded="false">Оставить отзыв</button>
                 <div class="rev-leave-menu" data-leave-menu hidden>
                   <a href="https://yandex.ru/maps/org/227012965480/reviews" target="_blank" rel="noopener"><span class="rev-leave-dot rev-leave-dot--yandex"></span>На Яндекс.Картах</a>
                   <a href="https://2gis.ru/moscow/firm/70000001019036937/tab/reviews" target="_blank" rel="noopener"><span class="rev-leave-dot rev-leave-dot--2gis"></span>В 2ГИС</a>
@@ -4290,6 +4346,34 @@
       check();
     });
   }
+  /* ── Отзывы на мобилке: «Показать полностью» ──
+     Вложенный скролл внутри карточки на тач-экране конфликтует с прокруткой страницы, поэтому там
+     текст обрезан и раскрывается по тапу. Кнопку ставим ТОЛЬКО тем, кто реально не влез, и только
+     на мобилке: на десктопе работает прежний скролл с растворяющимся низом. */
+  const REV_MOBILE = window.matchMedia('(max-width:900px)');
+  function markReviewClamp(scope){
+    (scope || document).querySelectorAll('.usl-rev .mk-review__text').forEach(el => {
+      const card = el.closest('.mk-review');
+      let btn = el.querySelector('.rev-more');
+      if (!REV_MOBILE.matches) { if (btn) btn.remove(); el.classList.remove('rev-clamped','is-open'); return; }
+      const over = el.scrollHeight - el.clientHeight > 1 || el.classList.contains('is-open');
+      el.classList.toggle('rev-clamped', over);
+      if (over && !btn && card) {
+        btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'rev-more'; btn.textContent = '…ещё';
+        btn.addEventListener('click', () => {
+          const open = el.classList.toggle('is-open');
+          btn.textContent = open ? 'Свернуть' : '…ещё';
+        });
+        el.appendChild(btn);   // ВНУТРЬ текста: position:absolute считается от позиционированного
+                               // ПРЕДКА, а не от брата — снаружи ссылку уносило к краю карточки
+      } else if (!over && btn) btn.remove();
+    });
+  }
+  markReviewClamp();
+  REV_MOBILE.addEventListener('change', () => markReviewClamp());
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => markReviewClamp());
+
   markReviewScroll();                                                          // статичные карточки
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => markReviewScroll());  // после свопа шрифтов высоты меняются
   window.addEventListener('resize', () => markReviewScroll(), { passive:true });
@@ -4395,7 +4479,9 @@
       rendered = true;
       box.dispatchEvent(new CustomEvent('mk:sync'));   // карточек стало больше/меньше — пересчитать стрелки
       // подсказка прокрутки: мерить после свопа шрифтов И завершения раскладки новых карточек
-      const hint = () => markReviewScroll(grid);
+      // кнопки «Показать полностью» — тоже здесь: карточки виджета ЗАМЕНИЛИ статичные
+      // (grid.replaceChildren), и разметка, поставленная при загрузке, ушла вместе с ними
+      const hint = () => { markReviewScroll(grid); markReviewClamp(grid); };
       (document.fonts && document.fonts.ready || Promise.resolve())
         .then(() => requestAnimationFrame(() => requestAnimationFrame(hint)));
       setTimeout(hint, 300);                           // страховка, если rAF отработал до реколка
