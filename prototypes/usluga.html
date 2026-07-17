@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717i">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717i">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717i">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717j">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717j">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717j">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -406,33 +406,33 @@
   @media (prefers-reduced-motion:reduce){.usl-foot .fcopy{transition:none}}
 
   /* ── ВАРИАНТ Б копирования: без кнопок, подсказка при наведении ──
-     Включается классом body.fcopy-hint. Кнопки-иконки (вариант А) при этом скрыты.
+     Включается классом body. Кнопки-иконки (вариант А) при этом скрыты.
      Клик по номеру копирует вместо перехода — но только там, где есть мышь:
      на тач-устройстве tel:/mailto: должны работать как обычные ссылки.
      Оформление висит на [data-hint], а не на .fcopy-link: адрес не копируется,
      но ведёт себя так же — пунктир и подсказка «Показать на карте». */
-  body.fcopy-hint .usl-foot .fcopy{display:none}
-  body.fcopy-hint .usl-foot [data-hint]{position:relative}
+  .usl-foot .fcopy{display:none}
+  .usl-foot [data-hint]{position:relative}
   @media (hover:hover){
-    body.fcopy-hint .usl-foot [data-hint]{cursor:pointer;
+    .usl-foot [data-hint]{cursor:pointer;
       border-bottom:1px dashed var(--border-on-dark-2);transition:border-color .15s}
-    body.fcopy-hint .usl-foot [data-hint]:hover{border-bottom-color:var(--text-on-dark)}
+    .usl-foot [data-hint]:hover{border-bottom-color:var(--text-on-dark)}
     /* подсказка справа, а не снизу: строки идут через 12px и снизу она накрывала соседнюю */
-    body.fcopy-hint .usl-foot [data-hint]::after{content:attr(data-hint);position:absolute;
+    .usl-foot [data-hint]::after{content:attr(data-hint);position:absolute;
       left:calc(100% + var(--sp-10));top:50%;z-index:5;
       background:var(--surface-card);color:var(--text-primary);
       font-size:11.5px;font-weight:600;line-height:1.3;padding:5px 9px;
       border-radius:var(--radius-inside);white-space:nowrap;box-shadow:var(--shadow);
       opacity:0;pointer-events:none;transform:translate(-3px,-50%);
       transition:opacity .15s,transform .15s}
-    body.fcopy-hint .usl-foot [data-hint]:hover::after,
-    body.fcopy-hint .usl-foot [data-hint]:focus-visible::after,
-    body.fcopy-hint .usl-foot .fcopy-link.is-done::after{opacity:1;transform:translate(0,-50%)}
-    body.fcopy-hint .usl-foot .fcopy-link.is-done::after{content:"Скопировано";
+    .usl-foot [data-hint]:hover::after,
+    .usl-foot [data-hint]:focus-visible::after,
+    .usl-foot .fcopy-link.is-done::after{opacity:1;transform:translate(0,-50%)}
+    .usl-foot .fcopy-link.is-done::after{content:"Скопировано";
       background:var(--brand);color:var(--on-brand)}
   }
-  @media (prefers-reduced-motion:reduce){body.fcopy-hint .usl-foot [data-hint],
-    body.fcopy-hint .usl-foot [data-hint]::after{transition:none}}
+  @media (prefers-reduced-motion:reduce){.usl-foot [data-hint],
+    .usl-foot [data-hint]::after{transition:none}}
 
   /* Адрес ведёт на карту. Стрелки «наружу» нет: подсказку даёт [data-hint],
      как у телефона и почты. align-self — потому что .fcontact__body это flex-колонка:
@@ -661,7 +661,7 @@
     /* Косяк №3: ссылка-источник («Яндекс Карты») давала цель 16px по высоте. */
     .usl-rev .mk-review__source{min-height:32px;padding-block:var(--sp-8)}
     /* .usl-art .art-grid — см. второй брейкпоинт в <style id="port-after">: здесь правило
-       бесполезно, его перебивает body.v-after .usl-art .art-grid из более позднего блока */
+       бесполезно, его перебивает .usl-art .art-grid из более позднего блока */
     /* ГДЕ ПРИМЕНЯЕТСЯ — 3 в ряд (решение Omar). Подписи набраны как плитки технологий
        («Сочетается»): дефолтный .mk-mcard__title = Roboto 600, модификатор --label снят.
        Текст прижат к низу, как на десктопе: прижим даёт justify-content:flex-end из десктопного
@@ -1201,31 +1201,30 @@
   body.scrolled .navbar .nav{display:none}
 
   /* ═══ ФОРМА КНОПОК/ПОЛЕЙ: скругление (--radius-md 8px) — выбранный вариант ═══
-     Включено классом body.shape-rounded (тумблер выбора убран, форма зафиксирована). */
+     Включено классом (тумблер выбора убран, форма зафиксирована). */
   /* :not(--link) — форма меняется только у кнопок-ПЛАШЕК. --link это текст с пунктирным
      подчёркиванием, у него в ките border-radius:0, и скруглять там нечего: радиус загибал концы
      пунктира. Раньше это гасили по месту (в «Требованиях» стояла локальная заплатка с таким же
      комментарием) — лечили симптом, а не причину. */
-  body.shape-rounded .mk-btn:not(.mk-btn--link){border-radius:var(--radius-md)}
-  body.shape-rounded .search{border-radius:var(--radius-md)}
-  body.shape-rounded .search-drop{border-radius:var(--radius-md) var(--radius-md) var(--radius-outside) var(--radius-outside)}
-  body.shape-rounded .usl-foot .fsub-form{border-radius:var(--radius-md)}
+  .mk-btn:not(.mk-btn--link){border-radius:var(--radius-md)}
+  .search{border-radius:var(--radius-md)}
+  .search-drop{border-radius:var(--radius-md) var(--radius-md) var(--radius-outside) var(--radius-outside)}
+  .usl-foot .fsub-form{border-radius:var(--radius-md)}
   /* кнопка ВНУТРИ поля: концентрический радиус = радиус поля − зазор, не пилюля-в-пилюле */
-  body.shape-rounded .search .s-go,body.shape-rounded .usl-foot .fsub-form .mk-btn{border-radius:var(--radius-inside)}
+  .search .s-go,.usl-foot .fsub-form .mk-btn{border-radius:var(--radius-inside)}
   /* сегмент фото/видео: контейнер 8px, тумблеры 8−4=4px (паддинг --sp-4 равномерный → строго концентрично) */
-  body.shape-rounded .mk-segment{border-radius:var(--radius-md)}
-  body.shape-rounded .mk-segment__btn{border-radius:var(--radius-inside)}
-  /* ═══ конец временного теста ═══ */
+  .mk-segment{border-radius:var(--radius-md)}
+  .mk-segment__btn{border-radius:var(--radius-inside)}
 </style>
 <style id="port-after">
-/* ═══ ПЕРЕНОС ПРАВОК С ТУМБЛЕРОМ ДО/ПОСЛЕ (body.v-after = «После», дефолт) ═══
-   Все правки сессии живут под body.v-after; без класса — исходный вид «До».
-   Разметочные различия держат две версии: .v-before / .v-after-el. */
-  body.v-after .v-before{display:none!important}
-  body:not(.v-after) .v-after-el{display:none!important}
+/* ═══ Правки редизайна (запечены 17.07) ═══
+   Раньше этот слой включался классом body.v-after — тумблером сравнения «до/после». Тумблер снят:
+   вариант «после» победил и стал единственным, разметка варианта «до» удалена. Класс на <body> был
+   миной для переноса: в теме WordPress его взяться неоткуда, а от него зависели 60 самых
+   специфичных правил файла — страница поехала бы молча. */
 
   /* ГЕРОЙ — левую часть выше */
-  body.v-after .usl-hero .hero-left{padding-top:20px}
+  .usl-hero .hero-left{padding-top:20px}
 
   /* СТАТЬИ — 5 в ряд + время/стрелка (meta-обёртка глобальна; в «До» стрелка и 5-я карточка скрыты) */
   .usl-art .art-card__meta{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-12);margin-top:auto;padding-top:var(--sp-12);line-height:var(--t-small-lh)}
@@ -1233,14 +1232,13 @@
   .usl-art .art-card .mk-arr{color:var(--text-tertiary);transition:transform .15s}
   .usl-art .art-card:hover .mk-arr{transform:translateX(2px);color:var(--text-primary)}
   @media (prefers-reduced-motion:reduce){.usl-art .art-card .mk-arr{transition:none}.usl-art .art-card:hover .mk-arr{transform:none}}
-  body.v-after .usl-art .art-grid{grid-template-columns:repeat(5,1fr)}
-  body:not(.v-after) .usl-art .art-card .mk-arr{display:none}
+  .usl-art .art-grid{grid-template-columns:repeat(5,1fr)}
 
   /* КАЛЬКУЛЯТОР — прозрачный, 36px, иконка 20px, кружок «%» */
-  body.v-after .calcbtn{background:transparent;border-color:transparent;padding:0 12px;height:36px}
-  body.v-after .calcbtn:hover{background:var(--surface-subtle);border-color:transparent}
-  body.v-after .calcbtn .calc-ic{display:inline-flex;flex-shrink:0}
-  body.v-after .calcbtn .calc-ic svg{width:20px;height:20px;color:currentColor}
+  .calcbtn{background:transparent;border-color:transparent;padding:0 12px;height:36px}
+  .calcbtn:hover{background:var(--surface-subtle);border-color:transparent}
+  .calcbtn .calc-ic{display:inline-flex;flex-shrink:0}
+  .calcbtn .calc-ic svg{width:20px;height:20px;color:currentColor}
 
   /* ПОРТФОЛИО — переключатель как ЧАСТЬ ЗАГОЛОВКА: дисплейный кегль h2, активный помечен
      бренд-подчёркиванием. Контрола нет вовсе — ни плашки, ни рамки, ни заливки, поэтому
@@ -1264,114 +1262,114 @@
 
   /* ЧАВО — форма как тёплая карточка (не терялась), аккордеоны из «коробок» в тихий список
      с разделителями (карточный вариант кита — «для коротких/одиночных», а не для списка из 5) */
-  body.v-after .faq-form{background:var(--surface-subtle);border-color:transparent}
+  .faq-form{background:var(--surface-subtle);border-color:transparent}
   /* отдельные карточки: тёплый фон БЕЗ обводки (как у форм); компактнее и hover фоном, а не бордером */
-  body.v-after .usl-faq .mk-acc--card,
-  body.v-after .usl-faq .mk-acc--card:hover,
-  body.v-after .usl-faq .mk-acc--card[open]{border-color:transparent}
-  body.v-after .usl-faq .mk-acc--card{background:var(--surface-subtle)}
-  body.v-after .usl-faq .mk-acc--card:hover{background:var(--surface-gray)}
+  .usl-faq .mk-acc--card,
+  .usl-faq .mk-acc--card:hover,
+  .usl-faq .mk-acc--card[open]{border-color:transparent}
+  .usl-faq .mk-acc--card{background:var(--surface-subtle)}
+  .usl-faq .mk-acc--card:hover{background:var(--surface-gray)}
   /* боковые поля обязаны остаться: шорткат padding:16px 0 обнулял их и бил китовое
      .mk-acc--card > .mk-acc__q — текст ложился на самый край карточки */
-  body.v-after .usl-faq .mk-acc__q{padding:var(--sp-16) var(--sp-20)}
-  body.v-after .usl-faq .mk-acc[open] .mk-acc__q{padding-bottom:var(--sp-8)}
+  .usl-faq .mk-acc__q{padding:var(--sp-16) var(--sp-20)}
+  .usl-faq .mk-acc[open] .mk-acc__q{padding-bottom:var(--sp-8)}
   /* Маркер +/× в тональном КРУЖКЕ. Круг, а не квадрат правила форм: форма несёт аффорданс —
      округлость роднит элемент с кнопкой-пилюлей («нажимается»), квадрат читается как статичный
      контейнер. Поэтому правило форм действует на НЕинтерактивные плашки (шапки карточек, галочки,
      бейджи), а контролы — круглые: этот маркер и стрелки скроллера. */
-  body.v-after .usl-faq .mk-acc__q::after{width:26px;height:26px;flex-shrink:0;border-radius:50%;
+  .usl-faq .mk-acc__q::after{width:26px;height:26px;flex-shrink:0;border-radius:50%;
     background:var(--surface-on-light);color:var(--text-secondary);
     display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;
     transition:background .15s,color .15s,transform .2s}
-  body.v-after .usl-faq .mk-acc__q:hover::after{background:var(--surface-on-light-2);color:var(--text-primary)}
+  .usl-faq .mk-acc__q:hover::after{background:var(--surface-on-light-2);color:var(--text-primary)}
   /* disabled CTA на тёплой подложке: gray сливается с subtle → плотнее (gray-2) */
-  body.v-after .faq-form .cbm-submit:disabled{background:var(--surface-gray-2)}
+  .faq-form .cbm-submit:disabled{background:var(--surface-gray-2)}
 
-  /* МЕГАМЕНЮ C2 (scoped body.v-after) */
+  /* МЕГАМЕНЮ C2 (scoped body) */
 
 /* ПЕСОЧНИЦА C2: линии → фланг-панели. Рельса и промо становятся скруглёнными панелями
    («скобки» слева/справа), центр — белая «деталь» выбора между ними. Master-detail
    держится на: (1) структуре скобок, (2) бренд-эхе активный пункт ↔ тик у заголовка центра.
    Наложено поверх usluga.html через inject — оригинал не изменён. */
-  body.v-after .mega-box{border:0}
-  body.v-after .mega-card{grid-template-columns:280px 1fr 240px;height:540px;padding:14px 0}
+  .mega-box{border:0}
+  .mega-card{grid-template-columns:280px 1fr 240px;height:540px;padding:14px 0}
 
   /* РЕЛЬСА — нейтральная панель-навигация (левый фланг). Раньше «висела» на белом.
      surface-subtle неотличим от белого (проверено, конц. B), gray-2 был тяжеловат →
      завели токен --surface-panel (тёплый off-white). Панель со скруглением = контейнер. */
-  body.v-after .rail{border:0;border-radius:var(--radius-outside);background:var(--surface-panel);padding:8px 4px;margin:0 8px 0 0;height:100%;max-height:none;scrollbar-gutter:stable}
-  body.v-after .rail .lbl{padding:8px 10px 4px}
-  body.v-after .rail .ri{padding:9px 10px;border-radius:var(--radius-md);white-space:nowrap;gap:9px}/* одна строка + чуть плотнее иконка↔текст (было 12) */
-  body.v-after .rail .ri:hover{background:var(--surface-card)}/* наведение = выбор раздела (mouseenter → active) */
+  .rail{border:0;border-radius:var(--radius-outside);background:var(--surface-panel);padding:8px 4px;margin:0 8px 0 0;height:100%;max-height:none;scrollbar-gutter:stable}
+  .rail .lbl{padding:8px 10px 4px}
+  .rail .ri{padding:9px 10px;border-radius:var(--radius-md);white-space:nowrap;gap:9px}/* одна строка + чуть плотнее иконка↔текст (было 12) */
+  .rail .ri:hover{background:var(--surface-card)}/* наведение = выбор раздела (mouseenter → active) */
   /* активный/выбранный (он же — состояние наведения): белая карточка + бренд-бар слева.
      Светло-жёлтая заливка на тёплой панели читалась «грязно» → ушли от неё. */
-  body.v-after .rail .ri.active{background:var(--surface-card);border-radius:var(--radius-md);box-shadow:0 1px 4px rgba(20,15,0,.06)}
+  .rail .ri.active{background:var(--surface-card);border-radius:var(--radius-md);box-shadow:0 1px 4px rgba(20,15,0,.06)}
   /* бренд-акцент активного = вертикальный аналог таб-подчёркивания ДС (.usl-subnav a.active): 2px, заподлицо, инсет по радиусу карточки (radius-md 8px) */
-  body.v-after .rail .ri.active::before{display:block;content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;background:var(--brand)}
-  body.v-after .rail .sep{margin:6px 10px}
+  .rail .ri.active::before{display:block;content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;background:var(--brand)}
+  .rail .sep{margin:6px 10px}
 
   /* ЦЕНТР — «деталь». Подчёркивание заголовка убрано (усиливало несвязанность);
      бренд-тик у заголовка эхом связывает с активным пунктом рельсы.
      Мягкий фейд сверху и снизу вместо резкого «невидимого» белого обреза скролла.
      Паддинг центра (18/22px) держит заголовок чётким в покое — фейд его не задевает. */
-  body.v-after .pane{border-right:0;height:100%;max-height:none;scrollbar-gutter:stable;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(to bottom,transparent 0,#000 16px,#000 calc(100% - 16px),transparent)}
-  body.v-after .pane .phead{border-bottom:0;margin:0 0 16px;padding:0;justify-content:flex-start;gap:9px;width:fit-content;cursor:pointer}
-  body.v-after .pane .phead h3{display:inline-flex;align-items:center}
-  body.v-after .pane .phead h3::before{display:none}/* бренд-тик убран — акцент у заголовка теперь даёт кружок-стрелка */
+  .pane{border-right:0;height:100%;max-height:none;scrollbar-gutter:stable;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(to bottom,transparent 0,#000 16px,#000 calc(100% - 16px),transparent)}
+  .pane .phead{border-bottom:0;margin:0 0 16px;padding:0;justify-content:flex-start;gap:9px;width:fit-content;cursor:pointer}
+  .pane .phead h3{display:inline-flex;align-items:center}
+  .pane .phead h3::before{display:none}/* бренд-тик убран — акцент у заголовка теперь даёт кружок-стрелка */
   /* «Все услуги раздела» → контурный кружок-стрелка у заголовка (текст скрыт font-size:0).
      Паттерн ДС = ghost-кнопка (.mk-btn--ghost): белый фон + 1px var(--border), на hover
      бордер и контент → --text-primary. Иконочный размер, вторичный вид (просто обводка).
      align-self:center + сдвиг −1px — оптическое выравнивание с прописным заголовком. */
   /* мягкая тональная заливка без обводки — токен --surface-on-light (не кнопка: у кружка есть
      своя форма и стрелка, ему контур не нужен). */
-  body.v-after .pane .phead a{font-size:0;flex:0 0 auto;align-self:center;margin-top:-1px;position:relative;width:22px;height:22px;border-radius:var(--radius-inside);background:var(--surface-on-light);color:var(--text-secondary);display:inline-block;transition:background .15s,color .15s}
+  .pane .phead a{font-size:0;flex:0 0 auto;align-self:center;margin-top:-1px;position:relative;width:22px;height:22px;border-radius:var(--radius-inside);background:var(--surface-on-light);color:var(--text-secondary);display:inline-block;transition:background .15s,color .15s}
   /* ОБЩИЙ hover на весь заголовок (текст+плашка = один элемент): плашка мягко темнеет (ДС soft-hover), стрелка темнеет. Без слайда. */
-  body.v-after .pane .phead:hover a{background:var(--surface-on-light-2);color:var(--text-primary)}
+  .pane .phead:hover a{background:var(--surface-on-light-2);color:var(--text-primary)}
   /* стрелку центрируем абсолютно: скрытый текст (font-size:0) остаётся флекс-элементом и сдвигал её вправо */
-  body.v-after .pane .phead a .arr-ico{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;display:block;transition:none}
+  .pane .phead a .arr-ico{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;display:block;transition:none}
   /* без анимации: гасим унаследованный слайд .arr-ico{translateX(2px)} на hover — стрелка статична по центру */
-  body.v-after .pane .phead a:hover .arr-ico{transform:translate(-50%,-50%)}
+  .pane .phead a:hover .arr-ico{transform:translate(-50%,-50%)}
 
   /* подразделы (.group h4): общий hover в серый — весь заголовок (текст+стрелка) сереет вместе.
      currentColor держит стрелку в цвет текста; оригинальную плавную анимацию появления (fade+лёгкий слайд) НЕ трогаем. */
-  body.v-after .pane .group h4 .ha{background:currentColor}
-  body.v-after .pane .group h4:hover{color:var(--text-secondary)}
+  .pane .group h4 .ha{background:currentColor}
+  .pane .group h4:hover{color:var(--text-secondary)}
 
   /* «Показать все» → текст как у ссылок списка + справа КРУЖОК С ЗАЛИВКОЙ (бренд-жёлтый) со стрелкой.
      Бренд-акцент (по просьбе маркетолога) живёт в кружке, текст нейтральный. */
-  body.v-after .pane .group li .more{display:inline-flex;align-items:center;gap:8px;margin-top:0;padding:0;background:none;border-radius:0;font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:400;color:var(--text-secondary);white-space:nowrap;transition:color .12s}
+  .pane .group li .more{display:inline-flex;align-items:center;gap:8px;margin-top:0;padding:0;background:none;border-radius:0;font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:400;color:var(--text-secondary);white-space:nowrap;transition:color .12s}
   /* без подчёркивания: ховер живёт в кружке+стрелке (кружок темнеет, стрелка едет вправо) */
-  body.v-after .pane .group li .more:hover{color:var(--text-primary);text-decoration:none}
+  .pane .group li .more:hover{color:var(--text-primary);text-decoration:none}
   /* кружок — как у заголовка раздела: серая soft-заливка (--surface-on-light) + приглушённая стрелка; на hover темнеет (общий hover) */
-  body.v-after .pane .group li .more .arr-ico{width:20px;height:20px;margin:0;border-radius:var(--radius-inside);background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;flex:0 0 auto;vertical-align:0;transition:background .15s}
-  body.v-after .pane .group li .more .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;background:var(--text-secondary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat;transition:background .15s,transform .15s}
+  .pane .group li .more .arr-ico{width:20px;height:20px;margin:0;border-radius:var(--radius-inside);background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;flex:0 0 auto;vertical-align:0;transition:background .15s}
+  .pane .group li .more .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;background:var(--text-secondary);-webkit-mask:var(--arr) center/contain no-repeat;mask:var(--arr) center/contain no-repeat;transition:background .15s,transform .15s}
   /* кружок стоит на месте (transform:none гасит унаследованный слайд), только темнеет; едет — стрелка внутри */
-  body.v-after .pane .group li .more:hover .arr-ico{transform:none;background:var(--surface-on-light-2)}
-  body.v-after .pane .group li .more:hover .arr-ico::before{background:var(--text-primary);transform:translate(-50%,-50%) translateX(2px)}
+  .pane .group li .more:hover .arr-ico{transform:none;background:var(--surface-on-light-2)}
+  .pane .group li .more:hover .arr-ico::before{background:var(--text-primary);transform:translate(-50%,-50%) translateX(2px)}
 
   /* ВНЕШНЯЯ ССЫЛКА mdmgifts (.extli) → тот же вид, что «Показать все» (нейтральный текст + кружок),
      но стрелка ДИАГОНАЛЬНАЯ «в угол» (↗) — маркер ухода на внешний домен. Тот же стиль линии (1.7). */
   :root{--arr-ne:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 11.5 11.5 4.5M6 4.5h5.5V10'/%3E%3C/svg%3E")}
   /* строчный поток (НЕ inline-flex): длинный текст переносится на 2 строки, кружок липнет к последнему слову */
-  body.v-after .pane .group li .extli{display:inline;margin:0;padding:0;background:none;font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:400;color:var(--text-secondary);transition:color .12s}
-  body.v-after .pane .group li .extli:hover{color:var(--text-primary);text-decoration:none}
-  body.v-after .pane .group li .extli .arr-ico{display:inline-flex;width:20px;height:20px;margin:0 0 0 6px;border-radius:var(--radius-inside);background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;vertical-align:middle;transition:background .15s}
-  body.v-after .pane .group li .extli .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;background:var(--text-secondary);-webkit-mask:var(--arr-ne) center/contain no-repeat;mask:var(--arr-ne) center/contain no-repeat;transition:background .15s,transform .15s}
+  .pane .group li .extli{display:inline;margin:0;padding:0;background:none;font-size:var(--t-small);line-height:var(--t-small-lh);font-weight:400;color:var(--text-secondary);transition:color .12s}
+  .pane .group li .extli:hover{color:var(--text-primary);text-decoration:none}
+  .pane .group li .extli .arr-ico{display:inline-flex;width:20px;height:20px;margin:0 0 0 6px;border-radius:var(--radius-inside);background:var(--surface-on-light);-webkit-mask:none;mask:none;position:relative;vertical-align:middle;transition:background .15s}
+  .pane .group li .extli .arr-ico::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;background:var(--text-secondary);-webkit-mask:var(--arr-ne) center/contain no-repeat;mask:var(--arr-ne) center/contain no-repeat;transition:background .15s,transform .15s}
   /* кружок статичен, темнеет; стрелка едет в угол (вправо-вверх) */
-  body.v-after .pane .group li .extli:hover .arr-ico{transform:none;background:var(--surface-on-light-2)}
-  body.v-after .pane .group li .extli:hover .arr-ico::before{background:var(--text-primary);transform:translate(-50%,-50%) translate(1.5px,-1.5px)}
+  .pane .group li .extli:hover .arr-ico{transform:none;background:var(--surface-on-light-2)}
+  .pane .group li .extli:hover .arr-ico::before{background:var(--text-primary);transform:translate(-50%,-50%) translate(1.5px,-1.5px)}
 
   /* ХОВЕР УСЛУГ по ДС: вместо плоского подчёркивания — мягкая скруглённая подсветка строки
      (тот же язык тональной заливки, что у рельсы/кружков: --surface-on-light). Весь список
      читается как интерактивное меню. inline + box-decoration-break:clone — переносы и бейджи ХИТ
      не ломаются; padding гасится отрицательным margin, вертикальный не двигает строку. */
   /* только конечные услуги; .more (Показать все) и .extli (внешняя) — со своим видом, плашку не даём */
-  body.v-after .pane .group li a:not(.more):not(.extli){border-radius:6px;transition:color .12s,background .12s}
-  body.v-after .pane .group li a:not(.more):not(.extli):hover{color:var(--text-primary);text-decoration:none;background:var(--surface-on-light);padding:2px 7px;margin:0 -7px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .pane .group li a:not(.more):not(.extli){border-radius:6px;transition:color .12s,background .12s}
+  .pane .group li a:not(.more):not(.extli):hover{color:var(--text-primary);text-decoration:none;background:var(--surface-on-light);padding:2px 7px;margin:0 -7px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 
   /* ПРОМО — акцент-панель (правый фланг). Короче рельсы/центра и прижата к верху:
      промо-CTA не обязан тянуться на всю высоту master-detail (иначе «вытянут» и пустует). */
-  body.v-after .promo{margin:0 0 0 8px;border:1px solid var(--brand-soft-2);border-radius:var(--radius-outside);align-self:start;height:470px}
+  .promo{margin:0 0 0 8px;border:1px solid var(--brand-soft-2);border-radius:var(--radius-outside);align-self:start;height:470px}
 
   /* ============================================================
      МОБИЛЬНАЯ ШАПКА + КАТАЛОГ-DRAWER (drill-down, ≤900px).
@@ -1477,7 +1475,7 @@
       width:100%;max-width:none;box-shadow:none;border:none;display:none;transform:none}   /* lvh: тянем фон дравера ПОД тулбар Safari (иначе там белая полоса и список «обрезан»); контент поднят запасом 96px */
     #mega.open{display:block;animation:mDrawerFade .18s ease}
     #mega .m-dhead .m-dh-x{display:none}   /* закрывает бургер-крестик в шапке, отдельный × не нужен */
-    /* #mega-префикс: перебивает body.v-after .mega-card/.pane (иначе остаётся десктоп-грид 280/1fr/240 и .pane 1400px → оверфлоу страницы) */
+    /* #mega-префикс: перебивает .mega-card/.pane (иначе остаётся десктоп-грид 280/1fr/240 и .pane 1400px → оверфлоу страницы) */
     #mega .mega-inner,#mega .mega-box,#mega .mega-card{display:block;padding:0;margin:0;max-width:none;width:auto;background:none;border:none;box-shadow:none;min-height:0}
     /* сплошная flex-цепочка высот: #mega(фикс, top:58→bottom:0) → inner 100% → box → card, иначе абсолютные уровни коллапсят карточку в 0 */
     #mega .mega-inner{height:100%;display:flex;flex-direction:column}
@@ -1614,16 +1612,16 @@
     #mega .rail .ri:active{background:var(--surface-subtle)}
     #mega .pane .group li a:active{background:var(--surface-subtle)}
 
-    /* СТАТЬИ. Мобильное правило обязано жить ЗДЕСЬ: десктопное body.v-after .usl-art .art-grid
+    /* СТАТЬИ. Мобильное правило обязано жить ЗДЕСЬ: десктопное .usl-art .art-grid
        (5 колонок) сидит в этом же <style id="port-after"> и бьёт первый брейкпоинт и
        специфичностью (0,3,0 против 0,2,0), и порядком подключения. Из-за этого на мобилке
        карточки шли в 5 колонок по ~75px — текст растирало в столбики по 4 буквы. */
-    body.v-after .usl-art .art-grid{grid-template-columns:1fr}
+    .usl-art .art-grid{grid-template-columns:1fr}
 
     /* СЕГМЕНТ видео/фото. Подписи раздували вторичный переключатель до ~190px, и он спорил с
        заголовком секции. На мобилке возвращаем кит: иконка-квадрат 36×36. Доступность не
        страдает — у кнопок есть aria-label и title.
-       Префикс body.v-after и место во ВТОРОМ брейкпоинте обязательны: десктопное правило
+       Префикс и место во ВТОРОМ брейкпоинте обязательны: десктопное правило
        (0,3,1) сидит в этом же <style id="port-after"> и иначе перебьёт и специфичностью, и порядком. */
     /* Мобильного правила у табов больше нет: они набраны ступенью --t-h2 (десктопное правило),
        а та сама становится мобильной в tokens.css — совпадение с заголовком секции держится
@@ -1656,8 +1654,7 @@
   }
 </style>
 </head>
-<!-- fcopy-hint = вариант Б (подсказка при наведении). Убрать класс → вариант А (кнопки-иконки). -->
-<body class="fcopy-hint shape-rounded v-after">
+<body>
 
   <!-- Шапка длинная: без этого до контента с клавиатуры ~40 табов -->
   <a class="mk-skip" href="#content">К основному содержимому</a>
@@ -1773,7 +1770,7 @@
         </button>
         <span class="sep"></span>
         <a class="hbtn hcalc" id="hcalc" href="#" title="Калькулятор">
-          <span class="ci"><svg class="v-before" width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><circle cx="8.5" cy="17.3" r="1" fill="currentColor"/><circle cx="12" cy="17.3" r="1" fill="currentColor"/><circle cx="15.5" cy="17.3" r="1" fill="currentColor"/></svg><svg class="v-after-el" width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
+          <span class="ci"><svg class="" width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
           Калькулятор
         </a>
         <button type="button" class="hbtn m-keep" title="Войти">
@@ -1806,8 +1803,7 @@
         <a href="#" data-open="2">Баннеры и Roll-Up</a>
       </nav>
       <button type="button" class="calcbtn mk-btn mk-btn--ghost mk-btn--md">
-        <svg class="v-before" width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="12" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><circle cx="8.5" cy="17.3" r="1" fill="currentColor"/><circle cx="12" cy="17.3" r="1" fill="currentColor"/><circle cx="15.5" cy="17.3" r="1" fill="currentColor"/></svg>
-        <span class="calc-ic v-after-el"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
+        <span class="calc-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
         Калькулятор
         <span class="mk-btn__badge">−5%</span>
       </button>
@@ -1899,8 +1895,8 @@
             <div class="ri active" data-sec="0"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M7 14h5M7 10.5h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="ri-tx"><span class="ri-title">Визитки</span><span class="ri-desc">Матовые, тиснение, скруглённые, пластик</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="1"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2M7 15h10v5H7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Печать полиграфии</span><span class="ri-desc">Листовки, буклеты, папки, календари</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="2"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m6 14 3.5-4 2.5 3 2-2.5L18 14" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Широкоформатная печать</span><span class="ri-desc">Баннеры, интерьерная, конструкции</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="ri" data-sec="3"><span class="em"><svg class="v-before" width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="11" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M9 9h1M9 16h1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="m16 6 4 1.4-3 12L13 18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><svg class="v-after-el" width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="12.4" y="5.5" width="8.5" height="13" rx="1.8" transform="rotate(12 16.6 12)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="4" y="5" width="9.5" height="14.5" rx="1.8" fill="var(--surface-page)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.7 9.6 10 11.3 8.7 13 7.4 11.3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Карты и настольные игры</span><span class="ri-desc">Игральные карты, настольные игры</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="ri" data-sec="4"><span class="em"><svg class="v-before" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M5 4h9l5 5v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2zM14 4v5h5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><svg class="v-after-el" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 21a9 9 0 1 1 9-9c0 1-1.2 2.2-3 4l-2 2c-1.8 1.8-3 3-4 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M21 12c-3.3 0-5.6.8-7 2.2S12 18 12 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Наклейки, стикеры, этикетки</span><span class="ri-desc">Печать наклеек, этикетки на товар</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="3"><span class="em"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="12.4" y="5.5" width="8.5" height="13" rx="1.8" transform="rotate(12 16.6 12)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="4" y="5" width="9.5" height="14.5" rx="1.8" fill="var(--surface-page)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.7 9.6 10 11.3 8.7 13 7.4 11.3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Карты и настольные игры</span><span class="ri-desc">Игральные карты, настольные игры</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="4"><span class="em"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 21a9 9 0 1 1 9-9c0 1-1.2 2.2-3 4l-2 2c-1.8 1.8-3 3-4 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M21 12c-3.3 0-5.6.8-7 2.2S12 18 12 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Наклейки, стикеры, этикетки</span><span class="ri-desc">Печать наклеек, этикетки на товар</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="5"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 4 7v10l8 4 8-4V7zM4 7l8 4 8-4M12 11v10" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Упаковка и коробки</span><span class="ri-desc">Кашированные, из картона, из МГК</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="6"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 8h16v3H4zM5 11h14v9H5zM12 8v12M12 8S10.5 3 8 4.5 9.5 8 12 8ZM12 8s1.5-5 4-3.5S14.5 8 12 8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Сувениры и мерч</span><span class="ri-desc">Корпоративный мерч, с логотипом, наборы</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="ri" data-sec="7"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M8 4 4 6v4l2.5-1V20h11V9l2.5 1V6l-4-2-2 2H10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Нанесение</span><span class="ri-desc">На текстиль, акрил, ленты</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
@@ -1909,11 +1905,11 @@
             <div class="sep"></div>
             <div class="lbl">Готовые решения</div>
             <div class="ri" data-sec="10"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 20V9l8-5 8 5v11" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="9" y="13" width="6" height="7" stroke="currentColor" stroke-width="1.7"/></svg></span><span class="ri-tx"><span class="ri-title">Бизнесу</span><span class="ri-desc">Для офиса, для клиентов, для рекламы</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-            <div class="ri" data-sec="11"><span class="em"><svg class="v-before" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 11l16-6-3 14-5-4-3 3v-5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><svg class="v-after-el" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 10.5v3A1.5 1.5 0 0 0 5.5 15H8l6 4V5L8 9H5.5A1.5 1.5 0 0 0 4 10.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M8 15v3a1.2 1.2 0 0 0 2.4 0v-2.3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M17 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="ri-tx"><span class="ri-title">Рекламным агентствам</span><span class="ri-desc">Опт, спецусловия, по направлениям</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+            <div class="ri" data-sec="11"><span class="em"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 10.5v3A1.5 1.5 0 0 0 5.5 15H8l6 4V5L8 9H5.5A1.5 1.5 0 0 0 4 10.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M8 15v3a1.2 1.2 0 0 0 2.4 0v-2.3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M17 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="ri-tx"><span class="ri-title">Рекламным агентствам</span><span class="ri-desc">Опт, спецусловия, по направлениям</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             <div class="rail-v1">
               <div class="sep"></div>
               <div class="ri" data-sec="svc"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.2 2.2-2-2 2.2-2.2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Услуги</span><span class="ri-desc">Брошюровка, печать, постобработка, резка</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
-              <div class="ri" data-sec="mat"><span class="em"><svg class="v-before" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v12H4zM4 17l4 2 4-2 4 2 4-2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><svg class="v-after-el" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 3 8l9 5 9-5-9-5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 12l9 5 9-5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 16l9 5 9-5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Материалы</span><span class="ri-desc">Бумага, картон, плёнки, пластик</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+              <div class="ri" data-sec="mat"><span class="em"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 3 8l9 5 9-5-9-5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 12l9 5 9-5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 16l9 5 9-5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Материалы</span><span class="ri-desc">Бумага, картон, плёнки, пластик</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
             </div>
           </div>
 
@@ -3532,7 +3528,7 @@
               <span class="art-card__meta"><span class="art-card__time">4 мин чтения</span><i class="mk-arr" aria-hidden="true"></i></span>
             </span>
           </a>
-          <a class="mk-mcard mk-mcard--link art-card v-after-el" href="#">
+          <a class="mk-mcard mk-mcard--link art-card" href="#">
             <span class="mk-mcard__body">
               <span class="mk-mcard__tag">Тиснение</span>
               <h3 class="mk-mcard__title">Сколько стоит тиснение и от чего зависит цена</h3>
@@ -4252,7 +4248,6 @@
     // на тач-устройстве tel:/mailto: должны отработать штатно.
     document.querySelectorAll('.usl-foot .fcopy-link').forEach(a => {
       a.addEventListener('click', e => {
-        if(!document.body.classList.contains('fcopy-hint')) return;
         if(!window.matchMedia('(hover:hover)').matches) return;
         e.preventDefault();
         copy(a.dataset.copy).then(() => feedback(a), () => fail(a));
