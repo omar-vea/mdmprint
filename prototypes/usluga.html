@@ -9,9 +9,9 @@
 <!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
      При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
      (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
-<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717a">
-<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717a">
-<link rel="stylesheet" href="../assets/css/kit.css?v=20260717a">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717b">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260717b">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260717b">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--font-body);color:var(--text-primary);background:var(--surface-subtle);font-size:var(--t-small);line-height:1.45}
@@ -611,11 +611,6 @@
        правила, а запас в две строки — min-height (без него прижимать не к чему, и короткие
        подписи всплывают вверх). */
     .usl-prod .pcards{grid-template-columns:1fr 1fr}
-    /* Плитка ниже за счёт двух вещей: кадр 16:10 вместо 4:3 (кроп «снизу» это допускает — он и
-       рисовался с запасом) и леадинг подписи 18 вместо 20. Леадинг тут не ступень, а роль:
-       ярлык в две строки не проза, 1.28 ему хватает. min-height считается от того же числа —
-       иначе прижим к низу перестанет совпадать с текстом. */
-    .usl-prod .mk-mcard{--mcard-aspect:16/10}
     /* flex:1 — тело забирает весь остаток высоты плитки. Без него в рядах, где у соседа подпись
        в три строки, плитка растягивалась до высоты ряда, а тело оставалось по контенту: текст
        висел выше низа (замер: отступ 28 против 10). Прижим держится на паре flex:1 + flex-end. */
