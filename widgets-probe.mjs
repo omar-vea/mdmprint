@@ -1,65 +1,60 @@
-// Разовый зонд: цифры для решения по нижним виджетам (кнопка «наверх», виджет Битрикса, куки).
-// Печатает ТОЛЬКО агрегаты, токен в вывод не попадает. Запуск: METRIKA_TOKEN=… node widgets-probe.mjs
+// Разовый зонд: цифры для решения по нижним виджетам. Печатает только агрегаты.
 const TOKEN = process.env.METRIKA_TOKEN;
 const ID    = process.env.COUNTER_ID || '91973';
 if (!TOKEN) { console.error('нужен METRIKA_TOKEN'); process.exit(1); }
 const H = { Authorization: 'OAuth ' + TOKEN };
-
-const d2 = n => String(n).padStart(2, '0');
+const d2 = n => String(n).padStart(2,'0');
 const day = d => `${d.getUTCFullYear()}-${d2(d.getUTCMonth()+1)}-${d2(d.getUTCDate())}`;
-const today = new Date();
-const from = day(new Date(today.getTime() - 90*864e5)), to = day(today);
+const now = new Date();
+const from = day(new Date(now.getTime() - 90*864e5)), to = day(now);
 
-async function api(path, params={}) {
-  const u = new URL('https://api-metrika.yandex.net' + path);
-  Object.entries(params).forEach(([k,v]) => u.searchParams.set(k, v));
-  const r = await fetch(u, { headers: H });
-  const t = await r.text();
-  if (!r.ok) return { error: r.status + ' ' + t.slice(0,200) };
-  try { return JSON.parse(t); } catch { return { error: 'не JSON' }; }
+async function stat(params){
+  const u = new URL('https://api-metrika.yandex.net/stat/v1/data');
+  Object.entries({ ids: ID, date1: from, date2: to, accuracy: 'medium', limit: 20, ...params })
+    .forEach(([k,v]) => u.searchParams.set(k,v));
+  const r = await fetch(u,{headers:H}); const t = await r.text();
+  if(!r.ok) return { error: r.status + ' ' + t.slice(0,160) };
+  return JSON.parse(t);
 }
-const stat = (params) => api('/stat/v1/data', { ids: ID, date1: from, date2: to, accuracy: 'full', limit: 30, ...params });
+const num = n => Number(n).toLocaleString('ru-RU');
+const pct = (a,b) => b ? (a/b*100).toFixed(2) + '%' : '—';
 
-console.log(`\n=== СЧЁТЧИК ${ID}, период ${from} … ${to} ===\n`);
+console.log(`\n=== период ${from} … ${to}, выборка medium ===`);
 
-// 1. Цели: есть ли среди них клики по виджету/мессенджерам
-const goals = await api(`/management/v1/counter/${ID}/goals`);
-if (goals.error) console.log('ЦЕЛИ: ошибка', goals.error);
-else {
-  console.log(`ЦЕЛИ (${goals.goals.length}):`);
-  goals.goals.forEach(g => console.log(`  id ${g.id} · ${g.name} · тип ${g.type}`));
-}
+const GOALS = {
+  151947109: 'переход в мессенджер',
+  196109470: 'переход в соцсеть',
+  189330493: 'клик на телефон',
+  318880710: 'клик e-mail',
+  360663062: 'отправка заявки',
+  175974346: 'отправка формы',
+  279541417: 'звонки',
+};
 
-// 2. Общая посещаемость и доля мобильных
-const gen = await stat({ metrics: 'ym:s:visits,ym:s:users,ym:s:bounceRate', dimensions: 'ym:s:deviceCategory' });
-if (gen.error) console.log('\nПОСЕЩАЕМОСТЬ: ошибка', gen.error);
-else {
-  console.log('\nПОСЕЩАЕМОСТЬ по устройствам:');
-  console.log(`  ВСЕГО визитов ${gen.totals[0]}, посетителей ${gen.totals[1]}, отказы ${gen.totals[2].toFixed(1)}%`);
-  gen.data.forEach(r => console.log(`  ${r.dimensions[0].name}: визитов ${r.metrics[0]}, отказы ${r.metrics[1+1].toFixed(1)}%`));
-}
+const base = await stat({ metrics: 'ym:s:visits,ym:s:users' });
+const visits = base.error ? 0 : base.totals[0];
+console.log(base.error ? `ВИЗИТЫ: ошибка ${base.error}`
+  : `\nВИЗИТЫ за период: ${num(visits)} (посетителей ${num(base.totals[1])})`);
 
-// 3. Достижения целей — что реально приносит обращения
-if (!goals.error) {
-  const ids = goals.goals.map(g => g.id);
-  const metrics = ids.map(i => `ym:s:goal${i}reaches`).join(',');
-  const gd = await stat({ metrics, dimensions: '' , limit: 1});
-  if (gd.error) console.log('\nДОСТИЖЕНИЯ: ошибка', gd.error);
-  else {
-    console.log('\nДОСТИЖЕНИЯ ЦЕЛЕЙ за период:');
-    ids.forEach((id, i) => {
-      const g = goals.goals.find(x => x.id === id);
-      console.log(`  ${g.name}: ${gd.totals[i]}`);
-    });
-  }
+console.log('\nДОСТИЖЕНИЯ ЦЕЛЕЙ (и доля от визитов):');
+for (const [id, name] of Object.entries(GOALS)) {
+  const r = await stat({ metrics: `ym:s:goal${id}reaches,ym:s:goal${id}visits` });
+  if (r.error) { console.log(`  ${name}: ошибка ${r.error}`); continue; }
+  console.log(`  ${name}: ${num(r.totals[0])} достижений, визитов с ним ${num(r.totals[1])} (${pct(r.totals[1], visits)})`);
 }
 
-// 4. Переходы по внешним ссылкам — уходы в мессенджеры и соцсети
-for (const preset of ['ext_link_domains', 'ext_link_url']) {
-  const ext = await stat({ preset, metrics: 'ym:s:visits' });
-  if (ext.error) { console.log(`\nВНЕШНИЕ ССЫЛКИ (${preset}): ошибка`, ext.error); continue; }
-  console.log(`\nВНЕШНИЕ ССЫЛКИ (${preset}), топ:`);
-  (ext.data || []).slice(0, 15).forEach(r =>
-    console.log(`  ${(r.dimensions[0].name || '—')}: ${r.metrics[0]}`));
-  if (ext.totals) console.log(`  ИТОГО визитов с переходами: ${ext.totals[0]}`);
+console.log('\nМЕССЕНДЖЕРЫ И СОЦСЕТИ ПО УСТРОЙСТВАМ:');
+for (const id of [151947109, 196109470]) {
+  const r = await stat({ metrics: `ym:s:goal${id}visits`, dimensions: 'ym:s:deviceCategory' });
+  if (r.error) { console.log(`  цель ${id}: ошибка ${r.error}`); continue; }
+  console.log(`  ${GOALS[id]}:`);
+  (r.data||[]).forEach(x => console.log(`    ${x.dimensions[0].name}: ${num(x.metrics[0])}`));
+}
+
+console.log('\nВНЕШНИЕ ССЫЛКИ (куда уходят):');
+for (const preset of ['ext_link_domains','ext_link_url']) {
+  const r = await stat({ preset, metrics: 'ym:s:visits' });
+  if (r.error) { console.log(`  ${preset}: ошибка ${r.error}`); continue; }
+  console.log(`  — ${preset}, итого визитов ${num(r.totals?.[0] ?? 0)}:`);
+  (r.data||[]).slice(0,12).forEach(x => console.log(`    ${x.dimensions[0].name || '—'}: ${num(x.metrics[0])}`));
 }
