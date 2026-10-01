@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Neucha&amp;family=Caveat:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f0eee9;font-family:'Neucha',system-ui,sans-serif;color:#2a2a28}
+a{color:#2a6bd6}a:hover{color:#1a4fa8}
+.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55);max-width:400px}
+.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}
+/* wireframe kit */
+.wf{width:400px;font-family:'Neucha',cursive;font-size:13px;line-height:1.25}
+.blk{border-bottom:1.5px dashed #c9c4b6;padding:12px 14px;position:relative}
+.tag{position:absolute;top:3px;right:9px;font-family:'Caveat',cursive;font-size:12px;color:#a39d8e}
+.bx{border:1.6px solid #2a2a28;border-radius:6px;background:#fff}
+.img{border:1.6px solid #2a2a28;border-radius:6px;background:
+ linear-gradient(to top right,transparent 49.6%,#cfcabd 49.6%,#cfcabd 50.4%,transparent 50.4%),
+ linear-gradient(to bottom right,transparent 49.6%,#cfcabd 49.6%,#cfcabd 50.4%,transparent 50.4%),#faf9f5}
+.ln{height:6px;background:#d8d3c8;border-radius:4px}
+.lnD{height:6px;background:#8f8a7d;border-radius:4px}
+.btn{display:inline-block;padding:5px 12px;border:1.6px solid #2a2a28;border-radius:7px;background:#FFC100;font-size:12.5px;box-shadow:2px 2px 0 #2a2a28}
+.btnG{display:inline-block;padding:5px 12px;border:1.6px solid #2a2a28;border-radius:7px;background:#fff;font-size:12.5px}
+.chip{display:inline-block;padding:2px 9px;border:1.4px solid #2a2a28;border-radius:99px;background:#fff;font-size:11.5px}
+.note{font-family:'Caveat',cursive;font-size:14.5px;line-height:1.1;color:#2a6bd6}
+.h{font-size:17px;font-weight:700;letter-spacing:.2px}
+.stk{background:#fff;border:3px solid #fff;box-shadow:0 0 0 1.6px #2a2a28,2px 3px 6px rgba(0,0,0,.18);position:relative}
+.gls{position:absolute;top:12%;left:14%;width:34%;height:22%;border-radius:50%;background:linear-gradient(150deg,rgba(255,255,255,.95),rgba(255,255,255,0));transform:rotate(-18deg)}
+.row{display:flex;gap:8px}.col{display:flex;flex-direction:column;gap:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.dark{background:#2a2a28;color:#f5f3ed}
+.dark .ln{background:#57534a}.dark .bx,.dark .img{border-color:#f5f3ed;background:#3a3835}
+</style></helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">4 направления лендинга «3D Стикеры» — одна структура (13 блоков), разные концепции</span></div>
+<div class="dv-opts">
+
+<!-- ============ 1a РОССЫПЬ ============ -->
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>«Россыпь» — продукт солирует: die-cut стикеры разбросаны по всей странице, лёгкий каталожный тон. Ближе всех к sandstudio, но с сильным B2B.</div>
+<div class="dv-card wf">
+ <div class="blk"><span class="tag">1 · шапка</span>
+  <div class="row" style="align-items:center">
+   <div class="stk" style="width:34px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#FFC100;font-size:11px">✈</div>
+   <div style="flex:1;display:flex;gap:7px;font-size:11px;color:#6e6a60">Стикеры · Портфолио · Бизнесу · Отзывы · Контакты</div>
+   <span class="chip">TG/WA</span><span style="font-size:11px">+7 ···</span>
+  </div>
+ </div>
+ <div class="blk" style="min-height:190px;overflow:hidden"><span class="tag">2 · герой</span>
+  <div class="h" style="font-size:24px;line-height:1;max-width:220px">МЕРЧ, КОТОРЫЙ ЗАМЕТЯТ</div>
+  <div class="ln" style="width:190px;margin:7px 0 4px"></div><div class="ln" style="width:140px"></div>
+  <div style="margin-top:10px;display:flex;gap:8px"><span class="btn">Рассчитать тираж</span><span class="btnG">Образец</span></div>
+  <div class="stk" style="position:absolute;right:10px;top:28px;width:74px;height:74px;border-radius:60% 40% 55% 45%/50% 60% 40% 55%;transform:rotate(9deg)"><span class="gls"></span></div>
+  <div class="stk" style="position:absolute;right:92px;top:96px;width:44px;height:44px;border-radius:50%;transform:rotate(-12deg);background:#FFC100"><span class="gls"></span></div>
+  <div class="stk" style="position:absolute;right:20px;top:118px;width:56px;height:40px;border-radius:10px;transform:rotate(-6deg)"><span class="gls"></span></div>
+  <div class="note" style="position:absolute;left:14px;bottom:8px">россыпь «наклеена» поверх сетки, лёгкий tilt при hover ↗</div>
+ </div>
+ <div class="blk"><span class="tag">3 · виды</span>
+  <div class="h">Формы и покрытия</div>
+  <div class="row" style="margin:7px 0">
+   <div class="stk" style="width:34px;height:34px;border-radius:50%"></div>
+   <div class="stk" style="width:34px;height:34px;border-radius:6px"></div>
+   <div class="stk" style="width:40px;height:30px;border-radius:8px"></div>
+   <div class="stk" style="width:38px;height:34px;border-radius:55% 45% 60% 40%/45% 55% 45% 60%"></div>
+   <div class="note" style="align-self:center">фигурная резка = любой контур</div>
+  </div>
+  <div class="row"><span class="chip" style="background:#FFC100">смола</span><span class="chip">голография</span><span class="chip">светятся в темноте</span></div>
+ </div>
+ <div class="blk"><span class="tag">4 · преимущества</span>
+  <div class="grid3">
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:70%"></div><div class="ln" style="width:90%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:60%"></div><div class="ln" style="width:85%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:75%"></div><div class="ln" style="width:80%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:65%"></div><div class="ln" style="width:88%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:72%"></div><div class="ln" style="width:82%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:58%"></div><div class="ln" style="width:90%;margin-top:4px"></div></div>
+  </div>
+  <div class="note" style="margin-top:5px">6 шт: без подтёков · точная резка · не выцветает · клей без следов · любые поверхности · сроки</div>
+ </div>
+ <div class="blk" style="background:#FFF3CC"><span class="tag">5 · B2B</span>
+  <div class="h">Бизнесу: брендинг, который фотографируют</div>
+  <div class="row" style="margin-top:7px">
+   <div class="bx" style="width:96px;height:150px;border-radius:14px;padding:6px;background:#fff">
+    <div class="ln" style="width:60%"></div><div class="img" style="height:64px;margin:5px 0"></div>
+    <div class="lnD" style="width:80%"></div><div class="ln" style="width:50%;margin-top:3px"></div>
+    <div class="stk" style="width:26px;height:26px;border-radius:50%;background:#FFC100;margin-top:5px"></div>
+   </div>
+   <div class="col" style="flex:1">
+    <div class="note">телефон: карточка товара на МП со стикером на упаковке</div>
+    <div class="bx" style="padding:5px;font-size:11.5px">Селлерам МП — вау-распаковка</div>
+    <div class="bx" style="padding:5px;font-size:11.5px">Агентствам — раздатка/мерч</div>
+    <div class="bx" style="padding:5px;font-size:11.5px">Дизайнерам — точный цвет</div>
+   </div>
+  </div>
+  <div class="row" style="margin-top:8px;align-items:center">
+   <div class="bx" style="width:44px;height:20px"></div><div class="bx" style="width:44px;height:20px"></div><div class="bx" style="width:44px;height:20px"></div>
+   <div class="chip" style="border-style:dashed">+ ваш логотип</div>
+  </div>
+ </div>
+ <div class="blk"><span class="tag">6 · портфолио</span>
+  <div class="h">Печатаем ваши идеи</div>
+  <div class="grid3" style="margin-top:6px">
+   <div class="img" style="height:52px"></div><div class="img" style="height:70px"></div><div class="img" style="height:52px"></div>
+   <div class="img" style="height:64px"></div><div class="img" style="height:48px"></div><div class="img" style="height:64px"></div>
+  </div>
+  <div class="note" style="margin-top:4px">masonry, зум по клику</div>
+ </div>
+ <div class="blk"><span class="tag">7 · производство</span>
+  <div class="row"><div class="img" style="width:120px;height:66px"></div>
+   <div class="col" style="flex:1"><div class="lnD" style="width:75%"></div><div class="ln" style="width:90%"></div><div class="ln" style="width:60%"></div><span class="chip">★ 4.9 Яндекс</span></div></div>
+ </div>
+ <div class="blk"><span class="tag">8 · отзывы</span>
+  <div class="row">
+   <div class="bx" style="flex:1;padding:6px;border-radius:10px"><div class="row" style="align-items:center"><div style="width:16px;height:16px;border-radius:50%;border:1.4px solid #2a2a28"></div><div class="lnD" style="width:50px"></div></div><div class="img" style="height:40px;margin:5px 0"></div><div class="ln" style="width:85%"></div></div>
+   <div class="bx" style="flex:1;padding:6px;border-radius:10px"><div class="row" style="align-items:center"><div style="width:16px;height:16px;border-radius:50%;border:1.4px solid #2a2a28"></div><div class="lnD" style="width:44px"></div></div><div class="img" style="height:40px;margin:5px 0"></div><div class="ln" style="width:75%"></div></div>
+  </div>
+  <div class="note" style="margin-top:4px">формат сториз/постов из соцсетей</div>
+ </div>
+ <div class="blk" style="background:#2a2a28;color:#f5f3ed"><span class="tag" style="color:#8f8a7d">9 · мини-лид</span>
+  <div class="h" style="color:#FFC100">Ответим за 10 минут</div>
+  <div class="row" style="margin-top:6px"><span class="btn">Telegram</span><span class="btn" style="background:#fff">WhatsApp</span></div>
+ </div>
+ <div class="blk"><span class="tag">10 · макеты</span>
+  <div class="h">Требования к макету</div>
+  <div class="row" style="margin-top:6px">
+   <div class="col" style="flex:1"><div class="ln" style="width:90%"></div><div class="ln" style="width:80%"></div><div class="ln" style="width:85%"></div></div>
+   <div class="bx" style="flex:1;border-style:dashed;padding:10px;text-align:center;font-size:11.5px">⤒ перетащите макет<br>AI / PDF / PNG</div>
+  </div>
+ </div>
+ <div class="blk"><span class="tag">11 · заявка</span>
+  <div class="h">Рассчитаем за час</div>
+  <div class="col" style="margin-top:6px">
+   <div class="bx" style="height:22px"></div><div class="bx" style="height:22px"></div>
+   <div class="row" style="align-items:center"><span class="btn">Отправить заявку</span><span style="font-size:10.5px;color:#6e6a60">☑ согласие на обработку ПД</span></div>
+  </div>
+ </div>
+ <div class="blk"><span class="tag">12 · FAQ</span>
+  <div class="col"><div class="bx" style="padding:4px 8px;font-size:11.5px">Сроки печати? ⌄</div><div class="bx" style="padding:4px 8px;font-size:11.5px">Пробный образец? ⌄</div><div class="bx" style="padding:4px 8px;font-size:11.5px">Поможете с макетом? ⌄</div></div>
+ </div>
+ <div class="blk" style="border-bottom:none;background:#f5f3ed"><span class="tag">13 · футер</span>
+  <div class="row"><div class="col" style="flex:1"><div class="lnD" style="width:60%"></div><div class="ln" style="width:75%"></div></div><div class="col" style="flex:1"><div class="ln" style="width:70%"></div><div class="ln" style="width:55%"></div></div></div>
+ </div>
+</div>
+</div>
+
+<!-- ============ 1b ПРАЙС-ИНЖЕНЕРИЯ ============ -->
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>«Спецификация» — деловой B2B-каталог: тёмный герой, размеры с монеткой, калькулятор и «образец-кит» наверху. Чинит «невнятные размеры» конкурентов.</div>
+<div class="dv-card wf">
+ <div class="blk dark"><span class="tag">1 · шапка</span>
+  <div class="row" style="align-items:center">
+   <div class="stk" style="width:34px;height:26px;border-radius:8px;background:#FFC100;display:flex;align-items:center;justify-content:center;font-size:11px;color:#2a2a28">✈</div>
+   <div style="flex:1;display:flex;gap:7px;font-size:11px;color:#b9b4a8">Стикеры · Портфолио · Бизнесу · Отзывы · Контакты</div>
+   <span class="btn" style="padding:3px 9px;font-size:11px">+7 ···</span>
+  </div>
+ </div>
+ <div class="blk dark" style="min-height:170px"><span class="tag">2 · герой</span>
+  <div class="h" style="font-size:24px;line-height:1;color:#FFC100;max-width:230px">МЕРЧ, КОТОРЫЙ ЗАМЕТЯТ</div>
+  <div class="ln" style="width:200px;margin:7px 0 4px"></div><div class="ln" style="width:150px"></div>
+  <div class="row" style="margin-top:10px"><span class="btn">Рассчитать стоимость</span><span class="btnG" style="background:#2a2a28;color:#f5f3ed;border-color:#f5f3ed">Заказать образец-кит</span></div>
+  <div class="stk" style="position:absolute;right:14px;top:30px;width:88px;height:88px;border-radius:14px;transform:rotate(7deg)"><span class="gls"></span></div>
+  <div class="note" style="margin-top:12px;color:#FFC100">строка доверия: с 20XX года · сроки от 3 дней · тиражи от 50 шт</div>
+ </div>
+ <div class="blk"><span class="tag">3 · виды + размеры</span>
+  <div class="h">Форматы — наглядно</div>
+  <div class="row" style="align-items:flex-end;margin:8px 0">
+   <div class="stk" style="width:22px;height:22px;border-radius:50%;background:#e8e4da;display:flex;align-items:center;justify-content:center;font-size:8px">₽</div>
+   <div class="stk" style="width:30px;height:30px;border-radius:50%"></div>
+   <div class="stk" style="width:44px;height:44px;border-radius:8px"></div>
+   <div class="stk" style="width:60px;height:44px;border-radius:10px"></div>
+   <div class="stk" style="width:56px;height:52px;border-radius:55% 45% 60% 40%/45% 55% 45% 60%"></div>
+  </div>
+  <div class="note">первый — монета 25 мм для масштаба! линейка под каждым: 30 / 50 / 70 / фигурный</div>
+  <div class="row" style="margin-top:6px"><span class="chip" style="background:#FFC100">смола</span><span class="chip">голо</span><span class="chip">glow</span></div>
+ </div>
+ <div class="blk" style="background:#FFF3CC"><span class="tag">3½ · калькулятор</span>
+  <div class="row" style="align-items:center">
+   <div class="col" style="flex:1"><div style="font-size:11px">Тираж</div><div class="bx" style="height:18px"></div></div>
+   <div class="col" style="flex:1"><div style="font-size:11px">Размер</div><div class="bx" style="height:18px"></div></div>
+   <div class="col" style="flex:1"><div style="font-size:11px">Покрытие</div><div class="bx" style="height:18px"></div></div>
+   <div class="h" style="align-self:flex-end">≈ ·· ₽/шт</div>
+  </div>
+ </div>
+ <div class="blk"><span class="tag">4 · преимущества</span>
+  <div class="grid2">
+   <div class="row" style="align-items:center"><div class="bx" style="width:20px;height:20px;border-radius:50%"></div><div class="ln" style="flex:1"></div></div>
+   <div class="row" style="align-items:center"><div class="bx" style="width:20px;height:20px;border-radius:50%"></div><div class="ln" style="flex:1"></div></div>
+   <div class="row" style="align-items:center"><div class="bx" style="width:20px;height:20px;border-radius:50%"></div><div class="ln" style="flex:1"></div></div>
+   <div class="row" style="align-items:center"><div class="bx" style="width:20px;height:20px;border-radius:50%"></div><div class="ln" style="flex:1"></div></div>
+   <div class="row" style="align-items:center"><div class="bx" style="width:20px;height:20px;border-radius:50%"></div><div class="ln" style="flex:1"></div></div>
+   <div class="row" style="align-items:center"><div class="bx" style="width:20px;height:20px;border-radius:50%"></div><div class="ln" style="flex:1"></div></div>
+  </div>
+  <div class="note" style="margin-top:4px">компактный чек-лист, без «воды» — деловой тон</div>
+ </div>
+ <div class="blk dark"><span class="tag">5 · B2B</span>
+  <div class="h" style="color:#FFC100">Считаем как бизнес</div>
+  <div class="row" style="margin-top:7px">
+   <div class="bx" style="width:90px;height:140px;border-radius:14px;padding:6px">
+    <div class="ln" style="width:55%"></div><div class="img" style="height:58px;margin:5px 0"></div><div class="ln" style="width:80%"></div><div class="lnD" style="width:45%;margin-top:3px;background:#FFC100"></div>
+   </div>
+   <div class="col" style="flex:1">
+    <div class="bx" style="padding:5px;font-size:11px">себестоимость вау-эффекта: от ·· ₽ на заказ</div>
+    <div class="bx" style="padding:5px;font-size:11px">селлеры · агентства · дизайнеры — свои условия</div>
+    <div class="bx" style="padding:5px;font-size:11px">цветопроба для тиражей, договор, ЭДО</div>
+   </div>
+  </div>
+  <div class="row" style="margin-top:8px;align-items:center"><div class="bx" style="width:44px;height:18px"></div><div class="bx" style="width:44px;height:18px"></div><div class="bx" style="width:44px;height:18px"></div><div class="bx" style="width:44px;height:18px"></div></div>
+ </div>
+ <div class="blk"><span class="tag">6 · портфолио</span>
+  <div class="grid3"><div class="img" style="height:56px"></div><div class="img" style="height:56px"></div><div class="img" style="height:56px"></div><div class="img" style="height:56px"></div><div class="img" style="height:56px"></div><div class="img" style="height:56px"></div></div>
+  <div class="note" style="margin-top:4px">ровная сетка + подпись: тираж, размер, покрытие — «как у нас будет»</div>
+ </div>
+ <div class="blk"><span class="tag">7 · производство</span>
+  <div class="row"><div class="img" style="width:110px;height:62px"></div><div class="col" style="flex:1"><div class="lnD" style="width:70%"></div><div class="ln" style="width:85%"></div><span class="chip">оборудование · цифры</span></div></div>
+ </div>
+ <div class="blk"><span class="tag">8 · отзывы</span>
+  <div class="row"><div class="bx" style="flex:1;padding:6px"><div class="lnD" style="width:40%"></div><div class="ln" style="width:90%;margin-top:4px"></div><span style="font-size:10px;color:#fc3f1d">Яндекс ★★★★★</span></div>
+  <div class="bx" style="flex:1;padding:6px"><div class="lnD" style="width:45%"></div><div class="ln" style="width:85%;margin-top:4px"></div><span style="font-size:10px;color:#19aa1e">2ГИС ★★★★★</span></div></div>
+ </div>
+ <div class="blk" style="background:#FFF3CC"><span class="tag">9 · мини-лид</span>
+  <div class="row" style="align-items:center"><div class="h" style="flex:1">Менеджер онлайн — ответ за 10 мин</div><span class="btn">Написать в TG</span></div>
+ </div>
+ <div class="blk"><span class="tag">10 · макеты</span>
+  <div class="row"><div class="col" style="flex:1"><div class="lnD" style="width:70%"></div><div class="ln" style="width:88%"></div><div class="ln" style="width:80%"></div><span class="chip">чек-лист PDF ↓</span></div>
+   <div class="bx" style="flex:1;border-style:dashed;padding:10px;text-align:center;font-size:11.5px">⤒ загрузить макет<br>проверим бесплатно</div></div>
+ </div>
+ <div class="blk dark"><span class="tag">11 · заявка</span>
+  <div class="h" style="color:#FFC100">Заявка на расчёт</div>
+  <div class="row" style="margin-top:6px"><div class="bx" style="flex:1;height:22px"></div><div class="bx" style="flex:1;height:22px"></div></div>
+  <div class="row" style="margin-top:6px;align-items:center"><span class="btn">Отправить</span><span style="font-size:10.5px;color:#b9b4a8">☑ согласие ПД</span></div>
+ </div>
+ <div class="blk"><span class="tag">12 · FAQ</span>
+  <div class="col"><div class="bx" style="padding:4px 8px;font-size:11.5px">Минимальный тираж? ⌄</div><div class="bx" style="padding:4px 8px;font-size:11.5px">Цветопроба? ⌄</div><div class="bx" style="padding:4px 8px;font-size:11.5px">Документы для юрлиц? ⌄</div></div>
+ </div>
+ <div class="blk dark" style="border-bottom:none"><span class="tag">13 · футер</span>
+  <div class="row"><div class="col" style="flex:1"><div class="lnD" style="width:60%;background:#FFC100"></div><div class="ln" style="width:75%"></div></div><div class="col" style="flex:1"><div class="ln" style="width:70%"></div><div class="ln" style="width:55%"></div></div></div>
+ </div>
+</div>
+</div>
+
+<!-- ============ 1c ОДИН СТИКЕР-ГЕРОЙ ============ -->
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>«Тактильный» — один гигантский стикер-герой, скролл раскрывает слои технологии; покрытия — интерактив «свет/темнота». Максимум 3D-ощущения.</div>
+<div class="dv-card wf">
+ <div class="blk"><span class="tag">1 · шапка</span>
+  <div class="row" style="align-items:center">
+   <div class="stk" style="width:34px;height:26px;border-radius:8px;background:#FFC100;display:flex;align-items:center;justify-content:center;font-size:11px">✈</div>
+   <div style="flex:1;display:flex;gap:7px;font-size:11px;color:#6e6a60">Стикеры · Портфолио · Бизнесу · Отзывы · Контакты</div>
+   <span class="chip">✆</span>
+  </div>
+ </div>
+ <div class="blk" style="min-height:230px;background:#f5f3ed"><span class="tag">2 · герой</span>
+  <div style="display:flex;justify-content:center;margin-top:8px">
+   <div class="stk" style="width:150px;height:150px;border-radius:58% 42% 55% 45%/48% 58% 42% 55%;background:#FFC100;transform:rotate(-4deg)">
+    <span class="gls" style="width:44%;height:30%"></span>
+    <div style="position:absolute;bottom:-6px;right:-4px;width:34px;height:26px;background:#fff;border-radius:0 0 14px 0;box-shadow:-2px -2px 5px rgba(0,0,0,.15);transform:rotate(-2deg)"></div>
+   </div>
+  </div>
+  <div class="note" style="position:absolute;right:10px;top:60px;width:90px">уголок отклеивается + tilt за курсором</div>
+  <div class="h" style="font-size:23px;text-align:center;margin-top:10px">МЕРЧ, КОТОРЫЙ ЗАМЕТЯТ</div>
+  <div style="text-align:center;margin-top:8px"><span class="btn">Оставить заявку</span></div>
+ </div>
+ <div class="blk"><span class="tag">3 · виды: слои</span>
+  <div class="h">Что внутри стикера</div>
+  <div style="display:flex;flex-direction:column;gap:4px;align-items:center;margin:8px 0">
+   <div class="bx" style="width:150px;height:12px;border-radius:99px;background:#fff">&nbsp;</div>
+   <div class="bx" style="width:170px;height:12px;border-radius:99px;background:#FFC100"></div>
+   <div class="bx" style="width:190px;height:12px;border-radius:99px;background:#e8e4da"></div>
+  </div>
+  <div class="note" style="text-align:center">купол смолы / печать / плёнка die-cut — слои разъезжаются при скролле</div>
+  <div class="row" style="margin-top:7px;justify-content:center"><span class="chip">круг</span><span class="chip">квадрат</span><span class="chip">фигурные</span></div>
+ </div>
+ <div class="blk dark"><span class="tag">3½ · глоу</span>
+  <div class="row" style="align-items:center">
+   <div class="stk" style="width:56px;height:56px;border-radius:50%;background:#eef7b8;box-shadow:0 0 14px #d6f76a,0 0 0 1.6px #f5f3ed"></div>
+   <div class="col" style="flex:1"><div class="h" style="color:#FFC100">Светятся в темноте</div><div class="ln" style="width:80%"></div></div>
+   <div class="bx" style="width:40px;height:20px;border-radius:99px;display:flex;align-items:center;padding:2px"><div style="width:14px;height:14px;border-radius:50%;background:#FFC100"></div></div>
+  </div>
+  <div class="note" style="margin-top:5px;color:#FFC100">переключатель день/ночь красит всю секцию</div>
+ </div>
+ <div class="blk"><span class="tag">4 · преимущества</span>
+  <div class="grid2">
+   <div class="bx" style="padding:6px"><div class="img" style="height:34px;margin-bottom:4px"></div><div class="ln" style="width:80%"></div></div>
+   <div class="bx" style="padding:6px"><div class="img" style="height:34px;margin-bottom:4px"></div><div class="ln" style="width:70%"></div></div>
+   <div class="bx" style="padding:6px"><div class="img" style="height:34px;margin-bottom:4px"></div><div class="ln" style="width:85%"></div></div>
+   <div class="bx" style="padding:6px"><div class="img" style="height:34px;margin-bottom:4px"></div><div class="ln" style="width:75%"></div></div>
+  </div>
+  <div class="note" style="margin-top:4px">4–6 карточек с макро-фото/видео (капля смолы, резка) — доказательство, не текст</div>
+ </div>
+ <div class="blk" style="background:#FFF3CC"><span class="tag">5 · B2B</span>
+  <div class="h">Ваш бренд — на вещах клиентов</div>
+  <div class="row" style="margin-top:7px">
+   <div class="bx" style="width:92px;height:140px;border-radius:14px;padding:6px;background:#fff"><div class="ln" style="width:55%"></div><div class="img" style="height:60px;margin:5px 0"></div><div class="lnD" style="width:75%"></div></div>
+   <div class="col" style="flex:1"><div class="note">ноутбук/термокружка/упаковка МП со стикером — карусель поверхностей</div>
+    <div class="row"><span class="chip">селлерам</span><span class="chip">агентствам</span><span class="chip">дизайнерам</span></div>
+    <div class="row" style="align-items:center;margin-top:4px"><div class="bx" style="width:40px;height:18px"></div><div class="bx" style="width:40px;height:18px"></div><div class="chip" style="border-style:dashed">+ вы</div></div>
+   </div>
+  </div>
+ </div>
+ <div class="blk"><span class="tag">6 · портфолио</span>
+  <div style="display:flex;gap:8px;overflow:hidden">
+   <div class="stk" style="width:64px;height:64px;border-radius:50%;flex:none"></div>
+   <div class="stk" style="width:70px;height:58px;border-radius:12px;flex:none;transform:rotate(3deg)"></div>
+   <div class="stk" style="width:60px;height:66px;border-radius:55% 45% 60% 40%/45% 55% 45% 60%;flex:none;transform:rotate(-5deg)"></div>
+   <div class="stk" style="width:64px;height:64px;border-radius:10px;flex:none"></div>
+  </div>
+  <div class="note" style="margin-top:5px">работы показаны КАК стикеры (die-cut, тень, tilt), лента с прокруткой</div>
+ </div>
+ <div class="blk"><span class="tag">7 · производство</span>
+  <div class="img" style="height:70px"></div>
+  <div class="note" style="margin-top:4px">зацикленное видео: смола заливается в контур</div>
+ </div>
+ <div class="blk"><span class="tag">8 · отзывы</span>
+  <div class="row">
+   <div class="bx" style="flex:1;border-radius:12px;padding:5px"><div class="img" style="height:66px;border-radius:8px"></div><div class="ln" style="width:70%;margin-top:4px"></div></div>
+   <div class="bx" style="flex:1;border-radius:12px;padding:5px"><div class="img" style="height:66px;border-radius:8px"></div><div class="ln" style="width:60%;margin-top:4px"></div></div>
+   <div class="bx" style="flex:1;border-radius:12px;padding:5px"><div class="img" style="height:66px;border-radius:8px"></div><div class="ln" style="width:75%;margin-top:4px"></div></div>
+  </div>
+  <div class="note" style="margin-top:4px">вертикальные сториз с видео-распаковками</div>
+ </div>
+ <div class="blk" style="background:#FFC100"><span class="tag">9 · мини-лид</span>
+  <div class="row" style="align-items:center"><div class="h" style="flex:1">Покажем образцы в TG за 10 минут</div><span class="btnG">Написать</span></div>
+ </div>
+ <div class="blk"><span class="tag">10 · макеты</span>
+  <div class="bx" style="border-style:dashed;padding:12px;text-align:center;font-size:11.5px">⤒ бросьте макет сюда — подскажем по контуру резки<br><span class="note">подсказки: 3 мм вылет, контур отдельным слоем</span></div>
+ </div>
+ <div class="blk"><span class="tag">11 · заявка</span>
+  <div class="col"><div class="bx" style="height:22px"></div><div class="bx" style="height:22px"></div>
+  <div class="row" style="align-items:center"><span class="btn">Отправить заявку</span><span style="font-size:10.5px;color:#6e6a60">☑ ПД</span></div></div>
+ </div>
+ <div class="blk"><span class="tag">12 · FAQ</span>
+  <div class="col"><div class="bx" style="padding:4px 8px;font-size:11.5px">Можно мочить? ⌄</div><div class="bx" style="padding:4px 8px;font-size:11.5px">Сроки? ⌄</div><div class="bx" style="padding:4px 8px;font-size:11.5px">Дизайн с нуля? ⌄</div></div>
+ </div>
+ <div class="blk" style="border-bottom:none;background:#f5f3ed"><span class="tag">13 · футер</span>
+  <div class="row"><div class="col" style="flex:1"><div class="lnD" style="width:60%"></div><div class="ln" style="width:75%"></div></div><div class="col" style="flex:1"><div class="ln" style="width:70%"></div><div class="ln" style="width:55%"></div></div></div>
+ </div>
+</div>
+</div>
+
+<!-- ============ 1d КЕЙСЫ ============ -->
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>«Кейсы» — редакционный тон: портфолио и B2B слиты в истории клиентов («селлер → +отзывы на МП»). Доверие через чужой результат.</div>
+<div class="dv-card wf">
+ <div class="blk"><span class="tag">1 · шапка</span>
+  <div class="row" style="align-items:center">
+   <div class="stk" style="width:34px;height:26px;border-radius:8px;background:#FFC100;display:flex;align-items:center;justify-content:center;font-size:11px">✈</div>
+   <div style="flex:1;display:flex;gap:7px;font-size:11px;color:#6e6a60">Стикеры · Кейсы · Бизнесу · Отзывы · Контакты</div>
+   <span style="font-size:11px">+7 ···</span>
+  </div>
+ </div>
+ <div class="blk" style="min-height:150px"><span class="tag">2 · герой</span>
+  <div class="h" style="font-size:23px;line-height:1;max-width:240px">МЕРЧ, КОТОРЫЙ ЗАМЕТЯТ</div>
+  <div class="note" style="margin:5px 0">подзаг: 120+ брендов уже клеят наши стикеры на свою упаковку</div>
+  <div class="row"><span class="btn">Оставить заявку</span><span class="btnG">Смотреть кейсы ↓</span></div>
+  <div class="stk" style="position:absolute;right:12px;top:34px;width:80px;height:60px;border-radius:12px;transform:rotate(5deg)"><span class="gls"></span></div>
+ </div>
+ <div class="blk" style="background:#FFF3CC"><span class="tag">5+6 · кейс №1</span>
+  <div class="row">
+   <div class="img" style="width:130px;height:100px"></div>
+   <div class="col" style="flex:1">
+    <span class="chip" style="background:#FFC100">селлер МП</span>
+    <div class="lnD" style="width:85%"></div><div class="ln" style="width:90%"></div><div class="ln" style="width:70%"></div>
+    <div class="note">задача → тираж/размер → цитата клиента</div>
+   </div>
+  </div>
+ </div>
+ <div class="blk"><span class="tag">кейс №2</span>
+  <div class="row">
+   <div class="col" style="flex:1">
+    <span class="chip">агентство</span>
+    <div class="lnD" style="width:80%"></div><div class="ln" style="width:88%"></div><div class="ln" style="width:65%"></div>
+   </div>
+   <div class="img" style="width:130px;height:100px"></div>
+  </div>
+ </div>
+ <div class="blk"><span class="tag">кейс №3</span>
+  <div class="row">
+   <div class="img" style="width:130px;height:100px"></div>
+   <div class="col" style="flex:1">
+    <span class="chip">дизайнер</span>
+    <div class="lnD" style="width:82%"></div><div class="ln" style="width:85%"></div><div class="ln" style="width:60%"></div>
+   </div>
+  </div>
+  <div class="note" style="margin-top:5px">чередование лево/право; ниже — сетка остальных работ 3×2</div>
+ </div>
+ <div class="blk"><span class="tag">3 · виды</span>
+  <div class="h">Формы и покрытия</div>
+  <div class="row" style="margin-top:6px">
+   <div class="stk" style="width:32px;height:32px;border-radius:50%"></div>
+   <div class="stk" style="width:32px;height:32px;border-radius:6px"></div>
+   <div class="stk" style="width:36px;height:30px;border-radius:55% 45% 60% 40%/45% 55% 45% 60%"></div>
+   <div class="col" style="flex:1;justify-content:center"><div class="row"><span class="chip">смола</span><span class="chip">голо</span><span class="chip">glow</span></div></div>
+  </div>
+ </div>
+ <div class="blk"><span class="tag">4 · преимущества</span>
+  <div class="grid3">
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:70%"></div><div class="ln" style="width:90%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:62%"></div><div class="ln" style="width:84%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:74%"></div><div class="ln" style="width:80%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:66%"></div><div class="ln" style="width:87%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:71%"></div><div class="ln" style="width:82%;margin-top:4px"></div></div>
+   <div class="bx" style="padding:6px"><div class="lnD" style="width:59%"></div><div class="ln" style="width:89%;margin-top:4px"></div></div>
+  </div>
+ </div>
+ <div class="blk"><span class="tag">лого-лента</span>
+  <div class="row" style="align-items:center"><div class="bx" style="width:46px;height:20px"></div><div class="bx" style="width:46px;height:20px"></div><div class="bx" style="width:46px;height:20px"></div><div class="bx" style="width:46px;height:20px"></div><div class="chip" style="border-style:dashed">+ ваш</div></div>
+ </div>
+ <div class="blk"><span class="tag">7 · производство</span>
+  <div class="row"><div class="img" style="width:115px;height:64px"></div><div class="col" style="flex:1"><div class="lnD" style="width:72%"></div><div class="ln" style="width:86%"></div><span class="chip">★ рейтинг гео-сервисов</span></div></div>
+ </div>
+ <div class="blk"><span class="tag">8 · отзывы</span>
+  <div class="row"><div class="bx" style="flex:1;padding:6px;border-radius:10px"><div class="img" style="height:44px"></div><div class="ln" style="width:80%;margin-top:4px"></div></div>
+  <div class="bx" style="flex:1;padding:6px;border-radius:10px"><div class="img" style="height:44px"></div><div class="ln" style="width:72%;margin-top:4px"></div></div></div>
+ </div>
+ <div class="blk" style="background:#2a2a28;color:#f5f3ed"><span class="tag" style="color:#8f8a7d">9 · мини-лид</span>
+  <div class="row" style="align-items:center"><div class="h" style="flex:1;color:#FFC100">Обсудим ваш кейс?</div><span class="btn">TG</span><span class="btn" style="background:#fff">WA</span></div>
+ </div>
+ <div class="blk"><span class="tag">10 · макеты</span>
+  <div class="row"><div class="col" style="flex:1"><div class="ln" style="width:88%"></div><div class="ln" style="width:80%"></div></div><div class="bx" style="flex:1;border-style:dashed;padding:8px;text-align:center;font-size:11.5px">⤒ макет</div></div>
+ </div>
+ <div class="blk"><span class="tag">11 · заявка</span>
+  <div class="col"><div class="bx" style="height:22px"></div><div class="bx" style="height:22px"></div>
+  <div class="row" style="align-items:center"><span class="btn">Отправить заявку</span><span style="font-size:10.5px;color:#6e6a60">☑ ПД</span></div></div>
+ </div>
+ <div class="blk"><span class="tag">12 · FAQ</span>
+  <div class="col"><div class="bx" style="padding:4px 8px;font-size:11.5px">Сроки? ⌄</div><div class="bx" style="padding:4px 8px;font-size:11.5px">Образец? ⌄</div><div class="bx" style="padding:4px 8px;font-size:11.5px">Макет? ⌄</div></div>
+ </div>
+ <div class="blk" style="border-bottom:none;background:#f5f3ed"><span class="tag">13 · футер</span>
+  <div class="row"><div class="col" style="flex:1"><div class="lnD" style="width:60%"></div><div class="ln" style="width:75%"></div></div><div class="col" style="flex:1"><div class="ln" style="width:70%"></div><div class="ln" style="width:55%"></div></div></div>
+ </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Дальше: «собери хай-фай из <a class="dv-oid" href="#1a">1a</a> с героем из <a class="dv-oid" href="#1c">1c</a>» · «покажи <a class="dv-oid" href="#1b">1b</a> в мобильной версии» · «ещё направления»</p>
+</section>
+
+</x-dc>
+</body>
+</html>

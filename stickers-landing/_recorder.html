@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Запись лупов вращения из GLB</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  body{margin:0;padding:24px;font:15px/1.5 system-ui,sans-serif;background:#141212;color:#fff}
+  h1{font-size:18px;margin:0 0 6px}
+  p{margin:0 0 18px;color:#a8a29a;font-size:13px;max-width:70ch}
+  .row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+  model-viewer{width:520px;height:520px;background:#fff;border-radius:14px;display:block}
+  .stage{position:relative;width:520px;height:520px}
+  /* затемняем то, что в карточку НЕ попадёт: сверху и снизу по (520-390)/2 = 65px */
+  .crop{position:absolute;inset:0;pointer-events:none;border-radius:14px;overflow:hidden}
+  .crop::before,.crop::after{content:"";position:absolute;left:0;right:0;height:65px;
+    background:rgba(20,18,18,.55)}
+  .crop::before{top:0}.crop::after{bottom:0}
+  .crop span{position:absolute;left:50%;top:65px;transform:translate(-50%,-100%);
+    margin-top:-6px;font:11px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;
+    text-transform:uppercase;color:#FFC100}
+  .crop{box-shadow:inset 0 65px 0 -64px #FFC100, inset 0 -65px 0 -64px #FFC100}
+  button{font:inherit;font-weight:700;padding:11px 18px;border:0;border-radius:12px;
+    background:#FFC100;color:#141212;cursor:pointer}
+  button:disabled{opacity:.4;cursor:default}
+  .mode{margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid rgba(255,255,255,.12)}
+  .mode:last-of-type{border:0}
+  h2{font-size:14px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.06em;color:#FFC100}
+  button + button{margin-left:8px}
+  #recStop{background:#fff}
+  #orbit{margin-top:10px;font:12px ui-monospace,Menlo,monospace;color:#8c8477}
+  select{font:inherit;padding:6px 8px;border-radius:8px;border:0}
+  #log{margin-top:16px;font:12px/1.7 ui-monospace,Menlo,monospace;color:#a8a29a;white-space:pre-wrap}
+  label{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:#a8a29a}
+  input[type=number]{width:56px;font:inherit;padding:6px 8px;border-radius:8px;border:0}
+</style>
+</head>
+<body>
+<h1>Запись лупов вращения из GLB</h1>
+<p>Крутит камеру вокруг модели и пишет канвас <code>model-viewer</code> через MediaRecorder.
+   Файлы скачиваются сами — положи их в <code>stickers-landing/models/</code>.
+   В headless Chrome это не работает (WebGL не поднимается), поэтому страница для обычного браузера.</p>
+
+<div class="row">
+  <div class="stage">
+  <model-viewer id="mv" camera-controls interaction-prompt="none"
+    exposure="1.0" shadow-intensity="0" reveal="auto"
+    environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"></model-viewer>
+    <!-- Рамка = то, что реально видно в карточке лендинга: .fcard__art это 4:3 с object-fit:cover,
+         то есть от квадратной записи остаётся центральная полоса, верх и низ срезаются. -->
+    <div class="crop" aria-hidden="true"><span>видно в карточке · 4:3</span></div>
+  </div>
+  <div>
+    <div class="mode">
+      <h2>Кадр для карточки</h2>
+      <p style="margin:0 0 10px">Выстави ракурс мышью или впиши числа, посмотри в рамку 4:3 —
+        это то, что видно в карточке. Потом скачай кадр и отдай мне файл.</p>
+      <p style="margin:0 0 10px">
+        <label>Модель <select id="pick"></select></label>
+      </p>
+      <p style="margin:0 0 10px">
+        <label>Поворот <input type="number" id="az" step="1"></label>
+        <label>Наклон <input type="number" id="el" step="1"></label>
+        <label>Дистанция % <input type="number" id="di" step="1"></label>
+        <button id="apply" style="padding:7px 12px">Применить</button>
+      </p>
+      <button id="shot">⬇ Скачать кадр</button>
+      <div id="orbit"></div>
+    </div>
+    <div class="mode">
+      <h2>Ручная запись видео</h2>
+      <p style="margin:0 0 10px">Крути модель мышью — запишется ровно то, что делаешь.
+        Чтобы луп был бесшовным, закончи примерно там же, где начал: текущий угол видно ниже.</p>
+      <button id="recStart">● Записать движения</button>
+      <button id="recStop" disabled>■ Стоп и скачать</button>
+      <div id="orbit"></div>
+    </div>
+    <div class="mode">
+      <h2>Авто-оборот</h2>
+      <p style="margin:0 0 10px">
+        <label>Секунд на оборот <input type="number" id="sec" value="5" min="2" max="12"></label>
+      </p>
+      <button id="go">Записать все пять</button>
+    </div>
+    <div id="log"></div>
+  </div>
+</div>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js"></script>
+<script>
+const FILES=['m1-glow.glb','m2.glb','m3.glb','m4.glb','m5.glb'];
+const mv=document.getElementById('mv'), log=document.getElementById('log'), go=document.getElementById('go');
+const say=t=>log.textContent+=t+'\n';
+
+function load(file){
+  return new Promise((res,rej)=>{
+    const ok=()=>{mv.removeEventListener('load',ok);res()};
+    mv.addEventListener('load',ok,{once:true});
+    mv.addEventListener('error',rej,{once:true});
+    mv.src='models/'+file;
+  });
+}
+
+/* Пишем НЕ канвас model-viewer напрямую: он не отдаёт кадры в captureStream (получался
+   пустой файл на 110 байт). Перерисовываем его в свой канвас на каждом кадре и пишем уже его. */
+const out=document.createElement('canvas'); out.width=out.height=600;
+const octx=out.getContext('2d',{alpha:false});
+let frames=0;
+function pump(){
+  const cv=mv.shadowRoot.querySelector('canvas');
+  if(cv&&cv.width){ octx.drawImage(cv,0,0,out.width,out.height); frames++; }
+}
+function record(sec){
+  return new Promise(res=>{
+    frames=0;
+    const rec=new MediaRecorder(out.captureStream(30),
+      {mimeType:'video/webm;codecs=vp9',videoBitsPerSecond:1_200_000});
+    const chunks=[]; rec.ondataavailable=e=>chunks.push(e.data);
+    rec.onstop=()=>res(new Blob(chunks,{type:'video/webm'}));
+    rec.start();
+    const t0=performance.now();
+    (function tick(){
+      const t=(performance.now()-t0)/(sec*1000);
+      if(t>=1){ rec.stop(); return; }
+      // полный оборот + лёгкое покачивание по вертикали, чтобы блик пробежал по линзе
+      mv.cameraOrbit=(t*360).toFixed(1)+'deg '+(46+6*Math.sin(t*Math.PI*2)).toFixed(1)+'deg 118%';
+      pump();
+      requestAnimationFrame(tick);
+    })();
+  });
+}
+
+/* ── Ручная запись: пишем канвас, пока Omar крутит модель мышью ── */
+const pick=document.getElementById('pick'), orbit=document.getElementById('orbit');
+FILES.forEach(f=>pick.add(new Option(f,f)));
+pick.addEventListener('change',()=>load(pick.value));
+load(FILES[0]);
+/* Живые числа камеры + возможность вбить их руками: так ракурс можно повторить точь-в-точь. */
+setInterval(()=>{
+  const o=mv.getCameraOrbit?.(); if(!o) return;
+  const az=(o.theta*180/Math.PI), el=(o.phi*180/Math.PI);
+  orbit.textContent='camera-orbit: '+az.toFixed(1)+'deg '+el.toFixed(1)+'deg '+
+    (mv.getFieldOfView?()+'':'')+' · radius '+o.radius.toFixed(2)+'m';
+  if(document.activeElement!==document.getElementById('az')) document.getElementById('az').value=az.toFixed(1);
+  if(document.activeElement!==document.getElementById('el')) document.getElementById('el').value=el.toFixed(1);
+},250);
+document.getElementById('apply').addEventListener('click',()=>{
+  const az=+document.getElementById('az').value||0, el=+document.getElementById('el').value||45,
+        di=+document.getElementById('di').value||118;
+  mv.cameraOrbit=az+'deg '+el+'deg '+di+'%';
+});
+/* Снимок кадра: model-viewer умеет отдать свой рендер картинкой. Сохраняем в webp. */
+document.getElementById('shot').addEventListener('click',async()=>{
+  const blob=await mv.toBlob({mimeType:'image/webp',qualityArgument:.9,idealAspect:false});
+  const name='card-'+pick.value.replace('.glb','')+'.webp';
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click();
+  say('кадр сохранён: '+name+' — '+Math.round(blob.size/1024)+' КБ');
+});
+
+let manual=null;
+let pumpRaf=0;
+document.getElementById('recStart').addEventListener('click',()=>{
+  frames=0;
+  manual=new MediaRecorder(out.captureStream(30),
+    {mimeType:'video/webm;codecs=vp9',videoBitsPerSecond:1_200_000});
+  (function loop(){ pump(); pumpRaf=requestAnimationFrame(loop); })();
+  const chunks=[]; manual.ondataavailable=e=>chunks.push(e.data);
+  manual.onstop=()=>{
+    const blob=new Blob(chunks,{type:'video/webm'});
+    const name='loop-'+pick.value.replace('.glb','')+'.webm';
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click();
+    say('записано вручную: '+name+' — '+Math.round(blob.size/1024)+' КБ, кадров '+frames);
+    if(blob.size<5000) say('⚠ файл пустой — кадры не сняты, напиши мне');
+  };
+  manual.start(); say('пишу… крути модель, потом «Стоп»');
+  document.getElementById('recStart').disabled=true;
+  document.getElementById('recStop').disabled=false;
+});
+document.getElementById('recStop').addEventListener('click',()=>{
+  cancelAnimationFrame(pumpRaf);
+  manual?.stop();
+  document.getElementById('recStart').disabled=false;
+  document.getElementById('recStop').disabled=true;
+});
+
+go.addEventListener('click',async()=>{
+  go.disabled=true; log.textContent='';
+  const sec=+document.getElementById('sec').value||5;
+  for(const f of FILES){
+    say('загружаю '+f+'…');
+    try{ await load(f); }catch(e){ say('  не загрузилась, пропускаю'); continue; }
+    await new Promise(r=>setTimeout(r,700));       // даём кадру устояться
+    say('  пишу '+sec+' с…');
+    const blob=await record(sec);
+    const name='loop-'+f.replace('.glb','')+'.webm';
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download=name; a.click();
+    say('  готово: '+name+' — '+Math.round(blob.size/1024)+' КБ, кадров '+frames);
+    if(blob.size<5000) say('  ⚠ файл пустой — кадры не сняты, напиши мне');
+  }
+  say('\nвсё. положи файлы в stickers-landing/models/ и скажи — подключу в карточки');
+  go.disabled=false;
+});
+</script>
+</body>
+</html>

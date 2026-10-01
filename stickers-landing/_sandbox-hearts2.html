@@ -1,0 +1,82 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Сердечки — цвет и подача</title>
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260720a">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260817a">
+<style>
+  /* ПЕСОЧНИЦА. Жёлтые сердечки на светлом снимке теряются — на кадре с чехлом их почти
+     не видно. Здесь пять подач: цвет, обводка, количество и точка вылета. */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-body);background:#efece6;color:var(--text-primary);padding:28px 22px 70px}
+  h1{font-family:var(--font-head);font-size:19px;text-transform:uppercase;margin-bottom:6px}
+  .lead{color:var(--text-secondary);font-size:14px;margin-bottom:26px;max-width:74ch}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:22px;max-width:1300px}
+  .v__cap{font-family:var(--font-head);font-weight:800;text-transform:uppercase;font-size:12px;
+    letter-spacing:.05em;color:#8a6a00;margin-bottom:3px}
+  .v__note{font-size:13px;color:var(--text-secondary);margin-bottom:10px;min-height:2.8em}
+  figure{margin:0;position:relative;background:#fff;border-radius:14px;overflow:hidden;
+    box-shadow:inset 0 0 0 2px var(--brand)}
+  figure img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+  figcaption{padding:14px;font-size:14px;line-height:1.5;color:var(--text-secondary)}
+  figcaption b{display:block;font-size:16px;color:var(--text-primary);margin-bottom:3px}
+
+  .fly{position:absolute;left:0;right:0;top:0;aspect-ratio:4/3;z-index:3;overflow:hidden;pointer-events:none}
+  .fly i{position:absolute;bottom:-8%;animation:fly 3.6s ease-in infinite}
+  .fly svg{display:block;width:100%;height:100%}
+  @keyframes fly{
+    0%{transform:translateY(0) scale(.55) rotate(-8deg);opacity:0}
+    15%{opacity:1} 70%{opacity:.8}
+    100%{transform:translateY(-330px) scale(1.05) rotate(9deg);opacity:0}
+  }
+  /* базовая раскладка четырёх сердечек */
+  .fly i:nth-child(1){left:13%;width:22px;height:22px;animation-delay:0s}
+  .fly i:nth-child(2){left:39%;width:15px;height:15px;animation-delay:.9s}
+  .fly i:nth-child(3){left:65%;width:26px;height:26px;animation-delay:1.8s}
+  .fly i:nth-child(4){left:85%;width:17px;height:17px;animation-delay:2.7s}
+  .fly i:nth-child(5){left:26%;width:19px;height:19px;animation-delay:1.3s}
+  .fly i:nth-child(6){left:53%;width:24px;height:24px;animation-delay:2.2s}
+
+  /* А · как сейчас: жёлтые, мягкая тень */
+  .a i{color:var(--brand);filter:drop-shadow(0 1px 3px rgba(20,18,18,.4))}
+  /* Б · жёлтые с белой обводкой — не тонут на светлом фото */
+  .b i{color:var(--brand);filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(0 2px 4px rgba(20,18,18,.35))}
+  /* В · красные, цвет лайка */
+  .c i{color:#e0483a;filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(0 2px 4px rgba(20,18,18,.3))}
+  /* Г · красные, шесть штук, вылет из центра — от самого стикера */
+  .d i{color:#e0483a;filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(0 2px 4px rgba(20,18,18,.3))}
+  .d i:nth-child(1){left:44%;bottom:42%} .d i:nth-child(2){left:52%;bottom:44%}
+  .d i:nth-child(3){left:38%;bottom:40%} .d i:nth-child(4){left:58%;bottom:43%}
+  .d i:nth-child(5){left:48%;bottom:41%} .d i:nth-child(6){left:62%;bottom:39%}
+  .d i{animation-duration:3s}
+  /* Д · чёрные — цвет текста лендинга, самый спокойный */
+  .e i{color:var(--v-ink,#141212);filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff)}
+</style>
+</head>
+<body>
+<h1>Сердечки: цвет и подача</h1>
+<p class="lead">Кадр один и тот же, карточка-победитель. Жёлтые на светлом снимке почти
+  не читаются — с этого и начали.</p>
+<div class="grid" id="grid"></div>
+
+<script>
+  const HEART = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg>';
+  const V = [
+    {k:'a', n:4, cap:'А · как сейчас', note:'Жёлтые, мягкая тень. На светлом чехле теряются: сердечко видно, только когда попадает на тёмный участок.'},
+    {k:'b', n:4, cap:'Б · жёлтые с белой обводкой', note:'Тот же фирменный цвет, но обведён белым — читается на любом кадре и остаётся в палитре.'},
+    {k:'c', n:4, cap:'В · красные', note:'Цвет лайка, считывается мгновенно. В палитре лендинга красного нет, ближайший — #e0483a из токенов (он для ошибок).'},
+    {k:'d', n:6, cap:'Г · красные, из-под стикера', note:'Шесть штук, вылетают из центра — от самого стикера, а не со дна кадра. Читается как «лайкнули именно его».'},
+    {k:'e', n:4, cap:'Д · чёрные', note:'Цвет текста лендинга. Самый спокойный вариант, но эмоции меньше всего.'},
+  ];
+  document.getElementById('grid').innerHTML = V.map(v => `
+    <div>
+      <div class="v__cap">${v.cap}</div>
+      <p class="v__note">${v.note}</p>
+      <figure>
+        <span class="fly ${v.k}">${('<i>' + HEART + '</i>').repeat(v.n)}</span>
+        <img src="b2b/cmp-3.webp" alt="">
+        <figcaption><b>3D-стикер со смолой</b>Объём и глянец: его хочется потрогать и оставить на виду.</figcaption>
+      </figure>
+    </div>`).join('');
+</script>
+</body></html>

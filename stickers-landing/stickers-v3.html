@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Только литерал: var() в meta не работает — Safari молча игнорирует значение и красит
+     статус-бар в фон body (белый). Здесь --v-paper-2 #fbfaf7: цвет верхней кромки героя. -->
+<meta name="theme-color" content="#fbfaf7">
+<title>3D-стикеры со смолой на заказ в Москве — MDMprint</title>
+<meta name="description" content="Печать объёмных 3D-стикеров со смолой: мерч, упаковка, брендинг. Любые формы и покрытия, срок от 3 дней, самовывоз и доставка по Москве и России.">
+<!-- ПРОТОТИП на GitHub Pages не должен попасть в индекс и конкурировать с будущим лендингом.
+     СНЯТЬ при переносе на прод-домен и там же добавить canonical. -->
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="3D-стикеры со смолой на заказ — MDMprint">
+<meta property="og:description" content="Объёмные стикеры со смолой: любые формы и покрытия, срок от 3 дней, Москва и вся Россия.">
+<!-- og:image 1200×630 — обязательный размер для Telegram, ВК и соцсетей: фото 4:3
+     они обрезали по своему усмотрению, и текст мог попасть под кроп. Собрана из реального
+     кадра продукта: фото + затемнение слева + заголовок и факты. -->
+<meta property="og:image" content="og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="3D-стикер со смолой с логотипом MDMprint">
+<meta property="og:site_name" content="MDMprint">
+<meta property="og:locale" content="ru_RU">
+<!-- og:url и canonical заполняются на проде, здесь их нет намеренно: указывать несуществующий
+     адрес хуже, чем не указывать вовсе. -->
+<meta name="twitter:card" content="summary_large_image">
+<!-- ═══ SEO. Всё, что можно подготовить БЕЗ домена, — готово. При переносе на прод:
+     1) заменить строку ДОМЕН в двух JSON-LD ниже и в og:url/canonical;
+     2) снять robots noindex;
+     3) положить og-картинку 1200×630 (сейчас указано фото продукта cmp-3).
+     Разметка LocalBusiness даёт карточку организации, FAQPage — раскрывающиеся вопросы
+     прямо в выдаче: шесть наших вопросов уже есть на странице, дублировать текст не нужно. -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "LocalBusiness",
+ "name": "MDMprint",
+ "alternateName": "ООО «МДМпринт»",
+ "description": "Печать объёмных 3D-стикеров со смолой: любые формы и покрытия, тираж от 10 штук, срок от 3 дней.",
+ "url": "https://ДОМЕН/",
+ "image": "https://ДОМЕН/b2b/cmp-3.webp",
+ "telephone": "+7 495 256-10-00",
+ "email": "zakaz@mdmprint.ru",
+ "address": {
+  "@type": "PostalAddress",
+  "streetAddress": "ул. Орджоникидзе, д. 11, стр. 1А",
+  "addressLocality": "Москва",
+  "postalCode": "115419",
+  "addressCountry": "RU"
+ },
+ "openingHours": "Mo-Su 09:00-22:00",
+ "taxID": "7704815108",
+ "vatID": "7704815108",
+ "identifier": {
+  "@type": "PropertyValue",
+  "name": "ОГРН",
+  "value": "1127746679587"
+ },
+ "sameAs": [
+  "https://mdmprint.ru/"
+ ],
+ "makesOffer": {
+  "@type": "Offer",
+  "itemOffered": {
+   "@type": "Service",
+   "name": "Печать 3D-стикеров со смолой",
+   "serviceType": "Печать объёмных стикеров",
+   "areaServed": {
+    "@type": "Country",
+    "name": "Россия"
+   }
+  }
+ }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Сколько времени занимает печать?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "От 3 дней. Срок зависит от тиража: 10 штук — 3 дня, 1 000 — 7 рабочих дней, 5 000 — 14 рабочих дней, 50 000 — около месяца. Считаем от согласования макета, точную дату назовём при расчёте."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Стикеры приедут листом или по отдельности?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "По базовой цене стикеры сдаются на печатных листах. Поштучная резка — отдельная услуга, её стоимость назовёт менеджер: она зависит от тиража. Стикерпак режется всегда — это лист выбранного формата, А7, А6 или А5."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Можно ли напечатать одну штуку?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Да, минимальный заказ — от одной штуки: можно напечатать пробный стикер и посмотреть на результат вживую. Для больших тиражей делаем цветопробу, чтобы согласовать цвет до печати."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Какая смола у стикеров?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Полимерная: мягкая и эластичная, не дубеет со временем и не желтеет. Заливка автоматическая, поэтому линза выходит одинаковой на всём тираже."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Вы разрабатываете дизайн?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Да, нарисуем по вашей идее или доведём готовый макет: проверим вылеты, контур высечки и цвет. Стоимость зависит от задачи — назовём при согласовании."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Как подготовить макет к печати?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "PDF, AI, EPS или CDR, CMYK, растр 300 dpi в масштабе 1:1, вылеты 3 мм, безопасная зона 5 мм, контур высечки вектором в отдельном слое плашечным цветом CUT. Полные требования."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Можно ли мочить стикеры?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Да. Смола защищает рисунок от влаги, царапин и выцветания, поэтому стикер держится на бутылке, чехле и технике."
+   }
+  }
+ ]
+}
+</script>
+
+<!-- ИКОНКИ. Исходник — «фавка 2» от Omar: тот же знак, но крупнее в кадре — мелкий
+     детализированный самолётик в 16px не читался. Файл приехал сломанным (контуры лежали
+     за пределами холста 32×32 и обрезались маской), знак вписан трансформацией группы.
+     Раньше здесь стоял общий логотип 59×20 — во вкладке была нечитаемая полоска. -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260720a">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260817a">
+<link rel="stylesheet" href="assets/stickers-v3.css?v=20260825a">
+</head>
+<body>
+
+  <!-- Первая цель табуляции: до контента иначе шесть пунктов меню и кнопка «Связаться» -->
+  <a class="skip" href="#calc">К расчёту стоимости</a>
+
+  <!-- ШАПКА: лого · важные блоки · контакты (плавающее стекло) -->
+  <header class="hd" id="top">
+   <div class="hd__glass" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div class="hd__bar">
+    <!-- Локап убран 30.07: было четыре объекта (знак, ×, кубик, слово «СТИКЕРЫ»), слово
+         дублировало пункт меню, а серый × пропадал в инверсии. Остался только знак.
+         Компонент .cube3 в CSS оставлен — Omar сказал «пока», вернуть можно одной вставкой. -->
+    <!-- href="#" вёл в никуда. Пока это якорь наверх страницы; при переносе в CMS сюда
+         подставляется главная сайта. -->
+    <a class="hd__logo" href="#top" aria-label="MDMprint · 3D Стикеры, наверх страницы">
+      <img class="hd__mark" src="../assets/mdmprint-logo.svg" alt="MDMprint" width="77" height="26">
+    </a>
+    <nav class="hd__nav">
+      <!-- «Бизнесу» первым: секция B2B поднята сразу за героя 03.08, а порядок пунктов
+           обязан совпадать с порядком секций — иначе подсветка активного прыгает не по списку -->
+      <!-- 24.08: «О нас» и «Отзывы» из меню убраны. После добавления «Контактов» пунктов
+           стало восемь и ряд разъезжался; оба блока человек проходит скроллом по пути,
+           а меню должно вести к шагам воронки. Порядок пунктов обязан совпадать
+           с порядком секций, иначе подсветка активного прыгает не по списку. -->
+      <a href="#b2b">Бизнесу</a>
+      <!-- было «Стикеры» — дублировало слово из логотипа и не описывало блок -->
+      <a href="#vidy">Виды</a>
+      <a href="#calc" data-goal="calc_click" data-place="menu">Расчёт</a>
+      <a href="#portfolio">Портфолио</a>
+      <!-- ЧАВО в меню 31.07: туда идут за сроками и «подойдёт ли мой макет». Порядок пунктов
+           = порядок секций, иначе подсветка активного при скролле прыгает не по списку.
+           Преимущества, Производство и Требования сознательно без ссылок — читаются по пути. -->
+      <!-- 24.08: «Контакты» — правка маркетолога. Стоит перед «Вопросами», как и секция. -->
+      <a href="#showroom">Контакты</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+    <div class="hd__contacts">
+      <!-- ОДНА точка входа в контакты вместо четырёх элементов в ряд. Раньше здесь висели
+           две иконки в фирменных синем и фиолетовом — единственные такие цвета на странице,
+           в чёрно-жёлтом бренде читались как чужие наклейки. Плюс у каждого канала есть
+           условие («ответим за 10 минут», график, «счёт и документы»), которое иконкой
+           не покажешь, а строкой в карточке — да. Адреса чатов подставляет MSG в конце файла. -->
+      <div class="hd__reach">
+        <button class="hd__reachbtn" type="button" aria-expanded="false" aria-controls="reachMenu">Связаться<svg
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg></button>
+        <div class="hd__reachmenu" id="reachMenu">
+          <a href="#zayavka" data-msg="tg" data-goal="msg_tg" data-place="header">
+            <img src="../assets/telegram.svg" alt="" width="20" height="20">
+            <span><b>Telegram</b>Ответим за 10 минут</span></a>
+          <a href="#zayavka" data-msg="max" data-goal="msg_max" data-place="header">
+            <img src="../assets/max-icon.webp" alt="" width="20" height="20">
+            <span><b>MAX</b>Ответим за 10 минут</span></a>
+          <!-- класс hd__phone обязателен: на нём висит копирование номера на десктопе -->
+          <a class="hd__phone" href="tel:+74952561000" data-copy="+7 (495) 256-10-00" data-goal="phone" data-place="header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+            <span><b>+7 (495) 256-10-00</b>Ежедневно с 9 до 22</span>
+            <span class="hd__copied" aria-hidden="true">Скопировано</span></a>
+          <!-- адрес взят с их сайта, лично не подтверждён — см. ANSWERS.md -->
+          <a href="mailto:zakaz@mdmprint.ru" data-goal="mail" data-place="header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg>
+            <span><b>zakaz@mdmprint.ru</b>Заказ, счёт и документы</span></a>
+        </div>
+      </div>
+      <a class="hd__cta" href="#calc" data-goal="calc_click" data-place="header">Рассчитать</a>
+    </div>
+   </div>
+  </header>
+
+  <main>
+  <!-- 1. ГЕРОЙ -->
+  <section class="hero">
+   <!-- .hero — дорожка скролла, .hero__pin — липкий первый экран внутри неё -->
+   <div class="hero__pin">
+    <div class="hero__in">
+    <div class="hero__text">
+      <!-- 10.08: надстрочник называл процесс («от дизайна до печати»), а первый экран должен
+           сказать, для кого страница — маркетолог 23.07 определила главной ЦА B2B.
+           H1 был описанием того, что мы делаем; теперь он про выгоду, ключ «3D-стикеры»
+           остался на месте и в леттеринге. -->
+      <span class="hero__eyebrow">Брендам, селлерам и агентствам</span>
+      <h1><span class="hl">3D-стикеры</span> и стикерпаки, которые заметят</h1>
+      <!-- 24.08: подзаголовок заменён по правке маркетолога. Прежний перечислял условия
+           (смола, тиражи, срок), а те же цифры стоят строкой ниже в .hero__facts. -->
+      <p class="hero__sub">Печатаем объёмный мерч для брендов и людей,
+        чтобы вы выделялись каждый день.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#calc" data-goal="calc_click" data-place="hero">Рассчитать стоимость</a>
+        <!-- образец = 1 шт, а калькулятор не считает меньше 10 → открываем шторку заказа
+             с пометкой «Пробный стикер». Без JS ссылка ведёт к мессенджерам. -->
+        <a class="btn btn--ghost" href="#zayavka" id="heroSample">Заказать образец</a>
+      </div>
+      <!-- Акция вынесена на первый экран (решение Omar 05.08). Условие названо прямо:
+           скидка действует не на любой тираж, и умолчать о пороге — обмануть. Слово
+           «недорого» сознательно не используем: сверки с рынком у нас нет. -->
+      <p class="hero__promo"><b>−30%</b> на тиражи от 1000 шт — до 31 августа</p>
+      <div class="hero__facts">
+        <div><b>от 3 дней</b>печатаем в срок</div>
+        <div><b>от 1 шт</b>по выгодной цене</div>
+        <!-- было «4 плёнки / включая голографию» — единственный факт про ассортимент в ряду
+             про выгоду. Заменено на подтверждённое маркетологом 30.07: «Контроль качества
+             каждого тиража, брак переделываем». -->
+        <!-- 24.08: «переделаем / если брак — за нами» заменено по правке маркетолога.
+             Гарантия на брак не пропала: она осталась в блоке преимуществ и в ЧАВО. -->
+        <div><b>льём больше смолы</b>за те же деньги</div>
+      </div>
+      <!-- строка соцдоверия убрана 30.07: «Всегда в срок» директор не подтвердил, «Всегда в цвет»
+           ни о чём. Место под реальные аргументы качества от маркетолога (полимерная смола,
+           контроль каждого тиража, брак переделываем) — см. ANSWERS.md. -->
+    </div>
+    <!-- СЦЕНА: четыре живых стикера кучкой, по скроллу раскрываются веером.
+         Модели пережаты: resize 1024 → webp → draco. ВАЖНО: gltf-transform `optimize`
+         брать нельзя — его prune выкидывает материал смолы, модель рендерится белым пятном.
+         Спутники с loading=lazy: на мобилке сцена display:none и их GLB не грузятся вовсе. -->
+    <div class="hero__stage">
+      <div class="hero__sh" aria-hidden="true"></div>
+      <div class="obj obj--c" data-obj="c">
+        <model-viewer class="hero__model" src="models/hero/round.glb" alt="Круглый 3D-стикер со смолой"
+          interaction-prompt="none" disable-tap disable-pan disable-zoom loading="lazy"
+          environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+          exposure="1" shadow-intensity="0" tone-mapping="neutral" interpolation-decay="90"
+          camera-orbit="14deg 70deg 106%" max-camera-orbit="auto auto 300%"></model-viewer>
+        <span>Полиуретан</span>
+      </div>
+      <div class="obj obj--b" data-obj="b">
+        <model-viewer class="hero__model" src="models/hero/mellow.glb" alt="Фигурный стикер по контуру"
+          interaction-prompt="none" disable-tap disable-pan disable-zoom loading="lazy"
+          environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+          exposure="1" shadow-intensity="0" tone-mapping="neutral" interpolation-decay="90"
+          camera-orbit="-30deg 44deg 106%" max-camera-orbit="auto auto 300%"></model-viewer>
+        <span class="top">Фигурный</span>
+      </div>
+      <div class="obj obj--a" data-obj="a">
+        <model-viewer class="hero__model" src="models/hero/glow.glb" alt="Светящийся в темноте стикер"
+          interaction-prompt="none" disable-tap disable-pan disable-zoom loading="lazy"
+          environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+          exposure="1" shadow-intensity="0" tone-mapping="neutral" interpolation-decay="90"
+          camera-orbit="22deg 64deg 106%" max-camera-orbit="auto auto 300%"></model-viewer>
+        <span class="top">Светится</span>
+      </div>
+      <div class="obj obj--main" data-obj="main">
+        <!-- POSTER УБРАН 05.08. Здесь стояла иконка из калькулятора (calc-icons/kind-0.webp) —
+             плоский жёлтый маскот на белой квадратной плашке. Пока грузилась модель, в герое
+             мелькал ЧУЖОЙ продукт: плоская наклейка вместо объёмного стикера, да ещё с белым
+             фоном поверх прозрачной сцены. Лучше доля секунды пустоты: mdm.glb весит 53 КБ,
+             у трёх спутников постера и не было. -->
+        <model-viewer class="hero__model" src="models/hero/mdm.glb"
+          alt="3D-стикер со смолой с логотипом MDMprint"
+          interaction-prompt="none" disable-tap disable-pan disable-zoom loading="eager"
+          environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+          exposure="1" shadow-intensity="0" tone-mapping="neutral" interpolation-decay="90"
+          camera-orbit="-12deg 52deg 104%" max-camera-orbit="auto auto 300%"></model-viewer>
+      </div>
+    </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">Листайте вниз
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 7 7 7-7"/></svg>
+    </div>
+   </div>
+  </section>
+
+  <!-- 2. ВИДЫ И ПОКРЫТИЯ: лента карточек. Картинка-постер сразу, 3D подгружается апгрейдом. -->
+  <!-- обёртка светлых секций: один непрерывный фон-переливы на всех -->
+  <div class="page-bg">
+  <!-- О НАС / ПРОИЗВОДСТВО (по ТЗ). Цифры про годы и рейтинг НЕ выдумывал — ждём от бизнеса.
+       Медиа по имени файла: about/p1.webp, about/p2.webp, about/v1.mp4 -->
+  <section class="abt" id="o-nas">
+    <div class="abt__in">
+      <div>
+        <!-- Заголовок и лид переписаны 03.08: маркетолог просила акцент на ПОЛНОЙ АВТОМАТИЗАЦИИ
+             и на больших тиражах в короткий срок, а не «всё в кучу». Цифры 10 шт / 3 дня
+             и 50 000 / месяц — дословный ответ директора 30.07, см. ANSWERS.md. -->
+        <!-- «Две линии» — не наше допущение: в акциях их карточки на Яндекс.Картах
+             (снято 05.08) сказано, что установлена ВТОРАЯ машина для автоматической
+             заливки стикеров полимерной смолой. Дословно — в ANSWERS.md. -->
+        <h2>Создаём мерч вместе с брендами</h2>
+        <!-- 24.08: заголовок и текст — дословная правка маркетолога. Прежний заголовок
+             «Смолу льют две автоматические линии» она попросила убрать как отдельный раздел,
+             а его содержание (линии, автоматизация, объём) переехало сюда в её формулировке.
+             Два фото рядом остались от того раздела — тоже её решение. -->
+        <p class="abt__text">Мы — типография МДМпринт, более 10 лет печатаем мерч и брендируем
+          сувениры для наших клиентов, а объёмные 3D-стикеры теперь одно из наших любимых
+          направлений. Поэтому в 2026 мы запустили две новые автоматические линии по заливке
+          смолой и обучили своих дизайнеров и технологов всем нюансам работы — ради стабильного
+          насыщенного цвета и идеальной формы без подтёков. Полная автоматизация производства
+          позволяет печатать более 200 000 стикеров в месяц и гарантирует быстрые сроки,
+          низкую стоимость тиража и минимальную вероятность брака.</p>
+      </div>
+      <!-- Видео производства (about/v1) убрано 03.08: на нём РУЧНАЯ заливка — прямо спорит
+           с тезисом об автоматизации (замечание маркетолога). Ждём съёмку линии, слот вернуть
+           одной строкой: <figure class="abt__cell abt__cell--tall" data-media="about/v1">. -->
+      <div class="abt__media">
+        <figure class="abt__cell" data-media="about/p1">
+          <span class="abt__ph"><b>Фото</b>оборудование</span>
+        </figure>
+        <figure class="abt__cell" data-media="about/p2">
+          <span class="abt__ph"><b>Фото</b>цех</span>
+        </figure>
+      </div>
+    </div>
+    <!-- Факты плашками, а не списком (правка маркетолога 03.08: «раскрыть отдельными плашками»).
+         Порядок по важности: сначала автоматизация и тиражи, потом материал и приёмка. -->
+    <div class="abt__cards">
+      <article class="abt__card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="9" width="16" height="8" rx="1.6"/><path d="M7 9V4.5h10V9M7 17v2.5h10V17"/></svg>
+        <h3>Две линии заливки</h3>
+        <p>Вторую машину поставили, чтобы тираж в тысячи штук не превращался в недели ожидания.</p>
+      </article>
+      <article class="abt__card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3.2 2"/><circle cx="12" cy="12" r="9.2"/></svg>
+        <h3>Тираж от 10 штук до 50 000</h3>
+        <p>Срок от трёх дней. На пятьдесят тысяч берём месяц — называем дату до оплаты.</p>
+      </article>
+      <article class="abt__card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.4" cy="5.4" r="2.4"/><circle cx="5.4" cy="18.6" r="2.4"/><path d="M7.6 7 20 18.8M7.6 17 20 5.2"/></svg>
+        <h3>Плоттерная резка на месте</h3>
+        <p>Фигурная высечка по контуру любого рисунка — без сторонних подрядчиков и лишних дней.</p>
+      </article>
+      <!-- аргументы маркетолога 30.07, см. ANSWERS.md -->
+      <article class="abt__card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 7v10l8 4 8-4V7l-8-4Z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg>
+        <h3>Полимерная смола</h3>
+        <!-- 24.08: убрано «в отличие от дешёвой эпоксидки». По ответу директора эпоксидную
+             смолу мы сами льём на тиражах до 100 штук — страница ругала собственный
+             материал на малых заказах. Обещание то же, сравнения нет. -->
+        <p>Мягкая и эластичная, с эффектом «антистресс»: не дубеет со временем и не желтеет.</p>
+      </article>
+      <article class="abt__card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v6c0 4.4-3.1 8.2-7.5 9.4C7.6 20.2 4.5 16.4 4.5 12V6L12 3Z"/><path d="m9 12 2.2 2.2L15.4 10"/></svg>
+        <h3>Контроль каждого тиража</h3>
+        <p>Смотрим партию перед отправкой. Брак переделываем.</p>
+      </article>
+      <!-- факты от директора 29.07: минимальный заказ и адреса производства -->
+      <article class="abt__card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M10.6 9.2 12.6 8v8M10.4 16h4.4"/></svg>
+        <!-- цены и условия дал бизнес 05.08 -->
+        <h3>Пробный стикер — 1 700 ₽</h3>
+        <p>Одна штука за 3 дня: посмотрите вживую, как ляжет смола на ваш макет. Стикерпак —
+          2 500 ₽. Закажете тираж от 20 000 ₽ — стоимость пробника зачтём в него.</p>
+      </article>
+      <article class="abt__card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18M5 20V9l7-5 7 5v11"/><path d="M9.5 20v-5h5v5"/></svg>
+        <h3>Своя типография в Москве</h3>
+        <p>Производство на Автозаводской, офис на Орджоникидзе — можно приехать и забрать.</p>
+      </article>
+      <article class="abt__card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        <h3>Самовывоз и доставка</h3>
+        <p>Забрать можно с производства или из офиса. Курьер по Москве и области, в регионы —
+          СДЭК или другой перевозчик на выбор.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 24.08: «С кем мы работали» вынесено из блока для брендов в свою секцию
+       и поставлено сразу за «О нас» — порядок блоков по правке маркетолога. -->
+  <section class="b2b b2b--logos" id="clients">
+    <div class="b2b__in">
+      <!-- 24.08: h2 без класса .b2b__cap. Класс задавал кегль «уровнем ниже секции»
+           (28px против 42px) и был уместен, пока заголовок жил ВНУТРИ блока для брендов.
+           Теперь это своя секция, и мелкий заголовок читался как разнобой. -->
+      <h2>С кем мы работали</h2>
+      <div class="b2b__logos">
+          <!-- Логотипы взяты из блока «Клиенты и их благодарности» на mdmprint.ru: это уже
+               опубликованные самой компанией знаки, к каждому на их сайте приложено
+               благодарственное письмо. Выбор крупных клиентов — Omar 05.08.
+               ВАЖНО: блок говорит «работали», а не «печатали 3D-стикеры» — часть этих
+               клиентов заказывала полиграфию. Рисовать им стикеры нельзя. -->
+          <div class="b2b__logo" data-logo="b2b/logo-rzd.svg" data-name="РЖД">Логотип</div>
+          <div class="b2b__logo" data-logo="b2b/logo-sber.svg" data-name="Сбер">Логотип</div>
+          <div class="b2b__logo" data-logo="b2b/logo-bam.svg" data-name="Бамстройпуть">Логотип</div>
+          <div class="b2b__logo" data-logo="b2b/logo-mosquar.svg" data-name="Москвариум">Логотип</div>
+          <div class="b2b__logo" data-logo="b2b/logo-prime.svg" data-name="Прайм">Логотип</div>
+          <div class="b2b__logo" data-logo="b2b/logo-genpro.svg" data-name="Генпро">Логотип</div>
+          <div class="b2b__logo" data-logo="b2b/logo-golubka.svg" data-name="Голубка">Логотип</div>
+          <!-- vitobox собран из двух присланных картинок (иконка + надпись) в один знак:
+               белый фон снят, поэтому плашка просвечивает, как у векторных соседей -->
+          <div class="b2b__logo" data-logo="b2b/logo-vitobox.webp" data-name="Vitobox">Логотип</div>
+          <div class="b2b__logo" data-logo="b2b/logo-ferro.svg" data-name="Феррострой">Логотип</div>
+          <div class="b2b__logo" data-logo="b2b/logo-endomet.svg" data-name="Эндомедпроект">Логотип</div>
+          <div class="b2b__logo" data-logo="b2b/logo-oil.webp" data-name="Oil Energy">Логотип</div>
+          <div class="b2b__logo b2b__logo--you">Место для вашего стикера</div>
+      </div>
+    </div>
+  </section>
+  <!-- B2B поднят сразу за героя 03.08: маркетолог считает этот блок важнее, чем в исходном ТЗ —
+       лендинг заточен под бренды, поэтому «зачем это бренду» человек читает до видов и цены.
+       Заголовок — её формулировка. Логотипы по имени файла: b2b/logo-1.webp… -->
+  <section class="b2b" id="b2b">
+    <div class="b2b__in">
+      <div class="b2b__head">
+        <div>
+          <h2>3D-стикеры нужны каждому бренду</h2>
+          <!-- 24.08: лид переписан под новый заголовок и укорочен вдвое. Совсем без него
+               шапка блока разваливалась: заголовок в одну строку слева и крупное фото
+               справа, между ними дыра во всю высоту кадра. -->
+          <p class="b2b__lead">Селлерам, агентствам и дизайнерам: объёмный стикер
+            замечают там, где плоскую наклейку просто не видят.</p>
+        </div>
+        <!-- продукт в шапке секции: стикерпак в упаковке — ровно то, что покупает B2B -->
+        <figure class="b2b__shot"><img src="b2b/pack.webp" width="900" height="900" alt="Стикерпак в упаковке" loading="lazy" decoding="async"></figure>
+      </div>
+      <ul class="b2b__grid">
+        <li class="b2b__item">
+          <span class="b2b__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7H4v13h16V7Z"/><path d="M2 7h20v4H2zM12 7v13M12 7S9.5 3 7.5 3a2.5 2.5 0 0 0 0 5M12 7s2.5-4 4.5-4a2.5 2.5 0 0 1 0 5"/></svg>Дайте бонус к заказу</span>
+          <h3>Сделайте подарок, который отметят</h3>
+          <p>Кладём прикольный стикер в заказ, человек с радостью поделится им в соцсетях
+            и оставит о вас отзыв.</p>
+        </li>
+        <!-- Второй сценарий (маркетолог 10.08): стикером брендируют СВОИ подарки.
+             Формулировки осторожные: «дешевле» — про печать на каждом изделии, без цифр. -->
+        <li class="b2b__item">
+          <span class="b2b__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2c0 .5.2 1 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4Z"/><path d="M7.5 7.5h.01"/></svg>Сэкономьте на мерче</span>
+          <h3>Дарите стикерпаки на мероприятиях</h3>
+          <p>Клиент сам выберет, куда его наклеить. Дешевле и круче обычной раздатки: блокноты
+            с лого, ручки, пакеты и так далее.</p>
+        </li>
+        <li class="b2b__item">
+          <span class="b2b__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>Получайте охваты</span>
+          <h3>Бесплатная реклама, которая работает на вас</h3>
+          <p>Клиент и окружающие видят ваши стикеры каждый день: на ноутбуке, телефоне, кружке.
+            Бренд остаётся в поле зрения надолго.</p>
+        </li>
+        <li class="b2b__item">
+          <span class="b2b__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r="1.4"/><circle cx="17.5" cy="10.5" r="1.4"/><circle cx="8.5" cy="7.5" r="1.4"/><circle cx="6.5" cy="12.5" r="1.4"/><path d="M12 2a10 10 0 1 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.6-1.4-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.4A4.7 4.7 0 0 0 22 10.6C22 5.9 17.5 2 12 2Z"/></svg>Брендируйте сами</span>
+          <h3>Просто всё наклейте</h3>
+          <p>Выбираете подарки для мерча, мы печатаем стикеры, вы приклеиваете и дарите своим
+            клиентам. Поверхность любая. С дизайном поможем.</p>
+        </li>
+      </ul>
+      <!-- ФОТО-СРАВНЕНИЕ (просьба маркетолога 03.08): печать → плоская наклейка → 3D со смолой.
+           Фото подхватываются по имени файла b2b/cmp-1.webp…
+           11.08: все три кадра сняты ОДНОЙ сценой (телефон в чехле в руках), меняется только
+           способ нанесения. До этого сцены были разные — сравнивать было нечего, и маркетолог
+           справедливо ловила на том, что первая карточка выигрывает не по сути.
+           Кроп подобран Omar'ом в _crop-lab.html: zoom 1.80, cx 0.50, cy 0.35. Общий план
+           не годился — в карточке 400px знак получался с ноготь и разница пропадала. -->
+      <div class="cmp">
+        <h3 class="cmp__cap">Что из этого захочется оставить себе</h3>
+        <div class="cmp__grid">
+          <figure class="cmp__item" data-media="b2b/cmp-1">
+            <span class="cmp__ph"><b>Фото</b>обычный мерч</span>
+            <figcaption><b>Обычный мерч</b>Блокноты, ручки, пакеты с логотипом. Дёшево, а взгляд не цепляет.</figcaption>
+          </figure>
+          <figure class="cmp__item cmp__item--win" data-media="b2b/cmp-3">
+            <span class="cmp__fly" aria-hidden="true">
+              <i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg></i>
+              <i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg></i>
+              <i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg></i>
+              <i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg></i>
+              <i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg></i>
+              <i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg></i>
+            </span>
+            <span class="cmp__ph"><b>Фото</b>3D-стикер со смолой</span>
+            <figcaption><b>3D-стикер со смолой</b>Объём и глянец: его хочется потрогать и оставить на виду.</figcaption>
+          </figure>
+          <figure class="cmp__item" data-media="b2b/cmp-2">
+            <span class="cmp__ph"><b>Фото</b>обычная наклейка</span>
+            <figcaption><b>Обычная наклейка</b>Печать на плёнке. Дёшево и быстро, но рядом с объёмной — просто картинка.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="forms" id="vidy">
+    <div class="forms__head">
+      <!-- 25.08: блок перестал быть только про форму. Маркетолог попросила показать в ленте
+           и отделку («можно добавить голографических и тп видов отделки»), поэтому карточки
+           смешивают две оси. Сущность вписана в САМО название («Круглая форма»,
+           «Голографическая отделка»), отдельной метки над заголовком нет.
+           Текст под заголовком блока убран по её же правке. -->
+      <h2>Печатаем стикеры любой формы и отделки</h2>
+    </div>
+    <div class="lane" tabindex="0" role="group" aria-label="Виды стикеров — прокрутите по горизонтали">
+      <article class="fcard fcard--round fcard--pop">
+        <span class="fcard__hit">Хит</span>
+        <h3>Круглая форма</h3>
+        <div class="fcard__art fcard__art--plate">
+          <img src="models/card-cat.webp?v=20260825b" width="584" height="438" alt="Круглый жёлтый стикер с мордой кота" loading="lazy" decoding="async">
+        </div>
+      </article>
+      <article class="fcard fcard--pill">
+        <h3>Форма-пилюля</h3>
+        <div class="fcard__art fcard__art--plate">
+          <img src="models/card-pill.webp?v=20260825b" width="584" height="438" alt="Стикер-пилюля белого глянца с надписью «Можно, а зачем?»" loading="lazy" decoding="async">
+        </div>
+      </article>
+      <article class="fcard fcard--diecut">
+        <h3>Форма по контуру</h3>
+        <div class="fcard__art fcard__art--plate">
+          <img src="models/card-diecut.webp?v=20260825b" width="584" height="438" alt="Фигурный стикер с надписью «Всё получится», вырезанный по контуру букв" loading="lazy" decoding="async">
+        </div>
+      </article>
+      <article class="fcard fcard--rect">
+        <h3>Прямоугольная форма</h3>
+        <div class="fcard__art fcard__art--plate">
+          <img src="models/card-rect.webp?v=20260825a" width="584" height="438" alt="Прямоугольный стикер с ретро-кассетой mixtape" loading="lazy" decoding="async">
+        </div>
+      </article>
+      <article class="fcard fcard--holo">
+        <h3>Голографическая отделка</h3>
+        <div class="fcard__art fcard__art--plate">
+          <img src="models/card-holo.webp?v=20260825b" width="584" height="438" alt="Фигурный стикер-привидение с радужным голографическим переливом" loading="lazy" decoding="async">
+        </div>
+      </article>
+      <article class="fcard fcard--glow">
+        <h3>Отделка со свечением в темноте</h3>
+        <div class="fcard__art fcard__art--dark">
+          <img src="models/card-glow.webp?v=20260825c" width="584" height="438" alt="Круглый светящийся в темноте стикер с надписью «Я свечусь»" loading="lazy" decoding="async">
+        </div>
+      </article>
+    </div>
+    <!-- 25.08: на десктопе лента стала сеткой 3×2 (решение Omar) — шесть карточек влезают
+         целиком, ничего не прячется за краем. Прокрутка со снапом осталась только на узких
+         экранах, там она и работает пальцем. Стрелки убраны: на сетке им нечего листать. -->
+    <div class="lane__foot">
+      <a class="lane__calc" href="#calc" data-goal="calc_click" data-place="lane">Посчитать тираж<svg viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"
+        aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a>
+    </div>
+  </section>
+  <!-- КАЛЬКУЛЯТОР: тираж + опции → цена (поля по ТЗ). Цифры ДЕМО, ждём прайс. -->
+  <section class="calc" id="calc">
+    <div class="calc__in">
+      <h2>Посчитайте свой тираж</h2>
+      <p class="calc__note">Выберите плёнку, размер и тираж — покажем цену и срок сразу,
+        без ожидания менеджера.</p>
+      <div class="calc__grid">
+        <form class="calc__form" id="calcForm">
+        <div class="calc__left">
+          <fieldset class="fs fs--wide">
+            <legend>Что печатаем</legend>
+            <div class="opts opts--2col opts--near" id="kind"></div>
+          </fieldset>
+          <fieldset class="fs fs--wide">
+            <legend>Плёнка</legend>
+            <div class="opts opts--vert opts--four" id="mat"></div>
+          </fieldset>
+          <!-- Шаг «Смола» убран: смолу выбирает не клиент, а тираж (эпоксидная до 100 шт,
+               полиуретановая от 100) — факт живёт в тексте про производство, а не полем.
+               «Дополнительно» переехало галочками в шторку заказа. См. FUNNEL.md.
+               Размер и тираж переехали сюда же: после сокращения шагов левая колонка
+               осталась вдвое короче правой и под материалами зияла пустота. -->
+          <!-- без fs--wide: иначе grid-column:1/-1 растягивает оба на всю ширину и они встают
+               друг под другом, а плашки «Свой размер»/«Свой тираж» разъезжаются на 790px -->
+              <fieldset class="fs">
+              <legend id="sizeLeg">Размер по длинной стороне</legend>
+              <div class="opts opts--flow" id="size"></div>
+            </fieldset>
+              <fieldset class="fs">
+              <legend id="qtyLeg">Количество, штук</legend>
+              <div class="opts opts--flow" id="qty"></div>
+            </fieldset>
+            <!-- 25.08: «Дополнительно» разведено на два шага. Раньше в одной группе стояли
+                 услуга (дизайн) и способ выдачи, причём «поштучно» и «упаковать по одному»
+                 можно было отметить ОБА, хотя это одно измерение. Выдача стала выбором
+                 из трёх с явным «листом» по умолчанию — правка маркетолога о том,
+                 что «непонятно, что отжать, если не нужно». -->
+            <fieldset class="fs calc__extra">
+            <legend>Как отдадим тираж</legend>
+            <div class="opts" id="pack"></div>
+            </fieldset>
+            <fieldset class="fs calc__extra">
+            <legend>Дополнительно</legend>
+            <div class="opts">
+              <label class="opt"><input type="checkbox" id="needDesign">
+              <span class="opt--card"><b class="opt__txt">Нужен дизайн<em class="opt__desc">Нарисуем макет, стоимость скажет менеджер</em></b></span></label>
+            </div>
+            <!-- Требования к макетам: целого блока под них не нужно (маркетолог 03.08),
+                 ссылка живёт здесь — рядом с «Нужен дизайн», где человек и думает про макет.
+                 Сам макет прикладывается в шторке заказа, там же зона перетаскивания. -->
+            <p class="calc__note-art">Макет приложите при оформлении — проверим вылеты, контур
+              высечки и цвет.
+              <a class="calc__req" href="https://mdmprint.ru/trebovaniya-k-maketam/trebovaniya-k-maketam-poligrafii#stikerpack"
+                target="_blank" rel="noopener">Требования к макетам</a></p>
+            </fieldset>
+        </div>
+        </form>
+        <div class="calc__right">
+
+        <div class="calc__out" aria-live="polite">
+          <div>
+            <span class="calc__cap">Предварительная цена</span>
+            <div class="calc__sum">
+              <!-- «от» стоит ВПЛОТНУЮ к цифре, а не в подписи сверху: в подписи 11.5px
+                   капслоком его не замечают, а именно оно и делает цену нижней границей
+                   (поштучная резка и упаковка в базовую цену не входят) -->
+              <span class="calc__price"><i class="calc__from">от</i><span id="total">—</span></span>
+              <span class="calc__unit" id="unit"></span>
+            </div>
+          </div>
+          <div class="calc__rows">
+            <div class="calc__row"><span>За тираж</span><b id="sumOut">—</b></div>
+            <div class="calc__row"><span>Срок</span><b id="term">—</b></div>
+            <!-- смолу клиент не выбирает, её определяет тираж — показываем как вывод -->
+            <div class="calc__row"><span>Смола</span><b id="resinOut">—</b></div>
+          </div>
+          <p class="calc__promo" id="promo" hidden>−30% по акции до 31 августа</p>
+          <!-- Оговорка к цене. Сейчас нужна ровно для одного случая: прайс на стикерпаки
+               дан только по белому глянцу, и молча отдавать эту же цену за голографический
+               пак значило бы занижать. Вопрос 20 в ANSWERS.md. -->
+          <p class="calc__mark" id="calcMark" hidden></p>
+          <button class="calc__cta" type="button" id="orderOpen">Оформить заказ</button>
+          <!-- 24.08: оферта убрана отсюда на форму заказа (правка маркетолога): под расчётом
+               человек ещё выбирает, а не соглашается на условия. «Доставка и самовывоз»
+               осталась одна и стала заметнее — она отвечает на вопрос, который возникает
+               ровно здесь, вместе с ценой. -->
+          <p class="calc__hint"><button class="calc__link calc__link--lead" type="button" id="shipOpen">Условия доставки, самовывоз и оплата</button></p>
+        </div>
+        <!-- Крупный тираж — просьба маркетолога 03.08: завлечь больших клиентов прямо у расчёта.
+             Порога в штуках нет сознательно: маркетолог его не называла, а прайс выше 1000 шт
+             мы всё равно не знаем. Жёлтая = выгода, кнопка чёрная = действие (FUNNEL.md §5). -->
+        <aside class="calc__big">
+          <b>У вас большой тираж?</b>
+          <!-- 24.08: текст и подпись кнопки — правка маркетолога. Цифру она дала «более 50 000
+               в месяц»; в блоке «О нас» её же текст говорит «более 200 000». Расхождение
+               оставлено по решению Omar — обе формулировки её. -->
+          <p>Сделаем индивидуальный расчёт стоимости. Наше производство может печатать
+            более 50 000 стикеров в месяц.</p>
+          <a class="calc__big-cta" href="#zayavka">Обсудить проект</a>
+        </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ПРЕИМУЩЕСТВА: 6 карточек из ТЗ + слоты под фото/видео (реф крин2 — разнобой с воздухом).
+       Медиа подхватывается по имени файла: adv/v1.mp4 (вертикальное видео) или adv/p1.webp (фото).
+       Файла нет — остаётся плашка-заглушка с подписью формата. -->
+  <!-- ПРЕИМУЩЕСТВА: одинаковые квадратные ячейки в три колонки со смещением (реф крин2).
+       Тексты дословно из ТЗ. Медиа по имени файла: adv/v1.mp4 (вертикальное) или adv/p1.webp. -->
+  <!-- ПРЕИМУЩЕСТВА (реф крин2): 4 колонки одинаковых квадратов, заголовок — первая ячейка.
+       Тексты дословно из ТЗ. Медиа по имени файла: adv/v1.mp4 (вертикальное) или adv/p1.webp. -->
+  <!-- ПРЕИМУЩЕСТВА (реф крин2): 4 колонки одинаковых квадратов, вперемешку текст, фото, видео
+       и ПУСТЫЕ ячейки для воздуха. Заголовок — отдельно над сеткой. Тексты дословно из ТЗ.
+       Медиа по имени файла: adv/v1.mp4 (вертикальное) или adv/p1.webp. -->
+  <!-- ПОРТФОЛИО (по ТЗ). Слоты под фото работ: works/w1.webp … w8.webp, клик — увеличение. -->
+  <section class="work" id="portfolio">
+    <div class="work__in">
+      <h2>Печатаем ваши идеи</h2>
+      <div class="work__grid">
+          <button class="work__cell" type="button" data-work="works/w1">
+            <span class="work__ph"><b>Работа 1</b>фото</span>
+          </button>
+          <button class="work__cell" type="button" data-work="works/w2">
+            <span class="work__ph"><b>Работа 2</b>фото</span>
+          </button>
+          <button class="work__cell" type="button" data-work="works/w3">
+            <span class="work__ph"><b>Работа 3</b>фото</span>
+          </button>
+          <button class="work__cell" type="button" data-work="works/w4">
+            <span class="work__ph"><b>Работа 4</b>фото</span>
+          </button>
+          <button class="work__cell" type="button" data-work="works/w5">
+            <span class="work__ph"><b>Работа 5</b>фото</span>
+          </button>
+          <button class="work__cell" type="button" data-work="works/w6">
+            <span class="work__ph"><b>Работа 6</b>фото</span>
+          </button>
+          <button class="work__cell" type="button" data-work="works/w7">
+            <span class="work__ph"><b>Работа 7</b>фото</span>
+          </button>
+          <button class="work__cell" type="button" data-work="works/w8">
+            <span class="work__ph"><b>Работа 8</b>фото</span>
+          </button>
+      </div>
+    </div>
+  </section>
+  <section class="adv" id="preimushchestva">
+    <div class="adv__in">
+      <!-- Заголовок переписан 03.08: «Печать с нами — это легко и быстро» ничего не обещало
+           про сам продукт. Маркетолог просила сказать, что стикеры крутые, и дальше обосновать —
+           карточки ниже как раз обоснования. -->
+      <!-- 24.08: заголовок — правка маркетолога. -->
+      <h2>Почему наши 3D-стикеры — это круто</h2>
+      <div class="adv__grid">
+          <article class="adv__card adv__cell">
+          <span class="adv__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.6"/><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.9 1.9M17.3 17.3l1.9 1.9M19.2 4.8l-1.9 1.9M6.7 17.3l-1.9 1.9"/></svg>Яркий цвет</span>
+          <h3>Наклейка, которая не стирается и не выцветает</h3>
+          </article>
+          <figure class="adv__media adv__cell" data-media="adv/p1">
+            <span class="adv__ph"><b>Фото</b>работа</span>
+          </figure>
+          <div class="adv__cell adv__empty" aria-hidden="true"></div>
+          <article class="adv__card adv__cell">
+          <span class="adv__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.2 3.4h9.9l5.9 5.9v10.3a1.6 1.6 0 0 1-1.6 1.6H4.2a1.6 1.6 0 0 1-1.6-1.6V5a1.6 1.6 0 0 1 1.6-1.6Z"/><path d="M14.1 3.4v5.3a.6.6 0 0 0 .6.6h5.3"/></svg>Удобство</span>
+          <h3>Быстро клеятся, крепко держатся, но легко снимаются</h3>
+          <p>Не оставляют липких следов.</p>
+          </article>
+          <figure class="adv__media adv__cell" data-media="adv/v1">
+            <span class="adv__ph"><b>Видео</b>9:16 · процесс печати</span>
+          </figure>
+          <article class="adv__card adv__cell">
+          <span class="adv__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.4" cy="5.4" r="2.8"/><circle cx="5.4" cy="18.6" r="2.8"/><path d="M7.8 7.1 21 19.2M7.8 16.9 21 4.8"/></svg>Чёткая форма</span>
+          <h3>Режем любую форму на плоттере с высокой точностью</h3>
+          </article>
+          <article class="adv__card adv__cell">
+          <span class="adv__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.2 4.2 5v6.2c0 4.7 3.3 8.3 7.8 10 4.5-1.7 7.8-5.3 7.8-10V5L12 2.2Z"/><path d="M8.7 12.2l2.4 2.4 4.2-4.5"/></svg>Защита</span>
+          <h3>Смола защищает рисунок</h3>
+          <p>От влаги, царапин и выцветания на долгое время.</p>
+          </article>
+          <figure class="adv__media adv__cell" data-media="adv/p2">
+            <span class="adv__ph"><b>Фото</b>плоттер</span>
+          </figure>
+          <article class="adv__card adv__cell">
+          <span class="adv__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.2c4.4 5.2 6.8 8.6 6.8 11.6a6.8 6.8 0 0 1-13.6 0c0-3 2.4-6.4 6.8-11.6Z"/></svg>Полимерная смола</span>
+          <h3>Мягкая, с эффектом «антистресс»</h3>
+          <p>Не дубеет со временем, не желтеет и держит форму без подтёков.</p>
+          </article>
+          <div class="adv__cell adv__empty" aria-hidden="true"></div>
+          <article class="adv__card adv__cell">
+          <span class="adv__badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.6" y="5" width="18.8" height="12" rx="1.8"/><path d="M1.4 20h21.2"/></svg>Для любых поверхностей</span>
+          <h3>Клеится куда угодно</h3>
+          <p>Чехол телефона, ноутбук, скейтборд, бутылка, блокнот, холодильник.</p>
+          </article>
+          <figure class="adv__media adv__cell" data-media="adv/v2">
+            <span class="adv__ph"><b>Видео</b>9:16 · заливка смолой</span>
+          </figure>
+      </div>
+    </div>
+  </section>
+  <!-- ОТЗЫВЫ (по ТЗ). Тексты НЕ выдуманы: слоты под реальные скрины из Я.Карт, 2ГИС, соцсетей.
+       Файлы по имени: reviews/s1.webp (сторис), reviews/r1.webp (скрин), reviews/p1.webp (фото). -->
+  <section class="rev" id="reviews">
+    <div class="rev__in">
+      <div class="rev__head">
+        <h2>Спасибо, что выбрали нас</h2>
+        <!-- Рейтинг и число отзывов — с карточки на Яндекс.Картах (снято 05.08).
+             Первые два отзыва оттуда же и говорят ПРО САМ ПРОДУКТ: стикерпаки и объёмные
+             наклейки. Третий — с сайта mdmprint.ru, источник у каждого подписан свой. -->
+        <p class="rev__rate"><b>5,0</b> из 5 — 363 отзыва на Яндекс.Картах</p>
+      </div>
+      <div class="rev__grid">
+        <figure class="rev__slot rev__slot--sq">
+          <div class="rev__ph"><span class="rev__card">
+            <span class="rev__skel-top"><i class="rev__ava">З</i><b class="rev__nick">Зарина Меркулова</b></span>
+            <span class="rev__stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg></span>
+            <span class="rev__body">Я напечатала стикерпаки в большом количестве за очень маленький срок, ни одна типография на эти сроки не брала в работу заказ. Не подвели, всё что было обещано — выполнили! Большое спасибо всей команде МДМпринт!</span>
+            <span class="rev__from">Яндекс.Карты · май 2026</span>
+          </span></div>
+        </figure>
+        <figure class="rev__slot rev__slot--sq" data-shot="reviews/p1">
+          <span class="rev__ph"><b>Фото</b>работа клиента</span>
+        </figure>
+        <figure class="rev__slot rev__slot--long">
+          <div class="rev__ph"><span class="rev__card">
+            <span class="rev__skel-top"><i class="rev__ava">Д</i><b class="rev__nick">Детские сердца</b></span>
+            <span class="rev__stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg></span>
+            <span class="rev__body">Мы очень рады давнему сотрудничеству с типографией «МДМпринт»! В этот раз заказывали печать объёмных наклеек. Всё сделано супер качественно и точно в срок! Общение по заказу оставило самые лучшие впечатления — всегда на связи, с вниманием к деталям, ответы на дополнительные вопросы и правки в макетах получали сразу.</span>
+            <span class="rev__from">Яндекс.Карты · ноябрь 2025</span>
+          </span></div>
+        </figure>
+        <figure class="rev__slot rev__slot--sq" data-shot="reviews/p2">
+          <span class="rev__ph"><b>Фото</b>работа клиента</span>
+        </figure>
+        <figure class="rev__slot rev__slot--sq">
+          <div class="rev__ph"><span class="rev__card">
+            <span class="rev__skel-top"><i class="rev__ava">М</i><b class="rev__nick">Максим Орлов</b></span>
+            <span class="rev__stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg></span>
+            <span class="rev__body">Качественно и быстро сделали, хотя остальные типографии не брались сделать за такое короткое время. Качество отличное, вырезка супер. Очень рекомендую, если нужна быстрая и качественная печать.</span>
+            <span class="rev__from">Яндекс.Карты · февраль 2026</span>
+          </span></div>
+        </figure>
+        <figure class="rev__slot rev__slot--long">
+          <div class="rev__ph"><span class="rev__card">
+            <span class="rev__skel-top"><i class="rev__ava">Е</i><b class="rev__nick">Евгения</b></span>
+            <span class="rev__stars"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.6 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9L12 2.6Z"/></svg></span>
+            <span class="rev__body">Я дизайнер и иллюстратор. Уже несколько лет отправляю заказы для больших клиентов в эту типографию, всегда всё чётко — и я, и клиенты довольны. В МДМпринт печатали папки для прайс-листов, пластиковые карты, картхолдеры, визитки, флаеры, стикеры — тут можно напечатать практически всё.</span>
+            <span class="rev__from">Отзыв на mdmprint.ru · 25 декабря 2025</span>
+          </span></div>
+        </figure>
+      </div>
+    </div>
+  </section>
+  <!-- МИНИ-ЛИДФОРМА (по ТЗ): консультация в мессенджерах, ответ за 10 минут.
+       Ссылки-заглушки: реальные аккаунты и телефон ждём от бизнеса. -->
+  <!-- Блок «Проконсультируем и покажем примеры» временно убран 30.07 по просьбе Omar.
+       Разметка сохранена в _removed/lead-konsultatsiya.html, CSS .lead* оставлен на месте. -->
+  <!-- ПЕРЕТЯЖКА «ШОУРУМ» встала на место блока требований к макетам (маркетолог 03.08: целый
+       блок под требования не нужен, ссылка ушла в калькулятор). Адрес — офис на Орджоникидзе:
+       именно его маркетолог называет шоурумом (уточнение Omar 03.08). Часы и адрес от директора. -->
+  <section class="show" id="showroom">
+    <div class="show__in">
+     <div class="show__band">
+      <div class="show__text">
+        <!-- Слово «шоурум» вернулось: Omar подтвердил 05.08, что в офисе он есть.
+             До этого писали обтекаемо «приезжайте посмотреть», потому что маркетолог просила
+             звать в шоурум, а подтверждения его существования у нас не было. -->
+        <!-- 25.08: блок называется «Контакты» — правка маркетолога, вместе с пунктом в меню.
+             Строка «Приезжайте в наш шоурум» убрана (Omar): о шоуруме говорит текст ниже. -->
+        <h2>Контакты</h2>
+        <p>Покажем образцы разных плёнок и толщины смолы, дадим потрогать готовые стикеры
+          и подскажем, что лучше сядет на вашу упаковку. Без записи и без обязательств.</p>
+      </div>
+      <div class="show__meta">
+        <p class="show__addr"><b>Москва, ул. Орджоникидзе, 11с1А</b>подъезд 29, ежедневно 9:00–22:00</p>
+        <!-- 24.08, аудит: пункт меню «Контакты» ведёт сюда, а телефона и почты в блоке не было —
+             только адрес и карта. Они жили в шапке и футере, то есть человек, пришедший
+             по прямой ссылке на контакты, их не находил. -->
+        <p class="show__contacts">
+          <a href="tel:+74952561000" data-goal="phone" data-place="showroom">+7 (495) 256-10-00</a>
+          <a href="mailto:zakaz@mdmprint.ru" data-goal="mail" data-place="showroom">zakaz@mdmprint.ru</a></p>
+        <div class="show__acts">
+          <a class="show__btn" href="https://yandex.ru/maps/?text=Москва, улица Орджоникидзе, 11с1А"
+            target="_blank" rel="noopener">Показать на карте</a>
+          <button class="show__link" type="button" id="showShip">Доставка и самовывоз</button>
+        </div>
+      </div>
+     </div>
+    </div>
+  </section>
+  <!-- ЧАВО: пять вопросов дословно из ТЗ. Ответы — только по проверенным фактам. -->
+  <!-- ЧАВО + обращение. Сюда слиты два блока: «Проконсультируем» (каналы, 10 минут, график)
+       и «Нестандартная задача или большой тираж» (форма). Логика одна: человек не нашёл ответ —
+       спрашивает. Якорь #zayavka сохранён, на него ведут ссылки из шапки, героя и футера. -->
+  <section class="faq" id="faq">
+    <div class="faq__in">
+      <h2>Частые вопросы</h2>
+      <div class="faq__grid">
+        <div class="faq__list">
+          <!-- первый раскрыт по умолчанию: пустой список из шести закрытых плашек
+               не показывает, что внутри вообще есть ответы -->
+          <details open>
+            <summary>Сколько времени занимает печать?<span class="faq__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 9 7 7 7-7"/></svg></span></summary>
+            <!-- шкала целиком подтверждена бизнесом: 10 шт и месяц — директор 30.07,
+                 промежуточные узлы — лист «Вопросы» 06.08. Дни РАБОЧИЕ, так и написано -->
+            <p>От 3 дней. Срок зависит от тиража: 10 штук — 3 дня, 1 000 — 7 рабочих дней,
+              5 000 — 14 рабочих дней, 50 000 — около месяца. Считаем от согласования макета,
+              точную дату назовём при расчёте.</p>
+          </details>
+          <details>
+            <summary>Стикеры приедут листом или по отдельности?<span class="faq__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 9 7 7 7-7"/></svg></span></summary>
+            <p>По базовой цене стикеры сдаются на печатных листах. Поштучная резка — отдельная
+              услуга, её стоимость назовёт менеджер: она зависит от тиража. Стикерпак режется
+              всегда — это лист выбранного формата, А7, А6 или А5.</p>
+          </details>
+          <details>
+            <summary>Можно ли напечатать одну штуку?<span class="faq__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 9 7 7 7-7"/></svg></span></summary>
+            <p>Да, минимальный заказ — от одной штуки: можно напечатать пробный стикер и посмотреть
+              на результат вживую. Для больших тиражей делаем цветопробу, чтобы согласовать цвет
+              до печати.</p>
+          </details>
+          <details>
+            <summary>Какая смола у стикеров?<span class="faq__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 9 7 7 7-7"/></svg></span></summary>
+            <p>Полимерная: мягкая и эластичная, не дубеет со временем и не желтеет. Заливка
+              автоматическая, поэтому линза выходит одинаковой на всём тираже.</p>
+          </details>
+          <details>
+            <summary>Вы разрабатываете дизайн?<span class="faq__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 9 7 7 7-7"/></svg></span></summary>
+            <!-- цифра 900 ₽ убрана 07.08: директор называл её за подготовку КОНТУРА, а мы
+                 предлагаем дизайн как услугу целиком. Формулировка сведена с разметкой FAQPage,
+                 где она уже была без цены. Сама цифра сохранена в ANSWERS.md -->
+            <p>Да, нарисуем по вашей идее или доведём готовый макет: проверим вылеты, контур высечки
+              и цвет. Стоимость зависит от задачи — назовём при согласовании.</p>
+          </details>
+          <details>
+            <summary>Как подготовить макет к печати?<span class="faq__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 9 7 7 7-7"/></svg></span></summary>
+            <p>PDF, AI, EPS или CDR, CMYK, растр 300 dpi в масштабе 1:1, вылеты 3 мм, безопасная
+              зона 5 мм, контур высечки вектором в отдельном слое плашечным цветом CUT.
+              <a href="https://mdmprint.ru/trebovaniya-k-maketam/trebovaniya-k-maketam-poligrafii#stikerpack"
+                target="_blank" rel="noopener">Полные требования</a>.</p>
+          </details>
+          <details>
+            <summary>Можно ли мочить стикеры?<span class="faq__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 9 7 7 7-7"/></svg></span></summary>
+            <p>Да. Смола защищает рисунок от влаги, царапин и выцветания, поэтому стикер держится
+              на бутылке, чехле и технике.</p>
+          </details>
+        </div>
+
+        <aside class="faq__ask" id="zayavka">
+          <h3>Не нашли ответ?</h3>
+          <p class="faq__ask-text">Спросите — ответим и посчитаем. Нестандартная форма, большой
+            тираж, счёт для компании: всё, что не считает калькулятор.</p>
+          <form class="faq__form" id="orderForm" novalidate>
+            <input type="hidden" name="source" value="zayavka">
+            <label class="calc__f"><span>Имя <i>*</i></span>
+              <input type="text" name="name" autocomplete="name" required aria-required="true"
+                placeholder="Как к вам обращаться">
+              <span class="calc__err">Укажите имя — минимум две буквы</span></label>
+            <label class="calc__f"><span>Телефон <i>*</i></span>
+              <input type="tel" name="phone" inputmode="tel" autocomplete="tel" required aria-required="true"
+                placeholder="+7 (___) ___-__-__">
+              <span class="calc__err">Введите корректный номер телефона</span></label>
+            <label class="calc__f"><span>Вопрос или задача</span>
+              <input type="text" name="task" placeholder="Например: 5000 шт, по контуру"></label>
+            <label class="calc__ok">
+              <input type="checkbox" class="mk-check" name="agree" required>
+              <span>Я даю согласие на обработку персональных данных согласно <a data-legal="privacy"
+                target="_blank" rel="noopener">политике конфиденциальности</a> и принимаю
+                <a data-legal="offer" target="_blank" rel="noopener">условия оферты</a></span>
+            </label>
+            <button class="calc__cta" type="submit">Отправить вопрос</button>
+          </form>
+          <!-- каналы из бывшего блока «Проконсультируем»: обещание 10 минут и график оттуда же -->
+          <div class="faq__chan">
+            <a href="#zayavka" data-msg="tg" data-goal="msg_tg" data-place="lead"><img src="../assets/telegram.svg" alt="" width="18" height="18">Telegram</a>
+            <a href="#zayavka" data-msg="max" data-goal="msg_max" data-place="lead"><img src="../assets/max-icon.webp" alt="" width="18" height="18">MAX</a>
+            <a href="tel:+74952561000" data-goal="phone" data-place="lead">+7 (495) 256-10-00</a>
+            <!-- почта тут была пропущена: в футере и в шторке она есть, а в блоке, куда
+                 человек приходит с вопросом, единственным письменным каналом были мессенджеры -->
+            <a href="mailto:zakaz@mdmprint.ru" data-goal="mail" data-place="lead">zakaz@mdmprint.ru</a>
+          </div>
+          <p class="faq__note">Ежедневно с 9 до 22. В мессенджерах отвечаем за 10 минут в рабочее время.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+  <!-- ФОРМА ЗАЯВКИ (по ТЗ: имя, телефон, e-mail, согласие, файл). Отправку подключит разработчик. -->
+  </div>
+  </main>
+  <!-- Реквизиты взяты из футера их сайта (30.07): ООО «МДМпринт», ИНН 7704815108, © 2012–2026,
+       адрес офиса и график. ОГРН там не указан — в ANSWERS.md висит вопросом.
+       Логотип: assets/mdmprint-logo-dark.svg — монохромный белый вариант под тёмный фон
+       (в шапке светлый mdmprint-logo.svg, у него словомарк тёмный и на чёрном пропадает). -->
+  <footer class="ft">
+    <div class="ft__in">
+      <div class="ft__brand">
+        <img src="../assets/mdmprint-logo-dark.svg" alt="MDMprint" width="96" height="32">
+        <p>3D-стикеры со смолой: печать, фигурная резка и заливка на своём оборудовании.</p>
+      </div>
+      <div>
+        <h3>Контакты</h3>
+        <a class="ft__phone" href="tel:+74952561000" data-goal="phone" data-place="footer">+7 (495) 256-10-00</a>
+        <a href="mailto:zakaz@mdmprint.ru" data-goal="mail" data-place="footer">zakaz@mdmprint.ru</a>
+        <a href="#zayavka" data-msg="tg" data-goal="msg_tg" data-place="footer">Telegram</a>
+        <a href="#zayavka" data-msg="max" data-goal="msg_max" data-place="footer">MAX</a>
+        <p class="ft__addr">Москва, ул.&nbsp;Орджоникидзе, 11с1А,&nbsp;подъезд&nbsp;29<br>Ежедневно с 9 до 22</p>
+      </div>
+      <div>
+        <h3>Разделы</h3>
+        <a href="#vidy">Виды стикеров</a>
+        <a href="#calc" data-goal="calc_click" data-place="footer">Калькулятор</a>
+        <a href="#portfolio">Портфолио</a>
+        <a href="#b2b">Бизнесу</a>
+        <a href="#o-nas">О нас</a>
+        <a href="#faq">Вопросы и ответы</a>
+      </div>
+      <div>
+        <h3>Документы</h3>
+        <a data-legal="offer" target="_blank" rel="noopener">Публичная <span class="ft__nb">оферта<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
+        <a data-legal="privacy" target="_blank" rel="noopener">Политика <span class="ft__nb">конфиденциальности<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
+        <a data-legal="cookie" target="_blank" rel="noopener">Обработка <span class="ft__nb">cookies<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
+        <a href="https://mdmprint.ru/dostavka" target="_blank" rel="noopener">Доставка и <span class="ft__nb">оплата<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
+        <!-- было «Пункты выдачи» на страницу 25 ПВЗ: для стикеров их нет (Omar 05.08) -->
+        <a href="https://mdmprint.ru/dostavka/dostavka-po-rossii" target="_blank" rel="noopener">Доставка по <span class="ft__nb">России<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
+        <a href="https://mdmprint.ru/trebovaniya-k-maketam/trebovaniya-k-maketam-poligrafii#stikerpack" target="_blank" rel="noopener">Требования к <span class="ft__nb">макетам<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
+      </div>
+    </div>
+    <div class="ft__legal">
+      <!-- Реквизиты сверены с публичной офертой на mdmprint.ru (05.08): ОГРН и юр. адрес
+           взяты дословно оттуда, ИНН совпал с футером их сайта. -->
+      <p>ООО «МДМпринт» · ИНН 7704815108 · ОГРН 1127746679587 · © 2012–2026<br>
+        115419, Москва, ул. Орджоникидзе, д. 11, стр. 1А</p>
+      <p>Материалы сайта не являются публичной офертой; условия заказа —
+        в <a href="https://mdmprint.ru/publichnaya-oferta" target="_blank" rel="noopener">оферте</a>.
+        Цены на странице предварительные, точную стоимость подтверждает менеджер.</p>
+    </div>
+  </footer>
+
+
+  <!-- Заказ: сводка + макет + контакты. Вынесено из калькулятора, чтобы итог оставался коротким -->
+  <div class="sheet" id="orderSheet" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
+    <div class="sheet__box">
+      <button class="sheet__close" type="button" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <!-- Шапка модалки НЕ скроллится: раньше при прокрутке уезжал крестик (закрыть было
+           нечем, кроме Escape) и вместе с ним заголовок и сводка — человек терял, что заказывает
+           и по какой цене. Теперь скроллится только форма. -->
+      <div class="ord__head">
+        <h3 class="sheet__title" id="orderTitle">Оформить заказ</h3>
+      </div>
+      <!-- Форма — flex-колонка: прокручивается только .ord__scroll, подвал с ценой и кнопкой
+           стоит на месте. Подвал внутри <form>, иначе submit-кнопка не отправит форму. -->
+      <form class="ord__form" id="calcLead" novalidate>
+        <input type="hidden" name="source" value="calc">
+        <div class="ord__scroll">
+        <!-- Спека ПЕРВОЙ, до полей: проверка заказа не требует усилий и занимает две секунды,
+             а заполнение требует. Найти ошибку в тираже после вбитого телефона — худший момент. -->
+        <div class="ord__grp ord__grp--spec">
+          <span class="ord__lab">Ваш заказ</span>
+          <dl class="ord__spec" id="ordSpec"></dl>
+        </div>
+        <div class="ord__main">
+        <!-- Контакты ВЫШЕ макета: это минимум, который нужен, чтобы ответить. Макет и опции
+               необязательны («можно прислать менеджеру позже»), поэтому идут после. -->
+          <div class="ord__grp">
+            <span class="ord__lab">Куда ответить</span>
+            <div class="ord__fields">
+              <label class="calc__f"><span>Имя <i>*</i></span>
+                <input type="text" name="name" autocomplete="name" required aria-required="true"
+                  placeholder="Как к вам обращаться">
+                <span class="calc__err">Укажите имя — минимум две буквы</span></label>
+              <label class="calc__f"><span>Телефон <i>*</i></span>
+                <input type="tel" name="phone" inputmode="tel" autocomplete="tel" required aria-required="true"
+                  placeholder="+7 (___) ___-__-__">
+                <span class="calc__err">Введите корректный номер телефона</span></label>
+              <label class="calc__f"><span>E-mail <i>*</i></span>
+                <input type="email" name="email" inputmode="email" autocomplete="email" required aria-required="true"
+                  placeholder="you@example.ru">
+                <span class="calc__err">Проверьте адрес — нужен вид name@mail.ru</span></label>
+            </div>
+          </div>
+          <div class="ord__grp">
+            <!-- Требования — часть блока загрузки, а не общий мелкий шрифт формы:
+                 человек читает их ровно тогда, когда собирается приложить файл. -->
+            <div class="ord__lab-row">
+              <span class="ord__lab">Макет <em>необязательно</em></span>
+              <a class="ord__req" href="https://mdmprint.ru/trebovaniya-k-maketam/trebovaniya-k-maketam-poligrafii#stikerpack"
+                target="_blank" rel="noopener">Требования к макетам</a>
+            </div>
+            <!-- Была одинокая кнопка с подписью под меткой — блок висел в воздухе, без тела.
+                 Теперь зона: пунктирный контур (тот же приём высечки, что у «места для стикера»
+                 в B2B), внутри и подсказка, и форматы. Плюс перетаскивание — для макетов
+                 это естественный жест. -->
+            <!-- Контейнер — div, а НЕ label: список файлов лежит ВНУТРИ рамки, а кнопка удаления
+                 внутри label открывала бы диалог выбора вместо удаления. Кликабельно только
+                 приглашение. С файлами приглашение сжимается в одну строку — пустой бокс
+                 на 105px под двумя строчками текста был расточительным. -->
+            <div class="ord__drop" id="dropZone">
+              <ul class="ord__files" id="fileList" hidden></ul>
+              <label class="ord__drop-cta">
+                <input type="file" id="artFile" multiple accept=".pdf,.ai,.eps,.svg,.png,.jpg,.jpeg,.tif,.tiff,.cdr">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/></svg>
+                <span class="ord__drop-txt" id="fileName">Перетащите макет или выберите файл</span>
+                <em id="dropHint">PDF, AI, EPS, SVG, PNG, JPG, TIFF, CDR · до 25 МБ файл</em>
+              </label>
+            </div>
+            <p class="ord__err" id="fileErr" role="alert" hidden></p>
+            <!-- Допы переехали в калькулятор (это выбор, а не свойство заявки). Здесь только
+                 скрытые поля, чтобы выбранное ушло в CRM — значения ставит JS при открытии. -->
+            <input type="hidden" name="design" value="">
+            <input type="hidden" name="single" value="">
+            <input type="hidden" name="box" value="">
+          </div>
+          <div class="ord__legal">
+            <label class="calc__ok">
+              <input type="checkbox" class="mk-check" name="agree" required>
+              <span>Я даю согласие на обработку персональных данных согласно <a data-legal="privacy"
+                target="_blank" rel="noopener">политике конфиденциальности</a> и принимаю
+                <a data-legal="offer" target="_blank" rel="noopener">условия оферты</a></span>
+            </label>
+            <label class="calc__ok">
+              <input type="checkbox" class="mk-check" name="promo">
+              <span>Согласен получать новости и спецпредложения <em>(необязательно)</em></span>
+            </label>
+          </div>
+        </div>
+        </div>
+        <!-- ПОДВАЛ: цена и действие рядом. Цена подтверждается в момент нажатия, поэтому живёт
+             здесь, а не в шапке — и при прокрутке ни она, ни кнопка не уезжают. -->
+        <div class="ord__foot">
+          <!-- Сетка: цена и кнопка в первом ряду, оговорка ПОД ЦЕНОЙ в своей колонке
+               (во всю ширину она заезжала под кнопку), альтернатива — общей строкой внизу. -->
+          <div class="ord__price" id="ordPrice">
+            <span class="ord__big" id="ordTotal">—</span>
+            <span class="ord__per" id="ordPer"></span>
+            <span class="ord__promo" id="ordPromo" hidden></span>
+          </div>
+          <button class="calc__cta" type="submit">Отправить заявку</button>
+          <p class="ord__note">Цена предварительная — зависит от срока и сложности макета.
+            Предоплата онлайн по ссылке от менеджера — после согласования.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Доставка и самовывоз — краткой модалкой (по ТЗ: «максимально кратко, можно в попап») -->
+  <div class="sheet" id="shipSheet" role="dialog" aria-modal="true" aria-labelledby="shipTitle">
+    <div class="sheet__box">
+      <button class="sheet__close" type="button" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <h3 class="sheet__title" id="shipTitle">Доставка и самовывоз</h3>
+      <div class="sheet__grid">
+        <!-- 25 ПВЗ УБРАНЫ (Omar 05.08): для стикеров их нет. Самовывоз только с двух
+             своих адресов — офис и производство. -->
+        <!-- «Скидки за самовывоз нет» убрано (Omar 10.08): фраза отвечала на вопрос, которого
+             никто не задавал, и в блоке «бесплатно» читалась как отказ. В ответах бизнеса
+             такого условия нет — это была наша перестраховка. Не возвращать. -->
+        <div class="sheet__item"><b>Самовывоз — бесплатно</b>
+          <p>С производства на Автозаводской или из офиса на Орджоникидзе, 11с1А, подъезд 29.
+            Ежедневно с 9 до 22.</p></div>
+        <div class="sheet__item"><b>Курьер по Москве и МО</b>
+          <!-- подтверждено директором 29.07: для стикеров тариф тот же 790 ₽; бесплатно от 40 000 ₽
+               только по Москве в пределах МКАД и только не крупногабарит -->
+          <!-- 2–3 дня директор назвал именно для БЕСПЛАТНОЙ доставки, не как общий срок курьера -->
+          <p>Москва в пределах МКАД — 790 ₽, МО до ЦКАД — 1 100 ₽, за ЦКАД — 1 500 ₽.
+            От 40 000 ₽ по Москве в пределах МКАД — бесплатно, кроме крупногабаритных:
+            через 2–3 дня после готовности заказа.</p></div>
+        <!-- СДЭК ВЕРНУЛСЯ: 05.08 он нашёлся на mdmprint.ru/dostavka/dostavka-po-rossii вместе
+             с формулировкой «любая другая транспортная компания на ваш выбор» и тарифами
+             до терминала. В июле его там не было — страницу с тех пор дополнили. -->
+        <div class="sheet__item"><b>Доставка по России</b>
+          <p>СДЭК или любая транспортная компания на ваш выбор — в любой город. До терминала
+            перевозчика: 790 ₽ малогабаритный заказ, 3 000 ₽ крупногабаритный. Дальше — тариф
+            перевозчика; менеджер подберёт удобный вариант.
+            <a href="https://mdmprint.ru/dostavka/dostavka-po-rossii" target="_blank" rel="noopener">Условия доставки<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></p></div>
+        <!-- «Любым способом» было нашей выдумкой (Omar 05.08): способ один — предоплата
+             онлайн по ссылке, которую присылает менеджер после согласования. -->
+        <div class="sheet__item"><b>Оплата</b>
+          <p>Предоплата онлайн по ссылке от менеджера — после того, как согласуем макет,
+            тираж и срок. В производство заказ уходит после оплаты.
+            <a data-legal="offer" target="_blank" rel="noopener">Публичная оферта</a></p></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- мобильная полоса калькулятора: цена и кнопка всегда под рукой -->
+  <div class="calcbar" id="calcBar" aria-hidden="true">
+    <div><b id="barPrice">—</b><span id="barMeta"></span></div>
+    <button class="calcbar__btn" type="button" id="barOrder">Оформить</button>
+  </div>
+
+  <!-- контактное состояние той же полосы: показывается вне калькулятора, пока герой пролистан.
+       Ссылки мессенджеров ведут на форму заявки, пока аккаунты не даст маркетолог, — тот же
+       фолбэк, что в меню «Связаться» (JS подменит href по MSG). -->
+  <div class="rbar" id="reachBar">
+    <div class="rbar__chans">
+      <a class="rbar__chan" href="#zayavka" data-msg="tg" data-goal="msg_tg" data-place="bar" aria-label="Написать в Telegram">
+        <img src="../assets/telegram.svg" alt="" width="20" height="20"></a>
+      <a class="rbar__chan" href="#zayavka" data-msg="max" data-goal="msg_max" data-place="bar" aria-label="Написать в MAX">
+        <img src="../assets/max-icon.webp" alt="" width="20" height="20"></a>
+      <a class="rbar__chan" href="tel:+74952561000" data-goal="phone" data-place="bar" aria-label="Позвонить: +7 495 256-10-00">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.6a2 2 0 0 1-.5 2.1L8.2 9.6a16 16 0 0 0 6 6l1.2-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.6 2.6.7a2 2 0 0 1 1.7 2Z"/></svg></a>
+      <a class="rbar__chan" href="mailto:zakaz@mdmprint.ru" data-goal="mail" data-place="bar" aria-label="Написать на почту: zakaz@mdmprint.ru">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg></a>
+    </div>
+    <!-- Вела на #zayavka — форму в блоке ЧАВО. Но полоса показывается, когда человек ещё
+         НЕ считал: главное действие для него — расчёт, а не заявка вслепую. Заявка рядом:
+         мессенджеры и телефон в той же полосе. -->
+    <a class="rbar__btn" href="#calc" data-goal="calc_click" data-place="bar">Рассчитать</a>
+  </div>
+
+  <!-- Уведомление о cookie. На странице пока нет счётчиков, но метрику подключат при запуске
+       (у каталога она уже стоит), а уведомление по 152-ФЗ нужно с первого же визита.
+       Не блокирует страницу и не спрашивает разрешения: у нас нет рекламных пикселей,
+       которые надо было бы отключать по отказу. Появляется через 1.2 с, чтобы не спорить
+       с первым экраном; выбор помнится в localStorage. -->
+  <div class="cookie" id="cookieBar" hidden>
+    <p>Мы используем cookie и собираем обезличенную статистику посещений — это нужно, чтобы
+      страница работала и мы понимали, что на ней искать неудобно.
+      Подробности — в <a data-legal="cookie" target="_blank" rel="noopener">положении
+      об обработке файлов cookies</a>.</p>
+    <button class="cookie__ok" type="button" id="cookieOk">Понятно</button>
+  </div>
+
+<!-- Рантайм model-viewer (модульный скрипт = defer, первый экран не блокирует).
+     В бою запинить конкретную версию. -->
+<script type="module" src="https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js"></script>
+<script src="assets/stickers-v3.js?v=20260825a"></script>
+</body>
+</html>

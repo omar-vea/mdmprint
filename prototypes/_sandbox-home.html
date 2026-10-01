@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Главная (песочница) — MDMprint</title>
+<meta name="robots" content="noindex">
+<link rel="preload" href="../assets/fonts/AttractiveCond-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/AttractiveCond-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<!-- ?v= — обход кэша: CSS лежит по неизменному адресу, и браузер держит его часами.
+     При правке assets/css/* бампать число, иначе телефон покажет новый HTML со старым CSS
+     (ловили 16.07: мобильная шкала уехала в токены, страница осталась на десктопной). -->
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260717l">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260817a">
+<link rel="stylesheet" href="../assets/css/kit.css?v=20260819c">
+<!-- Стили страницы: строго после кита — страница переопределяет кит, а не наоборот -->
+<link rel="stylesheet" href="../assets/css/usluga.css?v=20260819a">
+<!-- Стили ТОЛЬКО новых блоков главной (песочница). Остальное — из кита и usluga.css.
+     Переедут в кит/страничный css после согласования. -->
+<style>
+  /* Первый экран без картинки: на 390px он должен вместить заголовок, лид и обе кнопки */
+  .home-hero{padding:var(--sp-24) 0 var(--sp-32)!important}
+  .home-hero h1{margin:var(--sp-8) 0 var(--sp-12)}
+  .home-hero .lead{margin:0}
+  .home-hero .hero-cta{margin-top:var(--sp-24)}
+
+  /* Быстрые входы: 2×2 плашки, вся плашка — ссылка */
+  .home-quick{padding:var(--sp-20) 0;border-top:1px solid var(--border)}
+  .home-quick__grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-8)}
+  .home-quick__it{display:flex;align-items:center;gap:var(--sp-10);min-height:56px;padding:var(--sp-10) var(--sp-12);
+    border-radius:var(--radius-outside);background:var(--surface-panel);color:var(--text-primary);text-decoration:none;
+    font-size:var(--t-ui);line-height:var(--t-ui-lh);font-weight:500}
+  .home-quick__it svg{flex:none;width:22px;height:22px}
+  @media (hover:hover){.home-quick__it:hover{background:var(--surface-on-light-2)}}
+  @media (min-width:1024px){.home-quick__grid{grid-template-columns:repeat(4,1fr)}}
+
+  /* Отступ секций на мобилке: у кита 80px сверху и снизу = 160px пустоты между блоками,
+     на телефоне это почти пятая часть экрана. ПРЕДЛОЖЕНИЕ НА ВЕСЬ САЙТ, здесь пока только главная. */
+  @media (max-width:1023px){.home{--section-y:48px}}
+
+  /* Категории: 3 колонки, подпись под картинкой — 6 плиток в два ряда */
+  .home-cats .pcards{grid-template-columns:repeat(3,1fr);gap:var(--sp-8)}
+  .home-cats .mk-mcard__body{padding:var(--sp-8) var(--sp-8) var(--sp-10);min-height:0}
+  .home-cats .mk-mcard__title{font-size:var(--t-small);line-height:var(--t-small-lh);hyphens:manual}
+  .home-cats__all{margin-top:var(--sp-16);width:100%}
+  @media (min-width:1024px){.home-cats .pcards{grid-template-columns:repeat(6,1fr)}.home-cats__all{width:auto}}
+
+  /* Акция сезона: тёмная карточка, как гибрид промо в мегаменю */
+  .home-promo{padding:0 0 var(--section-y)!important;border-top:none!important}
+  .home-promo__card{display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-8);
+    padding:var(--sp-24) var(--sp-20);border-radius:var(--radius-outside);background:var(--surface-dark);
+    color:var(--text-on-dark);text-decoration:none}
+  .home-promo__t{font-family:var(--font-head);font-size:var(--t-h3);line-height:var(--t-h3-lh);
+    letter-spacing:var(--t-h3-ls);text-transform:uppercase;font-weight:700;margin-top:var(--sp-8)}
+  .home-promo__s{color:var(--text-on-dark-2)}
+  .home-promo__btn{margin-top:var(--sp-12)}
+
+  /* Ссылка «ещё» под блоком */
+  .home-more{display:inline-flex;align-items:center;gap:var(--sp-6);margin-top:var(--sp-16);
+    color:var(--text-primary);font-weight:500;text-decoration:none}
+  /* Цифры: 3 в ряд одной полосой (было 2×2 = 227px). Подписи — до 2 строк на 320px */
+  @media (max-width:1023px){
+    .home-stat .mk-statbar__row{grid-template-columns:repeat(3,1fr)}
+    .home-stat .mk-statbar__item{padding:var(--sp-16) var(--sp-12)}
+    .home-stat .mk-statbar__item:first-child{padding-left:var(--container-pad)}
+    .home-stat .mk-statbar__item:last-child{padding-right:var(--container-pad)}
+    .home-stat .mk-statbar__item:nth-child(n+2){border-left:1px solid var(--border)}
+    .home-stat .mk-statbar__item:nth-child(n+3){border-top:0}
+    .home-stat .mk-statbar__label{font-size:var(--t-small);line-height:var(--t-small-lh)}
+  }
+  /* Узкие телефоны: «оборудования» в треть экрана не влезает кеглем 14 — берём ступень ниже и ужимаем поля */
+  @media (max-width:374px){
+    .home-stat .mk-statbar__item{padding-inline:var(--sp-8)}
+    .home-stat .mk-statbar__label{font-size:var(--t-caption);line-height:var(--t-caption-lh)}
+
+    /* «Почему мы»: 2×2 плашки, заголовок + короткий текст, без иконок-заглушек */
+    .home-adv .tiles{grid-template-columns:1fr 1fr;gap:var(--sp-8)}
+    .home-adv .mk-tile{display:block;padding:var(--sp-16) var(--sp-14)}
+    .home-adv .mk-tile__title{margin:0 0 var(--sp-6)}
+    .home-adv .mk-tile__text{font-size:var(--t-small);line-height:var(--t-small-lh)}
+
+    /* Портфолио: карточка 72% — соседняя подглядывает, лента читается как лента */
+    .home .usl-port .port-grid--photo{--item-w:72%}
+  }
+  /* Поле-кнопка поиска в первом экране: вид инпута, поведение — лупа шапки */
+  .home-search{display:flex;align-items:center;gap:var(--sp-10);width:100%;min-height:52px;margin-top:var(--sp-12);
+    padding:0 var(--sp-16);border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--surface-card);
+    color:var(--text-tertiary);font:inherit;font-size:var(--t-ui);text-align:left;cursor:text}
+  .home-search svg{flex:none;width:20px;height:20px;color:var(--text-secondary)}
+  .home-search span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* ФУТЕР НА МОБИЛКЕ: навигация свёрнута в группы (было 776px из 2241). Ссылки дублируют каталог
+     и меню шапки — до футера доходит тот, кто ищет конкретное (реквизиты, вакансии), ему хватит
+     заголовков групп. ПРЕДЛОЖЕНИЕ НА ВЕСЬ САЙТ. Разметку не трогаем: группы собирает скрипт. */
+  @media (max-width:1023px){
+    .usl-foot .flinks.is-acc{display:block}
+    .usl-foot .flinks.is-acc > div{display:contents}
+    .fgrp{border-bottom:1px solid var(--border-on-dark)}
+    .fgrp__btn{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:52px;
+      padding:0;border:0;background:none;color:var(--text-on-dark);font:inherit;cursor:pointer}
+    .fgrp > .mk-label{margin:0!important}
+    .fgrp__btn{font-size:inherit;letter-spacing:inherit;text-transform:inherit;font-weight:inherit}
+    .fgrp__btn::after{content:"";width:9px;height:9px;margin-right:4px;border-right:1.7px solid currentColor;
+      border-bottom:1.7px solid currentColor;transform:translateY(-3px) rotate(45deg);transition:transform .2s}
+    .fgrp.is-open .fgrp__btn::after{transform:translateY(2px) rotate(-135deg)}
+    .fgrp__list{display:none;padding:0 0 var(--sp-16)}
+    .fgrp.is-open .fgrp__list{display:grid;gap:var(--sp-12)}
+    @media (prefers-reduced-motion:reduce){.fgrp__btn::after{transition:none}}
+    /* 320px: колонка сетки футера растягивалась по форме подписки до 305px при контейнере 288 —
+       текст и кнопка упирались в край экрана. ТОТ ЖЕ КОСЯК НА usluga.html. */
+    .usl-foot .ftop{grid-template-columns:minmax(0,1fr)}
+    /* Соцсети: строкой с переносом, а не столбиком из 7 строк */
+    .usl-foot .fsoc{flex-direction:row;flex-wrap:wrap;gap:var(--sp-4) var(--sp-20)}
+  }
+</style>
+
+
+</head>
+<body>
+
+  <!-- Шапка длинная: без этого до контента с клавиатуры ~40 табов -->
+  <a class="mk-skip" href="#content">К основному содержимому</a>
+
+  <!-- ФИКС-ШАПКА (прилипает + уменьшается при скролле) -->
+  <div class="site-head">
+
+  <!-- ВЕРХНЯЯ ПОЛОСА (меню слева, контакты справа) -->
+  <div class="topbar">
+    <div class="wrap">
+      <div class="menu">
+        <a href="#">Оплата</a>
+        <a href="#">Доставка</a>
+        <a href="#">Портфолио</a>
+        <a href="#">Требования к макетам</a>
+        <a href="#">Контакты</a>
+        <div class="tb-drop">
+          <span class="tb-drop-t">О компании <svg width="9" height="9" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div class="tb-menu">
+            <div class="tb-col">
+              <span class="tb-col-h">Компания</span>
+              <a href="#">О компании</a>
+              <a href="#">Преимущества компании</a>
+              <a href="#">Производство</a>
+              <a href="#">Сертификаты и лицензии</a>
+              <a href="#">Вакансии</a>
+            </div>
+            <div class="tb-col">
+              <span class="tb-col-h">Медиа и контакты</span>
+              <a href="#">Отзывы</a>
+              <a href="#">Блог</a>
+              <a href="#">Новости</a>
+              <a href="#">Написать директору</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="info">
+        <a class="it tb-mail" id="tbMail" href="mailto:info@mdmprint.ru" data-hint="Нажмите, чтобы скопировать" data-mail="info@mdmprint.ru">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span class="ml-tx">info@mdmprint.ru</span>
+        </a>
+        <a class="tb-cta mk-btn mk-btn--primary mk-btn--sm" href="#">Оставить заявку</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ШАПКА -->
+  <header>
+    <div class="wrap hbar">
+      <a href="#" class="logo">
+        <img src="../assets/mdmprint-logo.svg" width="59" height="20" alt="MDMprint — заводская типография">
+      </a>
+      <button type="button" class="hcat mk-btn mk-btn--dark mk-btn--md" id="hcat" title="Каталог" aria-haspopup="true" aria-expanded="false" aria-controls="mega">
+        <span class="ic"><i></i><i></i><i></i></span>
+        Каталог
+      </button>
+      <form class="search" id="searchForm" onsubmit="return false" autocomplete="off">
+        <span class="si"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <input type="text" id="searchInput" placeholder="Поиск по 2000+ услугам: визитки, наклейки, коробки…">
+        <button type="button" class="s-clear" id="searchClear" aria-label="Очистить" title="Очистить">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button type="submit" class="s-go mk-btn mk-btn--dark mk-btn--sm">Найти</button>
+
+        <!-- ДРОПДАУН ПОИСКА: состояния empty / results / none -->
+        <div class="search-drop" id="searchDrop" data-state="empty">
+          <div class="sd-pane sd-empty">
+            <div class="sd-h">Популярные запросы</div>
+            <div class="sd-chips">
+              <button type="button" class="sd-chip">Визитки</button>
+              <button type="button" class="sd-chip">Листовки</button>
+              <button type="button" class="sd-chip">Наклейки</button>
+              <button type="button" class="sd-chip">Календари 2027</button>
+              <button type="button" class="sd-chip">Коробки</button>
+              <button type="button" class="sd-chip">Roll-Up</button>
+              <button type="button" class="sd-chip">Футболки с лого</button>
+              <button type="button" class="sd-chip">Брошюры</button>
+            </div>
+          </div>
+          <div class="sd-pane sd-results">
+            <ul class="sd-list"></ul>
+            <a class="sd-all" href="#">Все результаты по «<b class="sd-q"></b>»<span class="mk-arr" aria-hidden="true"></span></a>
+          </div>
+          <div class="sd-pane sd-none">
+            <div class="sd-none-t">Ничего не найдено</div>
+            <div class="sd-none-s">Попробуйте «визитки», «наклейки» или «коробки» — либо откройте каталог слева.</div>
+          </div>
+        </div>
+      </form>
+      <div class="hphone">
+        <div class="ph-txt">
+          <a href="tel:+74952561000" class="num" data-copy="+7 (495) 256-10-00"><span class="pre">+7 (495) 256-</span><span class="l4">10-00</span></a>
+          <div class="psub"><span class="day">Ежедневно с 9 до 22</span></div>
+        </div>
+      </div>
+      <div class="hactions">
+        <button type="button" class="mk-navbtn m-search" id="mSearch" title="Поиск" aria-label="Поиск">
+          <span class="mk-navbtn__ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          Поиск
+        </button>
+        <button type="button" class="mk-navbtn cb" title="Заказать звонок">
+          <span class="mk-navbtn__ic"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M18.7 5.3 13 11M13 7.4V11h3.6"/></svg></span>
+          Перезвоним
+        </button>
+        <button type="button" class="mk-navbtn" title="Написать в Телеграме">
+          <span class="mk-navbtn__ic"><svg width="21" height="21" viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg></span>
+          Телеграм
+        </button>
+        <button type="button" class="mk-navbtn" title="Написать в Максе">
+          <span class="mk-navbtn__ic"><svg width="20" height="20" viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></span>
+          Макс
+        </button>
+        <span class="sep"></span>
+        <a class="mk-navbtn hcalc" id="hcalc" href="#" title="Калькулятор">
+          <span class="mk-navbtn__ic"><svg class="" width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
+          Калькулятор
+        </a>
+        <div class="huser m-keep" id="huser">
+          <button type="button" class="mk-navbtn" id="authBtn" title="Войти" aria-haspopup="true" aria-expanded="false">
+            <span class="mk-navbtn__ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c.5-3.4 3.3-5.4 7-5.4s6.5 2 7 5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <span class="u-av" id="authAv" aria-hidden="true"></span>
+            <span id="authBtnLbl">Войти</span>
+          </button>
+          <div class="umenu" id="umenu" role="menu">
+            <div class="umenu__head">
+              <span class="umenu__id"><b id="umenuName">Личный кабинет</b><span id="umenuPhone">+7 (999) 123-45-67</span></span>
+            </div>
+            <div class="umenu__sep"></div>
+            <button type="button" class="umenu__item" role="menuitem"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c.5-3.4 3.3-5.4 7-5.4s6.5 2 7 5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Личный кабинет</button>
+            <button type="button" class="umenu__item" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Мои заказы</button>
+            <div class="umenu__sep"></div>
+            <button type="button" class="umenu__item" id="logout" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M16 17l5-5-5-5M21 12H9"/></svg>Выйти</button>
+          </div>
+        </div>
+        <button type="button" class="mk-navbtn m-keep" title="Корзина">
+          <span class="mk-navbtn__ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 4h2.2l1.8 11.5a1.5 1.5 0 0 0 1.5 1.3h8.4a1.5 1.5 0 0 0 1.5-1.2L20.5 8H6.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="20" r="1.3" fill="currentColor"/><circle cx="17.5" cy="20" r="1.3" fill="currentColor"/></svg></span>
+          <span class="mk-navbtn__badge">3</span>
+          Корзина
+        </button>
+      </div>
+    </div>
+  </header>
+
+  
+
+  <!-- НАВИГАЦИЯ -->
+  <div class="navbar">
+    <div class="wrap nav">
+      <button type="button" class="catbtn mk-btn mk-btn--dark mk-btn--md" id="catbtn" aria-haspopup="true" aria-expanded="false" aria-controls="mega">
+        <span class="ic"><i></i><i></i><i></i></span>
+        Каталог
+      </button>
+      <!-- Топ категорий: курируется из админки, меняется под сезон (не дублирует разделы каталога) -->
+      <nav class="quick" id="quick" aria-label="Популярные разделы">
+        <a href="#" data-open="1">Календари 2027</a>
+        <a href="#" data-open="6">Новогодние наборы</a>
+        <a href="#" data-open="0">Визитки</a>
+        <a href="#" data-open="4">Наклейки для маркетплейсов</a>
+        <a href="#" data-open="2">Баннеры и Roll-Up</a>
+      </nav>
+      <button type="button" class="calcbtn mk-btn mk-btn--ghost mk-btn--md">
+        <span class="calc-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
+        Калькулятор
+        <span class="mk-btn__badge">−5%</span>
+      </button>
+    </div>
+
+    <!-- МЕГАМЕНЮ -->
+    <div class="mega" id="mega">
+      <div class="mega-inner">
+      <div class="mega-box">
+
+        <!-- мобильная шапка drawer (видна ≤900px) -->
+        <div class="m-dhead">
+          <button type="button" class="m-dh-back" id="mDhBack" aria-label="Назад"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="m-dh-bl" id="mDhBackLbl">Меню</span></button>
+          <span class="m-dh-t" id="mDhTitle">Каталог</span>
+        </div>
+
+        <!-- ЕДИНАЯ СЕТКА: рельса (Каталог/Услуги/Материалы) + центр + промо -->
+        <div class="mega-card">
+
+          <!-- КОРЕНЬ МОБИЛЬНОГО МЕНЮ (виден ≤900px): поиск + Каталог ›  + ссылки топбара -->
+          <div class="m-root" id="mRoot">
+            <form class="m-dsearch" onsubmit="return false" autocomplete="off">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <input type="text" placeholder="Поиск по сайту…" aria-label="Поиск по сайту">
+            </form>
+            <button type="button" class="mr-cat" id="mrCat">
+              <span class="mr-cat-ic"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/></svg></span>
+              <span class="mr-cat-tx"><span class="mr-cat-t">Каталог</span><span class="mr-cat-d">Продукция, материалы, услуги, готовые решения</span></span>
+              <span class="mr-arr"><svg width="9" height="14" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </button>
+            <!-- калькулятор = инструмент (не контакт): пункт меню с промо-бейджем; ведёт на страницу → стрелка, не шеврон -->
+            <a class="mr-calc" href="#">
+              <span class="mr-calc-ic"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="2.5" width="14" height="19" rx="2.2" stroke="currentColor" stroke-width="1.7"/><rect x="8" y="5.5" width="8" height="3.4" rx="1" stroke="currentColor" stroke-width="1.5"/><circle cx="9.5" cy="13.5" r="1" fill="currentColor"/><circle cx="14.5" cy="13.5" r="1" fill="currentColor"/><circle cx="9.5" cy="17.3" r="1" fill="currentColor"/><circle cx="14.5" cy="17.3" r="1" fill="currentColor"/></svg></span>
+              <span class="mr-cat-tx"><span class="mr-cat-t">Калькулятор <span class="mk-btn__badge">−5%</span></span><span class="mr-cat-d">Онлайн-расчёт тиража со скидкой</span></span>
+              <span class="mr-go"></span>
+            </a>
+            <!-- заявка = не кнопка, а строка-вход в том же языке, что Каталог/Калькулятор (CTA не теряется) -->
+            <button type="button" class="mr-calc mr-req tb-cta">
+              <span class="mr-calc-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3v4h4" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.5 13.5l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="mr-cat-tx"><span class="mr-cat-t">Оставить заявку</span><span class="mr-cat-d">Расчёт тиража — ответим за 15 минут</span></span>
+              <span class="mr-go"></span>
+            </button>
+
+            <!-- КОНТАКТЫ: с иконками, чтобы не терялись среди навигационных ссылок -->
+            <!-- Контакты из drawer убраны (17.07). Телефон, Телеграм, Макс и почта дублировали
+                 call-bar шапки — он на мобилке ВСЕГДА на экране, вторым рядом, с крупным номером.
+                 В меню они стояли посередине и рвали логику: действия → вдруг справка → снова ссылки.
+                 Плюс ниже уже есть пункт «Контакты» — то есть контакты в меню лежали дважды.
+                 Теперь: поиск → ДЕЙСТВИЯ (каталог, калькулятор, заявка) → ССЫЛКИ (включая «Контакты»). -->
+            <nav class="mr-links" aria-label="Информация">
+              <a href="#">Оплата</a>
+              <a href="#">Доставка</a>
+              <a href="#">Портфолио</a>
+              <a href="#">Требования к макетам</a>
+              <a href="#">Контакты</a>
+            </nav>
+            <nav class="mr-links" aria-label="О компании">
+              <a href="#">О компании</a>
+              <a href="#">Преимущества компании</a>
+              <a href="#">Производство</a>
+              <a href="#">Сертификаты и лицензии</a>
+              <a href="#">Вакансии</a>
+              <a href="#">Отзывы</a>
+              <a href="#">Блог</a>
+              <a href="#">Новости</a>
+            </nav>
+          </div>
+
+          <!-- РЕЛЬСА (порядок по otavtora) -->
+          <div class="rail" id="rail">
+            <div class="lbl">Каталог</div>
+            <a class="ri active" data-sec="0" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M7 14h5M7 10.5h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="ri-tx"><span class="ri-title">Визитки</span><span class="ri-desc">Матовые, тиснение, скруглённые, пластик</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="1" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M7 9V4h10v5M7 18H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2M7 15h10v5H7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Печать полиграфии</span><span class="ri-desc">Листовки, буклеты, папки, календари</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="2" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m6 14 3.5-4 2.5 3 2-2.5L18 14" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Широкоформатная печать</span><span class="ri-desc">Баннеры, интерьерная, конструкции</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="3" href="#"><span class="em"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="12.4" y="5.5" width="8.5" height="13" rx="1.8" transform="rotate(12 16.6 12)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="4" y="5" width="9.5" height="14.5" rx="1.8" fill="var(--surface-page)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.7 9.6 10 11.3 8.7 13 7.4 11.3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Карты и настольные игры</span><span class="ri-desc">Игральные карты, настольные игры</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="4" href="#"><span class="em"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 21a9 9 0 1 1 9-9c0 1-1.2 2.2-3 4l-2 2c-1.8 1.8-3 3-4 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M21 12c-3.3 0-5.6.8-7 2.2S12 18 12 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Наклейки, стикеры, этикетки</span><span class="ri-desc">Печать наклеек, этикетки на товар</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="5" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 4 7v10l8 4 8-4V7zM4 7l8 4 8-4M12 11v10" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Упаковка и коробки</span><span class="ri-desc">Кашированные, из картона, из МГК</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="6" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 8h16v3H4zM5 11h14v9H5zM12 8v12M12 8S10.5 3 8 4.5 9.5 8 12 8ZM12 8s1.5-5 4-3.5S14.5 8 12 8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Сувениры и мерч</span><span class="ri-desc">Корпоративный мерч, с логотипом, наборы</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="7" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M8 4 4 6v4l2.5-1V20h11V9l2.5 1V6l-4-2-2 2H10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Нанесение</span><span class="ri-desc">На текстиль, акрил, ленты</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="8" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3v6M12 9l3 2.5M12 9 9 11.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="6" y="11" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.7"/></svg></span><span class="ri-tx"><span class="ri-title">POS-материалы</span><span class="ri-desc">Ценникодержатели, воблеры, тейбл-тенты</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="9" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.7"/><path d="M7 14h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="ri-tx"><span class="ri-title">Пластиковые карты</span><span class="ri-desc">Виды карт, по применению, тиражи</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <div class="sep"></div>
+            <div class="lbl">Готовые решения</div>
+            <a class="ri" data-sec="10" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 20V9l8-5 8 5v11" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="9" y="13" width="6" height="7" stroke="currentColor" stroke-width="1.7"/></svg></span><span class="ri-tx"><span class="ri-title">Бизнесу</span><span class="ri-desc">Для офиса, для клиентов, для рекламы</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <a class="ri" data-sec="11" href="#"><span class="em"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 10.5v3A1.5 1.5 0 0 0 5.5 15H8l6 4V5L8 9H5.5A1.5 1.5 0 0 0 4 10.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M8 15v3a1.2 1.2 0 0 0 2.4 0v-2.3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/><path d="M17 9.5a4 4 0 0 1 0 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span class="ri-tx"><span class="ri-title">Рекламным агентствам</span><span class="ri-desc">Опт, спецусловия, по направлениям</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            <div class="rail-v1">
+              <div class="sep"></div>
+              <a class="ri" data-sec="svc" href="#"><span class="em"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.2 2.2-2-2 2.2-2.2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Услуги</span><span class="ri-desc">Брошюровка, печать, постобработка, резка</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+              <a class="ri" data-sec="mat" href="#"><span class="em"><svg class="" width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3 3 8l9 5 9-5-9-5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 12l9 5 9-5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 16l9 5 9-5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span class="ri-tx"><span class="ri-title">Материалы</span><span class="ri-desc">Бумага, картон, плёнки, пластик</span></span><span class="arr"><svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+            </div>
+          </div>
+
+          <!-- КОНТЕНТ -->
+          <div class="pane" id="pane">
+            <button type="button" class="m-back" id="megaBack"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Все разделы</button>
+
+            <!-- 0 ВИЗИТКИ -->
+            <div class="panel show" data-sec="0">
+              <div class="phead"><h3>Визитки</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Печать <span class="nw">визиток<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Премиальные визитки</a></li>
+                  <li><a href="#">Визитки дёшево</a></li>
+                  <li><a href="#">Многослойные</a></li>
+                  <li><a href="#">С белилами</a></li>
+                  <li><a href="#">С конгревом</a></li>
+                  <li><a href="#">С ламинацией</a></li>
+                  <li><a href="#">С объёмным лаком <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">С тиснением</a></li>
+                  <li><a href="#">С фольгой</a></li>
+                  <li><a href="#">Со скруглением углов</a></li>
+                  <li><a href="#">Софт-тач</a></li>
+                  <li><a href="#">Срочная печать <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">УФ печать</a></li>
+                  <li><a href="#">Шелкография</a></li>
+                </ul></div>
+                <div class="group"><h4>Материал <span class="nw">визиток<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Каландрированная бумага</a></li>
+                  <li><a href="#">Крафт-бумага</a></li>
+                  <li><a href="#">Лён</a></li>
+                  <li><a href="#">Пластик</a></li>
+                  <li><a href="#">Плотная калька</a></li>
+                  <li><a href="#">Плотный картон</a></li>
+                  <li><a href="#">Бумага Majestic</a></li>
+                  <li><a href="#">Бумага Plike</a></li>
+                  <li><a href="#">Touche Paper</a></li>
+                </ul></div>
+                <div class="group"><h4>Визитки по <span class="nw">применению<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Для автосервиса</a></li>
+                  <li><a href="#">Для бизнеса</a></li>
+                  <li><a href="#">Для салона красоты</a></li>
+                  <li><a href="#">Для мастера маникюра</a></li>
+                  <li><a href="#">Для такси</a></li>
+                  <li><a href="#">Для фотографа</a></li>
+                  <li><a class="more" href="#">Показать все <span class="arr-ico"></span></a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 1 ПЕЧАТЬ ПОЛИГРАФИИ -->
+            <div class="panel" data-sec="1">
+              <div class="phead"><h3>Печать полиграфии</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols3">
+
+                <!-- Колонка 1: Листовая + Папки -->
+                <div class="col">
+                  <div class="group"><h4>Листовая <span class="nw">полиграфия<i class="ha"></i></span></h4><ul>
+                    <li><a href="#">Афиши</a></li>
+                    <li><a href="#">Бейджи</a></li>
+                    <li><a href="#">Билеты</a></li>
+                    <li><a href="#">Буклеты</a></li>
+                    <li><a href="#">Грамоты и дипломы</a></li>
+                    <li><a href="#">Инструкции</a></li>
+                    <li><a href="#">Конверты</a></li>
+                    <li><a href="#">Листовки</a></li>
+                    <li><a href="#">Лифлеты</a></li>
+                    <li><a href="#">Открытки</a></li>
+                    <li><a href="#">Плакаты <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                    <li><a href="#">Постеры <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                    <li><a href="#">Прайс-листы</a></li>
+                    <li><a href="#">Приглашения</a></li>
+                    <li><a href="#">Флаеры</a></li>
+                    <li><a href="#">Сертификаты</a></li>
+                    <li><a href="#">Фирменные бланки</a></li>
+                    <li><a href="#">Ярлыки и бирки</a></li>
+                    <li><a href="#">Листовое меню</a></li>
+                    <li><a href="#">Плейсматы</a></li>
+                    <li><a href="#">Костеры</a></li>
+                    <li><a href="#">Бирдекели</a></li>
+                    <li><a href="#">Складные карты</a></li>
+                    <li><a href="#">Кубарики</a></li>
+                  </ul></div>
+                  <div class="group"><h4>Изготовление <span class="nw">папок<i class="ha"></i></span></h4><ul>
+                    <li><a href="#">Бумажные папки</a></li>
+                    <li><a href="#">Папки на кольцах</a></li>
+                    <li><a href="#">Папки с карманом</a></li>
+                    <li><a href="#">Папки-планшеты</a></li>
+                  </ul></div>
+                </div>
+
+                <!-- Колонка 2: Многостраничная + Брошюровка -->
+                <div class="col">
+                  <div class="group"><h4>Многостраничная <span class="nw">полиграфия<i class="ha"></i></span></h4>
+                    <ul>
+                      <li><a href="#">Блокноты</a></li>
+                      <li><a href="#">Брошюры <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                      <li><a href="#">Годовые отчёты</a></li>
+                      <li><a href="#">Ежедневники</a></li>
+                      <li><a href="#">Журналы</a></li>
+                    </ul>
+                    <ul><li><a href="#">Каталоги <span class="mk-badge mk-badge--inline">Хит</span></a></li></ul>
+                    <ul><li><a href="#">Книги</a></li></ul>
+                    <ul>
+                      <li><a href="#">Маркетинг-кит</a></li>
+                      <li><a href="#">Презентации</a></li>
+                      <li><a href="#">Тетради</a></li>
+                      <li><a href="#">Учебные пособия</a></li>
+                    </ul>
+                  </div>
+                  <div class="group"><h4>Брошюровка и <span class="nw">переплёт<i class="ha"></i></span></h4><ul>
+                    <li><a href="#">Брошюровка на пружину</a></li>
+                    <li><a href="#">Брошюровка на скобу</a></li>
+                    <li><a href="#">Переплёт 7Б</a></li>
+                    <li><a href="#">Переплёт 7БЦ</a></li>
+                    <li><a href="#">Переплёт КБС</a></li>
+                    <li><a href="#">Переплёт КШС</a></li>
+                    <li><a href="#">ПУР-клеевое скрепление</a></li>
+                  </ul></div>
+                </div>
+
+                <!-- Колонка 3: Календари + Тематическая -->
+                <div class="col">
+                  <div class="group"><h4>Печать <span class="nw">календарей 2027<i class="ha"></i></span></h4><ul>
+                    <li><a href="#">Адвент-календари</a></li>
+                    <li><a href="#">Карманные</a></li>
+                    <li><a href="#">Квартальные</a></li>
+                    <li><a href="#">Календари-домики</a></li>
+                    <li><a href="#">Календари-линейки</a></li>
+                    <li><a href="#">Настенные</a></li>
+                    <li><a href="#">Настольные</a></li>
+                    <li><a href="#">Перекидные</a></li>
+                    <li><a href="#">Планинги</a></li>
+                    <li><a href="#">Фотокалендари</a></li>
+                  </ul></div>
+                  <div class="group"><h4>Тематическая <span class="nw">полиграфия<i class="ha"></i></span></h4><ul>
+                    <li><a href="#">Для бизнеса</a></li>
+                    <li><a href="#">Для выставок</a></li>
+                    <li><a href="#">Для маркетплейсов</a></li>
+                    <li><a href="#">Для свечей и мыла</a></li>
+                    <li><a href="#">Для туризма</a></li>
+                    <li><a href="#">Event-полиграфия</a></li>
+                  </ul></div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- 2 ШИРОКОФОРМАТ -->
+            <div class="panel" data-sec="2">
+              <div class="phead"><h3>Широкоформатная печать и реклама</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Наружная <span class="nw">реклама<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Баннеры на ткани <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">Баннеры на сетке</a></li>
+                  <li><a href="#">Билборды</a></li>
+                  <li><a href="#">Блюбэк</a></li>
+                  <li><a href="#">Ситилайт</a></li>
+                  <li><a href="#">Бэклит</a></li>
+                  <li><a href="#">Перфорированная плёнка</a></li>
+                </ul></div>
+                <div class="group"><h4>Интерьерная <span class="nw">печать<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Афиши</a></li>
+                  <li><a href="#">Модульные картины</a></li>
+                  <li><a href="#">Печать на холсте</a></li>
+                  <li><a href="#">Плакаты и постеры</a></li>
+                  <li><a href="#">Поп-арт картины</a></li>
+                  <li><a href="#">Фотообои</a></li>
+                  <li><a href="#">Коллажи</a></li>
+                </ul></div>
+                <div class="group"><h4>Рекламные <span class="nw">конструкции<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Brand Wall</a></li>
+                  <li><a href="#">Pop Up</a></li>
+                  <li><a href="#">Press Wall</a></li>
+                  <li><a href="#">X-Stand</a></li>
+                  <li><a href="#">Roll-Up <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">Стенды</a></li>
+                  <li><a href="#">Штендеры</a></li>
+                  <li><a href="#">Таблички</a></li>
+                </ul></div>
+                <div class="group"><h4>Накатка на <span class="nw">основу<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">На композит</a></li>
+                  <li><a href="#">На пенокартон</a></li>
+                  <li><a href="#">На ПВХ</a></li>
+                  <li><a href="#">Печать на оргстекле</a></li>
+                </ul></div>
+                <div class="group"><h4>Широкоформатные <span class="nw">наклейки<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">На авто</a></li>
+                  <li><a href="#">На витрины</a></li>
+                  <li><a href="#">На окна</a></li>
+                  <li><a href="#">На двери</a></li>
+                  <li><a href="#">На пол</a></li>
+                  <li><a href="#">На стену</a></li>
+                </ul></div>
+                <div class="group"><h4>Инженерная <span class="nw">печать<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Копирование чертежей</a></li>
+                  <li><a href="#">Печать лекал</a></li>
+                  <li><a href="#">Проектная документация</a></li>
+                  <li><a href="#">Сканирование чертежей</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 3 КАРТЫ И ИГРЫ -->
+            <div class="panel" data-sec="3">
+              <div class="phead"><h3>Карты и настольные игры</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Печать карт и <span class="nw">карточек<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Ассоциативные и метафорические</a></li>
+                  <li><a href="#">Аффирмации и мотивация</a></li>
+                  <li><a href="#">Гадальные</a></li>
+                  <li><a href="#">Игральные карты</a></li>
+                  <li><a href="#">Карты Таро <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">Обучающие и развивающие</a></li>
+                  <li><a href="#">С персонажами</a></li>
+                </ul></div>
+                <div class="group"><h4>Настольные <span class="nw">игры<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бизнес-игры</a></li>
+                  <li><a href="#">Игры-бродилки</a></li>
+                  <li><a href="#">Игры-стратегии</a></li>
+                  <li><a href="#">Игровое поле</a></li>
+                  <li><a href="#">Пазлы</a></li>
+                  <li><a href="#">Фигурки из акрила</a></li>
+                </ul></div>
+                <div class="group"><h4><span class="nw">Упаковка<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Коробочки для колоды <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">Упаковка для колоды</a></li>
+                  <li><a href="#">Упаковка для игр</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 4 НАКЛЕЙКИ -->
+            <div class="panel" data-sec="4">
+              <div class="phead"><h3>Наклейки, стикеры, этикетки</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4><span class="nw">Популярное<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Наклейки УФ ДТФ <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">Стикерпаки <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">3D стикеры со смолой</a></li>
+                </ul></div>
+                <div class="group"><h4>Печать <span class="nw">наклеек<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бумажные</a></li>
+                  <li><a href="#">Виниловые</a></li>
+                  <li><a href="#">На белой плёнке</a></li>
+                  <li><a href="#">На глянце / мате</a></li>
+                  <li><a href="#">На металлизированной</a></li>
+                  <li><a href="#">На прозрачной плёнке</a></li>
+                </ul></div>
+                <div class="group"><h4>Этикетки на <span class="nw">товар<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Для одежды</a></li>
+                  <li><a href="#">Для цветов</a></li>
+                  <li><a href="#">Для Ozon</a></li>
+                  <li><a href="#">Для Wildberries <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">На банки</a></li>
+                  <li><a href="#">На свечи</a></li>
+                  <li><a href="#">На бутылки</a></li>
+                  <li><a href="#">На воду</a></li>
+                </ul></div>
+                <div class="group"><h4>Дополнительная <span class="nw">отделка<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">С высечкой</a></li>
+                  <li><a href="#">С конгревом</a></li>
+                  <li><a href="#">С ламинацией</a></li>
+                  <li><a href="#">С объёмным лаком</a></li>
+                  <li><a href="#">С тиснением фольгой</a></li>
+                </ul></div>
+                <div class="group"><h4>По <span class="nw">форме<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Квадратные</a></li>
+                  <li><a href="#">Круглые</a></li>
+                  <li><a href="#">Прямоугольные</a></li>
+                  <li><a href="#">Фигурные и произвольные</a></li>
+                </ul></div>
+                <div class="group"><h4>Способы <span class="nw">печати<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">В листах</a></li>
+                  <li><a href="#">В рулоне</a></li>
+                  <li><a href="#">Офсетная</a></li>
+                  <li><a href="#">Цифровая</a></li>
+                  <li><a href="#">УФ</a></li>
+                  <li><a href="#">УФ ДТФ</a></li>
+                  <li><a href="#">Флексография</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 5 УПАКОВКА -->
+            <div class="panel" data-sec="5">
+              <div class="phead"><h3>Упаковка и коробки</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Кашированные <span class="nw">коробки<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Крышка-дно <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                  <li><a href="#">Пенал</a></li>
+                  <li><a href="#">С магнитным клапаном</a></li>
+                </ul></div>
+                <div class="group"><h4>Из <span class="nw">картона<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бонбоньерки</a></li>
+                  <li><a href="#">Коробка 2 клапана</a></li>
+                  <li><a href="#">Крышка-дно</a></li>
+                  <li><a href="#">Пенал</a></li>
+                  <li><a href="#">Ласточкин хвост</a></li>
+                  <li><a href="#">Самосборные</a></li>
+                </ul></div>
+                <div class="group"><h4>Из <span class="nw">МГК<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">2 / 4 клапана</a></li>
+                  <li><a href="#">Крышка-дно</a></li>
+                  <li><a href="#">Лоток</a></li>
+                  <li><a href="#">С ручкой</a></li>
+                  <li><a href="#">«Самолёт»</a></li>
+                </ul></div>
+                <div class="group"><h4>С <span class="nw">ложементами<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Изолон</a></li>
+                  <li><a href="#">Поролон</a></li>
+                  <li><a href="#">Картон</a></li>
+                  <li><a href="#">Переплётный картон</a></li>
+                  <li><a href="#">МГК</a></li>
+                  <li><a href="#">ЭВА</a></li>
+                </ul></div>
+                <div class="group"><h4>По типу <span class="nw">товара<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Алкоголь</a></li>
+                  <li><a href="#">Конфеты</a></li>
+                  <li><a href="#">Косметика</a></li>
+                  <li><a href="#">Парфюм</a></li>
+                  <li><a href="#">Одежда</a></li>
+                  <li><a href="#">Обувь</a></li>
+                  <li><a class="more" href="#">Показать все <span class="arr-ico"></span></a></li>
+                </ul></div>
+                <div class="group"><h4>Пакеты и <span class="nw">бумага<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бумажные</a></li>
+                  <li><a href="#">ПЭТ</a></li>
+                  <li><a href="#">ПВД</a></li>
+                  <li><a href="#">Тишью</a></li>
+                  <li><a href="#">Крафт</a></li>
+                  <li><a href="#">Калька</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 6 СУВЕНИРЫ -->
+            <div class="panel" data-sec="6">
+              <div class="phead"><h3>Сувениры и мерч</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Корпоративный <span class="nw">мерч<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Брендированная одежда</a></li>
+                  <li><a href="#">Брендированные аксессуары</a></li>
+                  <li><a href="#">Брендированные гаджеты</a></li>
+                  <li><a href="#">Виниловые магниты</a></li>
+                  <li><a href="#">Корпоративные наборы</a></li>
+                  <li><a href="#">Welcome pack</a></li>
+                </ul></div>
+                <div class="group"><h4>Сувениры с <span class="nw">логотипом<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Печать на ежедневниках</a></li>
+                  <li><a href="#">Печать на блокнотах</a></li>
+                  <li><a href="#">Печать на кружках</a></li>
+                  <li><a href="#">Печать на посуде</a></li>
+                  <li><a href="#">Печать на зонтах</a></li>
+                  <li><a href="#">Печать на сумках</a></li>
+                  <li><a href="#">Печать на футболках</a></li>
+                  <li><a href="#">Печать на толстовках</a></li>
+                  <li><a href="#">Печать на часах</a></li>
+                  <li><a href="#">Печать на электронике</a></li>
+                  <li><a href="#">Промо-сувениры</a></li>
+                </ul></div>
+                <div class="group"><h4>Готовые наборы и <span class="nw">проекты<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бизнес-наборы</a></li>
+                  <li><a href="#">Винные наборы</a></li>
+                  <li><a href="#">Новогодние наборы</a></li>
+                  <li><a href="#">Элитные подарки</a></li>
+                  <li><a href="#">Индивидуальный дизайн</a></li>
+                  <li class="ext-sep"><a class="extli" href="https://mdmgifts.ru" target="_blank" rel="noopener" title="Внешний каталог готовых сувениров">Весь каталог на mdmgifts.ru <span class="arr-ico"></span></a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 7 НАНЕСЕНИЕ -->
+            <div class="panel" data-sec="7">
+              <div class="phead"><h3>Нанесение</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Печать на <span class="nw">текстиле<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Кепки</a></li>
+                  <li><a href="#">Банданы</a></li>
+                  <li><a href="#">Куртки</a></li>
+                  <li><a href="#">Ветровки</a></li>
+                  <li><a href="#">Поло</a></li>
+                  <li><a href="#">Рубашки</a></li>
+                  <li><a href="#">Сумки-шопперы</a></li>
+                  <li><a href="#">Толстовки и худи</a></li>
+                  <li><a href="#">Футболки</a></li>
+                  <li><a href="#">Майки</a></li>
+                  <li><a class="more" href="#">Показать все <span class="arr-ico"></span></a></li>
+                </ul></div>
+                <div class="group"><h4>Печать на <span class="nw">акриле<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Брелоки</a></li>
+                  <li><a href="#">Фигурки</a></li>
+                  <li><a href="#">Кубки и награды</a></li>
+                  <li><a href="#">План рассадки</a></li>
+                  <li><a href="#">Таблички</a></li>
+                </ul></div>
+                <div class="group"><h4>Печать на <span class="nw">лентах<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Атласные ленты</a></li>
+                  <li><a href="#">Ленты для бейджей</a></li>
+                  <li><a href="#">Репсовые ленты</a></li>
+                </ul></div>
+                <div class="group"><h4>Способы <span class="nw">нанесения<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Вышивка</a></li>
+                  <li><a href="#">Сублимация</a></li>
+                  <li><a href="#">Лазерная гравировка</a></li>
+                  <li><a href="#">УФ печать</a></li>
+                  <li><a href="#">Шелкография</a></li>
+                  <li><a href="#">DTF</a></li>
+                  <li><a href="#">Термотрансфер</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 8 POS-МАТЕРИАЛЫ -->
+            <div class="panel" data-sec="8">
+              <div class="phead"><h3>POS-материалы</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:3;column-gap:28px">
+                <li><a href="#">Баркеты для товаров</a></li>
+                <li><a href="#">Блоттеры</a></li>
+                <li><a href="#">Воблеры</a></li>
+                <li><a href="#">Гирлянды</a></li>
+                <li><a href="#">Денглеры</a></li>
+                <li><a href="#">Лотки</a></li>
+                <li><a href="#">Менюхолдеры</a></li>
+                <li><a href="#">Мобайлы</a></li>
+                <li><a href="#">Монетницы</a></li>
+                <li><a href="#">Некхенгеры на бутылки</a></li>
+                <li><a href="#">Объёмные хештеги</a></li>
+                <li><a href="#">Панкарты и хардпостеры</a></li>
+                <li><a href="#">Таблички с QR-кодом</a></li>
+                <li><a href="#">Тейбл-тенты</a></li>
+                <li><a href="#">Холдеры и подставки</a></li>
+                <li><a href="#">Хенгеры на ручки</a></li>
+                <li><a href="#">Ценники</a></li>
+              </ul></div>
+            </div>
+
+            <!-- 9 ПЛАСТИКОВЫЕ КАРТЫ -->
+            <div class="panel" data-sec="9">
+              <div class="phead"><h3>Пластиковые карты</h3><a href="#">Все услуги раздела<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Виды <span class="nw">карт<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">С магнитной полосой</a></li>
+                  <li><a href="#">С чипом MiFare</a></li>
+                  <li><a href="#">С RFID / NFC-меткой</a></li>
+                  <li><a href="#">С эмбоссированием</a></li>
+                  <li><a href="#">Со штрих- и QR-кодом</a></li>
+                  <li><a href="#">Со скретч-панелью</a></li>
+                </ul></div>
+                <div class="group"><h4>По <span class="nw">применению<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Дисконтные</a></li>
+                  <li><a href="#">Бонусные</a></li>
+                  <li><a href="#">Клубные</a></li>
+                  <li><a href="#">Подарочные</a></li>
+                  <li><a href="#">Пропуска (СКУД)</a></li>
+                  <li><a href="#">Визитки на пластике</a></li>
+                </ul></div>
+                <div class="group"><h4>Тиражи и <span class="nw">сроки<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Сборные тиражи</a></li>
+                  <li><a href="#">Срочное изготовление</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 10 БИЗНЕСУ -->
+            <div class="panel" data-sec="10">
+              <div class="phead"><h3>Готовые решения бизнесу</h3><a href="#">Все решения<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Для <span class="nw">офиса<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бейджи</a></li>
+                  <li><a href="#">Бланки</a></li>
+                  <li><a href="#">Визитки</a></li>
+                  <li><a href="#">Кубарики</a></li>
+                  <li><a href="#">Папки с лого</a></li>
+                </ul></div>
+                <div class="group"><h4>Для <span class="nw">клиентов<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Брендирование сувениров</a></li>
+                  <li><a href="#">Бумажные пакеты</a></li>
+                  <li><a href="#">Готовые наборы подарков</a></li>
+                  <li><a href="#">Мерч</a></li>
+                  <li><a href="#">Сувениры с лого</a></li>
+                </ul></div>
+                <div class="group"><h4>Для <span class="nw">офлайн-рекламы<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Афиши</a></li>
+                  <li><a href="#">Каталоги</a></li>
+                  <li><a href="#">Листовки</a></li>
+                  <li><a href="#">Презентации</a></li>
+                  <li><a href="#">Флаеры</a></li>
+                </ul></div>
+                <div class="group"><h4>Для <span class="nw">товара<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бирки</a></li>
+                  <li><a href="#">Наклейки</a></li>
+                  <li><a href="#">Упаковка</a></li>
+                  <li><a href="#">Этикетки</a></li>
+                </ul></div>
+                <div class="group"><h4>По <span class="nw">направлениям<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Банки</a></li>
+                  <li><a href="#">Медицина</a></li>
+                  <li><a href="#">Производство</a></li>
+                  <li><a href="#">Рестораны и кафе</a></li>
+                  <li><a href="#">Салоны красоты</a></li>
+                  <li><a href="#">Селлеры на МП</a></li>
+                  <li><a href="#">Туризм</a></li>
+                  <li><a href="#">Программа лояльности и партнёрства <span class="mk-badge mk-badge--dark mk-badge--inline">Новое</span></a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- 11 РЕКЛАМНЫМ АГЕНТСТВАМ -->
+            <div class="panel" data-sec="11">
+              <div class="phead"><h3>Готовые решения рекламным агентствам</h3><a href="#">Все решения<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4>Выставки и <span class="nw">мероприятия<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Блокноты</a></li>
+                  <li><a href="#">Ручки</a></li>
+                  <li><a href="#">Брендированные пакеты</a></li>
+                  <li><a href="#">Контрольные браслеты</a></li>
+                  <li><a href="#">Ланъярды для бейджей</a></li>
+                  <li><a href="#">Печать бейджей</a></li>
+                  <li><a href="#">Стикерпаки</a></li>
+                  <li><a href="#">Roll-Up</a></li>
+                  <li><a href="#">Press Wall</a></li>
+                </ul></div>
+                <div class="group"><h4>Для <span class="nw">офлайн-рекламы<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Афиши</a></li>
+                  <li><a href="#">Каталоги</a></li>
+                  <li><a href="#">Листовки</a></li>
+                  <li><a href="#">Презентации</a></li>
+                  <li><a href="#">Флаеры</a></li>
+                </ul></div>
+                <div class="group"><h4>По типу <span class="nw">мероприятий<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Бизнес-форумы</a></li>
+                  <li><a href="#">Концерты</a></li>
+                  <li><a href="#">Промоакции</a></li>
+                  <li><a href="#">Спортивные мероприятия</a></li>
+                  <li><a href="#">Программа лояльности и партнёрства <span class="mk-badge mk-badge--dark mk-badge--inline">Новое</span></a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- УСЛУГИ s0..s5 -->
+            <div class="panel" data-sec="s0">
+              <div class="phead"><h3>Брошюровка и переплёт</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Брошюровка на пружину</a></li>
+                <li><a href="#">Брошюровка на скобу</a></li>
+                <li><a href="#">Переплёт 7Б</a></li>
+                <li><a href="#">Переплёт 7БЦ</a></li>
+                <li><a href="#">Переплёт КБС</a></li>
+                <li><a href="#">Переплёт КШС</a></li>
+                <li><a href="#">ПУР-клеевое скрепление <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s1">
+              <div class="phead"><h3>Способы печати</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Высокая печать</a></li>
+                <li><a href="#">Офсетная печать</a></li>
+                <li><a href="#">Печать на плёнке</a></li>
+                <li><a href="#">Трафаретная печать</a></li>
+                <li><a href="#">Флексографическая печать</a></li>
+                <li><a href="#">Цифровая печать</a></li>
+                <li><a href="#">Широкоформатная печать</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s2">
+              <div class="phead"><h3>Нанесение</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Вышивка</a></li>
+                <li><a href="#">Сублимация</a></li>
+                <li><a href="#">Термотрансфер</a></li>
+                <li><a href="#">УФ DTF печать</a></li>
+                <li><a href="#">УФ печать</a></li>
+                <li><a href="#">Шелкография</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s3">
+              <div class="phead"><h3>Постпечатная обработка</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">3D-лак и 3D-фольга</a></li>
+                <li><a href="#">Биговка</a></li>
+                <li><a href="#">Вырубка (высечка)</a></li>
+                <li><a href="#">Гравировка</a></li>
+                <li><a href="#">Конгревное тиснение</a></li>
+                <li><a href="#">Лакирование</a></li>
+                <li><a href="#">Ламинирование</a></li>
+                <li><a href="#">Праймирование</a></li>
+                <li><a href="#">Тиснение без фольги</a></li>
+                <li><a href="#">Тиснение с фольгой</a></li>
+                <li><a href="#">Фальцовка</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s4">
+              <div class="phead"><h3>Резка и сверление</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Гильотинная резка</a></li>
+                <li><a href="#">Лазерная резка</a></li>
+                <li><a href="#">Перфорация</a></li>
+                <li><a href="#">Планшетная резка</a></li>
+                <li><a href="#">Плоттерная резка</a></li>
+                <li><a href="#">Сверление отверстий</a></li>
+                <li><a href="#">Скругление углов</a></li>
+                <li><a href="#">Фигурная резка</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="s5">
+              <div class="phead"><h3>Другие услуги</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Подбор материалов</a></li>
+                <li><a href="#">Подготовка макета к печати</a></li>
+                <li><a href="#">Разработка дизайна</a></li>
+                <li><a href="#">Цветопроба печати</a></li>
+              </ul></div>
+            </div>
+
+            <!-- МАТЕРИАЛЫ m0..m3 -->
+            <div class="panel" data-sec="m0">
+              <div class="phead"><h3>Бумага</h3><a href="#">Все материалы<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Дизайнерская Majestic</a></li>
+                <li><a href="#">Дизайнерская Plike</a></li>
+                <li><a href="#">Калька плотная</a></li>
+                <li><a href="#">Картон плотный</a></li>
+                <li><a href="#">Крафт-бумага</a></li>
+                <li><a href="#">Лён</a></li>
+                <li><a href="#">Мелованная</a></li>
+                <li><a href="#">Touche Paper</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="m1">
+              <div class="phead"><h3>Пластик</h3><a href="#">Все материалы<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">ПВХ</a></li>
+                <li><a href="#">ПЭТ</a></li>
+                <li><a href="#">Пластик для карт</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="m2">
+              <div class="phead"><h3>Ламинация</h3><a href="#">Все материалы<span class="arr-ico"></span></a></div>
+              <div class="group"><ul style="column-count:2;column-gap:28px">
+                <li><a href="#">Глянцевая</a></li>
+                <li><a href="#">Матовая</a></li>
+                <li><a href="#">Софт-тач</a></li>
+              </ul></div>
+            </div>
+            <div class="panel" data-sec="m3">
+              <div class="phead"><h3>Набор каталогов «Look &amp; Print»</h3></div>
+              <div class="group">
+                <p style="font-size:13.5px;color:var(--text-secondary);line-height:1.6;max-width:420px;margin-bottom:14px">Образцы всех материалов и видов отделки в руки. Поможет выбрать бумагу, ламинацию и эффекты до заказа тиража.</p>
+                <a href="#" class="mk-btn mk-btn--dark promo-order" style="display:inline-flex;width:auto;padding:0 18px;text-decoration:none">Заказать набор образцов <span class="arr-ico"></span></a>
+              </div>
+            </div>
+
+            <!-- ВАРИАНТ 1: общий вид «Услуги» -->
+            <div class="panel" data-sec="svc">
+              <div class="phead"><h3>Услуги типографии</h3><a href="#">Все услуги<span class="arr-ico"></span></a></div>
+              <div class="cols-flow cols-flow--4">
+                <div class="group"><h4>Брошюровка и <span class="nw">переплёт<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Брошюровка на пружину</a></li>
+                  <li><a href="#">Брошюровка на скобу</a></li>
+                  <li><a href="#">Переплёт 7Б</a></li>
+                  <li><a href="#">Переплёт 7БЦ</a></li>
+                  <li><a href="#">Переплёт КБС</a></li>
+                  <li><a href="#">Переплёт КШС</a></li>
+                  <li><a href="#">ПУР-клеевое скрепление</a></li>
+                </ul></div>
+                <div class="group"><h4>Способы <span class="nw">печати<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Высокая печать</a></li>
+                  <li><a href="#">Офсетная печать</a></li>
+                  <li><a href="#">Печать на плёнке</a></li>
+                  <li><a href="#">Трафаретная печать</a></li>
+                  <li><a href="#">Флексографическая печать</a></li>
+                  <li><a href="#">Цифровая печать</a></li>
+                  <li><a href="#">Широкоформатная печать</a></li>
+                </ul></div>
+                <div class="group"><h4><span class="nw">Нанесение<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Вышивка</a></li>
+                  <li><a href="#">Сублимация</a></li>
+                  <li><a href="#">Термотрансфер</a></li>
+                  <li><a href="#">УФ DTF печать</a></li>
+                  <li><a href="#">УФ печать</a></li>
+                  <li><a href="#">Шелкография</a></li>
+                </ul></div>
+                <div class="group"><h4>Постпечатная <span class="nw">обработка<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">3D-лак и 3D-фольга</a></li>
+                  <li><a href="#">Биговка</a></li>
+                  <li><a href="#">Вырубка (высечка)</a></li>
+                  <li><a href="#">Гравировка</a></li>
+                  <li><a href="#">Конгревное тиснение</a></li>
+                  <li><a href="#">Лакирование</a></li>
+                  <li><a href="#">Ламинирование</a></li>
+                  <li><a href="#">Тиснение с фольгой</a></li>
+                  <li><a href="#">Фальцовка</a></li>
+                </ul></div>
+                <div class="group"><h4>Резка и <span class="nw">сверление<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Гильотинная резка</a></li>
+                  <li><a href="#">Лазерная резка</a></li>
+                  <li><a href="#">Перфорация</a></li>
+                  <li><a href="#">Плоттерная резка</a></li>
+                  <li><a href="#">Сверление отверстий</a></li>
+                  <li><a href="#">Скругление углов</a></li>
+                  <li><a href="#">Фигурная резка</a></li>
+                </ul></div>
+                <div class="group"><h4>Другие <span class="nw">услуги<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Подбор материалов</a></li>
+                  <li><a href="#">Подготовка макета к печати</a></li>
+                  <li><a href="#">Разработка дизайна</a></li>
+                  <li><a href="#">Цветопроба печати</a></li>
+                </ul></div>
+              </div>
+            </div>
+
+            <!-- ВАРИАНТ 1: общий вид «Материалы» -->
+            <div class="panel" data-sec="mat">
+              <div class="phead"><h3>Материалы</h3><a href="#">Все материалы<span class="arr-ico"></span></a></div>
+              <div class="cols-flow">
+                <div class="group"><h4><span class="nw">Бумага<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Мелованная</a></li>
+                  <li><a href="#">Дизайнерская</a></li>
+                  <li><a href="#">Крафт-бумага</a></li>
+                </ul></div>
+                <div class="group"><h4><span class="nw">Пластик<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">ПВХ</a></li>
+                  <li><a href="#">ПЭТ</a></li>
+                  <li><a href="#">Для пластиковых карт</a></li>
+                </ul></div>
+                <div class="group"><h4><span class="nw">Ламинация<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Глянцевая</a></li>
+                  <li><a href="#">Матовая</a></li>
+                  <li><a href="#">Софт-тач</a></li>
+                </ul></div>
+                <div class="group"><h4>Образцы <span class="nw">материалов<i class="ha"></i></span></h4><ul>
+                  <li><a href="#">Набор каталогов «Look &amp; Print» <span class="mk-badge mk-badge--inline">Хит</span></a></li>
+                </ul></div>
+              </div>
+            </div>
+
+          </div><!-- /pane -->
+
+          <!-- ПРОМО (переключаемый компонент: data-variant = offer|image|content|hybrid; дефолт — hybrid) -->
+          <div class="promo" id="promo" data-variant="hybrid">
+
+            <!-- A. ОФФЕР: бейдж + заголовок + текст + мокап + цена + кнопка -->
+            <div class="promo-body" data-for="offer">
+              <span class="mk-badge mk-badge--lg">Акция месяца</span>
+              <h4>Визитки 1000 шт — за 990 ₽</h4>
+              <p>Премиальный картон, печать с двух сторон. Готовы за 24 часа.</p>
+              <div class="promo-visual">
+                <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%">
+                  <rect x="34" y="34" width="132" height="78" rx="8" fill="#fff" stroke="#E9D9A6" stroke-width="1.5" transform="rotate(-7 100 73)"/>
+                  <rect x="24" y="22" width="132" height="78" rx="8" fill="#fff" stroke="#EBDCAA" stroke-width="1.5" transform="rotate(4 90 61)"/>
+                  <rect x="38" y="30" width="124" height="72" rx="8" fill="#fff" stroke="#1a1a1a" stroke-width="1.6"/>
+                  <rect x="50" y="42" width="26" height="26" rx="5" fill="#FFC100"/>
+                  <rect x="86" y="46" width="60" height="6" rx="3" fill="#1a1a1a"/>
+                  <rect x="86" y="58" width="44" height="5" rx="2.5" fill="#c9cdd3"/>
+                  <rect x="50" y="80" width="96" height="5" rx="2.5" fill="#dfe2e6"/>
+                  <rect x="50" y="90" width="70" height="5" rx="2.5" fill="#dfe2e6"/>
+                </svg>
+              </div>
+              <div class="price"><b>990 ₽</b><s>1 800 ₽</s></div>
+              <a href="#" class="mk-btn mk-btn--dark promo-order">Заказать <span class="arr-ico"></span></a>
+            </div>
+
+            <!-- B. БАННЕР: крупное изображение-обложка + бейдж + заголовок + кнопка -->
+            <div class="promo-body promo-banner" data-for="image">
+              <div class="promo-cover">
+                <svg viewBox="0 0 200 130" fill="none" xmlns="http://www.w3.org/2000/svg" width="60%">
+                  <rect x="38" y="30" width="124" height="72" rx="8" fill="#fff" stroke="#1a1a1a" stroke-width="1.6"/>
+                  <rect x="50" y="42" width="26" height="26" rx="5" fill="#FFC100"/>
+                  <rect x="86" y="46" width="60" height="6" rx="3" fill="#1a1a1a"/>
+                  <rect x="86" y="58" width="44" height="5" rx="2.5" fill="#c9cdd3"/>
+                  <rect x="50" y="80" width="96" height="5" rx="2.5" fill="#dfe2e6"/>
+                </svg>
+              </div>
+              <span class="mk-badge mk-badge--lg">Новинка</span>
+              <h4>Каталог готовых макетов</h4>
+              <a href="#" class="mk-btn mk-btn--dark promo-order">Смотреть <span class="arr-ico"></span></a>
+            </div>
+
+            <!-- C. КОНТЕНТ: картинка сверху + заголовок + текст + ссылка -->
+            <div class="promo-body" data-for="content">
+              <div class="promo-cover">
+                <svg viewBox="0 0 200 110" fill="none" xmlns="http://www.w3.org/2000/svg" width="55%">
+                  <rect x="40" y="22" width="120" height="66" rx="8" fill="#fff" stroke="#1a1a1a" stroke-width="1.6"/>
+                  <rect x="52" y="34" width="24" height="24" rx="5" fill="#FFC100"/>
+                  <rect x="86" y="38" width="58" height="6" rx="3" fill="#1a1a1a"/>
+                  <rect x="86" y="50" width="40" height="5" rx="2.5" fill="#c9cdd3"/>
+                  <rect x="52" y="70" width="92" height="5" rx="2.5" fill="#dfe2e6"/>
+                </svg>
+              </div>
+              <span class="mk-badge mk-badge--lg mk-badge--soft">Статья</span>
+              <h4>Как выбрать бумагу для визиток</h4>
+              <p>Лён, софт-тач, плотный картон — разбираем 9 материалов и для чего каждый.</p>
+              <a href="#" class="mk-btn mk-btn--inverse promo-order">Читать <span class="arr-ico"></span></a>
+            </div>
+
+            <!-- D. ГИБРИД: тёмный фон + бейдж + текст + кнопка -->
+            <div class="promo-body promo-hybrid" data-for="hybrid">
+              <span class="mk-badge mk-badge--lg">−45%</span>
+              <div class="hybrid-text">
+                <h4>Скидка на первый заказ</h4>
+                <p>Для новых клиентов до конца месяца.</p>
+              </div>
+              <a href="#" class="mk-btn mk-btn--inverse promo-order">Получить <span class="arr-ico"></span></a>
+            </div>
+
+          </div>
+
+        </div><!-- /mega-card -->
+
+      </div><!-- /mega-box -->
+      </div><!-- /mega-inner -->
+    </div><!-- /mega -->
+  </div>
+  </div><!-- /site-head -->
+
+<!-- КОНТАКТ-РЯД (только мобилка). НЕ липкий и это принципиально: липкая часть уже 107px
+       (шапка 59 + подшапка 49) — четверть экрана телефона, третий уровень туда не влезает.
+       Ряд ловит того, кто только пришёл, и уезжает при скролле, отдавая место контенту.
+       Слева номер ТЕКСТОМ, а не иконкой: трубка требует догадки, номер читается и жмётся сразу.
+       Справа мессенджеры и почта иконками — у них узнаваемые глифы, подписи не нужны. -->
+  <div class="m-contactbar">
+    <!-- Ссылка — ВЕСЬ блок, а не только номер: график работы стоит вплотную под ним и читается
+         как часть одного объекта, значит и жаться должен вместе с ним. Тач-цель = 44 на оба. -->
+    <a class="mcb-tx" href="tel:+74952561000">
+      <span class="mcb-num"><span class="pre">+7 (495) 256-</span><span class="l4">10-00</span></span>
+      <span class="mcb-when">Ежедневно с 9 до 22</span>
+    </a>
+    <span class="mcb-ics">
+      <a class="mcb-ic" href="#" aria-label="Написать в Телеграме"><svg aria-hidden="true" viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg></a>
+      <a class="mcb-ic" href="#" aria-label="Написать в Максе"><svg aria-hidden="true" viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></a>
+      <a class="mcb-ic" href="mailto:info@mdmprint.ru" aria-label="Написать на почту"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg></a>
+    </span>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- МОДАЛКА «Заказать звонок»: телефон обязателен, имя — необязательно; согласие на ПДн (152-ФЗ) -->
+  <div class="cbm-back" id="cbmBack" aria-hidden="true">
+    <div class="cbm" role="dialog" aria-modal="true" aria-labelledby="cbmTitle">
+      <button class="cbm-x" type="button" data-cbm-close aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+
+      <div id="cbmForm" data-role="form">
+        <h2 class="cbm-title" id="cbmTitle">Заказать звонок</h2>
+        <p class="cbm-sub">Оставьте номер. Перезвоним в рабочее время — ежедневно с 9 до 22.</p>
+        <form id="cbmFormEl" novalidate>
+          <div class="mk-field">
+            <label class="mk-field__lbl" for="cbmPhone">Телефон <i>*</i></label>
+            <input type="tel" class="mk-input" id="cbmPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required aria-required="true">
+            <span class="mk-field__err">Введите корректный номер телефона</span>
+          </div>
+          <div class="mk-field">
+            <label class="mk-field__lbl" for="cbmName">Имя <em>— необязательно</em></label>
+            <input type="text" class="mk-input" id="cbmName" name="name" autocomplete="name" placeholder="Как к вам обращаться">
+          </div>
+          <!-- honeypot: скрытое поле-ловушка для ботов; люди его не видят и не заполняют -->
+          <input type="text" class="mk-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="hidden" name="context" value="Тиснение фольгой">
+          <label class="mk-checkrow">
+            <input type="checkbox" class="mk-check" id="cbmConsent" data-role="consent" required>
+            <span>Я даю согласие на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и принимаю <a href="#" target="_blank" rel="noopener">политику конфиденциальности</a></span>
+          </label>
+          <label class="mk-checkrow">
+            <input type="checkbox" class="mk-check" id="cbmPromo">
+            <span>Согласен получать новости и спецпредложения <em>(необязательно)</em></span>
+          </label>
+          <div class="mk-formfoot">
+            <div class="mk-alert" data-role="alert" hidden role="alert">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v5M12 16.5v.01M10.3 3.9 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b>Заявка не ушла.</b> Похоже, пропала связь. Данные сохранены — нажмите ещё раз.
+                Если не выходит, позвоните: <a href="tel:+74952561000">+7 (495) 256-10-00</a></span>
+            </div>
+            <button type="submit" class="mk-submit mk-btn mk-btn--primary" id="cbmSubmit" disabled>Жду звонка</button>
+            <p class="mk-fine">Мы используем номер только для обратного звонка по вашей заявке.</p>
+          </div>
+        </form>
+      </div>
+
+      <div id="cbmDone" data-role="done" hidden>
+        <div class="cbm-done">
+          <div class="cbm-done-ic">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h2 class="cbm-title">Заявка принята</h2>
+          <p class="cbm-sub">Перезвоним на указанный номер в ближайшее время. Спасибо!</p>
+          <button type="button" class="mk-submit mk-btn mk-btn--primary" data-cbm-close>Хорошо</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА «Добавить отзыв». Поля как в форме отзыва на mdmprint.ru (имя, почта, текст,
+       файлы, два согласия) плюс ОЦЕНКА ЗВЁЗДАМИ, которой там нет: карточки отзывов у нас рисуют
+       звёзды, и своим отзывам их было бы неоткуда взять; без оценки не собрать и AggregateRating,
+       ради которого свои отзывы и заводятся (CMS_FIELDS §2.11).
+       Телефон здесь не спрашиваем: отзыв — не заявка, обратная связь идёт по почте. -->
+  <div class="cbm-back" id="revBack" aria-hidden="true">
+    <div class="cbm" role="dialog" aria-modal="true" aria-labelledby="revTitle">
+      <button class="cbm-x" type="button" data-cbm-close aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+
+      <div data-role="form">
+        <h2 class="cbm-title" id="revTitle">Добавить отзыв</h2>
+        <p class="cbm-sub">Расскажите, как прошёл заказ. Отзыв появится на сайте после проверки.</p>
+        <form novalidate>
+          <input type="hidden" name="context" value="Тиснение фольгой">
+          <div class="mk-field">
+            <span class="mk-field__lbl" id="revRateLbl">Оценка <i>*</i></span>
+            <!-- Порядок звёзд в разметке обратный (5 → 1), а ряд развёрнут в CSS: тогда подсветка
+                 «до наведённой» делается одним соседним селектором, без скрипта. -->
+            <div class="mk-rate" role="radiogroup" aria-labelledby="revRateLbl">
+              <input type="radio" name="rating" id="revRate5" value="5" required aria-required="true"><label for="revRate5" aria-label="5 из 5">★</label>
+              <input type="radio" name="rating" id="revRate4" value="4"><label for="revRate4" aria-label="4 из 5">★</label>
+              <input type="radio" name="rating" id="revRate3" value="3"><label for="revRate3" aria-label="3 из 5">★</label>
+              <input type="radio" name="rating" id="revRate2" value="2"><label for="revRate2" aria-label="2 из 5">★</label>
+              <input type="radio" name="rating" id="revRate1" value="1"><label for="revRate1" aria-label="1 из 5">★</label>
+            </div>
+            <span class="mk-field__err">Поставьте оценку</span>
+          </div>
+          <div class="mk-formrow">
+            <div class="mk-field">
+              <label class="mk-field__lbl" for="revName">Имя <i>*</i></label>
+              <input type="text" class="mk-input" id="revName" name="name" autocomplete="name" placeholder="Как вас подписать" required aria-required="true">
+              <span class="mk-field__err">Укажите имя — минимум две буквы</span>
+            </div>
+            <div class="mk-field">
+              <!-- Почта нужна модератору, чтобы ответить или уточнить; на сайте её не публикуем -->
+              <label class="mk-field__lbl" for="revEmail">E-mail <em>— необязательно</em></label>
+              <input type="email" class="mk-input" id="revEmail" name="email" autocomplete="email" placeholder="you@example.ru">
+              <span class="mk-field__err">Проверьте адрес: нужен формат name@mail.ru</span>
+            </div>
+          </div>
+          <div class="mk-field">
+            <label class="mk-field__lbl" for="revText">Отзыв <i>*</i></label>
+            <textarea class="mk-textarea" id="revText" name="review" rows="4" placeholder="Что заказывали, как прошла работа, что понравилось" required aria-required="true"></textarea>
+            <span class="mk-field__err">Напишите пару слов о заказе</span>
+          </div>
+          <div class="mk-field">
+            <label class="mk-field__lbl">Есть фото работы? Приложите</label>
+            <label class="mk-file">
+              <input type="file" id="revFiles" name="files" multiple accept=".png,.jpg,.jpeg,.webp,.heic">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 11.5l-8.4 8.4a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="mk-file__btn" data-file-label>Прикрепить фото</span>
+            </label>
+          </div>
+          <ul class="mk-filelist" data-file-list hidden></ul>
+          <p class="mk-file__hint">До 10 фото, JPG · PNG · WEBP.</p>
+          <input type="text" class="mk-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="mk-checkrow">
+            <input type="checkbox" class="mk-check" data-role="consent" required>
+            <span>Я даю согласие на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и принимаю <a href="#" target="_blank" rel="noopener">политику конфиденциальности</a></span>
+          </label>
+          <label class="mk-checkrow">
+            <input type="checkbox" class="mk-check" name="promo">
+            <span>Согласен получать новости и спецпредложения <em>(необязательно)</em></span>
+          </label>
+          <div class="mk-formfoot">
+            <div class="mk-alert" data-role="alert" hidden role="alert">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v5M12 16.5v.01M10.3 3.9 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b>Отзыв не ушёл.</b> Похоже, пропала связь. Текст сохранён — нажмите ещё раз.
+                Если не выходит, напишите на <a href="mailto:info@mdmprint.ru">info@mdmprint.ru</a>.</span>
+            </div>
+            <button type="submit" class="mk-submit mk-btn mk-btn--primary" disabled>Отправить отзыв</button>
+          </div>
+        </form>
+      </div>
+
+      <div data-role="done" hidden>
+        <div class="cbm-done">
+          <div class="cbm-done-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h2 class="cbm-title">Спасибо за отзыв</h2>
+          <p class="cbm-sub">Он появится на сайте после проверки — обычно в течение рабочего дня.</p>
+          <button type="button" class="mk-submit mk-btn mk-btn--primary" data-cbm-close>Понятно</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА «Оставить заявку»: расширенная заявка; телефон обязателен, остальное — необязательно; согласие на ПДн (152-ФЗ) -->
+  <div class="cbm-back" id="reqBack" aria-hidden="true">
+    <div class="cbm" role="dialog" aria-modal="true" aria-labelledby="reqTitle">
+      <button class="cbm-x" type="button" data-cbm-close aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+
+      <div data-role="form">
+        <!-- Контекст живёт в ЗАГОЛОВКЕ, отдельной плашки нет: серый чип с двоеточием читался
+             как метка от системы, а не как обращение к человеку. Заодно контекст не теряется
+             при прокрутке — заголовок липкий.
+             ВНИМАНИЕ ДЛЯ CMS: «Заявка на …» требует ВИНИТЕЛЬНОГО падежа. У «тиснения фольгой»
+             он совпал с именительным по роду, но «ламинация» → «на ламинацию», «широкоформатная
+             печать» → «на широкоформатную печать». Поэтому здесь ОТДЕЛЬНОЕ поле, а не то же
+             название, что в заголовке страницы. -->
+        <h2 class="cbm-title" id="reqTitle">Оставить заявку <span class="cbm-title-svc">на <span data-cms="service_accusative">тиснение фольгой</span></span></h2>
+        <!-- КОНТЕКСТ ОБРАЩЕНИЯ. Не поле, а сообщение: человек видит, что тему уже знают,
+             и не пересказывает её заново. Нередактируемо — стирать нечего.
+             Значение подставляет CMS из текущей записи; hidden-поле уходит менеджеру,
+             иначе строка обещала бы то, чего нет. -->
+        <p class="cbm-sub">Опишите задачу — рассчитаем стоимость и сроки. Ответим в рабочее время — ежедневно с 9 до 22.</p>
+        <form novalidate>
+          <input type="hidden" name="context" value="Тиснение фольгой">
+          <div class="mk-formrow">
+            <div class="mk-field">
+              <label class="mk-field__lbl" for="reqPhone">Телефон <i>*</i></label>
+              <input type="tel" class="mk-input" id="reqPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required aria-required="true">
+              <span class="mk-field__err">Введите корректный номер телефона</span>
+            </div>
+            <div class="mk-field">
+              <label class="mk-field__lbl" for="reqWay">Способ связи <i>*</i></label>
+              <div class="mk-select">
+                <select class="mk-input" id="reqWay" name="contact_way" required aria-required="true">
+                  <option value="" disabled selected>Выберите способ</option>
+                  <option>Позвонить</option>
+                  <option>Telegram</option>
+                  <option>MAX</option>
+                  <option>E-mail</option>
+                </select>
+              </div>
+              <span class="mk-field__err">Выберите, как с вами связаться</span>
+            </div>
+          </div>
+          <div class="mk-formrow">
+            <div class="mk-field">
+              <label class="mk-field__lbl" for="reqName">Имя <i>*</i></label>
+              <input type="text" class="mk-input" id="reqName" name="name" autocomplete="name" placeholder="Как к вам обращаться" required aria-required="true">
+              <span class="mk-field__err">Укажите имя — минимум две буквы</span>
+            </div>
+            <div class="mk-field">
+              <label class="mk-field__lbl" for="reqEmail">E-mail <em>— необязательно</em></label>
+              <input type="email" class="mk-input" id="reqEmail" name="email" autocomplete="email" placeholder="you@example.ru">
+              <span class="mk-field__err">Проверьте адрес — нужен вид name@mail.ru</span>
+            </div>
+          </div>
+          <div class="mk-field">
+            <label class="mk-field__lbl" for="reqMsg">Задача <em>— необязательно</em></label>
+            <textarea class="mk-textarea" id="reqMsg" name="message" rows="3" placeholder="Что нужно напечатать, тираж, сроки, пожелания…"></textarea>
+          </div>
+          <div class="mk-field">
+            <!-- Приглашение вместо ярлыка «Файлы»: формулировка называет выгоду
+                 («посчитаем точнее»), а не тип данных. Пометку «необязательно» сняли:
+                 вопрос сам по себе не обязывает, а лишние два слова уезжали на вторую строку. -->
+            <label class="mk-field__lbl">Есть макет? Приложите — посчитаем точнее</label>
+            <label class="mk-file">
+              <input type="file" id="reqFiles" name="files" multiple accept=".pdf,.ai,.cdr,.eps,.psd,.tif,.tiff,.png,.jpg,.jpeg,.zip,.rar">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 11.5l-8.4 8.4a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="mk-file__btn" data-file-label>Прикрепить макет</span>
+            </label>
+          </div>
+          <ul class="mk-filelist" data-file-list hidden></ul>
+          <p class="mk-file__hint">До 10 файлов, PDF · AI · CDR · PSD · JPG · ZIP. Большие макеты — архивом.</p>
+          <!-- honeypot: скрытое поле-ловушка для ботов -->
+          <input type="text" class="mk-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label class="mk-checkrow">
+            <input type="checkbox" class="mk-check" data-role="consent" required>
+            <span>Я даю согласие на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и принимаю <a href="#" target="_blank" rel="noopener">политику конфиденциальности</a></span>
+          </label>
+          <label class="mk-checkrow">
+            <input type="checkbox" class="mk-check" name="promo">
+            <span>Согласен получать новости и спецпредложения <em>(необязательно)</em></span>
+          </label>
+          <!-- .mk-formfoot: на мобилке залипает внизу шторки, чтобы кнопка была видна всегда,
+               а поля прокручивались под ней. На десктопе это обычный блок в потоке. -->
+          <div class="mk-formfoot">
+            <div class="mk-alert" data-role="alert" hidden role="alert">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v5M12 16.5v.01M10.3 3.9 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b>Заявка не ушла.</b> Похоже, пропала связь. Данные сохранены — нажмите ещё раз.
+                Если не выходит, позвоните: <a href="tel:+74952561000">+7 (495) 256-10-00</a></span>
+            </div>
+            <button type="submit" class="mk-submit mk-btn mk-btn--primary" disabled>Отправить заявку</button>
+            <p class="mk-fine">Мы используем контакты только для ответа по вашей заявке.</p>
+          </div>
+        </form>
+      </div>
+
+      <div data-role="done" hidden>
+        <div class="cbm-done">
+          <div class="cbm-done-ic">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h2 class="cbm-title">Заявка принята</h2>
+          <!-- Иерархия в три ступени, а не один абзац: сначала ЧТО БУДЕТ («перезвоним за 15 минут»),
+               потом ЧТО МЫ ПОНЯЛИ (тема и номер строками, как в квитанции), потом мелким — режим.
+               Строки читаются взглядом сверху вниз; сплошной текст по центру так не читается. -->
+          <p class="cbm-done-lead" data-done-lead>Перезвоним в рабочее время — ежедневно с 9 до 22</p>
+          <dl class="cbm-done-list">
+            <div><dt>Тема</dt><dd data-done-ctx>Тиснение фольгой</dd></div>
+            <div><dt data-done-waylbl>Телефон</dt><dd data-done-contact>ваш номер</dd></div>
+          </dl>
+          <button type="button" class="mk-submit mk-btn mk-btn--primary" data-cbm-close>Хорошо</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── МОДАЛКА: АВТОРИЗАЦИЯ ПО SMS (тот же компонент .cbm, что заявка/звонок) ── -->
+  <div class="cbm-back" id="authBack" aria-hidden="true">
+    <div class="cbm" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="cbm-x" type="button" id="authClose" aria-label="Закрыть"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+
+      <section class="auth-step" data-role="step" data-step="1">
+        <h2 class="cbm-title" id="authTitle">Вход в личный кабинет</h2>
+        <p class="cbm-sub">Введите номер телефона — пришлём код в SMS.</p>
+        <form id="phoneForm" novalidate>
+          <div class="mk-field" id="fPhone">
+            <label class="mk-field__lbl" for="iPhone">Телефон <i>*</i></label>
+            <input type="tel" class="mk-input" id="iPhone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__">
+            <span class="mk-field__err" id="ePhone">Введите номер полностью</span>
+          </div>
+          <label class="mk-checkrow" id="fConsent">
+            <input type="checkbox" class="mk-check" id="iConsent">
+            <span>Соглашаюсь с <a href="#" onclick="return false">политикой обработки персональных данных</a> и получением кода в SMS</span>
+          </label>
+          <span class="mk-field__err" id="eForm"></span>
+          <button type="submit" class="mk-submit mk-btn mk-btn--primary" id="btnGetCode">Получить код</button>
+        </form>
+      </section>
+
+      <section class="auth-step" data-role="step" data-step="2" hidden>
+        <h2 class="cbm-title">Введите код из SMS<span class="phone" id="phoneEcho">+7 (999) 123-45-67</span></h2>
+        <p class="cbm-sub"><button type="button" class="mk-btn mk-btn--link" id="btnBack">Изменить номер</button></p>
+        <div class="auth-code" id="codeBox">
+          <input class="auth-cell" inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Цифра 1">
+          <input class="auth-cell" inputmode="numeric" maxlength="1" aria-label="Цифра 2">
+          <input class="auth-cell" inputmode="numeric" maxlength="1" aria-label="Цифра 3">
+          <input class="auth-cell" inputmode="numeric" maxlength="1" aria-label="Цифра 4">
+        </div>
+        <span class="mk-field__err auth-code-err" id="eCode" role="alert" aria-live="assertive">Неверный код</span>
+        <div class="auth-resend" id="resendBox" aria-live="polite">
+          <span id="timerTx">Отправить код повторно через 1:00</span>
+          <button type="button" class="mk-btn mk-btn--link" id="btnResend" hidden>Отправить код повторно</button>
+        </div>
+        <button type="button" class="mk-submit mk-btn mk-btn--primary" id="btnVerify" disabled>Войти</button>
+      </section>
+
+      <section class="auth-step" data-role="step" data-step="done" hidden>
+        <div class="cbm-done">
+          <div class="cbm-done-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h2 class="cbm-title">Вход выполнен</h2>
+          <p class="cbm-done-lead">Профиль и история заказов теперь в личном кабинете</p>
+          <dl class="cbm-done-list"><div><dt>Телефон</dt><dd id="doneEcho">+7 (999) 123-45-67</dd></div></dl>
+          <button type="button" class="mk-submit mk-btn mk-btn--primary" id="btnDone">Хорошо</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ЛАЙТБОКС ВИДЕО ПОРТФОЛИО.
+       Ролики не наши: они лежат в сообществе ВК, сюда приезжает встраиваемый плеер, у работы
+       хранится только его id (и, если ролик на YouTube, отметка источника). Хостить копии у
+       себя незачем — это лишние сотни мегабайт и вторая точка правды.
+       iframe БЕЗ src до первого клика и с очисткой src на закрытии: иначе плеер грузится на
+       каждом заходе на страницу, а после закрытия продолжает играть — звук идёт из пустоты. -->
+  <div class="vlb-back" id="vlbBack" aria-hidden="true">
+    <div class="vlb" role="dialog" aria-modal="true" aria-labelledby="vlbTitle">
+      <button class="vlb-x" type="button" data-vlb-close aria-label="Закрыть видео">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="vlb-frame">
+        <iframe id="vlbFrame" title="Видео работы" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"></iframe>
+      </div>
+      <!-- Стрелки лежат в подписи, а не рядом с кадром: на десктопе они всё равно
+           абсолютные (уезжают к бокам кадра), а на телефоне встают в эту же строку —
+           один узел вместо двух наборов кнопок под разные ширины. -->
+      <div class="vlb-cap">
+        <span class="vlb-count" data-role="count"></span>
+        <button type="button" class="mk-scroller__nav mk-scroller__nav--prev" data-vlb-dir="-1" aria-label="Предыдущее видео"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <div class="vlb-cap-txt">
+          <span class="vlb-tag" data-role="tag"></span>
+          <span class="vlb-title" id="vlbTitle" data-role="title"></span>
+        </div>
+        <button type="button" class="mk-scroller__nav mk-scroller__nav--next" data-vlb-dir="1" aria-label="Следующее видео"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============ ГЛАВНАЯ (ПЕСОЧНИЦА, МОБИЛКА ПЕРВОЙ) ============
+       Структура и обоснование — PROGRESS.md, 29.09 «Главная: редизайн с мобилки».
+       Шапка, модалки, футер и липкая полоса заявки — один в один с usluga.html.
+       data-ym на точках входа — под цели Метрики (docs/METRIKA_FIX.md), не на классах. -->
+  <main class="usl home" id="content" tabindex="-1">
+
+    <!-- 1. ПЕРВЫЙ ЭКРАН: кто мы + два действия. Слайдер акций отсюда убран — на мобилке у него
+         не было ни кнопки, ни текста (только картинка), акция переехала в блок 4. -->
+    <section class="usl-hero home-hero">
+      <div class="wrap">
+        <span class="eyebrow">Своё производство с 2012 года</span>
+        <h1>Цифровая типография в&nbsp;Москве</h1>
+        <p class="lead">Визитки, наклейки, календари, каталоги, упаковка и&nbsp;ещё 2000+ видов продукции. Печатаем по&nbsp;вашему макету или сделаем дизайн сами.</p>
+        <div class="hero-cta">
+          <button type="button" class="tb-cta mk-btn mk-btn--primary" data-ym="home_hero_lead">Оставить заявку</button>
+        </div>
+        <!-- Поиск вместо второй кнопки «Каталог»: при 2000+ видах продукции поиск на мобилке быстрее
+             меню (так у vistaprint, flyeralarm, kopirka). Это не отдельный поиск, а вход в поиск шапки:
+             тап открывает тот же экран поиска, что и лупа в шапке. -->
+        <button type="button" class="home-search" data-ym="home_hero_search" aria-label="Поиск по каталогу">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>Визитки, наклейки, коробки…</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ДОВЕРИЕ: цифры с текущей главной и из отзывов (Яндекс.Карты 5,0) -->
+    <section class="usl-statbar mk-statbar home-stat">
+      <div class="wrap mk-statbar__row">
+        <div class="mk-statbar__item">
+          <b class="mk-statbar__value">97+</b>
+          <span class="mk-statbar__label">единиц техники</span>
+        </div>
+        <div class="mk-statbar__item">
+          <b class="mk-statbar__value">250+</b>
+          <span class="mk-statbar__label">форм для вырубки</span>
+        </div>
+        <div class="mk-statbar__item">
+          <b class="mk-statbar__value">5,0</b>
+          <span class="mk-statbar__label">оценка на&nbsp;Картах</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. БЫСТРЫЕ ВХОДЫ. С мобильной главной чаще всего уходят в контакты (283 просмотра за сентябрь),
+         дальше требования к макетам и доставка. Ставим короткой полосой; нужен ли блок — покажут цели. -->
+    <nav class="home-quick" aria-label="Быстрые переходы">
+      <div class="wrap home-quick__grid">
+        <a class="home-quick__it" href="#" data-ym="home_quick_contacts">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <span>Контакты и&nbsp;адрес</span>
+        </a>
+        <a class="home-quick__it" href="#" data-ym="home_quick_req">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14.5l2 2 4-4"/></svg>
+          <span>Требования к&nbsp;макетам</span>
+        </a>
+        <a class="home-quick__it" href="#" data-ym="home_quick_delivery">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
+          <span>Доставка и&nbsp;оплата</span>
+        </a>
+        <a class="home-quick__it" href="#" data-ym="home_quick_account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg>
+          <span>Мои заказы</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- 3. КАТЕГОРИИ: сетка вместо ленты вбок (в ленте было видно 2,5 карточки).
+         Компонент — .usl-prod из usluga.html; 6 плиток, чтобы не сработало мобильное сворачивание. -->
+    <section class="usl-prod home-cats" id="catalog">
+      <div class="wrap">
+        <div class="sec-head"><h2>Популярная продукция</h2></div>
+        <div class="pcards">
+          <a href="#" class="mk-mcard mk-mcard--link" data-ym="home_cat">
+            <span class="mk-mcard__media"><img src="../assets/img/products/vizitki.webp" alt="" loading="lazy" width="704" height="528" srcset="../assets/img/products/vizitki-352.webp 352w, ../assets/img/products/vizitki.webp 704w" sizes="(max-width:1023px) 45vw, 176px"></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Визитки</span></span>
+          </a>
+          <a href="#" class="mk-mcard mk-mcard--link" data-ym="home_cat">
+            <span class="mk-mcard__media"><img src="../assets/img/products/kalendari.webp" alt="" loading="lazy" width="704" height="528" srcset="../assets/img/products/kalendari-352.webp 352w, ../assets/img/products/kalendari.webp 704w" sizes="(max-width:1023px) 45vw, 176px"></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Календари</span></span>
+          </a>
+          <a href="#" class="mk-mcard mk-mcard--link" data-ym="home_cat">
+            <span class="mk-mcard__media"><img src="../assets/img/products/etiketki.webp" alt="" loading="lazy" width="704" height="528" srcset="../assets/img/products/etiketki-352.webp 352w, ../assets/img/products/etiketki.webp 704w" sizes="(max-width:1023px) 45vw, 176px"></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Наклейки и&nbsp;этикетки</span></span>
+          </a>
+          <a href="#" class="mk-mcard mk-mcard--link" data-ym="home_cat">
+            <span class="mk-mcard__media"><img src="../assets/img/products/listovaya.webp" alt="" loading="lazy" width="704" height="528" srcset="../assets/img/products/listovaya-352.webp 352w, ../assets/img/products/listovaya.webp 704w" sizes="(max-width:1023px) 45vw, 176px"></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Листовки и&nbsp;флаеры</span></span>
+          </a>
+          <a href="#" class="mk-mcard mk-mcard--link" data-ym="home_cat">
+            <span class="mk-mcard__media"><img src="../assets/img/products/mnogostranichnaya.webp" alt="" loading="lazy" width="704" height="528" srcset="../assets/img/products/mnogostranichnaya-352.webp 352w, ../assets/img/products/mnogostranichnaya.webp 704w" sizes="(max-width:1023px) 45vw, 176px"></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Каталоги и&nbsp;брошюры</span></span>
+          </a>
+          <a href="#" class="mk-mcard mk-mcard--link" data-ym="home_cat">
+            <span class="mk-mcard__media"><img src="../assets/img/products/korobki.webp" alt="" loading="lazy" width="704" height="528" srcset="../assets/img/products/korobki-352.webp 352w, ../assets/img/products/korobki.webp 704w" sizes="(max-width:1023px) 45vw, 176px"></span>
+            <span class="mk-mcard__body"><span class="mk-mcard__title">Коробки и&nbsp;упаковка</span></span>
+          </a>
+        </div>
+        <a class="home-cats__all mk-btn mk-btn--ghost" href="#" data-ym="home_cat_all">Весь каталог <span class="mk-arr" aria-hidden="true"></span></a>
+      </div>
+    </section>
+
+    <!-- 4. АКЦИЯ СЕЗОНА: одна карточка с кнопкой вместо слайдера из 6 картинок.
+         Поля CMS: бейдж (до 6 симв.), заголовок (до 40), текст (до 90), подпись кнопки (до 20), ссылка. -->
+    <section class="home-promo">
+      <div class="wrap">
+        <a class="home-promo__card" href="#" data-ym="home_promo">
+          <span class="mk-badge mk-badge--lg">−10%</span>
+          <span class="home-promo__t">Календари 2027 с&nbsp;выгодой</span>
+          <span class="home-promo__s">Скидка на&nbsp;заказ до&nbsp;1&nbsp;октября. Квартальные, перекидные, настольные.</span>
+          <span class="mk-btn mk-btn--inverse home-promo__btn">Перейти в&nbsp;раздел <span class="mk-arr" aria-hidden="true"></span></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 5. НАШИ РАБОТЫ: компонент портфолио из usluga.html. Подписи и параметры — РЫБА, в бою из CMS. -->
+    <section class="usl-port" id="primery">
+      <div class="wrap">
+        <div class="sec-head port-head">
+          <h2>Наши работы</h2>
+          <div class="port-tabs mk-tabs" role="tablist" aria-label="Вид портфолио" data-tabs>
+            <button type="button" class="mk-tab is-active" role="tab" aria-selected="true" data-tab="photo">Фото</button>
+            <button type="button" class="mk-tab" role="tab" aria-selected="false" data-tab="video">Видео</button>
+          </div>
+        </div>
+        <div class="mk-tabpanels">
+        <div class="mk-tabpanel is-active" data-panel="photo">
+          <div class="mk-scroller port-grid port-grid--photo" data-scroller>
+            <div class="mk-scroller__track" tabindex="0" role="group" aria-label="Фотоработы, лента с прокруткой">
+              <button type="button" class="mk-mcard mk-mcard--bare mk-mcard--link"><div class="mk-mcard__media"></div><div class="mk-mcard__body"><span class="mk-mcard__tag">Печать на&nbsp;текстиле</span><span class="mk-mcard__title">Шопперы для кофейни</span><span class="mk-mcard__text">Хлопок · шелкография · 300 шт</span></div></button>
+              <button type="button" class="mk-mcard mk-mcard--bare mk-mcard--link"><div class="mk-mcard__media"></div><div class="mk-mcard__body"><span class="mk-mcard__tag">Визитки</span><span class="mk-mcard__title">Визитки для «Стандарт 64»</span><span class="mk-mcard__text">Дизайнерский картон · 500 шт</span></div></button>
+              <button type="button" class="mk-mcard mk-mcard--bare mk-mcard--link"><div class="mk-mcard__media"></div><div class="mk-mcard__body"><span class="mk-mcard__tag">Интерьерная печать</span><span class="mk-mcard__title">Картина на&nbsp;холсте</span><span class="mk-mcard__text">Холст · подрамник · 120×80 см</span></div></button>
+              <button type="button" class="mk-mcard mk-mcard--bare mk-mcard--link"><div class="mk-mcard__media"></div><div class="mk-mcard__body"><span class="mk-mcard__tag">Упаковка</span><span class="mk-mcard__title">Коробки на&nbsp;магните</span><span class="mk-mcard__text">Переплётный картон · ламинация · 200 шт</span></div></button>
+            </div>
+          </div>
+        </div>
+        <div class="mk-tabpanel" data-panel="video">
+          <div class="mk-scroller port-grid port-grid--video" data-scroller>
+            <div class="mk-scroller__track" tabindex="0" role="group" aria-label="Видеоработы, лента с прокруткой">
+              <button type="button" class="mk-mcard mk-mcard--bare mk-mcard--story mk-mcard--video mk-mcard--link" data-video-id="456239782"><div class="mk-mcard__media"><span class="mk-mcard__play" aria-hidden="true"><svg viewBox="0 0 48 48" fill="currentColor"><path d="M17 11l22 13-22 13z"/></svg></span><span class="mk-mcard__dur">0:32</span></div><div class="mk-mcard__body"><span class="mk-mcard__tag">Процесс</span><span class="mk-mcard__title">Как мы печатаем</span></div></button>
+              <button type="button" class="mk-mcard mk-mcard--bare mk-mcard--story mk-mcard--video mk-mcard--link" data-video-id="456239773"><div class="mk-mcard__media"><span class="mk-mcard__play" aria-hidden="true"><svg viewBox="0 0 48 48" fill="currentColor"><path d="M17 11l22 13-22 13z"/></svg></span><span class="mk-mcard__dur">0:24</span></div><div class="mk-mcard__body"><span class="mk-mcard__tag">Визитки</span><span class="mk-mcard__title">Золото на&nbsp;чёрном картоне</span></div></button>
+              <button type="button" class="mk-mcard mk-mcard--bare mk-mcard--story mk-mcard--video mk-mcard--link" data-video-id="456239777"><div class="mk-mcard__media"><span class="mk-mcard__play" aria-hidden="true"><svg viewBox="0 0 48 48" fill="currentColor"><path d="M17 11l22 13-22 13z"/></svg></span><span class="mk-mcard__dur">0:41</span></div><div class="mk-mcard__body"><span class="mk-mcard__tag">Упаковка</span><span class="mk-mcard__title">Коробки на&nbsp;крафте</span></div></button>
+            </div>
+          </div>
+        </div>
+        </div>
+        <a class="home-more" href="#" data-ym="home_portfolio_all">Всё портфолио <span class="mk-arr" aria-hidden="true"></span></a>
+      </div>
+    </section>
+
+    <!-- 6. ПОЧЕМУ МЫ: 4 плитки вместо 6 пунктов на 937px. «97+» уже в полосе цифр —
+         здесь то, что цифрой не скажешь. Тексты с текущей главной, сокращены.
+         Лимиты CMS: заголовок до 18 символов, текст до 50 — иначе плитки в паре разной высоты. -->
+    <section class="usl-adv home-adv" id="preim">
+      <div class="wrap">
+        <div class="sec-head"><h2>Почему МДМпринт</h2></div>
+        <div class="tiles">
+          <div class="mk-tile"><h3 class="mk-tile__title">Своё производство</h3><p class="mk-tile__text">Печать и&nbsp;обработка в&nbsp;одном цеху, без подрядчиков.</p></div>
+          <div class="mk-tile"><h3 class="mk-tile__title">Свои дизайнеры</h3><p class="mk-tile__text">Сделаем макет или доведём ваш до&nbsp;печати.</p></div>
+          <div class="mk-tile"><h3 class="mk-tile__title">Банк макетов</h3><p class="mk-tile__text">Храним макеты: повтор тиража одним сообщением.</p></div>
+          <div class="mk-tile"><h3 class="mk-tile__title">Выбор бумаг</h3><p class="mk-tile__text">Подберём материал под&nbsp;задачу и&nbsp;бюджет.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. ЗАЯВКА: финальный CTA из usluga.html, поднят выше отзывов и ЧАВО
+         (на текущей главной форма стоит на 4,7 экрана). Плюс всегда есть липкая полоса снизу. -->
+    <section class="usl-final home-final">
+      <div class="wrap">
+        <div class="cta-box">
+          <div>
+            <h2 data-cms="cta_title">Рассчитаем ваш заказ</h2>
+            <p class="cta-sub" data-cms="cta_text">Оставьте заявку&nbsp;— подберём материал, тираж и&nbsp;сроки, пришлём стоимость.</p>
+            <button type="button" class="tb-cta mk-btn mk-btn--primary" data-cms="cta_button" data-ym="home_final_lead">Оставить заявку</button>
+            <p class="cta-note">Звонки принимаем ежедневно с&nbsp;9 до&nbsp;22, заявки с&nbsp;сайта&nbsp;— круглосуточно.</p>
+          </div>
+          <div class="cta-side">
+            <h3 class="mk-label">Как это будет</h3>
+            <ol class="cta-steps">
+              <li>Присылаете макет или описываете задачу словами</li>
+              <li>Менеджер считает стоимость и&nbsp;называет срок</li>
+              <li>Печатаем и&nbsp;отправляем удобным способом</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. ОТЗЫВЫ: одним блоком. Благодарственные письма и сторис из соцсетей — ссылкой,
+         отдельные блоки убраны (было 205 + 587 px). Лента заполняется из виджета, как на usluga. -->
+    <section class="usl-rev" id="otzyvy">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Отзывы</h2>
+          <div class="rev-head">
+            <span class="rev-score">5,0</span>
+            <span class="rev-of">600 отзывов на Яндекс.Картах, 2ГИС и на сайте</span>
+            <span class="rev-actions">
+              <a class="rev-badge" href="https://yandex.ru/maps/org/mdmprint/1299127609/" target="_blank" rel="noopener">
+                <img src="../assets/img/badge-yandex-light.svg" width="150" height="50" alt="Хорошее место по версии Яндекса — оценка 5,0" loading="lazy">
+              </a>
+            </span>
+          </div>
+        </div>
+        <div class="mk-scroller revs" data-scroller>
+          <div class="mk-scroller__track" tabindex="0" role="group" aria-label="Отзывы клиентов, лента с прокруткой">
+            <figure class="rev mk-card mk-review">
+              <div class="mk-review__head"><span class="mk-review__stars" role="img" aria-label="Оценка 5 из 5">★★★★★</span><a class="mk-review__source mk-review__source--yandex" href="#">Яндекс Карты</a></div>
+              <blockquote class="mk-review__text">«Отзыв подгружается из виджета.»</blockquote>
+              <figcaption class="mk-review__author"><span class="mk-review__avatar" aria-hidden="true">—</span><span class="mk-review__who"><span class="mk-review__name">Клиент</span></span></figcaption>
+            </figure>
+          </div>
+        </div>
+        <a class="home-more" href="#" data-ym="home_thanks">Благодарственные письма клиентов <span class="mk-arr" aria-hidden="true"></span></a>
+      </div>
+    </section>
+
+    <!-- 9. ЧАВО: вопросы и ответы с текущей главной (сокращены). Форма вопроса на мобилке — шторка. -->
+    <section class="usl-faq" id="faq">
+      <div class="wrap">
+        <div class="sec-head"><h2>Частые вопросы</h2></div>
+        <div class="faq-grid">
+          <div class="mk-acclist--card">
+            <details name="faq" class="mk-acc mk-acc--card"><summary class="mk-acc__q">Можно ли оформить заказ по телефону?</summary><p class="mk-acc__a">Да, по&nbsp;телефону +7&nbsp;(495)&nbsp;256-10-00 ежедневно с&nbsp;9 до&nbsp;22. Круглосуточно&nbsp;— через заявку на&nbsp;сайте, почту zakaz@mdmprint.ru или Телеграм: менеджер свяжется с&nbsp;вами.</p></details>
+            <details name="faq" class="mk-acc mk-acc--card"><summary class="mk-acc__q">Какие сроки изготовления?</summary><p class="mk-acc__a">Примерный срок указан на&nbsp;странице каждой услуги. Точный назовёт менеджер после расчёта: он зависит от&nbsp;объёма и&nbsp;обработки. Часть услуг можем сделать срочно.</p></details>
+            <details name="faq" class="mk-acc mk-acc--card"><summary class="mk-acc__q">Можно печатать по своему макету?</summary><p class="mk-acc__a">Да. Макет должен соответствовать <a href="#">требованиям</a>; если что-то расходится, доработаем. Нет макета&nbsp;— сделает наша студия дизайна.</p></details>
+          </div>
+          <div class="faq-cta">
+            <p class="faq-cta__t">Остались вопросы?</p>
+            <p class="faq-cta__s">Ответим удобным для вас способом.</p>
+            <button type="button" class="mk-btn mk-btn--primary" data-faq-open>Задать вопрос</button>
+          </div>
+          <!-- Форма «Задайте свой вопрос» — набор полей как в блоке FAQ на mdmprint.ru.
+               Способ связи управляет тем, какое контакт-поле показано (телефон/e-mail/Telegram).
+               На мобилке .faq-form превращается в нижнюю шторку (CSS в port-after). -->
+          <aside class="faq-form mk-card">
+            <button class="cbm-x" type="button" data-faq-close aria-label="Закрыть">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <div data-role="form">
+              <h3 class="cbm-title">Задайте свой вопрос</h3>
+              <p class="cbm-sub">Напишите вопрос — ответим в ближайшее время удобным для вас способом.</p>
+              <form novalidate>
+                <div class="mk-field">
+                  <label class="mk-field__lbl" for="faqQ">Ваш вопрос <i>*</i></label>
+                  <textarea class="mk-textarea" id="faqQ" name="comment" rows="3" maxlength="2000" placeholder="Опишите, что хотите узнать" required aria-required="true"></textarea>
+                  <span class="mk-field__err">Напишите вопрос</span>
+                </div>
+                <!-- способ связи + контакт под него в одном ряду; контакт-поле подставляется по способу -->
+                <div class="mk-formrow">
+                  <div class="mk-field">
+                    <label class="mk-field__lbl" for="faqWay">Способ связи <i>*</i></label>
+                    <div class="mk-select">
+                      <select class="mk-input" id="faqWay" name="contact_way">
+                        <option>Телефон</option>
+                        <option>Telegram</option>
+                        <option>MAX</option>
+                        <option>Email</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mk-field" data-contact="Телефон MAX">
+                    <label class="mk-field__lbl" for="faqPhone">Номер телефона <i>*</i></label>
+                    <input type="tel" class="mk-input" id="faqPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__">
+                    <span class="mk-field__err">Введите корректный номер телефона</span>
+                  </div>
+                  <div class="mk-field" data-contact="Email" hidden>
+                    <label class="mk-field__lbl" for="faqEmail">E-mail <i>*</i></label>
+                    <input type="email" class="mk-input" id="faqEmail" name="email" autocomplete="email" placeholder="example@mail.ru">
+                    <span class="mk-field__err">Проверьте адрес — нужен вид name@mail.ru</span>
+                  </div>
+                  <div class="mk-field" data-contact="Telegram" hidden>
+                    <label class="mk-field__lbl" for="faqTg">Никнейм в Telegram <i>*</i></label>
+                    <input type="text" class="mk-input" id="faqTg" name="telegram" placeholder="@username">
+                  </div>
+                </div>
+                <div class="mk-field">
+                  <label class="mk-field__lbl" for="faqName">Имя <em>— необязательно</em></label>
+                  <input type="text" class="mk-input" id="faqName" name="name" autocomplete="name" placeholder="Как к вам обращаться">
+                </div>
+                <!-- honeypot: скрытое поле-ловушка для ботов -->
+                <input type="text" class="mk-hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <label class="mk-checkrow">
+                  <input type="checkbox" class="mk-check" data-role="consent" required>
+                  <span>Я даю согласие на обработку <a href="#" target="_blank" rel="noopener">персональных данных</a> и принимаю <a href="#" target="_blank" rel="noopener">политику конфиденциальности</a></span>
+                </label>
+                <label class="mk-checkrow">
+                  <!-- согласие на рекламу не может быть предзаполнено: только активное действие -->
+                  <input type="checkbox" class="mk-check" name="promo">
+                  <span>Согласен получать новости и спецпредложения <em>(необязательно)</em></span>
+                </label>
+                <div class="mk-formfoot">
+                  <div class="mk-alert" data-role="alert" hidden role="alert">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v5M12 16.5v.01M10.3 3.9 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><b>Заявка не ушла.</b> Похоже, пропала связь. Данные сохранены — нажмите ещё раз.
+                Если не выходит, позвоните: <a href="tel:+74952561000">+7 (495) 256-10-00</a></span>
+            </div>
+            <button type="submit" class="mk-submit mk-btn mk-btn--primary" disabled>Задать вопрос</button>
+                </div>
+              </form>
+            </div>
+
+            <div data-role="done" hidden>
+              <div class="cbm-done">
+                <div class="cbm-done-ic">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <h3 class="cbm-title">Вопрос отправлен</h3>
+                <p class="cbm-sub">Ответим удобным для вас способом в ближайшее время. Спасибо!</p>
+              </div>
+            </div>
+          </aside>
+          <div class="faq-backdrop"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- ФУТЕР — продолжение той же тёмной поверхности; разделители зон идут от края до края.
+       Состав рубрик взят из мегаменю этой же страницы (Каталог 10 разделов, Услуги, Материалы,
+       Готовые решения), контакты и реквизиты — с mdmprint.ru.
+       Мессенджеры и соцсети РАЗВЕДЕНЫ: мессенджеры — канал связи (строки контактов, рядом
+       с телефоном), соцсети — подписка на контент (внизу, рядом с формой рассылки). -->
+  <footer class="usl-foot">
+    <!-- НАВИГАЦИЯ — своя зона во всю ширину: 4 колонки.
+         Главные заголовки на одной линии; подзаголовки живут внутри своей колонки. -->
+    <div class="fnav-bleed">
+      <div class="wrap">
+        <div class="flinks">
+          <div>
+            <h5 class="mk-label">Каталог</h5>
+            <a href="#">Визитки</a><a href="#">Печать полиграфии</a><a href="#">Широкоформатная печать</a>
+            <a href="#">Карты и настольные игры</a><a href="#">Наклейки, стикеры, этикетки</a>
+            <a href="#">Упаковка и коробки</a><a href="#">Сувениры и мерч</a><a href="#">Нанесение</a>
+            <a href="#">POS-материалы</a><a href="#">Пластиковые карты</a>
+          </div>
+          <div>
+            <h5 class="mk-label">Услуги</h5>
+            <a href="#">Брошюровка и переплёт</a><a href="#">Способы печати</a><a href="#">Нанесение</a>
+            <a href="#">Постпечатная обработка</a><a href="#">Резка и сверление</a><a href="#">Другие услуги</a>
+          </div>
+          <div>
+            <h5 class="mk-label">Материалы</h5>
+            <a href="#">Бумага</a><a href="#">Пластик</a><a href="#">Ламинация</a><a href="#">Набор каталогов</a>
+
+            <h5 class="mk-label">Готовые решения</h5>
+            <a href="#">Бизнесу</a><a href="#">Рекламным агентствам</a>
+          </div>
+          <div>
+            <h5 class="mk-label">Информация</h5>
+            <a href="#">Доставка</a><a href="#">Оплата</a><a href="#">Требования к макетам</a>
+            <a href="#">Скидки и акции</a><a href="#">Портфолио</a>
+
+            <h5 class="mk-label">Компания</h5>
+            <a href="#">Контакты</a><a href="#">Блог</a><a href="#">Новости</a>
+            <a href="#">Экскурсия по производству</a><a href="#">Вакансии</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="fmain">
+     <div class="wrap">
+      <div class="ftop">
+        <div class="fbrand">
+          <h5 class="mk-label">Контакты</h5>
+
+          <!-- Контакты столбиком -->
+          <div class="fcontacts">
+            <div class="fcont-col">
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 2a7.5 7.5 0 0 0-7.5 7.5c0 5.4 6.6 12 6.9 12.3a.85.85 0 0 0 1.2 0c.3-.3 6.9-6.9 6.9-12.3A7.5 7.5 0 0 0 12 2Zm0 10a2.6 2.6 0 1 1 0-5.2 2.6 2.6 0 0 1 0 5.2Z"/></svg></span>
+                <div class="fcontact__body">
+                  <a class="fmap" href="https://yandex.ru/maps/?text=Москва,%20улица%20Орджоникидзе,%2011с1А" target="_blank" rel="noopener noreferrer" data-hint="Показать на карте">Москва, ул. Орджоникидзе, 11с1А, подъезд 29<span class="mk-sr">Откроется на Яндекс.Картах в новой вкладке</span></a>
+                  <p class="fnote">Офис открыт Пн–Вс, 09:00–22:00</p>
+                </div>
+              </div>
+            </div>
+            <div class="fcont-col">
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2Z"/></svg></span>
+                <a href="tel:+74952561000" class="fcopy-link" data-copy="+7 (495) 256-10-00" data-hint="Нажмите, чтобы скопировать">+7 (495) 256-10-00</a>
+                <button type="button" class="fcopy" data-copy="+7 (495) 256-10-00" title="Скопировать" aria-label="Скопировать телефон"><svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+              </div>
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg></span>
+                <a href="mailto:zakaz@mdmprint.ru" class="fcopy-link" data-copy="zakaz@mdmprint.ru" data-hint="Нажмите, чтобы скопировать">zakaz@mdmprint.ru</a>
+                <button type="button" class="fcopy" data-copy="zakaz@mdmprint.ru" title="Скопировать" aria-label="Скопировать e-mail"><svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg><svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+              </div>
+            </div>
+            <div class="fcont-col">
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg></span>
+                <a href="#">Написать в Телеграме</a>
+              </div>
+              <div class="fcontact">
+                <span class="fcontact__ic"><svg aria-hidden="true" viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg></span>
+                <a href="#">Написать в Максе</a>
+              </div>
+            </div>
+          </div>
+          <p class="mk-sr js-copy-status" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="fsub">
+          <h5 class="mk-label">Дайджест раз в месяц</h5>
+          <p class="fsub-note">Новые технологии печати, разборы макетов и акции. Без спама, отписка в один клик.</p>
+          <!-- novalidate снят, чекбокс внутри form: иначе required его не проверит -->
+          <form onsubmit="return false">
+            <div class="fsub-form">
+              <input type="email" name="email" placeholder="you@example.ru" autocomplete="email" required aria-label="E-mail для рассылки">
+              <button type="submit" class="mk-btn mk-btn--primary mk-btn--sm">Подписаться</button>
+            </div>
+            <label class="fsub-check">
+              <input type="checkbox" class="mk-check" name="subscribe_consent" required>
+              <span>Я согласен получать рекламные материалы по e-mail и даю согласие на обработку
+                <a href="#">персональных данных</a> в соответствии с
+                <a href="#">политикой обработки персональных данных</a>. Отписаться можно в любой момент.</span>
+            </label>
+          </form>
+        </div>
+
+        <div class="fsoc-col">
+          <h5 class="mk-label">Мы в соцсетях</h5>
+          <div class="fsoc">
+            <!-- «Telegram-канал», а не «Телеграм»: Телеграм уже есть на странице как МЕССЕНДЖЕР
+                 (шапка, контакт-ряд, контакты футера). Без уточнения слово встречалось бы дважды
+                 в двух разных смыслах — «напишите нам» и «подпишитесь на контент». -->
+            <a href="#">ВКонтакте</a><a href="#">Telegram-канал</a><a href="#">YouTube</a>
+            <a href="#">Rutube</a><a href="#">Дзен</a><a href="#">Одноклассники</a>
+            <a href="#">Pinterest</a>
+          </div>
+        </div>
+      </div>
+     </div>
+    </div>
+
+    <!-- ТРЕТИЙ УРОВЕНЬ: бренд с бейджем, документы, реквизиты — по той же сетке,
+         что и второй (436/476/216), поэтому столбцы стоят друг под другом. -->
+    <div class="fbot-bleed">
+      <div class="wrap">
+        <div class="fbot">
+          <div class="fbot-brand">
+            <a href="#" class="flogo"><img src="../assets/mdmprint-logo-dark.svg" width="59" height="20" alt="MDMprint — заводская типография"></a>
+            <p class="fabout">Типография полного цикла: печать, постпечать и брендирование под ключ. Работаем с 2012 года.</p>
+            <p class="fcopy-line">© 2012–2026 ООО «МДМпринт»</p>
+
+          </div>
+
+          <div>
+            <h5 class="mk-label">Документы</h5>
+            <div class="flegal">
+              <a href="#">Политика обработки персональных данных</a>
+              <a href="#">Публичная оферта</a>
+              <a href="#">Пользовательское соглашение</a>
+              <a href="#">Обработка cookies</a>
+            </div>
+          </div>
+
+          <div>
+            <h5 class="mk-label">Реквизиты</h5>
+            <!-- сведения о продавце: наименование, ИНН, ОГРН, юридический адрес -->
+            <p class="freq">ООО «МДМпринт»</p>
+            <p class="freq">ИНН 7704815108</p>
+            <p class="freq">ОГРН 1127746679587</p>
+            <p class="freq">115419, г. Москва, ул. Орджоникидзе, д. 11, стр. 1А</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ЛИПКИЙ CTA (мобилка). Класс .tb-cta осознанно: setupLead навешивает открытие модалки
+       на все .tb-cta через querySelectorAll, поэтому отдельная логика кнопке не нужна —
+       она откроет ту же форму заявки, что и кнопки в блоках. -->
+  <!-- КУКИ-БАННЕР. По 152-ФЗ и разъяснениям РКН cookie с идентификаторами — персональные данные,
+       значит нужно информировать И получать согласие ДО их установки. «Продолжение пользования
+       сайтом = согласие» больше не работает: согласие должно быть конкретным и активным действием.
+       Отсюда две кнопки, а не одна: принять всё или оставить только необходимые. Отказ — такой же
+       законный выбор, поэтому «Только необходимые» — полноценная кнопка, а не серая ссылка мелким
+       шрифтом. Факт выбора храним с датой и версией текста: доказывать согласие придётся нам.
+       РАЗРАБОТЧИКУ: аналитика и реклама (Метрика, пиксели) подключаются ТОЛЬКО после «Принять».
+       Сейчас счётчика на прототипе нет, поэтому в коде только запись решения. -->
+  <div class="mk-cookie" id="cookieBar" role="dialog" aria-modal="false" aria-labelledby="cookieTx" hidden>
+   <div class="wrap mk-cookie__row">
+    <p class="mk-cookie__tx" id="cookieTx">Мы используем cookie, чтобы сайт работал и чтобы понимать,
+      какими разделами пользуются. Часть из них нужна для работы сайта, остальные — для аналитики.
+      Подробности — в <a href="#" target="_blank" rel="noopener">политике обработки данных</a>.</p>
+    <div class="mk-cookie__btns">
+      <button type="button" class="mk-btn mk-btn--ghost mk-btn--md" data-cookie="necessary">Только необходимые</button>
+      <button type="button" class="mk-btn mk-btn--primary mk-btn--md" data-cookie="all">Принять все</button>
+    </div>
+   </div>
+  </div>
+
+  <!-- ЛИПКАЯ ПОЛОСА = заявка + быстрые каналы. Каналы здесь, а не отдельным плавающим виджетом:
+       по Метрике переход в мессенджер — самый частый контакт на сайте (4,08% визитов против 3,22%
+       у форм), но угол на всех троих не хватает. Иконки монохромные: цвет на странице значит
+       «главное действие», три фирменных логотипа рядом с жёлтой кнопкой превращают угол в ёлку.
+       ВНИМАНИЕ ПРИ ПЕРЕНОСЕ: чат должен открывать виджет Битрикс24 (site_button), а не вести в
+       личку — иначе переписка уходит мимо CRM. Собственную плавающую кнопку виджета скрыть,
+       открытие повесить на эту иконку (docs/HANDOFF.md). -->
+  <div class="usl-stickycta" aria-hidden="true">
+    <span class="scta-ways">
+      <!-- Прямой звонок, а не модалка: трубка из шапки, но без стрелки — стрелка там означает
+           «перезвоним», то есть другое действие. Заливка, как у иконок Телеграма и Макса рядом:
+           контурная среди залитых выглядела бы чужой. -->
+      <a class="scta-ic" href="tel:+74952561000" tabindex="-1" aria-label="Позвонить" title="Позвонить">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      </a>
+      <a class="scta-ic" href="#" tabindex="-1" aria-label="Написать в Телеграме" title="Телеграм">
+        <svg viewBox="39.4 66.2 142.4 120" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M54.3,118.8c35-15.2,58.3-25.3,70-30.2 c33.3-13.9,40.3-16.3,44.8-16.4c1,0,3.2,0.2,4.7,1.4c1.2,1,1.5,2.3,1.7,3.3s0.4,3.1,0.2,4.7c-1.8,19-9.6,65.1-13.6,86.3 c-1.7,9-5,12-8.2,12.3c-7,0.6-12.3-4.6-19-9c-10.6-6.9-16.5-11.2-26.8-18c-11.9-7.8-4.2-12.1,2.6-19.1c1.8-1.8,32.5-29.8,33.1-32.3 c0.1-0.3,0.1-1.5-0.6-2.1c-0.7-0.6-1.7-0.4-2.5-0.2c-1.1,0.2-17.9,11.4-50.6,33.5c-4.8,3.3-9.1,4.9-13,4.8 c-4.3-0.1-12.5-2.4-18.7-4.4c-7.5-2.4-13.5-3.7-13-7.9C45.7,123.3,48.7,121.1,54.3,118.8z"/></svg>
+      </a>
+      <a class="scta-ic" href="#" tabindex="-1" aria-label="Написать в Максе" title="Макс">
+        <svg viewBox="0 0 266 265" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M78.7282 246.114C77.385 245.162 75.5339 245.421 74.4078 246.622C59.3591 262.672 20.8452 273.931 19.081 252.024C19.081 234.86 15.2258 220.397 10.9812 204.471C5.78268 184.967 0 163.272 0 131.74C0 56.5481 61.6671 0 134.783 0C207.899 0 265.225 59.3087 265.225 132.47C265.225 205.631 206.074 263.48 135.475 263.48C110.428 263.48 98.2731 259.952 78.7282 246.114ZM136.834 65.195C102.135 63.3755 75.0576 87.4529 69.0868 125.138C64.142 156.345 72.9088 194.372 80.4074 196.286C83.5879 197.098 91.2419 191.243 96.8105 185.992C97.8576 185.005 99.4401 184.839 100.668 185.59C109.348 190.898 119.176 194.887 130.011 195.455C165.634 197.323 197.202 169.443 199.067 133.818C200.933 98.1929 172.456 67.0632 136.834 65.195Z"/></svg>
+      </a>
+    </span>
+    <!-- Подпись короче, чем на usluga: «…на расчёт» на 320px обрезается (на usluga тоже) -->
+    <button type="button" class="tb-cta mk-btn mk-btn--primary" tabindex="-1" data-ym="home_sticky_lead">Оставить заявку</button>
+  </div>
+
+  <!-- источник данных для секции отзывов: рендер виджета скрыт, используем только его выдачу -->
+  <div class="sw-app" data-app="21070d5461e941a5a3abf339f617ae40" hidden></div>
+
+  <!-- Скрипты страницы: в конце <body>, без defer — код рассчитывает на разобранный DOM
+       и на то, что вся разметка страницы уже есть (виджет отзывов объявлен выше). -->
+  <script src="../assets/js/usluga.js?v=20260825a"></script>
+
+  <script src="https://res.smartwidgets.ru/app.js" defer></script>
+
+  <script>
+    /* Поле поиска в первом экране открывает поиск шапки (#mSearch на мобилке, форма шапки на ПК) */
+    document.querySelector('.home-search').addEventListener('click', () => {
+      const m = document.getElementById('mSearch');
+      if (m && m.offsetParent) m.click(); else document.getElementById('searchInput').focus();
+    });
+    /* Футер: на мобилке каждая пара «заголовок + ссылки» становится раскрывающейся группой */
+    (() => {
+      const box = document.querySelector('.usl-foot .flinks');
+      if (!box || !matchMedia('(max-width:1023px)').matches) return;
+      box.querySelectorAll('h5').forEach((h, i) => {
+        const links = [];
+        for (let n = h.nextElementSibling; n && n.tagName === 'A'; n = n.nextElementSibling) links.push(n);
+        const grp = document.createElement('div'); grp.className = 'fgrp';
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'fgrp__btn'; btn.setAttribute('aria-expanded', 'false');
+        const list = document.createElement('div'); list.className = 'fgrp__list'; list.id = 'fgrp' + i;
+        btn.setAttribute('aria-controls', list.id);
+        btn.textContent = h.textContent; h.textContent = ''; h.replaceWith(grp); h.append(btn);
+        list.append(...links); grp.append(h, list);
+        btn.addEventListener('click', () => {
+          const open = grp.classList.toggle('is-open'); btn.setAttribute('aria-expanded', open);
+        });
+      });
+      box.classList.add('is-acc');
+    })();
+  </script>
+</body>
+</html>

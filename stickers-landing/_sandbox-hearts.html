@@ -1,0 +1,110 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Сердечки в сравнении — варианты</title>
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260720a">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260817a">
+<style>
+  /* ПЕСОЧНИЦА. Маркетолог просила убрать ярлыки («наш вариант», «хит», «топ») и «подчеркнуть
+     сердечками, больше позитивных эмоций». Первый заход был мимо: ярлык остался ярлыком,
+     просто с сердечками внутри. Здесь четыре подхода, где сердечки живут в карточке. */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-body);background:var(--surface-page,#f7f5f1);color:var(--text-primary);
+    line-height:1.45;padding:32px 24px 80px}
+  h1{font-family:var(--font-head);font-size:20px;text-transform:uppercase;margin-bottom:6px}
+  .lead{color:var(--text-secondary);font-size:14px;margin-bottom:32px;max-width:70ch}
+  .v{max-width:1180px;margin:0 auto 52px}
+  .v__cap{font-family:var(--font-head);font-weight:800;text-transform:uppercase;font-size:13px;
+    letter-spacing:.05em;color:var(--v-gold-text,#8a6a00);margin-bottom:4px}
+  .v__note{font-size:13px;color:var(--text-secondary);margin-bottom:14px;max-width:78ch}
+
+  .cmp__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .cmp__item{position:relative;margin:0;background:var(--surface-card);border-radius:14px;overflow:hidden}
+  .cmp__item::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+    border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(20,18,18,.07)}
+  .cmp__item--win::after{box-shadow:inset 0 0 0 2px var(--brand)}
+  .cmp__item img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+  .cmp__item figcaption{display:block;padding:16px;font-size:14px;line-height:1.5;color:var(--text-secondary)}
+  .cmp__item figcaption b{display:block;font-size:16px;line-height:1.25;color:var(--text-primary);margin-bottom:4px}
+  svg{display:block}
+
+  /* А · сердечко рисуется от руки прямо на фото — как будто кто-то обвёл понравившееся */
+  .a-mark{position:absolute;z-index:3;right:14px;top:12px;width:54px;height:54px;color:var(--brand);
+    filter:drop-shadow(0 2px 6px rgba(20,18,18,.35))}
+
+  /* Б · сердечки вылетают из карточки, как лайки в сторис */
+  .b-fly{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+  .b-fly i{position:absolute;bottom:-10px;width:20px;height:20px;color:var(--brand);
+    animation:fly 3.4s ease-in infinite}
+  .b-fly i:nth-child(1){left:14%;animation-delay:0s}
+  .b-fly i:nth-child(2){left:40%;width:14px;height:14px;animation-delay:.9s}
+  .b-fly i:nth-child(3){left:66%;width:24px;height:24px;animation-delay:1.8s}
+  .b-fly i:nth-child(4){left:86%;width:16px;height:16px;animation-delay:2.6s}
+  @keyframes fly{
+    0%{transform:translateY(0) scale(.6) rotate(-8deg);opacity:0}
+    18%{opacity:1}
+    70%{opacity:.85}
+    100%{transform:translateY(-190px) scale(1.05) rotate(9deg);opacity:0}
+  }
+  @media(prefers-reduced-motion:reduce){.b-fly i{animation:none;opacity:.9;bottom:14px}}
+
+  /* В · сердечко в подписи, вместо любого значка на фото */
+  .c-title{display:flex;align-items:center;gap:7px}
+  .c-title svg{width:17px;height:17px;color:var(--brand);flex:none}
+
+  /* Г · строка-реакция под фото: сердечко и живая фраза, без цифр */
+  .d-react{display:flex;align-items:center;gap:8px;padding:12px 16px 0;
+    font-size:13px;font-weight:700;color:var(--text-primary)}
+  .d-react svg{width:16px;height:16px;color:var(--brand);flex:none}
+  .d-react--mute{color:var(--v-muted,#8b857c)}
+  .d-react--mute svg{color:rgba(20,18,18,.22)}
+  .d-react + figcaption{padding-top:8px}
+</style>
+</head>
+<body>
+<h1>Сердечки вместо ярлыка — четыре подхода</h1>
+<p class="lead">Ярлыка «Наш вариант» нет нигде. Жёлтая рамка у третьей карточки везде осталась —
+  она и так говорит «вот этот». Вопрос только в том, как добавить тепла.</p>
+
+<script>
+  const HEART = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35 10.55 20.03C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35Z"/></svg>';
+  // сердечко «от руки»: незамкнутый контур, как обводка маркером
+  const SCRIBBLE = '<svg viewBox="0 0 64 60" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 54C20 45 5 35 5 21.5 5 12.4 12 6 20 6c5.2 0 9.6 2.7 12 7 2.4-4.3 6.8-7 12-7 8 0 15 6.4 15 15.5C59 35 44 45 32 54Z"/></svg>';
+  const CARDS = [
+    {img:'b2b/cmp-1.webp', t:'Обычный мерч',        p:'Ручка, кружка, пакет. Нужны в деле, но такие уже есть у всех.'},
+    {img:'b2b/cmp-2.webp', t:'Плоская наклейка',    p:'Печать на плёнке. Дёшево и быстро, но рядом с объёмной — просто картинка.'},
+    {img:'b2b/cmp-3.webp', t:'3D-стикер со смолой', p:'Объём и глянец: его хочется потрогать и оставить на виду.'},
+  ];
+  const VARIANTS = [
+    {cap:'А · обводка на фото',
+     note:'Сердечко нарисовано от руки поверх снимка победителя — будто кто-то отметил понравившееся. Плашки нет вообще, на мобилке работает так же.',
+     deco: i => i===2 ? `<span class="a-mark">${SCRIBBLE}</span>` : ''},
+    {cap:'Б · сердечки взлетают',
+     note:'Ближе всего к видео-референсу: из карточки вылетают сердечки, как лайки в сторис. Живое, но движение на странице уже есть у кнопок — можно перегрузить.',
+     deco: i => i===2 ? `<span class="b-fly">${HEART.repeat(4).replace(/<svg/g,'<i><svg').replace(/<\/svg>/g,'</svg></i>')}</span>` : ''},
+    {cap:'В · сердечко в заголовке',
+     note:'Самое тихое: на фото ничего не добавляется, сердечко стоит рядом с названием победителя. Не спорит с самим стикером на снимке.',
+     title: i => i===2},
+    {cap:'Г · строка-реакция',
+     note:'Под фото короткая человеческая реакция. Цифр лайков нет намеренно — их пришлось бы выдумать.',
+     react: ['Полезно', 'Пойдёт', 'Хочу такой!']},
+  ];
+
+  document.body.insertAdjacentHTML('beforeend', VARIANTS.map(v => `
+    <section class="v">
+      <div class="v__cap">${v.cap}</div>
+      <p class="v__note">${v.note}</p>
+      <div class="cmp__grid">
+        ${CARDS.map((c, i) => `
+          <figure class="cmp__item${i===2 ? ' cmp__item--win' : ''}">
+            ${v.deco ? v.deco(i) : ''}
+            <img src="${c.img}" alt="">
+            ${v.react ? `<div class="d-react${i===2 ? '' : ' d-react--mute'}">${HEART}${v.react[i]}</div>` : ''}
+            <figcaption>
+              <b${v.title && v.title(i) ? ' class="c-title"' : ''}>${c.t}${v.title && v.title(i) ? HEART : ''}</b>${c.p}
+            </figcaption>
+          </figure>`).join('')}
+      </div>
+    </section>`).join(''));
+</script>
+</body></html>

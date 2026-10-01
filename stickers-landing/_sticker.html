@@ -1,0 +1,204 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Стикеры на чистый кадр</title>
+<style>html,body{margin:0;background:#fff}canvas{display:block}
+textarea{position:fixed;left:-9999px}</style></head>
+<body>
+<!-- СЛУЖЕБНОЕ. Ставит объёмные стикеры со смолой на чистое фото мерча.
+     Зачем: генератор картинок не держит масштаб (рисовал стикер 85 мм при потолке 50)
+     и каждый раз перевирает знак. Поэтому знак берём настоящий, из assets/mdmprint-logo.svg,
+     а размер считаем от предмета: диаметр кружки 82 мм — значит 50 мм это 0.61 её ширины.
+
+     Стикер собирается слоями, как настоящий: белая подложка-высечка (силуэт знака,
+     раздутый по кругу), сам знак, купол смолы — блик сверху-слева, тонкий ободок по краю,
+     тень под стикером. На кружке лежит по цилиндру: текстура разворачивается по дуге,
+     столбцами, с затуханием света к краям.
+
+     Числа правятся в CFG ниже. Результат — webp в textContent (value в дамп DOM не идёт). -->
+<canvas id="c"></canvas>
+<textarea id="out"></textarea>
+<script>
+const CFG = {
+  base: '_tmp/base.png',
+  logo: '../assets/mdmprint-logo.svg',
+  quality: 0.92,
+  // кружка: cx/cy — центр корпуса, R — его радиус в пикселях, mm — ширина стикера
+  mug:  {cx: 551, cy: 660, R: 268, mm: 50, mugMm: 82, tilt: 0},
+  // пакет: плоский, в расфокусе — блюр и падение контраста
+  bag:  {x: 1150, y: 480, w: 210, blur: 5, alpha: .93, skew: -.06},
+};
+
+const load = src => new Promise((res, rej) => {
+  const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src;
+});
+
+/* Силуэт знака, раздутый на r пикселей: знак рисуется по кругу со смещениями.
+   Так получается белая подложка-высечка, повторяющая контур, — как у настоящей вырубки. */
+function dilated(logo, w, h, r, color){
+  const c = document.createElement('canvas');
+  c.width = w + r * 2; c.height = h + r * 2;
+  const g = c.getContext('2d');
+  for(let a = 0; a < 32; a++){
+    const t = a / 32 * Math.PI * 2;
+    g.drawImage(logo, r + Math.cos(t) * r, r + Math.sin(t) * r, w, h);
+  }
+  g.drawImage(logo, r, r, w, h);
+  g.globalCompositeOperation = 'source-in';
+  g.fillStyle = color; g.fillRect(0, 0, c.width, c.height);
+  return c;
+}
+
+/* Готовый стикер на прозрачном фоне: подложка + знак + купол смолы. */
+function sticker(logo, W){
+  const ar = logo.height / logo.width;
+  const lw = W * 0.86, lh = lw * ar;          // знак с полями под вырубку
+  const pad = Math.round(W * 0.07);
+  const white = dilated(logo, lw, lh, pad, '#ffffff');
+  const c = document.createElement('canvas');
+  c.width = white.width; c.height = white.height;
+  const g = c.getContext('2d');
+
+  // торец: слой смолы имеет толщину, снизу видно её ребро — тот же силуэт со сдвигом вниз
+  g.save();
+  g.globalAlpha = .5;
+  g.translate(0, Math.max(1.5, W * .014));
+  g.drawImage(dilated(logo, lw, lh, pad, '#cdc7bd'), 0, 0);
+  g.restore();
+
+  g.drawImage(white, 0, 0);                    // подложка
+  g.drawImage(logo, pad, pad, lw, lh);         // знак
+
+  // купол: свет сверху-слева, тень к нижнему краю — рисуем только по силуэту
+  const dome = document.createElement('canvas');
+  dome.width = c.width; dome.height = c.height;
+  const dg = dome.getContext('2d');
+  const gr = dg.createLinearGradient(0, 0, c.width * .35, c.height);
+  gr.addColorStop(0,   'rgba(255,255,255,.48)');
+  gr.addColorStop(.30, 'rgba(255,255,255,.10)');
+  gr.addColorStop(.62, 'rgba(255,255,255,0)');
+  gr.addColorStop(1,   'rgba(20,18,18,.16)');
+  dg.fillStyle = gr; dg.fillRect(0, 0, c.width, c.height);
+  dg.globalCompositeOperation = 'destination-in';
+  dg.drawImage(white, 0, 0);
+  g.drawImage(dome, 0, 0);
+
+  // ободок: край смолы ловит свет — светлая кромка по самому контуру
+  const ring = document.createElement('canvas');
+  ring.width = c.width; ring.height = c.height;
+  const rg = ring.getContext('2d');
+  rg.drawImage(white, 0, 0);
+  rg.globalCompositeOperation = 'destination-out';
+  rg.drawImage(dilated(logo, lw, lh, pad - Math.max(2, W * .012), '#000'),
+    Math.max(2, W * .012), Math.max(2, W * .012));
+  rg.globalCompositeOperation = 'source-in';
+  const rr = rg.createLinearGradient(0, 0, 0, c.height);
+  rr.addColorStop(0, 'rgba(255,255,255,.95)');
+  rr.addColorStop(.5, 'rgba(255,255,255,.25)');
+  rr.addColorStop(1, 'rgba(255,255,255,.7)');
+  rg.fillStyle = rr; rg.fillRect(0, 0, c.width, c.height);
+  g.drawImage(ring, 0, 0);
+
+  /* Блик-капля. Именно по ней глаз читает купол: узкое яркое пятно в верхней левой
+     четверти, растянутое вдоль стикера. Без него слои выше дают плоскую наклейку. */
+  const spec = document.createElement('canvas');
+  spec.width = c.width; spec.height = c.height;
+  const pg = spec.getContext('2d');
+  pg.save();
+  pg.translate(c.width * .30, c.height * .21);
+  pg.scale(1, c.height / c.width * 1.15);
+  const sr = pg.createRadialGradient(0, 0, 0, 0, 0, c.width * .34);
+  sr.addColorStop(0,   'rgba(255,255,255,.50)');
+  sr.addColorStop(.45, 'rgba(255,255,255,.14)');
+  sr.addColorStop(1,   'rgba(255,255,255,0)');
+  pg.fillStyle = sr;
+  pg.beginPath(); pg.arc(0, 0, c.width * .34, 0, Math.PI * 2); pg.fill();
+  pg.restore();
+  pg.globalCompositeOperation = 'destination-in';
+  pg.drawImage(white, 0, 0);
+  g.drawImage(spec, 0, 0);
+
+  return {img: c, alpha: white};
+}
+
+/* Наклейка на цилиндр: текстуру разворачиваем по дуге. Столбец текстуры на длине дуги s
+   встаёт в x = cx + R·sin(s/R), ширина сжимается как cos, свет к краям падает. */
+/* Возвращает СЛОЙ размером с фото, а не рисует в него: затемнение краёв идёт
+   через source-atop, а фотография непрозрачна целиком — заливка ложилась бы
+   прямоугольником прямо по кружке. На прозрачном слое она попадает только на стикер. */
+function onCylinder(size, tex, cx, cy, R, W, H, shaded = true){
+  const layer = document.createElement('canvas');
+  layer.width = size.width; layer.height = size.height;
+  const g = layer.getContext('2d');
+  const N = Math.ceil(W);
+  for(let i = 0; i < N; i++){
+    const s = (i / N - .5) * W;               // смещение по дуге от центра
+    const t = s / R;
+    if(Math.abs(t) > Math.PI / 2) continue;
+    const x = cx + Math.sin(t) * R;
+    const dx = Math.cos(t) * (W / N) + 1;
+    const k = Math.cos(t);
+    g.save();
+    g.globalAlpha = 1;
+    g.drawImage(tex, i * (tex.width / N), 0, tex.width / N, tex.height,
+      x, cy - H * k * .5, dx, H * k);
+    g.restore();
+    // край цилиндра темнее — подмешиваем тень тем сильнее, чем дальше от центра
+    const shade = shaded ? Math.pow(1 - k, 1.4) * .5 : 0;
+    if(shade > .01){
+      g.save();
+      g.globalCompositeOperation = 'source-atop';
+      g.fillStyle = `rgba(20,18,18,${shade})`;
+      g.fillRect(x, cy - H * k * .5, dx, H * k);
+      g.restore();
+    }
+  }
+  return layer;
+}
+
+(async () => {
+  const [base, logo] = await Promise.all([load(CFG.base), load(CFG.logo)]);
+  const c = document.getElementById('c');
+  c.width = base.width; c.height = base.height;
+  const g = c.getContext('2d');
+  g.drawImage(base, 0, 0);
+
+  // ── кружка ──
+  const m = CFG.mug;
+  const W = m.R * 2 * (m.mm / m.mugMm);        // 50 мм от диаметра 82 мм
+  const st = sticker(logo, W);
+  const H = W * (st.img.height / st.img.width);
+
+  // тень под стикером — ложится по той же дуге, чуть ниже и мягче
+  const sh = document.createElement('canvas');
+  sh.width = st.img.width; sh.height = st.img.height;
+  const sg = sh.getContext('2d');
+  sg.drawImage(st.alpha, 0, 0);
+  sg.globalCompositeOperation = 'source-in';
+  sg.fillStyle = 'rgba(20,18,18,.34)';
+  sg.fillRect(0, 0, sh.width, sh.height);
+  /* Тень кладём отдельным слоем и блюрим ЦЕЛИКОМ. Блюр прямо в onCylinder мазал
+     прямоугольным ореолом: фильтр применялся к каждому столбцу дуги по отдельности. */
+  g.save();
+  g.filter = `blur(${Math.round(W * .015)}px)`;
+  g.drawImage(onCylinder(c, sh, m.cx, m.cy + W * .018, m.R, W, H, false), 0, 0);
+  g.restore();
+
+  g.drawImage(onCylinder(c, st.img, m.cx, m.cy, m.R, W, H), 0, 0);
+
+  // ── пакет: плоско, в расфокусе ──
+  const b = CFG.bag;
+  const bs = sticker(logo, b.w);
+  const bh = b.w * (bs.img.height / bs.img.width);
+  g.save();
+  g.filter = `blur(${b.blur}px)`;
+  g.globalAlpha = b.alpha;
+  g.translate(b.x, b.y);
+  g.transform(1, b.skew, 0, 1, 0, 0);
+  g.drawImage(bs.img, -b.w / 2, -bh / 2, b.w, bh);
+  g.restore();
+
+  document.getElementById('out').textContent = c.toDataURL('image/webp', CFG.quality);
+  document.title = 'READY';
+})().catch(e => { document.title = 'ERROR ' + e.message; });
+</script>
+</body></html>

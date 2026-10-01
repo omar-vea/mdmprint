@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блок 2 — вариант по реф4 (песочница)</title>
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260720a">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260817a">
+<style>
+  /* ═══ ПЕСОЧНИЦА: блок «Виды» по логике реф4 (amo Gallery) ═══
+     Контейнеров нет: подложка на рендере (сделана намеренно) и есть плашка продукта,
+     своей карточки вокруг не рисуем. Подпись — сама наклейка-пилюля.
+     Сравнение с текущим вариантом (лента карточек) — по рендерам, в прототип не лезет. */
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--v-max:1200px;--v-pad:24px}
+  body{font-family:var(--font-body);color:#141212;line-height:1.5;
+    background:
+      radial-gradient(60% 40% at 78% 8%, rgba(255,193,0,.22), transparent 70%),
+      radial-gradient(50% 36% at 12% 28%, rgba(120,200,255,.18), transparent 72%),
+      #fbfaf7}
+  .wrap{max-width:var(--v-max);margin:0 auto;padding:clamp(48px,7vw,96px) var(--v-pad)}
+  h2{font-family:var(--font-head);font-weight:800;text-transform:uppercase;
+    font-size:clamp(28px,3.6vw,46px);line-height:1;letter-spacing:-.005em;max-width:27ch}
+  .note{margin-top:14px;max-width:56ch;color:var(--text-secondary);
+    font-size:var(--t-body);line-height:var(--t-body-lh)}
+
+  /* галерея: шахматный ритм, у каждого объекта свой наклон — «вразнобой, но единое целое» */
+  /* флекс, а не грид: последний ряд центрируется сам (3+2), сироты справа не остаётся */
+  .gal{margin-top:clamp(32px,5vw,64px);display:flex;flex-wrap:wrap;justify-content:center;
+    gap:clamp(24px,4vw,52px) clamp(12px,3vw,40px)}
+  .item{flex:0 0 clamp(150px,46%,240px)}
+  @media(min-width:900px){.item{flex:0 0 clamp(220px,29%,320px)}}
+  .item{position:relative;display:flex;flex-direction:column;align-items:center}
+  /* смещение по вертикали = шахматка (в рефе колонки идут не в линию) */
+  .item:nth-child(even){margin-top:clamp(28px,5vw,72px)}
+  /* хало за продуктом: цвет ОТ продукта, а не заливка плашки */
+  .item::before{content:"";position:absolute;inset:2% 6% 22%;z-index:0;border-radius:50%;
+    background:radial-gradient(circle,var(--halo,rgba(255,235,180,.75)),transparent 68%);
+    filter:blur(18px)}
+  .item img{position:relative;z-index:1;width:100%;height:auto;display:block;
+    transform:rotate(var(--rot,0deg));transition:transform .3s cubic-bezier(.34,1.4,.64,1)}
+  .item:hover img{transform:rotate(0deg) scale(1.04)}
+  /* ПОДПИСЬ = НАКЛЕЙКА: белая пилюля, свой поворот, лежит поверх нижнего края продукта */
+  .tag{position:relative;z-index:2;margin-top:-14%;
+    background:#fff;border-radius:999px;padding:9px 18px;text-align:center;
+    box-shadow:0 8px 18px -10px rgba(20,18,18,.5), inset 0 0 0 1px rgba(20,18,18,.05);
+    transform:rotate(var(--trot,-3deg))}
+  .tag b{display:block;font-family:var(--font-head);font-weight:800;text-transform:uppercase;
+    font-size:var(--t-h4);line-height:var(--t-h4-lh);letter-spacing:var(--t-h4-ls)}
+  .tag span{display:block;font-size:12px;line-height:16px;color:var(--text-secondary);margin-top:2px}
+
+  .i1{--rot:-7deg;--trot:-4deg;--halo:rgba(120,255,170,.5)}
+  .i2{--rot:6deg;--trot:3deg;--halo:rgba(255,170,190,.45)}
+  .i3{--rot:-4deg;--trot:-2deg;--halo:rgba(240,215,160,.6)}
+  .i4{--rot:8deg;--trot:4deg;--halo:rgba(150,200,255,.5)}
+  .i5{--rot:-5deg;--trot:-3deg;--halo:rgba(255,215,120,.6)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h2>Любая форма под ваш бренд</h2>
+    <p class="note">Круглые, прямоугольные, пилюли и фигурная высечка по контуру.
+      Покрытия: плёнка, голография, свечение в темноте, эпоксидная и полиуретановая смола.</p>
+
+    <div class="gal">
+      <figure class="item i1">
+        <img src="posters/form-glow.webp"  alt="Круглый светящийся стикер">
+        <figcaption class="tag"><b>Круг</b><span>Светится в темноте</span></figcaption>
+      </figure>
+      <figure class="item i2">
+        <img src="posters/form-pill.webp"  alt="Стикер-пилюля с логотипом">
+        <figcaption class="tag"><b>Пилюля</b><span>Название целиком</span></figcaption>
+      </figure>
+      <figure class="item i3">
+        <img src="posters/form-diecut.webp"  alt="Фигурный стикер по контуру">
+        <figcaption class="tag"><b>Фигурный</b><span>Высечка по рисунку</span></figcaption>
+      </figure>
+      <figure class="item i4">
+        <img src="posters/form-rect.webp"  alt="Прямоугольный стикер с иллюстрацией">
+        <figcaption class="tag"><b>Прямоугольник</b><span>Сцена и детали</span></figcaption>
+      </figure>
+      <figure class="item i5">
+        <img src="posters/form-round.webp"  alt="Круглый стикер с логотипом">
+        <figcaption class="tag"><b>Круг</b><span>Мерч для бизнеса</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</body>
+</html>

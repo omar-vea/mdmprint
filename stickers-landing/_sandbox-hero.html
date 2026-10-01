@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Песочница: первый экран — варианты (03.08)</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260720a">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260817a">
+<style>
+  /* ПЕСОЧНИЦА первого экрана по правке маркетолога 03.08: текст слева, 3D-стикер справа,
+     движение по скроллу, «парочку посочнее» рядом. Прототип stickers-v2.html НЕ трогаем,
+     пока Omar не выберет вариант. Стили — копия нужного минимума из v2, без шапки и остальной
+     страницы: сравниваем только композицию первого экрана. */
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --v-ink:#141212; --v-ink-hover:#2c2825; --v-ink-press:#000;
+    --v-text-warm:#5b554a; --v-muted:#8c8477; --v-hair:#c9c0ae;
+    --brand:#FFC100; --v-gold-text:#7d5c00;
+    --v-paper:#FBFAF5; --v-paper-2:#fbfaf7;
+    --surface-card:#fff;
+    --v-glow:
+      radial-gradient(120% 90% at 88% 8%, rgba(255,193,0,.20), rgba(255,193,0,0) 60%),
+      radial-gradient(90% 70% at 10% 92%, rgba(150,190,255,.16), rgba(150,190,255,0) 62%);
+    --font-head:'AttractiveCond','Inter',system-ui,sans-serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    --v-max:1240px; --v-pad:clamp(20px,4vw,44px);
+  }
+  body{font-family:var(--font-body);color:var(--v-ink);background:var(--v-paper-2)}
+
+  /* ── стенд ── */
+  .bar{position:sticky;top:0;z-index:9;display:flex;gap:14px;align-items:center;
+    padding:10px var(--v-pad);background:var(--v-ink);color:#fff;font-size:13px}
+  .bar b{font-weight:800}
+  .bar a{color:var(--brand);text-decoration:none;font-weight:700}
+  .lbl{max-width:var(--v-max);margin:0 auto;padding:34px var(--v-pad) 0;
+    font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--v-muted)}
+  .lbl em{display:block;margin-top:6px;font-style:normal;font-size:13px;letter-spacing:0;
+    text-transform:none;font-weight:400;color:var(--v-text-warm);max-width:70ch;line-height:1.5}
+
+  /* ── общий язык первого экрана ── */
+  .hero{position:relative;background:var(--v-glow),var(--v-paper-2)}
+  .hero__pin{position:sticky;top:0;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+  .hero__in{position:relative;z-index:2;width:100%;max-width:var(--v-max);margin:0 auto;
+    padding-inline:var(--v-pad);display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);
+    gap:clamp(24px,4vw,64px);align-items:center}
+  @media(max-width:900px){.hero__in{grid-template-columns:1fr;gap:28px}}
+  .eyebrow{display:inline-block;background:var(--brand);color:var(--v-ink);border-radius:999px;
+    padding:7px 16px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  h1{margin:20px 0 0;font-family:var(--font-head);font-weight:800;text-transform:uppercase;
+    font-size:clamp(34px,4.6vw,64px);line-height:.98;letter-spacing:-.01em;text-wrap:balance}
+  h1 .hl{color:var(--v-ink);position:relative;white-space:nowrap}
+  h1 .hl::after{content:"";position:absolute;left:0;right:0;bottom:-.08em;height:.13em;
+    background:var(--brand);border-radius:2px;z-index:-1}
+  .sub{margin:20px 0 0;font-size:clamp(15px,1.35vw,19px);line-height:1.55;
+    color:var(--v-text-warm);max-width:46ch}
+  .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+  .btn{display:inline-flex;align-items:center;font:inherit;font-weight:800;font-size:16px;
+    padding:15px 28px;border-radius:14px;text-decoration:none;cursor:pointer;border:0;position:relative;
+    overflow:hidden;isolation:isolate}
+  .btn--primary{background:var(--v-ink);color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1.5px 0 rgba(0,0,0,.45),
+      0 10px 20px -12px rgba(20,18,18,.8)}
+  .btn--primary::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
+    background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.02) 52%,rgba(0,0,0,.14))}
+  .btn--ghost{background:transparent;color:var(--v-ink);box-shadow:inset 0 0 0 1.5px rgba(20,18,18,.3)}
+  .facts{display:flex;gap:22px;flex-wrap:wrap;margin-top:26px;font-size:13.5px;color:var(--v-text-warm)}
+  .facts b{display:block;font-family:var(--font-head);font-size:22px;color:var(--v-ink);line-height:1}
+
+  /* ── сцена: общая коробка под композицию ── */
+  .stage{position:relative;aspect-ratio:1/1;max-height:78svh;margin-inline:auto;width:100%}
+  @media(max-width:900px){.stage{max-height:46svh}}
+  .stage model-viewer{width:100%;height:100%;--poster-color:transparent;background:none}
+  .chip{position:absolute;border-radius:18px;overflow:hidden;box-shadow:0 26px 50px -26px rgba(20,18,18,.5);
+    background:var(--surface-card)}
+  .chip img{display:block;width:100%;height:100%;object-fit:cover}
+  /* подпись покрытия на спутнике — заодно объясняет, что покрытие не привязано к форме */
+  /* метка сверху, а не снизу: нижние углы карточек перекрываются соседями по композиции */
+  .chip span{position:absolute;left:8px;top:8px;background:rgba(20,18,18,.82);color:#fff;
+    font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    padding:4px 8px;border-radius:8px}
+
+  /* ═══ ВАРИАНТ A — ВЕЕР: главный стикер по центру, спутники разъезжаются по скроллу ═══ */
+  #A .hero__pin{min-height:100svh}
+  /* главный не во всю коробку: иначе он накрывает спутников и «парочки посочнее» не видно */
+  #A .a-main{position:absolute;right:0;top:12%;width:64%;aspect-ratio:1/1;z-index:2}
+  #A .a-side{position:absolute;aspect-ratio:1/1;z-index:1}
+  #A .a-1{left:0;top:-2%;width:42%}
+  #A .a-2{left:4%;bottom:0;width:38%}
+  /* подпись под спутником, а не на нём: у моделей фон прозрачный, плашки-карточки больше нет */
+  #A .a-side span{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);
+    background:rgba(20,18,18,.82);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;
+    text-transform:uppercase;padding:4px 9px;border-radius:8px;white-space:nowrap}
+  /* --progress-bar-height:0 — иначе над каждой моделью висит серая полоса загрузки
+     и в сцене из трёх стикеров это три посторонние линии */
+  .mv{width:100%;height:100%;background:none;--poster-color:transparent;
+    --progress-bar-height:0;--progress-bar-color:transparent}
+  /* На узком экране живой только центральный: спутники скрыты, а с loading=lazy их GLB
+     не запрашиваются вовсе — мобильный трафик не тратится. */
+  @media(max-width:900px){#A .a-side{display:none}#A .a-main{position:relative;right:auto;top:auto;width:100%}}
+
+  /* ═══ ВАРИАНТ B — СТОПКА: три карточки лесенкой, едут с разной скоростью ═══ */
+  #B .b-card{aspect-ratio:1/1}
+  #B .b-1{left:0;top:0;width:52%;z-index:1}
+  #B .b-3{left:4%;bottom:0;width:50%;z-index:2}
+  #B .b-live{position:absolute;right:0;top:16%;width:58%;aspect-ratio:1/1;z-index:3}
+
+  footer{padding:60px var(--v-pad) 100px;text-align:center;color:var(--v-muted);font-size:13px}
+</style>
+</head>
+<body>
+  <div class="bar"><b>Песочница первого экрана</b> · правка маркетолога 03.08: текст слева, стикер
+    справа, движение по скроллу · <a href="stickers-v2.html">← лендинг</a></div>
+
+  <p class="lbl">Вариант A — веер · выбран 03.08, три живые 3D-модели
+    <em>Все три стикера — настоящие 3D-модели, не кадры: стикер MDMprint по центру, светящийся
+      круглый и фигурный mellow по краям. По скроллу веер раскрывается — спутники разъезжаются
+      наружу и подворачиваются, главный доворачивается лицом к зрителю и подъезжает ближе.
+      Вес всех трёх после сжатия — 458 КБ (было 15 МБ). На узком экране живым остаётся только
+      центральный, спутники не грузятся вовсе.
+      <b>Голографической модели у нас нет</b> — вместо неё фигурный mellow.</em></p>
+  <section class="hero" id="A" style="height:200svh">
+    <div class="hero__pin">
+      <div class="hero__in">
+        <div>
+          <span class="eyebrow">От дизайна до печати</span>
+          <h1>Печатаем объёмные <span class="hl">3D-стикеры</span> и стикерпаки</h1>
+          <p class="sub">Со смолой, любой формы и покрытия — от одной штуки до 50 000.
+            Считаем цену на странице, срок от трёх дней.</p>
+          <div class="cta">
+            <a class="btn btn--primary" href="#">Рассчитать стоимость</a>
+            <a class="btn btn--ghost" href="#">Заказать образец</a>
+          </div>
+          <div class="facts">
+            <div><b>от 3 дней</b>срок изготовления</div>
+            <div><b>от 1 шт</b>пробный стикер</div>
+            <div><b>4 плёнки</b>включая голографию</div>
+          </div>
+        </div>
+        <!-- Модели пережаты: resize 1024 → webp → draco. ВАЖНО: gltf-transform `optimize`
+             брать нельзя — его prune выкидывает материал смолы, модель рендерится белым пятном.
+             Только отдельные команды resize/webp/draco. -->
+        <div class="stage" id="stageA">
+          <!-- спутники: loading=lazy + display:none на мобилке = файлы там вообще не грузятся -->
+          <div class="a-side a-1" data-side="1">
+            <model-viewer class="mv" data-mv="glow" src="models/hero/glow.glb" alt="Светящийся в темноте стикер"
+              interaction-prompt="none" disable-tap disable-pan disable-zoom loading="lazy"
+              environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+              exposure="1" shadow-intensity="0" tone-mapping="neutral"
+              camera-orbit="0deg 58deg 105%" max-camera-orbit="auto auto 300%"></model-viewer>
+            <span>Светится</span>
+          </div>
+          <div class="a-main">
+            <!-- poster виден, пока грузится модель, — на медленной сети первый экран не пустой -->
+            <model-viewer id="mvA" class="mv" data-mv="main" src="models/hero/mdm.glb"
+              poster="calc-icons/kind-0.webp" alt="3D-стикер со смолой с логотипом MDMprint"
+              interaction-prompt="none" disable-tap disable-pan disable-zoom loading="eager"
+              environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+              exposure="1" shadow-intensity="0" tone-mapping="neutral"
+              camera-orbit="0deg 58deg 108%" max-camera-orbit="auto auto 300%"></model-viewer>
+          </div>
+          <div class="a-side a-2" data-side="-1">
+            <model-viewer class="mv" data-mv="cut" src="models/hero/mellow.glb" alt="Фигурный стикер по контуру"
+              interaction-prompt="none" disable-tap disable-pan disable-zoom loading="lazy"
+              environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+              exposure="1" shadow-intensity="0" tone-mapping="neutral"
+              camera-orbit="0deg 58deg 105%" max-camera-orbit="auto auto 300%"></model-viewer>
+            <span>Фигурный</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="lbl">Вариант B — стопка
+    <em>Три карточки лесенкой едут вверх с разной скоростью (параллакс), верхняя — живой 3D.
+      Плюс: спокойнее, читается как «мы печатаем разное», хорошо ложится в одну колонку на телефоне.
+      Минус: движение тише, эффекта «вау» меньше.</em></p>
+  <section class="hero" id="B" style="height:200svh">
+    <div class="hero__pin">
+      <div class="hero__in">
+        <div>
+          <span class="eyebrow">От дизайна до печати</span>
+          <h1>Печать объёмных <span class="hl">3D-стикеров</span> и стикерпаков</h1>
+          <p class="sub">Смола, любая форма и четыре плёнки — от пробной штуки до тиража
+            в пятьдесят тысяч. Цена на странице, срок от трёх дней.</p>
+          <div class="cta">
+            <a class="btn btn--primary" href="#">Рассчитать стоимость</a>
+            <a class="btn btn--ghost" href="#">Заказать образец</a>
+          </div>
+          <div class="facts">
+            <div><b>от 3 дней</b>срок изготовления</div>
+            <div><b>от 1 шт</b>пробный стикер</div>
+            <div><b>4 плёнки</b>включая голографию</div>
+          </div>
+        </div>
+        <div class="stage" id="stageB">
+          <div class="chip b-card b-1" data-speed="0.5">
+            <img src="calc-icons/mat-2.webp" alt="Голографический стикер"><span>Голография</span>
+          </div>
+          <div class="chip b-card b-3" data-speed="1.4">
+            <img src="calc-icons/mat-3.webp" alt="Светящийся стикер"><span>Светится</span>
+          </div>
+          <div class="b-live" data-speed="0.9">
+            <model-viewer id="mvB" src="resin-sticker.glb" poster="calc-icons/kind-0.webp" alt="3D-стикер со смолой"
+              interaction-prompt="none" disable-tap disable-pan disable-zoom loading="eager"
+              environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+              exposure="0.95" shadow-intensity="0" tone-mapping="neutral"
+              camera-orbit="0deg 58deg 108%" max-camera-orbit="auto auto 300%"></model-viewer>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Оба варианта — черновики композиции. Тексты и цифры сверены с ANSWERS.md.</footer>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js"></script>
+<script>
+  /* Прогресс героя 0→1 считаем от его собственной дорожки прокрутки: у секции высота 200svh,
+     липкий экран внутри. Один обработчик на оба варианта, троттлинг через rAF. */
+  const RM = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
+  const prog = sec => {
+    const r = sec.getBoundingClientRect();
+    return clamp(-r.top / (r.height - innerHeight), 0, 1);
+  };
+
+  const A = document.getElementById('A'), B = document.getElementById('B');
+  const mvA = document.getElementById('mvA'), mvB = document.getElementById('mvB');
+  const sides = [...A.querySelectorAll('[data-side]')];
+  const layers = [...B.querySelectorAll('[data-speed]')];
+  /* Спутники крутятся В ПРОТИВОФАЗЕ главному (dir = +1/−1): если бы все три поворачивались
+     одинаково, сцена читалась бы как один поворот камеры, а не как три отдельных стикера. */
+  const sideMV = sides.map(el=>({el, dir:+el.dataset.side, mv:el.querySelector('model-viewer')}));
+
+  function paint(){
+    if(!RM){
+      // A: веер раскрывается — спутники уходят наружу, подворачиваются и чуть уменьшаются
+      const p = prog(A);
+      sideMV.forEach(({el,dir,mv})=>{
+        el.style.transform = `translate(${dir*p*24}%, ${-dir*p*16}%) rotate(${dir*p*12}deg) scale(${1-p*.08})`;
+        // каждый спутник доворачивается сам: theta в свою сторону, phi так же ложится → встаёт
+        mv.setAttribute('camera-orbit', `${dir*p*26}deg ${58-p*36}deg ${105-p*4}%`);
+      });
+      // главный стикер поворачивается к зрителю: 58° (лежит) → 14° (в лицо)
+      mvA.setAttribute('camera-orbit', `${p*20}deg ${58-p*44}deg ${108-p*12}%`);
+
+      // B: слои едут вверх с разными скоростями
+      const q = prog(B);
+      layers.forEach(el=>{
+        const s = +el.dataset.speed;
+        el.style.transform = `translateY(${-q*s*90}px)`;
+      });
+      mvB.setAttribute('camera-orbit', `${-q*14}deg ${58-q*40}deg ${108-q*6}%`);
+    }
+    ticking = false;
+  }
+  let ticking = false;
+  addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(paint); } }, {passive:true});
+  addEventListener('resize', paint, {passive:true});
+  paint();
+</script>
+</body>
+</html>

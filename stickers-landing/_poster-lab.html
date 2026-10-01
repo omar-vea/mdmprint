@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пульт ракурса — в живой карточке</title>
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260720a">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260817a">
+<style>
+  /* ПУЛЬТ: внутри — НАСТОЯЩАЯ страница, постеры в карточках подменены живыми моделями.
+     Крутим ползунками, забираем числа, потом ими же рендерятся постеры. */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-body);background:#efece6;color:#141212;line-height:1.45}
+  .bar{position:sticky;top:0;z-index:5;display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap;
+    background:#fff;padding:12px 16px;box-shadow:0 6px 18px -12px rgba(0,0,0,.5)}
+  .f{display:flex;flex-direction:column;gap:4px;min-width:150px}
+  label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#6e6e6a}
+  .row{display:flex;align-items:center;gap:8px}
+  input[type=range]{width:120px;accent-color:#141212}
+  .val{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;width:52px;text-align:right}
+  select,button{font:inherit;font-size:13px;border:1px solid #e6e1d8;border-radius:8px;background:#fff;
+    padding:7px 10px;cursor:pointer}
+  button.k{background:#141212;color:#fff;border:0;font-weight:700}
+  .out{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#141212;color:#e8ffd9;
+    border-radius:8px;padding:8px 10px;white-space:pre;min-width:230px}
+  .stage{padding:14px}
+  iframe{width:100%;height:1100px;border:0;border-radius:14px;background:#fff;display:block;
+    box-shadow:0 14px 40px -30px rgba(0,0,0,.6)}
+  .warn{padding:10px 16px;font-size:13px;color:#8a6a00}
+</style>
+</head>
+<body>
+  <div class="bar">
+    <div class="f">
+      <label>Что крутим</label>
+      <select id="which">
+        <option value="all">все пять сразу</option>
+        <option value="0">1 · светящийся</option>
+        <option value="1">2 · пилюля SALT</option>
+        <option value="2">3 · фигурный mellow</option>
+        <option value="3">4 · прямоугольный СПб</option>
+        <option value="4">5 · круглый NORDA</option>
+      </select>
+    </div>
+    <div class="f"><label>Поворот вбок · theta</label>
+      <div class="row"><input type="range" id="theta" min="-90" max="90" step="1" value="0"><span class="val" id="vTheta">0°</span></div></div>
+    <div class="f"><label>Наклон · phi</label>
+      <div class="row"><input type="range" id="phi" min="0" max="85" step="1" value="22"><span class="val" id="vPhi">22°</span></div></div>
+    <div class="f"><label>Отъезд · radius</label>
+      <div class="row"><input type="range" id="rad" min="60" max="320" step="1" value="62"><span class="val" id="vRad">62%</span></div></div>
+    <div class="f"><label>Перспектива · fov</label>
+      <div class="row"><input type="range" id="fov" min="10" max="60" step="1" value="27"><span class="val" id="vFov">27°</span></div></div>
+    <div class="f"><label>Масштаб в кадре</label>
+      <div class="row"><input type="range" id="scale" min="60" max="200" step="1" value="108"><span class="val" id="vScale">1.08</span></div></div>
+    <!-- 24.08: свет и сочность — вторая половина правки маркетолога («поярче») -->
+    <div class="f"><label>Свет · exposure</label>
+      <div class="row"><input type="range" id="exp" min="50" max="250" step="5" value="100"><span class="val" id="vExp">1.00</span></div></div>
+    <div class="f"><label>Сочность · saturate</label>
+      <div class="row"><input type="range" id="sat" min="80" max="200" step="2" value="118"><span class="val" id="vSat">1.18</span></div></div>
+    <div class="f"><label>Ширина экрана</label>
+      <div class="row"><button id="w390" type="button">390</button><button id="wfull" type="button">полная</button></div></div>
+    <div class="out" id="out">жду загрузки…</div>
+    <button class="k" id="copy" type="button">Скопировать числа</button>
+  </div>
+  <p class="warn" id="warn"></p>
+  <div class="stage"><iframe id="fr" src="stickers-v2.html"></iframe></div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  /* 10.08: пульт показывал пустые карточки. Постеры переехали posters/form-*.webp →
+     models/card-*.webp, и таблица старых имён давала undefined: картинку пульт прятал,
+     а ставить было нечего. Теперь модель выводится из имени постера — они лежат рядом
+     и сняты с этих же файлов: card-m2.webp → models/m2.glb, card-m1-glow → m1-glow.glb.
+     24.08: у картинок появился ?v= для сброса кэша — срезаем его, иначе имя модели
+     получается вида m2?v=20260824.glb. */
+  const glbFor = key => 'models/' + key.replace(/^card-/, '') + '.glb';
+  /* Дефолты = то, что стоит на странице сейчас (перерендер 24.08), чтобы крутить
+     от текущего кадра, а не от чужой точки. */
+  const S = {theta:0, phi:22, rad:62, fov:27, scale:108, exp:100, sat:118};
+  let views = [];                      // {mv, img, key}
+
+  function swap(){
+    const doc = $('fr').contentDocument;
+    const imgs = [...doc.querySelectorAll('.fcard__art img')];
+    if(!imgs.length){ $('warn').textContent = 'Карточки не найдены — открой страницу от корня репо.'; return; }
+    views = imgs.map(img=>{
+      const key = (img.getAttribute('src').split('/').pop() || '').split('?')[0].replace('.webp','');
+      const mv = doc.createElement('model-viewer');
+      const a = {src:glbFor(key), alt:img.alt, 'interaction-prompt':'none',
+        'camera-controls':'', 'disable-pan':'', 'disable-zoom':'', 'touch-action':'pan-y',
+        'environment-image':'https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr',
+        exposure:'1.0','shadow-intensity':'0','max-camera-orbit':'auto auto 500%',loading:'eager'};
+      for(const [k,v] of Object.entries(a)) mv.setAttribute(k,v);
+      mv.style.cssText = 'width:100%;height:100%;display:block;--poster-color:transparent';
+      img.style.display = 'none';
+      img.parentElement.appendChild(mv);
+      // покрутил мышью в самой карточке — ползунки подхватят
+      mv.addEventListener('camera-change', e=>{
+        if(e.detail.source !== 'user-interaction') return;
+        const o = mv.getCameraOrbit();
+        S.theta = Math.round(o.theta*180/Math.PI); S.phi = Math.round(o.phi*180/Math.PI);
+        $('theta').value = S.theta; $('phi').value = S.phi; apply();
+      });
+      return {mv, img, key};
+    });
+    // сразу к блоку «Виды»
+    const forms = doc.querySelector('.forms');
+    if(forms) forms.scrollIntoView();
+    apply();
+  }
+  function targets(){
+    const w = $('which').value;
+    return w === 'all' ? views : [views[+w]].filter(Boolean);
+  }
+  function apply(){
+    targets().forEach(({mv})=>{
+      mv.setAttribute('camera-orbit', `${S.theta}deg ${S.phi}deg ${S.rad}%`);
+      mv.setAttribute('field-of-view', `${S.fov}deg`);
+      mv.setAttribute('exposure', (S.exp/100).toFixed(2));
+      // сочность в готовом постере даётся фильтром канваса — здесь тот же saturate,
+      // поэтому пульт показывает ровно то, что получится в webp
+      mv.style.transform = `scale(${S.scale/100})`;
+      mv.style.filter = `saturate(${(S.sat/100).toFixed(2)})`;
+    });
+    $('vTheta').textContent = S.theta+'°'; $('vPhi').textContent = S.phi+'°';
+    $('vRad').textContent = S.rad+'%';     $('vFov').textContent = S.fov+'°';
+    $('vScale').textContent = (S.scale/100).toFixed(2);
+    $('vExp').textContent = (S.exp/100).toFixed(2);
+    $('vSat').textContent = (S.sat/100).toFixed(2);
+    const w = $('which').value;
+    $('out').textContent =
+`кому: ${w === 'all' ? 'всем пяти' : $('which').selectedOptions[0].textContent}
+camera-orbit: ${S.theta}deg ${S.phi}deg ${S.rad}%
+field-of-view: ${S.fov}deg
+scale: ${(S.scale/100).toFixed(2)}
+exposure: ${(S.exp/100).toFixed(2)}
+saturate: ${(S.sat/100).toFixed(2)}`;
+  }
+  ['theta','phi','rad','fov','scale','exp','sat'].forEach(k=>
+    $(k).addEventListener('input', e=>{ S[k] = +e.target.value; apply(); }));
+  $('which').addEventListener('change', apply);
+  $('copy').addEventListener('click', ()=> navigator.clipboard.writeText($('out').textContent));
+  $('w390').addEventListener('click', ()=>{ $('fr').style.width='390px'; });
+  $('wfull').addEventListener('click', ()=>{ $('fr').style.width='100%'; });
+  // ждём и страницу, и определение <model-viewer> внутри неё
+  $('fr').addEventListener('load', ()=>{
+    const win = $('fr').contentWindow;
+    const ready = () => win.customElements.get('model-viewer')
+      ? swap()
+      : win.customElements.whenDefined('model-viewer').then(swap);
+    setTimeout(ready, 300);
+  });
+</script>
+</body>
+</html>

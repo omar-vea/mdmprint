@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Пульт кропа — карточки сравнения</title>
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260720a">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260817a">
+<style>
+  /* ПУЛЬТ. Три кадра сравнения (печать / винил / смола) режутся в 4:3 прямо здесь,
+     превью показано в натуральную ширину карточки лендинга — 400px, как на десктопе,
+     и рядом крупно. Подобрал — жмёшь «Скачать три файла», кладёшь их в b2b/.
+     Исходники лежат в _crop/ ASCII-именами: кириллица в src у картинок не грузится. */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-body);background:#efece6;color:var(--text-primary);line-height:1.45}
+  .bar{position:sticky;top:0;z-index:5;display:flex;gap:22px;align-items:flex-end;flex-wrap:wrap;
+    background:#fff;padding:14px 18px;box-shadow:0 6px 18px -12px rgba(0,0,0,.5)}
+  .f{display:flex;flex-direction:column;gap:4px}
+  label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#6e6e6a}
+  .row{display:flex;align-items:center;gap:9px}
+  input[type=range]{width:150px;accent-color:#141212}
+  .val{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;width:46px;text-align:right}
+  select,button{font:inherit;font-size:13px;border:1px solid #e6e1d8;border-radius:8px;background:#fff;
+    padding:8px 11px;cursor:pointer}
+  button.k{background:#141212;color:#fff;border:0;font-weight:700}
+  .out{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#141212;color:#e8ffd9;
+    border-radius:8px;padding:9px 11px;white-space:pre}
+  .stage{padding:22px 18px 60px}
+  h2{font-family:var(--font-head);font-weight:800;text-transform:uppercase;font-size:13px;
+    letter-spacing:.05em;color:#8a6a00;margin:0 auto 10px;max-width:1240px}
+  .row-cards{display:grid;gap:12px;margin:0 auto 34px;max-width:1240px}
+  .row-cards--real{grid-template-columns:repeat(3,400px);justify-content:start}
+  .row-cards--big{grid-template-columns:repeat(3,1fr)}
+  figure{margin:0;background:#fff;border-radius:14px;overflow:hidden;position:relative;
+    box-shadow:inset 0 0 0 1px rgba(20,18,18,.07)}
+  figure.win{box-shadow:inset 0 0 0 2px var(--brand)}
+  canvas{display:block;width:100%;aspect-ratio:4/3}
+  figcaption{padding:14px;font-size:14px;line-height:1.5;color:var(--text-secondary)}
+  figcaption b{display:block;font-size:16px;line-height:1.25;color:var(--text-primary);margin-bottom:3px}
+  .hint{max-width:1240px;margin:0 auto 18px;font-size:13px;color:#6e6e6a}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="f">
+    <label>Что двигаем</label>
+    <select id="which">
+      <option value="all">все три сразу</option>
+      <option value="0">1 · печать</option>
+      <option value="1">2 · винил</option>
+      <option value="2">3 · смола</option>
+    </select>
+  </div>
+  <div class="f"><label>Приближение</label>
+    <div class="row"><input type="range" id="zoom" min="100" max="320" step="1" value="190"><span class="val" id="vZoom">1.90</span></div></div>
+  <div class="f"><label>Центр по горизонтали</label>
+    <div class="row"><input type="range" id="cx" min="0" max="100" step="1" value="50"><span class="val" id="vCx">0.50</span></div></div>
+  <div class="f"><label>Центр по вертикали</label>
+    <div class="row"><input type="range" id="cy" min="0" max="100" step="1" value="52"><span class="val" id="vCy">0.52</span></div></div>
+  <div class="out" id="out">—</div>
+  <button class="k" id="save" type="button">⬇ Скачать три файла</button>
+  <button id="reset" type="button">Сбросить</button>
+</div>
+
+<div class="stage">
+  <p class="hint">Сверху — как карточка выглядит на десктопе лендинга (400px, реальный размер).
+    Снизу — то же крупно, чтобы видеть детали. Скачанные файлы кладутся в
+    <code>stickers-landing/b2b/</code> под именами cmp-1.webp, cmp-2.webp, cmp-3.webp.</p>
+
+  <h2>Реальный размер карточки</h2>
+  <div class="row-cards row-cards--real" id="rowReal"></div>
+
+  <h2>Крупно</h2>
+  <div class="row-cards row-cards--big" id="rowBig"></div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const W = 900, H = 675;                       // размер готового файла, 4:3
+  const CARDS = [
+    {src:'_crop/p1.png', t:'Печать на изделии',    p:'Наносим прямо на предмет. Дёшево, а взгляд не цепляет.'},
+    {src:'_crop/p2.png', t:'Плоская наклейка',     p:'Печать на плёнке. Дёшево и быстро, но рядом с объёмной — просто картинка.'},
+    {src:'_crop/p3.png', t:'3D-стикер со смолой',  p:'Объём и глянец: его хочется потрогать и оставить на виду.'},
+  ];
+  const DEF = {zoom:1.9, cx:.5, cy:.52};
+  const S = CARDS.map(() => ({...DEF}));
+  const imgs = [], canv = [[], []];
+
+  // две сетки: карточка в натуральную ширину и она же крупно
+  [['rowReal', 'real'], ['rowBig', 'big']].forEach(([id, kind], gi) => {
+    $(id).innerHTML = CARDS.map((c, i) => `
+      <figure${i === 2 ? ' class="win"' : ''}>
+        <canvas id="c-${kind}-${i}" width="${W}" height="${H}"></canvas>
+        <figcaption><b>${c.t}</b>${c.p}</figcaption>
+      </figure>`).join('');
+    CARDS.forEach((c, i) => canv[gi][i] = $(`c-${kind}-${i}`));
+  });
+
+  function draw(i){
+    const im = imgs[i]; if(!im) return;
+    const s = S[i];
+    const k = Math.max(W / im.width, H / im.height) * s.zoom;
+    const w = im.width * k, h = im.height * k;
+    const x = W / 2 - w * s.cx, y = H / 2 - h * s.cy;
+    canv.forEach(g => {
+      const ctx = g[i].getContext('2d');
+      ctx.clearRect(0, 0, W, H);
+      ctx.drawImage(im, x, y, w, h);
+    });
+  }
+  const drawAll = () => CARDS.forEach((_, i) => draw(i));
+
+  function targets(){
+    const v = $('which').value;
+    return v === 'all' ? CARDS.map((_, i) => i) : [+v];
+  }
+  function apply(){
+    const t = targets();
+    const s = S[t[0]];
+    $('vZoom').textContent = s.zoom.toFixed(2);
+    $('vCx').textContent = s.cx.toFixed(2);
+    $('vCy').textContent = s.cy.toFixed(2);
+    $('out').textContent = t.map(i =>
+      `${i + 1}: zoom ${S[i].zoom.toFixed(2)} · cx ${S[i].cx.toFixed(2)} · cy ${S[i].cy.toFixed(2)}`).join('\n');
+    drawAll();
+  }
+  const bind = (id, key, div) => $(id).addEventListener('input', e => {
+    targets().forEach(i => S[i][key] = +e.target.value / div);
+    apply();
+  });
+  bind('zoom', 'zoom', 100); bind('cx', 'cx', 100); bind('cy', 'cy', 100);
+
+  $('which').addEventListener('change', () => {
+    const s = S[targets()[0]];
+    $('zoom').value = s.zoom * 100; $('cx').value = s.cx * 100; $('cy').value = s.cy * 100;
+    apply();
+  });
+  $('reset').addEventListener('click', () => {
+    S.forEach(s => Object.assign(s, DEF));
+    $('zoom').value = DEF.zoom * 100; $('cx').value = DEF.cx * 100; $('cy').value = DEF.cy * 100;
+    apply();
+  });
+  $('save').addEventListener('click', () => {
+    CARDS.forEach((_, i) => {
+      const a = document.createElement('a');
+      a.download = `cmp-${i + 1}.webp`;
+      a.href = canv[1][i].toDataURL('image/webp', 0.9);
+      a.click();
+    });
+  });
+
+  CARDS.forEach((c, i) => {
+    const im = new Image();
+    im.onload = () => { imgs[i] = im; draw(i); };
+    im.src = c.src;
+  });
+  apply();
+</script>
+</body>
+</html>

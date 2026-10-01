@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Песочница: движение героя — кучка → разлёт (03.08)</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="../assets/css/fonts.css?v=20260720a">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=20260817a">
+<style>
+  /* ПЕСОЧНИЦА ДВИЖЕНИЯ. Композиция героя выбрана (вариант A), характер движения выбран
+     (S1 кучка → разлёт). Здесь докручиваем: кучка разрыхлена — ни один стикер не прячется,
+     стикеров четыре, подписи переключаются кнопками в баре стенда.
+     Прототип stickers-v2.html НЕ трогаем. */
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --v-ink:#141212; --v-text-warm:#5b554a; --v-muted:#8c8477;
+    --brand:#FFC100;
+    --v-paper-2:#fbfaf7;
+    --v-glow:
+      radial-gradient(120% 90% at 88% 8%, rgba(255,193,0,.20), rgba(255,193,0,0) 60%),
+      radial-gradient(90% 70% at 10% 92%, rgba(150,190,255,.16), rgba(150,190,255,0) 62%);
+    --font-head:'AttractiveCond','Inter',system-ui,sans-serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    --v-max:1240px; --v-pad:clamp(20px,4vw,44px);
+  }
+  body{font-family:var(--font-body);color:var(--v-ink);background:var(--v-paper-2)}
+
+  /* ── стенд ── */
+  .bar{position:sticky;top:0;z-index:9;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+    padding:10px var(--v-pad);background:var(--v-ink);color:#fff;font-size:13px}
+  .bar b{font-weight:800}
+  .bar a{color:var(--brand);text-decoration:none;font-weight:700}
+  .bar .sep{opacity:.4}
+  .bar button{font:inherit;font-size:12px;font-weight:700;color:#fff;background:rgba(255,255,255,.12);
+    border:0;border-radius:8px;padding:5px 11px;cursor:pointer}
+  .bar button[aria-pressed="true"]{background:var(--brand);color:var(--v-ink)}
+  .lbl{max-width:var(--v-max);margin:0 auto;padding:34px var(--v-pad) 0;
+    font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--v-muted)}
+  .lbl em{display:block;margin-top:6px;font-style:normal;font-size:13px;letter-spacing:0;
+    text-transform:none;font-weight:400;color:var(--v-text-warm);max-width:74ch;line-height:1.55}
+
+  /* ── первый экран ── */
+  .hero{position:relative;background:var(--v-glow),var(--v-paper-2)}
+  .hero__pin{position:sticky;top:0;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+  .hero__in{position:relative;z-index:2;width:100%;max-width:var(--v-max);margin:0 auto;
+    padding-inline:var(--v-pad);display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);
+    gap:clamp(24px,4vw,64px);align-items:center}
+  @media(max-width:900px){.hero__in{grid-template-columns:1fr;gap:28px}}
+  .eyebrow{display:inline-block;background:var(--brand);color:var(--v-ink);border-radius:999px;
+    padding:7px 16px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  h1{margin:20px 0 0;font-family:var(--font-head);font-weight:800;text-transform:uppercase;
+    font-size:clamp(34px,4.6vw,64px);line-height:.98;letter-spacing:-.01em;text-wrap:balance}
+  /* жёлтое подчёркивание акцентного слова снято по правке Omar 03.08 */
+  h1 .hl{white-space:nowrap}
+  .sub{margin:20px 0 0;font-size:clamp(15px,1.35vw,19px);line-height:1.55;
+    color:var(--v-text-warm);max-width:46ch}
+  .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+  .btn{display:inline-flex;align-items:center;font:inherit;font-weight:800;font-size:16px;
+    padding:15px 28px;border-radius:14px;text-decoration:none;cursor:pointer;border:0;position:relative;
+    overflow:hidden;isolation:isolate}
+  .btn--primary{background:var(--v-ink);color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1.5px 0 rgba(0,0,0,.45),
+      0 10px 20px -12px rgba(20,18,18,.8)}
+  .btn--primary::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
+    background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.02) 52%,rgba(0,0,0,.14))}
+  .btn--ghost{background:transparent;color:var(--v-ink);box-shadow:inset 0 0 0 1.5px rgba(20,18,18,.3)}
+  .facts{display:flex;gap:22px;flex-wrap:wrap;margin-top:26px;font-size:13.5px;color:var(--v-text-warm)}
+  .facts b{display:block;font-family:var(--font-head);font-size:22px;color:var(--v-ink);line-height:1}
+
+  /* ── сцена ── */
+  .stage{position:relative;aspect-ratio:1/1;max-height:78svh;margin-inline:auto;width:100%}
+  @media(max-width:900px){.stage{max-height:40svh}}
+  /* Все четыре лежат в одной точке (центр сцены), расходятся только трансформом из JS:
+     позы заданы таблицей в скрипте, разметка одинаковая. */
+  .obj{position:absolute;left:50%;top:50%;aspect-ratio:1/1;will-change:transform,filter}
+  .obj--main{width:52%;z-index:4}
+  .obj--a{width:38%;z-index:3}
+  .obj--b{width:36%;z-index:2}
+  .obj--c{width:34%;z-index:1}
+  /* --progress-bar-height:0 — иначе над каждой моделью висит серая полоса загрузки,
+     в сцене из четырёх это четыре посторонние линии */
+  .mv{width:100%;height:100%;background:none;--poster-color:transparent;
+    --progress-bar-height:0;--progress-bar-color:transparent}
+
+  /* ── подписи: три варианта, переключаются кнопками в баре ──────────────────────────
+     Общее для всех: подпись висит под стикером и едет вместе с ним. Различаются видом
+     и поведением — прозрачность меняется только у «плашки». */
+  .obj span{position:absolute;left:50%;bottom:-2%;transform:translateX(-50%);white-space:nowrap;
+    pointer-events:none}
+  /* Подпись встаёт СО СТОРОНЫ, куда стикер уходит от центра. Иначе у верхних спутников
+     она уезжает под главный стикер и обрезается — на снимке от «Фигурный» оставалось «ый». */
+  .obj span.top{bottom:auto;top:-4%}
+  /* 1. плашка — как было: чёрная пилюля, проявляется по мере выхода стикера из кучки */
+  [data-lbl="pill"] .obj span{background:rgba(20,18,18,.82);color:#fff;font-size:10.5px;
+    font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:4px 9px;border-radius:8px}
+  /* 2. тихая — без плашки, тёмный текст по фону, видна всегда и не мигает */
+  [data-lbl="quiet"] .obj span{color:var(--v-ink);font-size:11px;font-weight:700;
+    letter-spacing:.10em;text-transform:uppercase;opacity:.62}
+  /* 3. выноска — короткая вертикальная чёрточка от стикера к тексту, видна всегда */
+  [data-lbl="tick"] .obj span{color:var(--v-ink);font-size:11px;font-weight:700;
+    letter-spacing:.10em;text-transform:uppercase;padding-top:16px}
+  [data-lbl="tick"] .obj span::before{content:"";position:absolute;left:50%;top:0;width:1px;height:12px;
+    background:var(--v-ink);opacity:.5}
+  [data-lbl="tick"] .obj span.top{padding-top:0;padding-bottom:16px}
+  [data-lbl="tick"] .obj span.top::before{top:auto;bottom:0}
+  /* 4. без подписей */
+  [data-lbl="off"] .obj span{display:none}
+
+  /* Общая тень — самый дешёвый способ сказать «предметы лежат в пространстве».
+     При разлёте растягивается и бледнеет. */
+  .sh{position:absolute;left:52%;top:82%;width:56%;height:13%;border-radius:50%;
+    /* ядро сплошное до 34%: чистый мягкий градиент после блюра выцветает почти в ноль */
+    background:radial-gradient(50% 50% at 50% 50%,rgba(20,18,18,.5) 0 34%,rgba(20,18,18,0) 76%);
+    filter:blur(12px);will-change:transform,opacity;pointer-events:none}
+
+  /* На узком экране живой только центральный: спутники скрыты, а с loading=lazy
+     их GLB не запрашиваются вовсе — мобильный трафик не тратится. */
+  @media(max-width:900px){
+    .obj--a,.obj--b,.obj--c{display:none}
+    .obj--main{width:76%}
+  }
+
+  footer{padding:60px var(--v-pad) 100px;text-align:center;color:var(--v-muted);font-size:13px}
+</style>
+</head>
+<body>
+  <div class="bar"><b>Кучка → разлёт</b> <span class="sep">·</span> подписи:
+    <button data-set="pill" aria-pressed="false">плашка</button>
+    <button data-set="quiet" aria-pressed="false">тихая</button>
+    <button data-set="tick" aria-pressed="true">выноска</button>
+    <button data-set="off" aria-pressed="false">без подписей</button>
+    <span class="sep">·</span> <a href="stickers-v2.html">лендинг</a></div>
+
+  <p class="lbl">Первый экран — четыре стикера, кучка раскрывается по скроллу
+    <em>В покое стикеры лежат кучкой, но ни один не спрятан: каждый виден целиком или почти целиком,
+      задние мельче, слегка размыты и притемнены — читается глубина. По скроллу кучка раскрывается
+      с лёгким перелётом, тень под ней расползается и бледнеет. Стикеры трогаются не одновременно.
+      Поверх скролла — слежение за курсором: доворачиваются к мыши, оставаясь на месте.
+      При первом показе кучка «влетает» сама — большинство людей вообще не скроллит.
+      <b>Четвёртый стикер без подписи:</b> честной у него нет — «круглый» уже занят светящимся,
+      а покрытие NORDA бизнесом не названо.</em></p>
+
+  <section class="hero" id="hero" data-lbl="tick" style="height:220svh">
+    <div class="hero__pin">
+      <div class="hero__in">
+        <div>
+          <span class="eyebrow">От дизайна до печати</span>
+          <h1>Печатаем объёмные <span class="hl">3D-стикеры</span> и стикерпаки</h1>
+          <p class="sub">Со смолой, любой формы и покрытия — от одной штуки до 50 000.
+            Считаем цену на странице, срок от трёх дней.</p>
+          <div class="cta">
+            <a class="btn btn--primary" href="#">Рассчитать стоимость</a>
+            <a class="btn btn--ghost" href="#">Заказать образец</a>
+          </div>
+          <div class="facts">
+            <div><b>от 3 дней</b>срок изготовления</div>
+            <div><b>от 1 шт</b>пробный стикер</div>
+            <div><b>4 плёнки</b>включая голографию</div>
+          </div>
+        </div>
+        <!-- Модели пережаты: resize 1024 → webp → draco. ВАЖНО: gltf-transform `optimize`
+             брать нельзя — его prune выкидывает материал смолы, модель рендерится белым пятном.
+             Только отдельные команды resize/webp/draco. -->
+        <div class="stage">
+          <div class="sh" data-sh></div>
+          <div class="obj obj--c" data-obj="c">
+            <model-viewer class="mv" src="models/hero/round.glb" alt="Круглый 3D-стикер со смолой"
+              interaction-prompt="none" disable-tap disable-pan disable-zoom loading="lazy"
+              environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+              exposure="1" shadow-intensity="0" tone-mapping="neutral" interpolation-decay="90"
+              camera-orbit="14deg 70deg 106%" max-camera-orbit="auto auto 300%"></model-viewer>
+          </div>
+          <div class="obj obj--b" data-obj="b">
+            <model-viewer class="mv" src="models/hero/mellow.glb" alt="Фигурный стикер по контуру"
+              interaction-prompt="none" disable-tap disable-pan disable-zoom loading="lazy"
+              environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+              exposure="1" shadow-intensity="0" tone-mapping="neutral" interpolation-decay="90"
+              camera-orbit="-30deg 44deg 106%" max-camera-orbit="auto auto 300%"></model-viewer>
+            <span class="top">Фигурный</span>
+          </div>
+          <div class="obj obj--a" data-obj="a">
+            <model-viewer class="mv" src="models/hero/glow.glb" alt="Светящийся в темноте стикер"
+              interaction-prompt="none" disable-tap disable-pan disable-zoom loading="lazy"
+              environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+              exposure="1" shadow-intensity="0" tone-mapping="neutral" interpolation-decay="90"
+              camera-orbit="22deg 64deg 106%" max-camera-orbit="auto auto 300%"></model-viewer>
+            <span class="top">Светится</span>
+          </div>
+          <div class="obj obj--main" data-obj="main">
+            <!-- poster виден, пока грузится модель, — на медленной сети первый экран не пустой -->
+            <model-viewer class="mv" src="models/hero/mdm.glb" poster="calc-icons/kind-0.webp"
+              alt="3D-стикер со смолой с логотипом MDMprint"
+              interaction-prompt="none" disable-tap disable-pan disable-zoom loading="eager"
+              environment-image="https://modelviewer.dev/shared-assets/environments/lightroom_14b.hdr"
+              exposure="1" shadow-intensity="0" tone-mapping="neutral" interpolation-decay="90"
+              camera-orbit="-12deg 52deg 104%" max-camera-orbit="auto auto 300%"></model-viewer>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Черновик движения. Тексты и цифры сверены с ANSWERS.md.</footer>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js"></script>
+<script>
+  /* ── КАДРЫ ДВИЖЕНИЯ ────────────────────────────────────────────────────────────────
+     Для каждого стикера две позы — «покой» и «конец скролла», всё между ними считается
+     интерполяцией.
+       x,y  — сдвиг в % от СОБСТВЕННОЙ ширины элемента (не сцены): так поза не плывёт
+              при смене размера сцены;
+       r,s  — поворот в плоскости и масштаб;
+       blur — размытие задних планов, тот самый DOF;
+       o    — камера модели [theta, phi, radius%]: phi 90° = стикер лежит, 0° = смотрит в лицо;
+       t    — окно прогресса, в котором элемент едет (сдвиг стартов = ощущение веса);
+       d    — амплитуда СЛЕЖЕНИЯ за курсором в градусах: стикер доворачивается к мыши,
+              позиция при этом не меняется (это не параллакс — сцена не ездит).
+     Смещения в покое подобраны замером так, чтобы НИ ОДИН стикер не был спрятан целиком:
+     раньше кучка была плотнее и нижний уходил под главный, читались три из четырёх.
+  ─────────────────────────────────────────────────────────────────────────────────── */
+  const SHADOW = {from:{sx:1,sy:1,op:.5}, to:{sx:1.9,sy:.78,op:.22}};
+  const OBJS = {
+    main:{t:[0,.9],  d:16,
+      from:{x:0,  y:8,   r:-4, s:1,   blur:0,   o:[-12,52,104]},
+      to:  {x:6,  y:-6,  r:0,  s:1.06,blur:0,   o:[10,14,94]}},
+    a:{t:[.06,1],    d:22,
+      from:{x:-64,y:-36, r:-12,s:.82, blur:1.1, o:[22,64,106]},
+      to:  {x:-98,y:-62, r:-20,s:.76, blur:0,   o:[46,30,104]}},
+    b:{t:[.12,1],    d:24,
+      from:{x:60, y:-42, r:13, s:.8,  blur:1.3, o:[-30,44,106]},
+      to:  {x:82, y:-62, r:20, s:.74, blur:0,   o:[-54,26,104]}},
+    c:{t:[.18,1],    d:24,
+      from:{x:88, y:66,  r:8,  s:.78, blur:1.5, o:[14,70,106]},
+      to:  {x:96, y:80,  r:14, s:.72, blur:0,   o:[34,34,104]}}
+  };
+
+  const RM = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+  const mix=(a,b,t)=>a+(b-a)*t;
+  const seg=(p,a,b)=>clamp((p-a)/(b-a),0,1);
+  const easeOut = t => 1-Math.pow(1-t,3);
+  /* Для скролла easeOut не годится: к середине дорожки он уже отрабатывает 87% пути,
+     и вторая половина прокрутки стоит мёртвой. Нужна кривая, размазанная по всей дорожке:
+     медленный старт, разгон, мягкая посадка. */
+  const easeInOut = t => t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+  /* Перелёт отдельным горбом на последней четверти: элемент уезжает чуть ДАЛЬШЕ цели
+     и садится назад ровно к концу. В самой кривой это не выразить — она монотонна. */
+  const overshoot = t => t<.72 ? 0 : Math.sin((t-.72)/.28*Math.PI);
+
+  const hero = document.getElementById('hero');
+  const shadow = hero.querySelector('[data-sh]');
+  const items = Object.entries(OBJS).map(([key,c])=>{
+    const el = hero.querySelector(`[data-obj="${key}"]`);
+    // перелёт только у спутников: главный — опора кадра, он должен ехать ровно
+    return {el, mv:el.querySelector('model-viewer'), c, lbl:el.querySelector('span'),
+            over: key==='main' ? 0 : .08};
+  });
+
+  /* Переключатель вида подписей — только для стенда, в бой не переносится */
+  document.querySelectorAll('.bar button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      hero.dataset.lbl = btn.dataset.set;
+      document.querySelectorAll('.bar button').forEach(b=>
+        b.setAttribute('aria-pressed', String(b===btn)));
+    });
+  });
+
+  /* Курсор: цель обновляем на pointermove, а в кадре подтягиваем к ней с затуханием —
+     без сглаживания стикеры дёргаются вслед за каждым событием мыши. */
+  let mx=0,my=0,tmx=0,tmy=0;
+  if(!RM && matchMedia('(pointer:fine)').matches){
+    addEventListener('pointermove', e=>{
+      tmx = (e.clientX/innerWidth -.5)*2;
+      tmy = (e.clientY/innerHeight-.5)*2;
+    }, {passive:true});
+  }
+
+  /* Влёт при первом показе: большинство людей вообще не скроллит, поэтому первое
+     движение должно случиться само. Один раз, 900 мс. */
+  let enter = RM ? 1 : 0, entered = false;
+  function startEnter(){
+    if(entered) return; entered = true;
+    const t0 = performance.now();
+    (function step(now){
+      enter = clamp((now-t0)/900,0,1);
+      if(enter<1) requestAnimationFrame(step);
+    })(performance.now());
+  }
+  addEventListener('load', ()=>setTimeout(startEnter,120));
+
+  function paint(){
+    mx += (tmx-mx)*.08; my += (tmy-my)*.08;
+    const e = easeOut(enter);
+    const r = hero.getBoundingClientRect();
+
+    if(r.bottom > -200 && r.top < innerHeight+200){
+      const p = RM ? 0 : clamp(-r.top/(r.height-innerHeight),0,1);
+      const pill = hero.dataset.lbl === 'pill';
+
+      for(const {el,mv,c,lbl,over} of items){
+        const raw = seg(p, c.t[0], c.t[1]);
+        const t = easeInOut(raw);
+        const k = 1 + over*overshoot(raw);   // перелёт по траектории, не по масштабу
+        const f=c.from, o=c.to;
+        // влёт: приезжают снизу и подрастают до своей позы
+        const x = mix(f.x,o.x,t*k);
+        const y = mix(f.y,o.y,t*k) + (1-e)*26;
+        const s = mix(f.s,o.s,t) * mix(.86,1,e);
+        el.style.transform =
+          `translate(${-50+x}%, ${-50+y}%) rotate(${mix(f.r,o.r,t*k)}deg) scale(${s})`;
+        el.style.opacity = e;
+        const bl = mix(f.blur,o.blur,t);
+        el.style.filter = bl>.05 ? `blur(${bl.toFixed(2)}px) brightness(${mix(.93,1,t)})` : '';
+        /* Слежение за курсором: доворот камеры поверх позы, которую задал скролл.
+           По горизонтали свободно, по вертикали — не больше ±4° от текущей позы:
+           на снимках видно, что уже +5° кладут главный стикер на ребро и логотип
+           перестаёт читаться, а он тут главный носитель смысла. */
+        const phBase = mix(f.o[1],o.o[1],t);
+        const th = mix(f.o[0],o.o[0],t) + mx*c.d;
+        const ph = clamp(phBase + my*c.d*.2, phBase-4, phBase+4);
+        mv.setAttribute('camera-orbit',
+          `${th.toFixed(1)}deg ${ph.toFixed(1)}deg ${mix(f.o[2],o.o[2],t).toFixed(1)}%`);
+        // «плашка» проявляется по мере выхода из кучки, остальные виды видны всегда
+        if(lbl) lbl.style.opacity = pill ? clamp((Math.abs(x)-56)/26,0,1)*e : e;
+      }
+      const sp = easeInOut(p);
+      shadow.style.transform =
+        `translate(-50%,-50%) scale(${mix(SHADOW.from.sx,SHADOW.to.sx,sp)},${mix(SHADOW.from.sy,SHADOW.to.sy,sp)})`;
+      shadow.style.opacity = mix(SHADOW.from.op,SHADOW.to.op,sp)*e;
+    }
+    requestAnimationFrame(paint);
+  }
+  paint();
+</script>
+</body>
+</html>
