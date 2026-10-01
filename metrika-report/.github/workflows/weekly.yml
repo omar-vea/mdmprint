@@ -1,0 +1,22 @@
+name: Еженедельный отчёт Метрики → Telegram
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'      # понедельник 04:00 UTC = 07:00 МСК
+  workflow_dispatch:          # + кнопка «Run workflow» для ручного запуска в любой момент
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Собрать и отправить отчёт
+        run: node metrika-weekly.mjs
+        env:
+          METRIKA_TOKEN: ${{ secrets.METRIKA_TOKEN }}
+          COUNTER_ID:    ${{ secrets.COUNTER_ID }}
+          TG_BOT_TOKEN:  ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID:    ${{ secrets.TG_CHAT_ID }}
