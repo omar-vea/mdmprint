@@ -284,6 +284,11 @@
     max-width:none;text-wrap:balance}
   .hero h1 .hl{white-space:nowrap}
   .hero__sub{font-size:clamp(15px,1.35vw,19px);line-height:1.55;color:var(--v-text-warm);max-width:46ch;margin:20px 0 0}
+  /* 05.10, маркетолог: «подчеркнуть объём в тексте». Слова набраны выпукло, как под смолой:
+     светлый блик сверху, плотная тень снизу и мягкая отбивка. Только в подзаголовке героя. */
+  .hero__vol{font-weight:700;color:var(--v-ink);white-space:nowrap;
+    text-shadow:0 -1px 0 rgba(255,255,255,.9),0 1px 0 rgba(20,18,18,.18),
+      0 2px 1px rgba(20,18,18,.14),0 5px 10px rgba(20,18,18,.16)}
   .hero__cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
   /* Три факта под кнопками. Набраны НЕ заголовочным 22px, как было: в таком весе они спорили
      с кнопкой «Рассчитать стоимость» и уводили взгляд вниз, мимо главного действия.
@@ -565,6 +570,12 @@
      Плашки-ярлыка тут быть не может: 10.08 она просила убрать «хит»/«топ»/«наш вариант»
      из блока сравнения именно как плашки. Осталась только жёлтая обводка (Omar 25.08):
      подпись, которая её объясняла, убрана — в .cmp такая подпись есть, здесь нет. */
+  /* 05.10 (Omar): аккуратная обводка белых карточек — пилюля (белый глянец на белом кадре)
+     терялась, карточка сливалась с фоном. Контур в ::before поверх кадра: кадр лежит в край,
+     inset-тень самой карточки он бы съел снизу. У тёмной «светящихся» контура нет. */
+  .fcard{position:relative}
+  .fcard:not(.fcard--glow)::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+    border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(20,18,18,.1)}
   .fcard--pop{position:relative}
   /* обводка в ::after, а не box-shadow карточки: внутренняя тень рисуется ПОД содержимым,
      и кадр, лежащий в край, съел бы её снизу (та же грабля, что в .cmp__item) */
@@ -603,6 +614,9 @@
       rgba(126,255,122,.55), rgba(126,255,122,.16) 52%, rgba(126,255,122,0) 82%), var(--v-ink)}
   .fcard--glow > *{position:relative;z-index:1}
   .fcard--glow h3{color:var(--surface-card)}
+  /* 05.10: кадр с НЛО — фото заказчика, квадрат. Кадрировать нельзя, поэтому contain:
+     поля по бокам чёрные и под screen исчезают в тёмной карточке. */
+  .fcard--glow .fcard__art img{object-fit:contain}
 
   .lane__foot{display:flex;align-items:center;justify-content:flex-start;gap:var(--sp-16);
     max-width:var(--v-max);margin:0 auto;padding-inline:var(--v-pad)}
@@ -820,6 +834,10 @@
   .b2b__cap{margin-top:clamp(28px,3.5vw,44px)}
   /* 24.08: секция клиентов стала самостоятельной. У .b2b h2 стоит margin:0 — заголовок
      прилипал к ряду плашек, отступа не было вовсе. */
+  /* 05.10: маркетолог — «с кем работали, меньше отступ хочется». На стыке с «О нас» складывались
+     два padding-block по clamp(64px,7vw,110px), до 220px пустоты между светлыми секциями.
+     Верхний отступ снят: зазор задаёт нижний padding .abt. */
+  .b2b--logos{padding-top:0}
   .b2b--logos h2{margin-bottom:clamp(20px,2.4vw,30px)}
   /* ── ФОТО-СРАВНЕНИЕ внутри B2B (просьба маркетолога 03.08): обычный мерч → плоская наклейка
      → 3D-стикер. Третья карточка выделена обводкой: сравнение должно заканчиваться выводом. ── */
@@ -896,30 +914,6 @@
     font-size:clamp(26px,3vw,38px);line-height:1;letter-spacing:-.005em;max-width:24ch;text-wrap:balance}
   .abt__text{margin:var(--sp-16) 0 0;font-size:var(--t-body);line-height:var(--t-body-lh);
     color:var(--text-secondary);max-width:52ch}
-  /* факты плашками (правка маркетолога 03.08): списком они читались «в кучу».
-     Четыре в ряд — тот же шаг, что у ленты видов; ниже 1100px по две, на телефоне по одной. */
-  .abt__cards{max-width:var(--v-max);margin:clamp(28px,3.5vw,48px) auto 0;padding-inline:var(--v-pad);
-    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sp-12)}
-  @media(max-width:1100px){.abt__cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  /* 24.08, аудит: на телефоне восемь карточек в столбик давали 4 200 px простыни, причём
-     вторым экраном — до первого продуктового блока человек листал и листал. Переводим их
-     в горизонтальную ленту тем же приёмом, что у видов стикеров: карточка обрезается
-     по краю экрана и этим показывает, что ряд можно листать. */
-  @media(max-width:560px){
-    .abt__cards{display:flex;grid-template-columns:none;overflow-x:auto;
-      scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
-      scrollbar-width:none;-webkit-overflow-scrolling:touch;
-      padding-bottom:var(--sp-12);scroll-padding-inline:20px}
-    .abt__cards::-webkit-scrollbar{display:none}
-    .abt__card{flex:0 0 min(78vw,300px);scroll-snap-align:start}
-  }
-  .abt__card{background:var(--surface-card);border-radius:var(--radius-outside);
-    padding:var(--sp-20);box-shadow:inset 0 0 0 1px rgba(20,18,18,.07)}
-  .abt__card svg{width:22px;height:22px;color:var(--v-gold-deep);display:block}
-  .abt__card h3{margin:var(--sp-12) 0 0;font-size:var(--t-body);line-height:1.25;
-    font-weight:800;color:var(--text-primary);text-wrap:balance}
-  .abt__card p{margin:6px 0 0;font-size:var(--t-small);line-height:var(--t-small-lh);
-    color:var(--text-secondary)}
   .abt__media{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-12)}
   .abt__cell{position:relative;overflow:hidden;border-radius:var(--radius-outside);
     background:var(--surface-gray);aspect-ratio:1/1}
