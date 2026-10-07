@@ -853,7 +853,8 @@
   .b2b--logos h2{margin-bottom:clamp(20px,2.4vw,30px)}
   /* ── ФОТО-СРАВНЕНИЕ внутри B2B (просьба маркетолога 03.08): обычный мерч → плоская наклейка
      → 3D-стикер. Третья карточка выделена обводкой: сравнение должно заканчиваться выводом. ── */
-  .cmp{margin-top:clamp(28px,3.5vw,48px)}
+  /* 07.10: отступ вырос под руку с телефоном, которая торчит над средней карточкой (см. ниже) */
+  .cmp{margin-top:clamp(56px,6vw,88px)}
   .cmp__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-12)}
   @media(max-width:720px){.cmp__grid{grid-template-columns:1fr}}
   /* Обводка вынесена в ::after, а не в box-shadow самой карточки: внутренняя тень рисуется
@@ -912,6 +913,16 @@
     color:var(--v-muted);font-size:12px;text-align:center}
   .cmp__ph b{display:block;font-family:var(--font-head);font-weight:800;font-size:13px;
     color:var(--text-secondary);text-transform:uppercase}
+  /* 07.10, референс маркетолога: рука с телефоном выходит ЗА верхний край карточки.
+     Кадр прозрачный 900×810: нижние 675 = коробка 4:3, верхние 135 (15% ширины) торчат наружу.
+     Подложку 4:3 рисует ::before, низ руки обрезан в самом файле ровно по кромке фото.
+     Телефон идёт поверх жёлтой обводки (z 3 > ::after z 2) — так и задумано. */
+  .cmp__item--win{overflow:visible}
+  .cmp__item--win::before{content:"";position:absolute;left:0;right:0;top:0;aspect-ratio:4/3;
+    background:var(--surface-panel);border-radius:var(--radius-outside) var(--radius-outside) 0 0}
+  .cmp__item--win img{position:relative;z-index:3;aspect-ratio:900/810;margin-top:-15%;object-fit:contain}
+  /* в одну колонку торчащей руке нужен свой зазор, иначе она ложится на подпись карточки выше */
+  @media(max-width:720px){.cmp__item--win{margin-top:15%}}
   .cmp__item figcaption{display:block;padding:var(--sp-16);font-size:var(--t-small);
     line-height:var(--t-small-lh);color:var(--text-secondary)}
   .cmp__item figcaption b{display:block;font-size:var(--t-body);line-height:1.25;
