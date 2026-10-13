@@ -21,3 +21,7 @@ stickers-landing/пакетправок/
 # внутренние: файл спорных пунктов и кухня генерации картинок — репо публичный
 stickers-landing/DISPUTED.md
 stickers-landing/LENTA_PROMPTS.md
+stickers-landing/BRIEF_V4.md
+stickers-landing/V4_PROMPTS.md
+# рабочие черновики v4 (внутренние комментарии) — наружу идёт stickers-v4.html без комментариев
+stickers-landing/_v4-*.html
