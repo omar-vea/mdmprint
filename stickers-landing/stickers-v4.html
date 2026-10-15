@@ -1747,7 +1747,7 @@
       qty:[[10,10],[50,50],[100,100],[500,500],[1000,1000],[5000,5000],[50000,50000],['Своё','own','Свой тираж']],
       qtyPack:[[10,10],[50,50],[100,100],[500,500],[1000,1000],['Своё','own','Свой тираж']],
     };
-    const S={kind:0,mat:0,size:0,qty:2,pack:0};
+    const S={kind:0,mat:0,size:3,qty:2,pack:0};
     const $=id=>document.getElementById(id);
     const rub=n=>n.toLocaleString('ru-RU')+' \u20BD';
 
@@ -1813,7 +1813,9 @@
       const packs=S.kind===1, sizes=packs?F.sheet:F.size, qtys=packs?F.qtyPack:F.qty;
       $('qtyLeg').textContent=packs?'Количество паков':'Количество, штук';
       $('sizeLeg').textContent=packs?'Формат листа':'Размер, мм';
-      if($('size').dataset.mode!==(packs?'sheet':'size')){$('size').dataset.mode=packs?'sheet':'size'; if(S.size>=sizes.length) S.size=0; build('size',sizes);}
+      if($('size').dataset.mode!==(packs?'sheet':'size')){
+        if(packs){S.sizeSt=S.size; S.size=S.sizePk??0;} else {S.sizePk=S.size; S.size=S.sizeSt??3;}
+        $('size').dataset.mode=packs?'sheet':'size'; build('size',sizes);}
       if($('qty').dataset.mode!==(packs?'pack':'st')){$('qty').dataset.mode=packs?'pack':'st'; if(S.qty>=qtys.length) S.qty=qtys.length-1; build('qty',qtys);}
       const sizeOwn=!packs&&sizes[S.size][1]==='own', qtyOwn=qtys[S.qty][1]==='own', qMax=packs?1000:50000;
       const q=qtyOwn?Math.min(qMax,Math.max(10,+($('qtyOwn')||{}).value||100)):qtys[S.qty][0];
@@ -1821,6 +1823,9 @@
       if(!packs&&sizeOwn){const t=(($('sizeOwn')||{}).value||'').split(/[x×х*]/i);
         const w=Math.min(99,parseFloat(t[0])||20), h=Math.min(99,parseFloat(t[1])||w); side=Math.sqrt(Math.max(100,w*h));}
       else if(!packs) side=sizes[S.size][1];
+
+      const stage=document.querySelector('.pre-stage');
+      if(stage){ if(!packs&&sizeOwn) stage.style.setProperty('--hmm',(side/.62).toFixed(1)); else stage.style.removeProperty('--hmm'); }
       let unit=packs?sumAt(PRICE.pack,sizes[S.size][1],q,PRICE.packQty)/q:unitFor(F.mat[S.mat][1],side,q);
       const P=BIZ.promo, promoLive=new Date(P.till+'T23:59:59')>=new Date(), onPromo=promoLive&&q>=(packs?P.minPack:P.minSt);
       if(onPromo) unit*=(1-P.off);
