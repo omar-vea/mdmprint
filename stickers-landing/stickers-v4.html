@@ -19,7 +19,7 @@
     --sec:clamp(72px,9vw,136px);
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth;overflow-x:clip}
+  html{scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.5;
     -webkit-font-smoothing:antialiased;overflow-x:clip}
   a{color:inherit;text-decoration:none}
@@ -713,6 +713,8 @@
     #calc #pack{grid-auto-flow:row}
     #calc #size,#calc #qty{grid-auto-flow:row;grid-template-columns:repeat(4,minmax(0,1fr))}
     #calc #qty{grid-template-columns:repeat(3,minmax(0,1fr))}
+    #calc #size[data-mode="size"] .chip:has(.own){grid-column:span 3}
+    #calc .chip .own{padding:0 10px}
 
     #calc .calc__opts{gap:22px}
     #calc .tiles--2,#calc .tiles--3{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;row-gap:18px;padding-top:16px}
@@ -1010,6 +1012,9 @@
 
   @media(max-width:560px){body .in .h2{font-size:32px}}
   @media(max-width:560px){.vsheet{display:flex;flex-direction:column}.vsheet__head{display:contents}.vlight{order:1;align-self:center;margin-top:28px}.vk{gap:0}.vk__name{margin-top:-6px}}
+  @media(max-width:374px){.rev__stars{display:none}.rev__score{padding:0 16px}
+    .hstub small{font-size:0;gap:0;padding:0 5px}
+    #calc .chip span{font-size:14.5px}}
   #caseRail{overflow-y:hidden}
   @media(max-width:700px){.case__nav{display:none}.rsheet__side{align-self:flex-start}}
 
