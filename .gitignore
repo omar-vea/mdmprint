@@ -25,3 +25,6 @@ stickers-landing/BRIEF_V4.md
 stickers-landing/V4_PROMPTS.md
 # рабочие черновики v4 (внутренние комментарии) — наружу идёт stickers-v4.html без комментариев
 stickers-landing/_v4-*.html
+stickers-landing/_publish-v4.py
+# исходники ретуши — в репо не кладём
+*.psd

@@ -44,6 +44,15 @@
     transition:transform .16s cubic-bezier(.3,1.4,.5,1),box-shadow .16s}
   .btn:active{transform:translateY(3px)}
 
+  .btn--go{height:56px;padding:0 6px 0 24px;gap:16px;justify-content:space-between;border-radius:99px;background:var(--y);color:var(--ink);
+    font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 10px 30px -12px rgba(255,193,0,.55);transition:background .2s,box-shadow .2s,transform .2s}
+  .btn--go::after{content:"";flex:none;width:44px;height:44px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFC100' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/20px no-repeat;
+    transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+  .btn--go:hover{background:#ffcd2e;box-shadow:0 14px 34px -12px rgba(255,193,0,.7);transform:translateY(-1px)}
+  .btn--go:hover::after{transform:translateX(3px)}
+  .btn--go:active{transform:translateY(0)}
+  .btn--go.btn--s{height:48px;padding:0 5px 0 20px;font-size:15px}.btn--go.btn--s::after{width:38px;height:38px;background-size:18px}
+
   .arr{display:inline-block;width:1em;height:1em;vertical-align:-.14em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
     flex:none;transition:transform .2s}
   .btn--ink{background:var(--ink);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 4px 0 #000,0 16px 26px -14px rgba(20,18,18,.6)}
@@ -60,14 +69,15 @@
   .hst::after,.hst__holo,.hst__sheen{will-change:transform}
   .hsheet.is-tilt{transition:transform .12s linear}
   .hsheet{position:relative;min-height:clamp(460px,44vw,650px);border-radius:32px;padding:clamp(28px,4vw,56px) clamp(20px,4vw,56px);text-align:center;
-    --hx:calc(100% - 46px);--hy:calc(100% - 46px);--hr:14px;
-    box-shadow:0 1px 2px rgba(20,18,18,.12),0 34px 60px -34px rgba(20,18,18,.55)}
+    border-radius:32px 32px 0 0}
 
-  .hsheet::before{-webkit-mask:radial-gradient(circle var(--hr) at var(--hx) var(--hy),transparent 96%,#000 100%);mask:radial-gradient(circle var(--hr) at var(--hx) var(--hy),transparent 96%,#000 100%)}
-  .hsheet::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
-    background:radial-gradient(circle calc(var(--hr) + 2px) at var(--hx) var(--hy),rgba(0,0,0,.45) 85%,transparent 100%),
-      linear-gradient(128deg,#3a3835 0%,#2c2a28 35%,#3d3b38 52%,#2a2826 78%,#353331 100%);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+  .hsheet::before,.hsheet::after{content:"";position:absolute;inset:0 0 -60px;z-index:-1;border-radius:32px;pointer-events:none}
+
+  .hsheet::before{display:none}
+  .hsheet{filter:drop-shadow(0 1px 1px rgba(20,18,18,.14)) drop-shadow(0 22px 26px rgba(20,18,18,.22))}
+  .hsheet::after{background:linear-gradient(180deg,transparent calc(100% - 60px),#fbfbfa calc(100% - 60px),#f1f0ee) ,linear-gradient(128deg,#3a3835 0%,#2c2a28 35%,#3d3b38 52%,#2a2826 78%,#353331 100%);   box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    --nt:radial-gradient(circle 8px at 0 calc(100% - 60px),#0000 98%,#000),radial-gradient(circle 8px at 100% calc(100% - 60px),#0000 98%,#000);
+    -webkit-mask:var(--nt);-webkit-mask-composite:source-in;mask:var(--nt);mask-composite:intersect}
   #film{position:absolute;pointer-events:none;z-index:2}
 
   .hero__head{position:relative}
@@ -80,20 +90,19 @@
   .hero__cta{position:relative;z-index:1;display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:clamp(18px,2vw,28px);pointer-events:none}
   .hero.is-open .hero__cta{pointer-events:auto}
 
-  .htag{position:absolute;left:calc(100% - 46px);top:calc(100% - 46px);z-index:3;width:0;height:0;color:var(--ink);text-decoration:none}
-  .htag__sw{position:absolute;left:0;top:0;transform-origin:0 -13px;
-    transform:rotate(7deg);transition:transform 1.1s cubic-bezier(.2,1.7,.4,1)}
-  .htag__sw.phys{transition:none}
-  .htag__chain{position:absolute;z-index:1;left:-40px;top:-40px;width:80px;height:120px;overflow:visible;pointer-events:none}
-  .htag__card{position:absolute;left:-46px;top:52px;width:92px;padding:26px 8px 12px;border-radius:10px;text-align:center;
-    background:linear-gradient(160deg,#fff,#f1efeb);box-shadow:0 1px 1px rgba(0,0,0,.15),0 12px 22px -10px rgba(0,0,0,.45)}
-  .htag__card::before{content:"";position:absolute;left:50%;top:9px;width:10px;height:10px;margin-left:-5px;border-radius:50%;
-    background:#2c2a28;box-shadow:inset 0 0 0 2px #d9d6d0}
-  .htag b{display:block;font-family:var(--font-head);font-weight:800;text-transform:uppercase;font-size:17px;line-height:1}
-  .htag__price{display:block;margin-top:5px;font-weight:700;font-size:15px}
-  .htag small{display:block;margin-top:6px;font-size:11px;color:var(--muted)}
-  .htag:hover small{color:var(--ink)}
-  .hero__cta .btn{height:52px;padding:0 24px;font-size:16px}
+  .hstub{position:absolute;left:0;right:0;top:calc(100% - 1px);height:61px;z-index:1;
+
+   display:flex;align-items:center;justify-content:center;gap:14px;
+    color:var(--muted);text-decoration:none;font-size:14px;
+    padding:0 14px;background:radial-gradient(circle,rgba(20,18,18,.28) 1px,transparent 1.5px) 0 0/8px 2px repeat-x content-box}
+  .hstub b{font-family:var(--font-head);font-weight:800;text-transform:uppercase;font-size:18px;letter-spacing:.02em;color:var(--ink)}
+  .hstub span{font-family:var(--font-head);font-weight:800;font-size:18px;color:var(--ink)}
+  .hstub small{display:inline-flex;align-items:center;gap:6px;height:34px;margin-left:6px;padding:0 6px 0 14px;border-radius:99px;background:var(--ink);color:#fff;
+    font-size:13.5px;font-weight:700;transition:background .2s}
+  .hstub small .arr{width:22px;height:22px;padding:4px;border-radius:50%;background:var(--y);color:var(--ink)}
+  .hstub:hover small{background:#000}.hstub:hover .arr{transform:translateX(3px)}
+  .hstub:focus-visible{outline:3px solid var(--y);outline-offset:-6px;border-radius:0 0 32px 32px}
+  .hero__cta{margin-top:-10px}
   .hero__cta .btn--w{background:rgba(255,255,255,.08);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
   .hero__cta .btn--w small{color:rgba(255,255,255,.6)}
 
@@ -394,13 +403,18 @@
     background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.9) 35%,rgba(120,200,255,.6) 45%,rgba(255,120,200,.6) 55%,transparent 70%) 0 0/250% 100%}
   @keyframes vholo{from{background-position:120% 0}to{background-position:-20% 0}}
 
-  .vlight{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 16px 0 10px;border:0;border-radius:999px;background:var(--ink);color:#fff;
-    font:600 14px/1 var(--font-body);cursor:pointer;flex:none}
-  .vlight i{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7c2,#FFC100 60%,#d99f00);box-shadow:0 0 10px rgba(255,193,0,.6);transition:all .4s}
+  .vlight{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px 0 14px;border:0;border-radius:99px;background:transparent;color:var(--ink);
+    font:600 14px/1 var(--font-body);cursor:pointer;flex:none;box-shadow:inset 0 0 0 1.5px rgba(20,18,18,.18);transition:background .12s,color .12s,box-shadow .12s;
+    will-change:transform;contain:paint}
+  .vlight:hover{background:var(--ink);color:#fff;box-shadow:none}
+  .vlight:focus-visible{outline:3px solid var(--y);outline-offset:3px}
+  .vlight svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .vlight .i-moon{display:none}
   .vsheet.is-dark{background:linear-gradient(128deg,#25272a,#1b1c1e 50%,#222326);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),0 24px 40px -28px rgba(0,0,0,.6)}
   .vsheet.is-dark .h2,.vsheet.is-dark .vk__name{color:#f3f1ec}
-  .vsheet.is-dark .vlight{background:#f3f1ec;color:var(--ink)}
-  .vsheet.is-dark .vlight i{background:#4a4d52;box-shadow:none}
+  .vsheet.is-dark .vlight{color:#f3f1ec;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.22)}
+  .vsheet.is-dark .vlight:hover{background:#f3f1ec;color:var(--ink)}
+  .vsheet.is-dark .vlight .i-bulb{display:none}.vsheet.is-dark .vlight .i-moon{display:block}
   .vsheet.is-dark .vk:not(.vk--glow) .vk__st{filter:brightness(.32) saturate(.6)}
   .vsheet.is-dark .vk--glow .vk__face{filter:url(#resin-lg) brightness(1.15) saturate(1.3) drop-shadow(0 0 10px rgba(190,255,90,.75)) drop-shadow(0 0 26px rgba(160,240,60,.45))}
   .vsheet.is-dark .vk--glow .vk__belt{opacity:.25}
@@ -541,19 +555,21 @@
   .calc__facts span{font-size:12.5px;color:rgba(255,255,255,.55)}
   .calc__facts b{font-size:17px;line-height:1.2}
 
-  .calc__pre{flex:1;min-height:180px;display:grid;place-items:end center;overflow:hidden;margin:0 calc(-1 * clamp(20px,2vw,28px));
+  .calc__pre{flex:1;min-height:380px;container-type:size;
+   display:grid;place-items:end center;overflow:hidden;margin:0 calc(-1 * clamp(20px,2vw,28px));
     background:radial-gradient(closest-side,rgba(255,255,255,.08),transparent);
     -webkit-mask:linear-gradient(#000 78%,transparent);mask:linear-gradient(#000 78%,transparent)}
   .pre-stage{--mm:1.15px;--hmm:148;--sh:calc(var(--hmm) * var(--mm));--sw:calc(var(--sh) * .707);
     --ax:calc(50% - var(--sw) / 2);--lift:calc(126.5 * var(--mm) - var(--drop));
 
-    --drop:40px;
+    --D:16;--drop:calc(var(--D) * var(--mm));
     position:relative;width:100%;height:100%;min-height:400px}
 
-  #calc:has(#kind input[value="1"]:checked) .pre-stage{--mm:1.85px;--drop:104px}
-  #calc:has(#size[data-mode="sheet"] input[value="1"]:checked) .pre-stage{--drop:144px}
-  #calc:has(#size[data-mode="sheet"] input[value="2"]:checked) .pre-stage{--drop:189px}
-  #calc:has(#kind input[value="0"]:checked) .pre-stage{--mm:2.5px;--drop:250px}
+  #calc:has(#kind input[value="1"]:checked) .pre-stage{--D:56;--mm:min(1.85px,calc((100cqh - 16px) / (126.5 - var(--D) + var(--hmm))))}
+  #calc:has(#size[data-mode="sheet"] input[value="1"]:checked) .pre-stage{--D:78}
+  #calc:has(#size[data-mode="sheet"] input[value="2"]:checked) .pre-stage{--D:102}
+
+  #calc:has(#kind input[value="0"]:checked) .pre-stage{--D:100;--mm:min(2.5px,calc((100cqh - 16px) / (88.7 + var(--hmm) * .7)))}
   .pre-hand{position:absolute;z-index:2;bottom:calc(-1 * var(--drop));left:calc(var(--ax) - 53.2 * var(--mm));width:calc(84.5 * var(--mm));height:auto;pointer-events:none;
     transition:left .35s cubic-bezier(.3,1.4,.5,1)}
 
@@ -563,11 +579,13 @@
 
   .pre-stage>img.pre--p0,.pre-stage>i.pre--p1,.pre-stage>i.pre--p2{
     height:calc(var(--sh) * 400 / 390);width:calc(var(--sw) * 309 / 299);aspect-ratio:auto;border-radius:0;
-    left:calc(var(--ax) - var(--sw) * 5 / 299 - .3 * var(--mm));bottom:calc(var(--lift) - var(--sh) * 5 / 390 - .3 * var(--mm))}
+    left:calc(var(--ax) - var(--sw) * 5 / 299 + .45 * var(--mm));   bottom:calc(var(--lift) - var(--sh) * 5 / 390 - .3 * var(--mm))}
 
-  .pre-hand--pinch{display:none;z-index:0;left:calc(50% - 88 * var(--mm));width:calc(101 * var(--mm))}
+  .pre-hand--pinch{display:none;z-index:0;left:calc(50% - 88 * var(--mm));width:calc(101.5 * var(--mm))}
   .pre-hand--front{z-index:3}
   #calc:has(#kind input[value="0"]:checked) .pre-hand--card{display:none}
+
+  .pre-hand--card{filter:drop-shadow(-1px 1px 1.5px rgba(0,0,0,.45)) drop-shadow(-2px 4px 6px rgba(0,0,0,.28))}
   #calc:has(#kind input[value="0"]:checked) .pre-hand--pinch{display:block}
   .pre-stage>img.pre--s0,.pre-stage>img.pre--s1,.pre-stage>img.pre--s2{z-index:1;left:50%;translate:-50% 0;bottom:calc(188.7 * var(--mm) - var(--sh) * .3 - var(--drop))}
 
@@ -597,6 +615,7 @@
   @media(prefers-reduced-motion:reduce){.pre-stage>*{animation:none!important;transition:none!important}}
   @media(max-width:1000px){.calc__pre{display:none}}
   .calc__sum .btn{margin-top:0}
+  .calc__sum .btn--go,.calc__back .btn--go,.form .btn--go{width:100%}
 
   .calc__flip{display:grid;perspective:1800px}
   .calc__flip>.calc__sum,.calc__flip>.calc__back{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;
@@ -619,20 +638,14 @@
   .ord__price small{flex-basis:100%;font-size:13px;color:rgba(255,255,255,.55)}
   .calc__back .fld{margin-bottom:0}
   .calc__back .agree{margin:2px 0 4px}
-  .calc__back .form__send{width:100%;height:56px;padding:0 8px 0 24px;justify-content:space-between;border-radius:99px;box-shadow:0 10px 30px -12px rgba(255,193,0,.55)}
-  .calc__back .form__send::after{content:"";flex:none;width:42px;height:42px;border-radius:50%;
-    background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFC100' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/20px no-repeat;transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
-  .calc__back .form__send:hover{background:#ffcd2e}.calc__back .form__send:hover::after{transform:translateX(3px)}
+
+  .calc__back .ord--big{display:none}
+  .calc__back.is-big .ord--big{display:revert}
+  .calc__back.is-big .ord--order{display:none}
+  .calc__back.is-big .fld.ord--big{display:grid}
+  .ord__big{margin:0;font-size:13.5px;line-height:1.45;color:rgba(255,255,255,.7)}
   .ord__note{margin:0;font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.5);text-align:center}
 
-  .calc__sum .btn--y{height:60px;padding:0 8px 0 26px;justify-content:space-between;border-radius:99px;font-size:17px;font-weight:700;
-    box-shadow:0 10px 30px -12px rgba(255,193,0,.55);transition:background .2s,box-shadow .2s,transform .2s}
-  .calc__sum .btn--y::after{content:"";flex:none;width:44px;height:44px;border-radius:50%;
-    background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFC100' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/20px no-repeat;
-    transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
-  .calc__sum .btn--y:hover{background:#ffcd2e;box-shadow:0 14px 34px -12px rgba(255,193,0,.7);transform:translateY(-1px)}
-  .calc__sum .btn--y:hover::after{transform:translateX(3px)}
-  .calc__sum .btn--y:active{transform:translateY(0)}
   .calc__min{font-size:13px;color:rgba(255,255,255,.6);text-align:center}
 
   .calc__stub{position:relative;display:block;margin:6px calc(-1 * clamp(20px,2vw,28px)) calc(-1 * clamp(20px,2vw,28px));
@@ -641,6 +654,8 @@
   .calc__stub::before,.calc__stub::after{content:"";position:absolute;top:-6px;width:12px;height:12px;border-radius:50%;background:var(--paper)}
   .calc__stub::before{left:-6px}.calc__stub::after{right:-6px}
   .calc__stub b{color:#f3f1ec;font-weight:700}
+  .calc__back{position:relative}
+  .calc__stub--back{margin-top:auto;pointer-events:none}
   .calc__stub:hover{color:#f3f1ec}
   .calc__stub .arr{color:var(--y)}
   .calc__stub:hover .arr{transform:translateX(3px)}
@@ -649,7 +664,7 @@
   .big p{margin:0;flex:1;max-width:52ch}
 
   @media(min-width:1000px){
-    #calc{padding-top:clamp(48px,6vw,96px)}
+    #calc{padding-top:clamp(48px,6vw,96px);scroll-margin-top:calc(20px - clamp(48px,6vw,96px))}
     #calc .h2{font-size:clamp(36px,3.2vw,50px)}
     #calc .lead{max-width:56ch;font-size:16px}
     #calc .calc__main{padding:clamp(20px,2vw,28px)}
@@ -682,45 +697,58 @@
   .wk__img{all:unset;display:block;width:100%;height:100%;border-radius:18px;overflow:hidden;cursor:zoom-in;
     box-shadow:0 1px 2px rgba(20,18,18,.18),0 6px 14px -8px rgba(20,18,18,.35);transition:transform .35s cubic-bezier(.2,1,.3,1),box-shadow .35s}
   .wk__img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.2,1,.3,1)}
-  .wk:hover .wk__img{transform:translateY(-4px) rotate(-1deg);box-shadow:0 2px 3px rgba(20,18,18,.16),0 18px 28px -14px rgba(20,18,18,.45)}
-  .wk:hover .wk__img img{transform:scale(1.04)}
+
+  .wk__img{position:relative;transition:transform .3s cubic-bezier(.2,1,.3,1),box-shadow .3s}
+  .wk:hover .wk__img{transform:translateY(-4px);box-shadow:0 2px 3px rgba(20,18,18,.16),0 18px 28px -14px rgba(20,18,18,.45)}
+  .wk:hover .wk__img img{transform:scale(1.03)}
+  .wk__img:active{transform:translateY(-1px) scale(.985)!important;transition-duration:.1s}
   .wk__img:focus-visible{outline:3px solid var(--y);outline-offset:3px}
-  .wk__calc{position:absolute;left:16px;bottom:16px;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:99px;
-    background:rgba(20,18,18,.82);color:#fff;font-size:13.5px;font-weight:600;text-decoration:none;backdrop-filter:blur(6px);
-    opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s}
-  .wk__calc .arr{color:var(--y)}
-  .wk:hover .wk__calc,.wk__calc:focus-visible{opacity:1;transform:none}
-  @media(hover:none){.wk__calc{opacity:1;transform:none}}
+  .wk__zoom{position:absolute;z-index:2;top:16px;right:16px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;pointer-events:none;
+    background:rgba(255,255,255,.9);color:var(--ink);opacity:0;transform:scale(.8);transition:opacity .2s,transform .2s;box-shadow:0 4px 10px -4px rgba(0,0,0,.3)}
+  .wk__zoom svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .wk:hover .wk__zoom{opacity:1;transform:none}
+  .wk:not(.wk--big) .wk__zoom{top:12px;right:12px;width:30px;height:30px}
+  @media(hover:none){.wk__zoom{display:none}}
 
   .wk--you{grid-column:span 3;aspect-ratio:auto;display:grid;place-items:center;align-content:center;gap:4px;text-align:center;text-decoration:none;color:var(--muted);
     font-size:15px;line-height:1.2;transition:box-shadow .2s,color .2s}
   .wk--you small{font-size:12.5px;font-weight:500}
   .wk--you:hover{color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
-  .wk-box{padding:0;border:0;border-radius:24px;max-width:min(92vw,820px);background:#fff;overflow:visible}
-  .wk-box::backdrop{background:rgba(20,18,18,.72);backdrop-filter:blur(4px)}
-  .wk-box img{display:block;width:100%;height:auto;max-height:86vh;object-fit:contain;border-radius:24px}
-  .wk-box__x{position:absolute;top:-14px;right:-14px;width:40px;height:40px;border:0;border-radius:50%;background:#fff;font-size:24px;line-height:1;cursor:pointer;
-    box-shadow:0 4px 12px rgba(0,0,0,.25)}
+  .wk-box{padding:0;border:0;border-radius:24px;max-width:min(92vw,760px);background:transparent;overflow:visible}
+  .wk-box[open]{animation:wkIn .3s cubic-bezier(.2,1,.3,1)}
+  @keyframes wkIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+  .wk-box::backdrop{background:rgba(20,18,18,.78);backdrop-filter:blur(6px)}
+  .wk-box img{display:block;width:100%;height:auto;max-height:78vh;object-fit:contain;border-radius:24px;background:#fff}
+  .wk-box__x{position:absolute;top:-14px;right:-14px;display:grid;place-items:center;width:42px;height:42px;border:0;border-radius:50%;background:#fff;color:var(--ink);cursor:pointer;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);transition:background .2s,color .2s}
+  .wk-box__x:hover{background:var(--ink);color:#fff}
+  .wk-box__x svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+  .wk-box__bar{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px;color:#f3f1ec}
+  .wk-box__nav{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+  .wk-box__nav:hover{background:#fff;color:var(--ink)}
+  .wk-box__nav .arr{width:18px;height:18px}
+  .wk-box__n{min-width:56px;text-align:center;font-size:14px;font-variant-numeric:tabular-nums;color:rgba(255,255,255,.7)}
   @media(max-width:900px){.works{grid-template-columns:repeat(3,1fr)}.wk--you{grid-column:span 3;min-height:120px}}
   @media(max-width:560px){.works{grid-template-columns:repeat(2,1fr)}.wk--you{grid-column:span 2}}
 
-  .why .in{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:14px;align-items:stretch}
-  .why__side{display:flex;flex-direction:column;gap:clamp(20px,2.4vw,32px);padding:clamp(24px,3vw,40px);border-radius:28px;color:#f3f1ec;
+  .why__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(220px,auto);gap:14px}
+  .why__head{grid-column:span 2;display:flex;align-items:flex-end;padding:clamp(24px,2.6vw,36px);border-radius:28px;color:#f3f1ec;
     background:linear-gradient(128deg,#25272a,#1b1c1e 50%,#222326);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),0 24px 40px -28px rgba(0,0,0,.6)}
-  .why__side .h2{color:#f3f1ec;font-size:clamp(34px,3.2vw,50px)}
-  .why__vid{flex:1;width:100%;min-height:0;max-height:520px;object-fit:cover;border-radius:20px;background:#111}
-  .why__list{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .wi{display:flex;flex-direction:column;gap:6px;padding:clamp(20px,2vw,26px);border-radius:24px;
+  .why__head .h2{color:#f3f1ec;font-size:clamp(34px,3.4vw,54px);max-width:12ch}
+
+  .why__media{position:relative;min-height:220px;margin:0;padding:6px;border-radius:28px;background:#fff;box-shadow:inset 0 0 0 1px rgba(20,18,18,.08),0 24px 40px -28px rgba(20,18,18,.35);overflow:hidden}
+  .why__media img,.why__media video{position:absolute;inset:6px;display:block;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:cover;border-radius:22px;background:#111}
+  .why__media--vid{grid-row:span 2}
+  .wi{display:flex;flex-direction:column;gap:8px;padding:clamp(20px,2vw,26px);border-radius:28px;
     background:linear-gradient(128deg,#fff 0%,#f3f3f2 30%,#fff 44%,#fafaf9 62%,#efefee 86%,#fff 100%);
     box-shadow:inset 0 1px 0 #fff,inset 0 0 0 1px rgba(20,18,18,.05),0 1px 2px rgba(20,18,18,.08),0 24px 40px -28px rgba(20,18,18,.35)}
-  .wi i{display:grid;place-items:center;width:44px;height:44px;margin-bottom:8px;border-radius:14px;background:var(--y);color:var(--ink);
+  .wi i{display:grid;place-items:center;width:44px;height:44px;margin-bottom:auto;border-radius:14px;background:var(--y);color:var(--ink);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 4px rgba(20,18,18,.12)}
   .wi i svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .wi small{font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-  .wi h3{margin:0;font-size:clamp(18px,1.45vw,21px);line-height:1.25}
-  .wi p{margin:2px 0 0;font-size:15px;color:var(--ink-2)}
-  @media(max-width:900px){.why .in{grid-template-columns:1fr}.why__vid{max-height:none;aspect-ratio:4/5}}
-  @media(max-width:560px){.why__list{grid-template-columns:1fr}}
+  .wi h3{margin:18px 0 0;font-family:var(--font-head);font-weight:800;text-transform:uppercase;font-size:clamp(22px,1.8vw,26px);line-height:1}
+  .wi p{margin:0;font-size:15px;line-height:1.45;color:var(--ink-2)}
+  @media(max-width:1000px){.why__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.why__media--vid{grid-row:span 2}}
+  @media(max-width:560px){.why__grid{grid-template-columns:1fr}.why__head{grid-column:auto}.why__media{aspect-ratio:1}.why__media--vid{grid-row:auto;aspect-ratio:9/12}}
 
   .rsheet .h2{font-size:clamp(36px,3.6vw,56px)}
 
@@ -862,12 +890,6 @@
   .agree input{flex:none;margin-top:2px;width:18px;height:18px;accent-color:var(--y)}
   .agree a{color:rgba(255,255,255,.8);text-decoration:underline}
 
-  .form .form__send{width:100%;height:60px;padding:0 8px 0 26px;justify-content:space-between;border-radius:99px;box-shadow:0 10px 30px -12px rgba(255,193,0,.55)}
-  .form .form__send::after{content:"";flex:none;width:44px;height:44px;border-radius:50%;
-    background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFC100' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/20px no-repeat;
-    transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
-  .form .form__send:hover{background:#ffcd2e}
-  .form .form__send:hover::after{transform:translateX(3px)}
   .msgs__t{margin:18px 0 8px;font-size:12.5px;color:rgba(255,255,255,.45);text-align:center}
   .msgs{display:flex;gap:8px}
   .msgs a{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:99px;color:#f3f1ec;text-decoration:none;
@@ -883,13 +905,12 @@
     padding:calc(clamp(36px,4vw,56px) + var(--r)) 0 0;font-size:14.5px;overflow:hidden}
   @media(max-height:600px),(max-width:800px){.ft{position:static}}
 
-  .ft__top{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,2fr);gap:clamp(24px,4vw,64px);align-items:start}
+  .ft__top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.3fr);gap:clamp(24px,4vw,64px);align-items:start}
   .ft__cta{margin:0 0 20px;font-family:var(--font-head);font-weight:800;text-transform:uppercase;color:#f3f1ec;font-size:clamp(28px,2.6vw,40px);line-height:.95}
   .ft__cta span{color:var(--y)}
-  .ft__btn{display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 22px;border-radius:99px;background:var(--y);color:var(--ink);
-    font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 10px 30px -12px rgba(255,193,0,.55);transition:background .2s}
-  .ft__btn:hover{background:#ffcd2e}.ft__btn:hover .arr{transform:translateX(3px)}
-  .ft__cols{position:relative;display:grid;grid-template-columns:1.4fr 1.4fr .8fr auto;gap:24px}
+  .ft__cols{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:32px}
+  .ft__cols a{white-space:nowrap}.ft__cols a[href*="yandex"]{white-space:normal}.ft__cols .nb{white-space:nowrap}
+  .ft__msg{display:flex;gap:14px;margin-top:6px}
   .ft b{display:block;margin-bottom:10px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.4)}
   .ft__cols a{display:block;width:fit-content;padding:3px 0;color:rgba(255,255,255,.8);text-decoration:none;transition:color .2s}
   .ft__cols>div:first-child{columns:2;column-gap:16px}
@@ -901,7 +922,16 @@
   .ft__cols .ft__up:hover{background:var(--y);color:var(--ink);box-shadow:none}
   .ft__up .arr{width:18px;height:18px}
   .ft__legal{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:clamp(24px,3vw,40px);padding:16px 0;border-top:1px solid rgba(255,255,255,.1);font-size:12.5px;color:rgba(255,255,255,.4)}
-  .ft__legal nav{display:flex;flex-wrap:wrap;gap:6px 20px}
+  .ft__legal p{margin:0;max-width:56ch;line-height:1.5}
+  .ft__legal p:first-child{max-width:none}
+  .ft__cols .ext{width:11px;height:11px;margin-left:4px;vertical-align:1px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.6}
+
+  .cp{position:relative;cursor:copy}
+  .cp::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);translate:-50% 4px;z-index:5;padding:5px 10px;border-radius:8px;
+    background:#f3f1ec;color:var(--ink);font:600 12.5px/1.2 var(--font-body);letter-spacing:0;text-transform:none;white-space:nowrap;
+    box-shadow:0 6px 16px -6px rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .15s,translate .15s}
+  .cp:hover::after,.cp:focus-visible::after,.cp.is-copied::after{opacity:1;translate:-50% 0}
+  .cp.is-copied::after{background:var(--y)}
 
   .cookie{position:fixed;left:16px;bottom:16px;z-index:50;display:flex;align-items:center;gap:16px;max-width:min(560px,calc(100vw - 32px));
     padding:14px 14px 14px 20px;border-radius:22px;color:rgba(255,255,255,.75);font-size:13px;line-height:1.45;
@@ -1002,14 +1032,15 @@
 
 <div class="hero">
   <div class="in"><div class="hsheet"><canvas id="film" aria-hidden="true"></canvas><div class="hero__head"><h1>3D стикеры и стикерпаки, которые заметят</h1><p class="hero__under">Сделаем ваши<br>за 3 дня</p></div>
-    <div class="hero__cta"><a class="btn btn--y" href="#calc">Рассчитать стоимость</a></div>
-    <a class="htag" href="#faq" aria-label="Заказать образец за 1 700 ₽"><span class="htag__sw"><svg class="htag__chain" viewBox="-40 -40 80 120" aria-hidden="true"></svg><span class="htag__card"><b>Образец</b><span class="htag__price">1 700 ₽</span><small>заказать <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></small></span></span></a>
+    <div class="hero__cta"><a class="btn btn--go" href="#calc">Рассчитать стоимость</a></div>
+    
+    <a class="hstub" href="#faq" aria-label="Заказать образец стикерпака с вашим дизайном за 2 500 ₽"><b>Образец стикерпака с вашим дизайном</b><span>2 500 ₽</span><small>заказать <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></small></a>
     <div class="hst hst--pill" style="--m:url(v4/hero-st-pill.png)"><i class="hst__cut"></i><img src="v4/hero-st-pill.png" alt=""><span class="hst__tag">Фирменный цвет</span></div>
     <div class="hst hst--holo" data-shape="rect" data-bg="silver" data-holo="1" data-logo="../assets/mdmprint-logo.svg"><i class="hst__cut"></i><img alt=""><span class="hst__tag">Голография</span></div>
     <div class="hst hst--bloom" style="--m:url(v4/hero-st-bloom.png)"><i class="hst__cut"></i><img src="v4/hero-st-bloom.png" alt=""><span class="hst__tag">Плавный градиент</span></div>
     <div class="hst hst--glow" data-shape="circle" data-bg="glow" data-deco="moon"><i class="hst__cut"></i><img alt=""><span class="hst__tag">Светится в темноте</span></div>
     <div class="hst hst--evrone" data-shape="oval" data-bg="#ff4d1f" data-logo="v4/evrone-logo.svg" data-fg="#fff"><i class="hst__cut"></i><img alt="Evrone"><span class="hst__tag">Логотип на любой форме</span></div>  
-    <div class="hst hst--frame" data-shape="text" data-text="FRAME" data-sub="MOSCOW" data-fg="#141212" data-subc="#ff6a1a"><i class="hst__cut"></i><img alt="FRAME Moscow"><span class="hst__tag">Надпись по контуру</span></div>  
+    <div class="hst hst--frame" data-shape="text" data-text="FRAME" data-sub="MOSCOW" data-bg="#141212" data-fg="#fff" data-subc="#ff6a1a"><i class="hst__cut"></i><img alt="FRAME Moscow"><span class="hst__tag">Надпись по контуру</span></div>  
     <div class="hst hst--tiny" data-shape="star" data-bg="#FFC100"><i class="hst__cut"></i><img alt=""></div>
     <div class="hst hst--m1" data-shape="heart" data-bg="#ff3b30"><i class="hst__cut"></i><img alt=""></div>
     <div class="hst hst--m2" data-shape="circle" data-bg="#3b6cff"><i class="hst__cut"></i><img alt=""></div>
@@ -1022,97 +1053,11 @@
   </div></div>
 </div>
 
-<section id="about">
-  <div class="in"><div class="sheet asheet">
-    <div class="about__top rv">
-      <div>
-        <h2 class="h2"><span class="h2__w">Создаём<span class="stat" aria-label="200 000+ стикеров в месяц"><span class="stat__in"><b>200 000+</b><span>стикеров в месяц</span></span></span></span> мерч вместе с брендами</h2>
-        
-        <p class="about__state">14 лет печатаем мерч, а 3D стикеры — наше любимое направление. Заливаем смолой на двух автоматических линиях: быстро, недорого, стабильно.</p>
-      </div>
-      <div class="about__win">  
-        <video src="adv/v1.webm" poster="adv/v1-poster.webp" autoplay muted loop playsinline aria-label="Автоматическая заливка стикеров смолой"></video>
-      </div>
-    </div>
-    <div class="bento">
-      <article class="ben ben--a rv">
-        <div><i>Дайте бонус к заказу</i><h3>Сделайте подарок, который отметят</h3>
-          <p>Кладём прикольный стикер в заказ, человек с радостью поделится им в соцсетях и оставит о вас отзыв.</p></div>
-        <img class="ben__ph" src="adv/p4.webp" alt="Стикерпак MDMprint в упаковке" loading="lazy">  
-      </article>
-      <article class="ben ben--b rv"><i>Сэкономьте на мерче</i><h3>Дарите стикерпаки на мероприятиях</h3>
-        <p class="grow">Клиент сам выберет, куда его наклеить. Дешевле и круче обычной раздатки: блокноты с лого, ручки, пакеты и так далее.</p></article>
-      <article class="ben ben--c rv"><i>Получайте охваты</i><h3>Бесплатная реклама, которая работает на вас</h3>
-        <p class="grow">Клиент и окружающие видят ваши стикеры каждый день: на ноутбуке, телефоне, кружке. Бренд остаётся в поле зрения надолго.</p></article>
-      <article class="ben ben--d rv"><i>Брендируйте сами</i><h3>Просто всё наклейте</h3>
-        <p class="grow">Выбираете подарки для мерча, мы печатаем стикеры, вы приклеиваете и дарите своим клиентам. Поверхность любая. С дизайном поможем.</p></article>
-    </div>
-  </div></div>
-</section>
-
-<section class="clients">
-  <div class="in"><div class="sheet"><h2 class="h2">С кем мы работали</h2>
-  <div class="logos">
-    <div class="cut"><div class="logo"><img src="b2b/logo-sber.svg" alt="Сбер"></div></div>
-    <div class="cut"><div class="logo"><img src="b2b/logo-rzd.svg" alt="РЖД"></div></div>
-    <div class="cut"><div class="logo"><img src="b2b/logo-prime.svg" alt="Prime"></div></div>
-    <div class="cut"><div class="logo"><img src="b2b/logo-genpro.svg" alt="GenPro"></div></div>
-    <div class="cut"><div class="logo"><img style="--s:1.4" src="b2b/logo-bam.svg" alt="БАМ"></div></div>
-    <div class="cut"><div class="logo"><img style="--s:1.4" src="b2b/logo-ferro.svg" alt="Ferro"></div></div>
-    <div class="cut"><div class="logo"><img style="--s:1.3" src="b2b/logo-golubka.svg" alt="Голубка"></div></div>
-    <div class="cut"><div class="logo"><img style="--s:1.3" src="b2b/logo-mosquar.svg" alt="Mosquar"></div></div>
-    <div class="cut"><div class="logo"><img style="--s:1.25" src="b2b/logo-endomet.svg" alt="Эндомет"></div></div>
-    <div class="cut"><div class="logo"><img src="b2b/logo-vitobox.webp" alt="Vitobox"></div></div>
-    <div class="cut"><div class="logo"><img src="b2b/logo-oil.webp" alt="Oil Energy"></div></div>
-    <a class="cut cut--empty" href="#faq"><i class="ph-plus"></i>Стать клиентом</a>
-  </div></div></div>
-</section>
-
-<section id="b2b">
-  <div class="in"><div class="sheet bsheet">
-    <div class="cmp__head rv">
-      <h2 class="h2">3D стикеры нужны каждому бренду</h2>
-      <p class="lead">Любой мерч работает на бренд, а 3D стикер ещё и всегда на виду. Его клеят на телефон и ноутбук, которые постоянно в руках, и логотип замечают в толпе: на мероприятиях, выставках, в транспорте.</p>
-      
-      <ul class="pros"><li>Объём и глянец</li><li>Не стирается</li><li>Не выцветает</li><li>Не рвётся по краям</li><li>Видно издалека</li></ul>
-    </div>
-    
-    <div class="rs" id="rs" hidden>  
-      <span class="rs__lab rs__lab--l">Обычная наклейка</span>
-      <div class="rs__st">
-        <div class="rs__face rs__flat"><img src="v4/evrone-logo.svg" alt=""></div>
-        <div class="rs__face rs__resin" aria-hidden="true"><img src="v4/evrone-logo.svg" alt=""></div>
-        <i class="rs__grain"></i><i class="rs__glare"></i>
-      </div>
-      <span class="rs__lab rs__lab--r">3D стикер со смолой</span>
-      <label class="rs__ctl"><span>Залить смолой</span><input type="range" min="0" max="100" value="0" id="rsK" aria-label="Сколько смолы"></label>
-    </div>
-    
-    <div class="lapw">
-      <div class="lapbox"><i class="lapbase"></i>  
-      <div class="lap" id="lap">
-        <i class="fs fs1 fs--old">wi-fi?</i><i class="fs fs2">hello</i><i class="fs fs3">ctrl+z</i><i class="fs fs4 fs--old">&lt;/dev&gt;</i>
-        <i class="fs fs5 fs--old">coffee</i><i class="fs fs6 fs--old">no bugs</i><i class="fs fs7">404</i>
-        <span class="lap__logo">ноутбук</span>
-        <div class="our" id="our"><div class="our__in"><img src="b2b/logo-prime.svg" alt="3D стикер PRIME"></div><i class="our__gl"></i><i class="our__rim"></i></div>
-      </div></div>
-    </div>
-    <div class="cmp__grid" hidden>  
-      <figure class="cmp__it rv" style="margin:0"><img class="cmp__img cmp__img--43" src="v4/stock-merch.jpg" alt="Кружка и карандаши с логотипом" loading="lazy">  
-        <figcaption class="cmp__cap"><b>Привычный мерч</b><p>Кружки, ручки, пакеты с логотипом. Нужны каждый день, но чаще остаются в офисе и дома.</p></figcaption></figure>
-      <figure class="cmp__it cmp__it--win rv" style="margin:0"><img class="cmp__img" src="adv/p1.webp" alt="Телефон с 3D стикерами PRIME" loading="lazy">
-        <figcaption class="cmp__cap"><b>3D стикер со смолой</b><p>Едет вместе с телефоном и ноутбуком. Объём и глянец видно издалека, даже в толпе.</p></figcaption></figure>
-      <figure class="cmp__it rv" style="margin:0"><img class="cmp__img cmp__img--43" src="v4/stock-flat-stickers.jpg" alt="Лист обычных плоских наклеек" loading="lazy">  
-        <figcaption class="cmp__cap"><b>Обычная наклейка</b><p>Печать на плёнке: быстро и недорого. Хороша для упаковки, рядом с объёмной смотрится тише.</p></figcaption></figure>
-    </div>
-  </div></div>
-</section>
-
 <section id="vidy">
   <div class="in"><div class="sheet vsheet" id="vsheet">
     <div class="vsheet__head">
       <h2 class="h2">Печатаем стикеры любой формы и отделки</h2>
-      <button class="vlight" id="vlight" type="button" aria-pressed="false"><i></i><span>Выключить свет</span></button>
+      <button class="vlight" id="vlight" type="button" aria-pressed="false"><svg class="i-bulb" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9V16h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3z"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><span>Выключить свет</span></button>
     </div>
     <div class="vgrid">
       <a class="vk" href="#calc">  
@@ -1182,32 +1127,36 @@
           <img class="pre--p0" src="calc-icons/kind-1.webp" alt="">
           <i class="pre--p1"></i>
           <i class="pre--p2"></i>
-          <img class="pre-hand pre-hand--card" src="calc-icons/hand.webp?v=1013d" alt="">
-          <img class="pre-hand pre-hand--pinch" src="calc-icons/hand-pinch.webp?v=1013d" alt="">
-          <img class="pre-hand pre-hand--pinch pre-hand--front" src="calc-icons/hand-pinch-front.webp?v=1013d" alt="">
+          <img class="pre-hand pre-hand--card" src="calc-icons/hand.webp?v=1014v" alt="">
+          <img class="pre-hand pre-hand--pinch" src="calc-icons/hand-pinch.webp?v=1014v" alt="">
+          <img class="pre-hand pre-hand--pinch pre-hand--front" src="calc-icons/hand-pinch-front.webp?v=1014v" alt="">
         </div></div>
-        <button class="btn btn--y" type="button" data-flip="1">Оформить заказ</button>
+        <button class="btn btn--go" type="button" data-flip="1">Оформить заказ</button>
         <div class="calc__min">Минимальная сумма заказа от 4000 руб</div>
         
-        <a class="calc__stub" href="#faq"><b>Большой тираж?</b> Посчитаем индивидуально <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a>
+        <a class="calc__stub" href="#calc" data-flip="big"><b>Большой тираж?</b> Посчитаем индивидуально <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a>
       </div>
       
       <form class="sheet calc__back" id="orderForm" novalidate aria-hidden="true" inert>
         <button class="calc__ret" type="button" data-flip="0"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4M7.5 4l-4 4 4 4"/></svg> К расчёту</button>
-        <h3 class="calc__title">Оформление заказа</h3>
+        <h3 class="calc__title"><span class="ord--order">Оформление заказа</span><span class="ord--big">Индивидуальный расчёт</span></h3>
         <div class="ord__sum">
           <ul class="calc__pick" id="ordPick"></ul>
-          <div class="ord__price"><span>Предварительно</span><b id="ordSum">—</b><small id="ordTerm"></small></div>
+          <div class="ord__price ord--order"><span>Предварительно</span><b id="ordSum">—</b><small id="ordTerm"></small></div>
+          <p class="ord__big ord--big">Посчитаем цену под ваш тираж — производство печатает больше 200 000 стикеров в месяц.</p>
         </div>
+        <div class="fld ord--big"><label for="o-q">Сколько нужно и к какому сроку</label><input id="o-q" name="qty_note" placeholder="Например, 20 000 шт к 1 декабря"></div>
         <div class="fld"><label for="o-n">Имя *</label><input id="o-n" name="name" autocomplete="name" required><small class="fld__err" id="o-n-err">Напишите, как к вам обращаться</small></div>
         <div class="fld"><label for="o-p">Телефон *</label><input id="o-p" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required><small class="fld__err" id="o-p-err">Нужен номер целиком — 11 цифр</small></div>
         <label class="agree"><input type="checkbox" name="agree" required><span>Я даю согласие на обработку персональных данных согласно <a href="https://mdmprint.ru/soglasie-na-obrabotku-personalnyh-dannyh" target="_blank" rel="noopener">политике конфиденциальности</a> и принимаю условия <a href="https://mdmprint.ru/publichnaya-oferta" target="_blank" rel="noopener">оферты</a></span></label>
-        <button class="btn btn--y form__send">Отправить заказ</button>
-        <p class="ord__note">Менеджер перезвонит, уточнит макет и назовёт точную цену. Оплата — после согласования.</p>
+        <button class="btn btn--go form__send"><span class="ord--order">Отправить заказ</span><span class="ord--big">Запросить расчёт</span></button>
+        <p class="ord__note">Менеджер перезвонит, уточнит макет и назовёт точную цену. <span class="ord--order">Оплата — после согласования.</span></p>
         <div class="form__done" role="status" hidden>
           <b>Заказ проверен</b>
           <p>Это прототип: заказ никуда не уходит, отправку подключает разработчик. На живом сайте здесь будет «Спасибо! Перезвоним в течение 10-15 минут».</p>
         </div>
+        
+        <div class="calc__stub calc__stub--back" aria-hidden="true">&nbsp;</div>
       </form>
       </div>
     </div>
@@ -1220,40 +1169,133 @@
     <h2 class="h2">Печатаем ваши идеи</h2>
     
     <div class="works">
-      <figure class="wk rv wk--big"><button class="wk__img" type="button" aria-label="Открыть работу 5"><img src="works/v3/w5.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv" data-kind="1" data-mat="0"><button class="wk__img" type="button" aria-label="Открыть работу 1"><img src="works/v3/w1.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv"><button class="wk__img" type="button" aria-label="Открыть работу 2"><img src="works/v3/w2.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv" data-mat="2"><button class="wk__img" type="button" aria-label="Открыть работу 6"><img src="works/v3/w6.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv"><button class="wk__img" type="button" aria-label="Открыть работу 3"><img src="works/v3/w3.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv"><button class="wk__img" type="button" aria-label="Открыть работу 4"><img src="works/v3/w4.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv"><button class="wk__img" type="button" aria-label="Открыть работу 7"><img src="works/v3/w7.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv" data-mat="2"><button class="wk__img" type="button" aria-label="Открыть работу 8"><img src="works/v3/w8.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv"><button class="wk__img" type="button" aria-label="Открыть работу 9"><img src="works/v3/w9.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv"><button class="wk__img" type="button" aria-label="Открыть работу 10"><img src="works/v3/w10.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv"><button class="wk__img" type="button" aria-label="Открыть работу 11"><img src="works/v3/w11.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
-      <figure class="wk rv"><button class="wk__img" type="button" aria-label="Открыть работу 12"><img src="works/v3/w12.webp" alt="" loading="lazy"></button><a class="wk__calc" href="#calc">Посчитать такой <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a></figure>
+      <figure class="wk rv wk--big"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 5"><img src="works/v3/w5.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 1"><img src="works/v3/w1.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 2"><img src="works/v3/w2.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 6"><img src="works/v3/w6.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 3"><img src="works/v3/w3.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 4"><img src="works/v3/w4.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 7"><img src="works/v3/w7.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 8"><img src="works/v3/w8.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 9"><img src="works/v3/w9.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 10"><img src="works/v3/w10.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 11"><img src="works/v3/w11.webp" alt="" loading="lazy"></button></figure>
+      <figure class="wk rv"><i class="wk__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h5v5M9 20H4v-5M20 4l-6 6M4 20l6-6"/></svg></i><button class="wk__img" type="button" aria-label="Открыть работу 12"><img src="works/v3/w12.webp" alt="" loading="lazy"></button></figure>
       <a class="wk wk--you rv" href="#calc"><span class="ph-plus"></span><b>Здесь будет ваш</b><small>Посчитать тираж</small></a>
     </div>
     </div>
-    <dialog class="wk-box" id="wkBox"><form method="dialog"><button class="wk-box__x" aria-label="Закрыть">×</button></form><img alt=""></dialog>
+    <dialog class="wk-box" id="wkBox" aria-label="Работа крупно">
+      <form method="dialog"><button class="wk-box__x" aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></form>
+      <img alt="">
+      <div class="wk-box__bar">
+        <button class="wk-box__nav" type="button" data-step="-1" aria-label="Предыдущая работа"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4M7.5 4l-4 4 4 4"/></svg></button>
+        <span class="wk-box__n" aria-live="polite"></span>
+        <button class="wk-box__nav" type="button" data-step="1" aria-label="Следующая работа"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></button>
+      </div>
+    </dialog>
   </div>
 </section>
 
+<section class="clients">
+  <div class="in"><div class="sheet"><h2 class="h2">С кем мы работали</h2>
+  <div class="logos">
+    <div class="cut"><div class="logo"><img src="b2b/logo-sber.svg" alt="Сбер"></div></div>
+    <div class="cut"><div class="logo"><img src="b2b/logo-rzd.svg" alt="РЖД"></div></div>
+    <div class="cut"><div class="logo"><img src="b2b/logo-prime.svg" alt="Prime"></div></div>
+    <div class="cut"><div class="logo"><img src="b2b/logo-genpro.svg" alt="GenPro"></div></div>
+    <div class="cut"><div class="logo"><img style="--s:1.4" src="b2b/logo-bam.svg" alt="БАМ"></div></div>
+    <div class="cut"><div class="logo"><img style="--s:1.4" src="b2b/logo-ferro.svg" alt="Ferro"></div></div>
+    <div class="cut"><div class="logo"><img style="--s:1.3" src="b2b/logo-golubka.svg" alt="Голубка"></div></div>
+    <div class="cut"><div class="logo"><img style="--s:1.3" src="b2b/logo-mosquar.svg" alt="Mosquar"></div></div>
+    <div class="cut"><div class="logo"><img style="--s:1.25" src="b2b/logo-endomet.svg" alt="Эндомет"></div></div>
+    <div class="cut"><div class="logo"><img src="b2b/logo-vitobox.webp" alt="Vitobox"></div></div>
+    <div class="cut"><div class="logo"><img src="b2b/logo-oil.webp" alt="Oil Energy"></div></div>
+    <a class="cut cut--empty" href="#faq"><i class="ph-plus"></i>Стать клиентом</a>
+  </div></div></div>
+</section>
+
+<section id="b2b">
+  <div class="in"><div class="sheet bsheet">
+    <div class="cmp__head rv">
+      <h2 class="h2">3D стикеры нужны каждому бренду</h2>
+      <p class="lead">Любой мерч работает на бренд, а 3D стикер ещё и всегда на виду. Его клеят на телефон и ноутбук, которые постоянно в руках, и логотип замечают в толпе: на мероприятиях, выставках, в транспорте.</p>
+      
+      <ul class="pros"><li>Объём и глянец</li><li>Не стирается</li><li>Не выцветает</li><li>Не рвётся по краям</li><li>Видно издалека</li></ul>
+    </div>
+    
+    <div class="rs" id="rs" hidden>  
+      <span class="rs__lab rs__lab--l">Обычная наклейка</span>
+      <div class="rs__st">
+        <div class="rs__face rs__flat"><img src="v4/evrone-logo.svg" alt=""></div>
+        <div class="rs__face rs__resin" aria-hidden="true"><img src="v4/evrone-logo.svg" alt=""></div>
+        <i class="rs__grain"></i><i class="rs__glare"></i>
+      </div>
+      <span class="rs__lab rs__lab--r">3D стикер со смолой</span>
+      <label class="rs__ctl"><span>Залить смолой</span><input type="range" min="0" max="100" value="0" id="rsK" aria-label="Сколько смолы"></label>
+    </div>
+    
+    <div class="lapw">
+      <div class="lapbox"><i class="lapbase"></i>  
+      <div class="lap" id="lap">
+        <i class="fs fs1 fs--old">wi-fi?</i><i class="fs fs2">hello</i><i class="fs fs3">ctrl+z</i><i class="fs fs4 fs--old">&lt;/dev&gt;</i>
+        <i class="fs fs5 fs--old">coffee</i><i class="fs fs6 fs--old">no bugs</i><i class="fs fs7">404</i>
+        <span class="lap__logo">ноутбук</span>
+        <div class="our" id="our"><div class="our__in"><img src="b2b/logo-prime.svg" alt="3D стикер PRIME"></div><i class="our__gl"></i><i class="our__rim"></i></div>
+      </div></div>
+    </div>
+    <div class="cmp__grid" hidden>  
+      <figure class="cmp__it rv" style="margin:0"><img class="cmp__img cmp__img--43" src="v4/stock-merch.jpg" alt="Кружка и карандаши с логотипом" loading="lazy">  
+        <figcaption class="cmp__cap"><b>Привычный мерч</b><p>Кружки, ручки, пакеты с логотипом. Нужны каждый день, но чаще остаются в офисе и дома.</p></figcaption></figure>
+      <figure class="cmp__it cmp__it--win rv" style="margin:0"><img class="cmp__img" src="adv/p1.webp" alt="Телефон с 3D стикерами PRIME" loading="lazy">
+        <figcaption class="cmp__cap"><b>3D стикер со смолой</b><p>Едет вместе с телефоном и ноутбуком. Объём и глянец видно издалека, даже в толпе.</p></figcaption></figure>
+      <figure class="cmp__it rv" style="margin:0"><img class="cmp__img cmp__img--43" src="v4/stock-flat-stickers.jpg" alt="Лист обычных плоских наклеек" loading="lazy">  
+        <figcaption class="cmp__cap"><b>Обычная наклейка</b><p>Печать на плёнке: быстро и недорого. Хороша для упаковки, рядом с объёмной смотрится тише.</p></figcaption></figure>
+    </div>
+  </div></div>
+</section>
+
+<section id="about">
+  <div class="in"><div class="sheet asheet">
+    <div class="about__top rv">
+      <div>
+        <h2 class="h2"><span class="h2__w">Создаём<span class="stat" aria-label="200 000+ стикеров в месяц"><span class="stat__in"><b>200 000+</b><span>стикеров в месяц</span></span></span></span> мерч вместе с брендами</h2>
+        
+        <p class="about__state">14 лет печатаем мерч, а 3D стикеры — наше любимое направление. Заливаем смолой на двух автоматических линиях: быстро, недорого, стабильно.</p>
+      </div>
+      <div class="about__win">  
+        <video src="adv/v1.webm" poster="adv/v1-poster.webp" autoplay muted loop playsinline aria-label="Автоматическая заливка стикеров смолой"></video>
+      </div>
+    </div>
+    <div class="bento">
+      <article class="ben ben--a rv">
+        <div><i>Дайте бонус к заказу</i><h3>Сделайте подарок, который отметят</h3>
+          <p>Кладём прикольный стикер в заказ, человек с радостью поделится им в соцсетях и оставит о вас отзыв.</p></div>
+        <img class="ben__ph" src="adv/p4.webp" alt="Стикерпак MDMprint в упаковке" loading="lazy">  
+      </article>
+      <article class="ben ben--b rv"><i>Сэкономьте на мерче</i><h3>Дарите стикерпаки на мероприятиях</h3>
+        <p class="grow">Клиент сам выберет, куда его наклеить. Дешевле и круче обычной раздатки: блокноты с лого, ручки, пакеты и так далее.</p></article>
+      <article class="ben ben--c rv"><i>Получайте охваты</i><h3>Бесплатная реклама, которая работает на вас</h3>
+        <p class="grow">Клиент и окружающие видят ваши стикеры каждый день: на ноутбуке, телефоне, кружке. Бренд остаётся в поле зрения надолго.</p></article>
+      <article class="ben ben--d rv"><i>Брендируйте сами</i><h3>Просто всё наклейте</h3>
+        <p class="grow">Выбираете подарки для мерча, мы печатаем стикеры, вы приклеиваете и дарите своим клиентам. Поверхность любая. С дизайном поможем.</p></article>
+    </div>
+  </div></div>
+</section>
+
 <section class="why" id="why">
-  <div class="in">
-    <div class="why__side rv">
-      <h2 class="h2">Почему наши 3D стикеры — это круто</h2>
-      <video class="why__vid" src="adv/v2.webm" poster="adv/v2-poster.webp" autoplay muted loop playsinline aria-label="Заливка стикеров смолой"></video>
-    </div>
-    <div class="why__list">
-      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg></i><small>Яркий цвет</small><h3>Наклейка, которая не стирается и не выцветает</h3></div>
-      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9a4 4 0 0 1 4-4h10v10a4 4 0 0 1-4 4z"/><path d="M19 15h-4a4 4 0 0 0-4 4"/></svg></i><small>Удобство</small><h3>Быстро клеятся, крепко держатся, но легко снимаются</h3><p>Не оставляют липких следов.</p></div>
-      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l12 16M18 4L6 20"/><circle cx="6" cy="4" r="2"/><circle cx="18" cy="4" r="2"/></svg></i><small>Чёткая форма</small><h3>Режем любую форму на плоттере с высокой точностью</h3></div>
-      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></i><small>Защита</small><h3>Смола защищает рисунок</h3><p>От влаги, царапин и выцветания на долгое время.</p></div>
-      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15c2-6 14-6 16 0"/><path d="M4 15c2 3 14 3 16 0"/></svg></i><small>Полимерная смола</small><h3>Мягкая, с эффектом «антистресс»</h3><p>Не дубеет со временем, не желтеет и держит форму без подтёков.</p></div>
-      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="10" height="18" rx="2"/><path d="M15 8h3a2 2 0 0 1 2 2v6"/><circle cx="10" cy="11" r="2.2"/></svg></i><small>Для любых поверхностей</small><h3>Клеится куда угодно</h3><p>Чехол телефона, ноутбук, скейтборд, бутылка, блокнот, холодильник.</p></div>
-    </div>
-  </div>
+  
+  <div class="in"><div class="why__grid">
+      <div class="why__head rv"><h2 class="h2">Почему наши 3D стикеры — это круто</h2></div>
+      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg></i><h3>Яркий цвет</h3><p>Наклейка, которая не стирается и не выцветает</p></div>
+      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9a4 4 0 0 1 4-4h10v10a4 4 0 0 1-4 4z"/><path d="M19 15h-4a4 4 0 0 0-4 4"/></svg></i><h3>Удобство</h3><p>Быстро клеятся, крепко держатся, но легко снимаются. Не оставляют липких следов.</p></div>
+      <figure class="why__media why__media--vid rv"><video class="why__vid" src="adv/v2.webm" poster="adv/v2-poster.webp" autoplay muted loop playsinline aria-label="Заливка стикеров смолой"></video></figure>
+      <figure class="why__media rv"><img src="adv/p2.webp" alt="3D стикеры на ноутбуке" loading="lazy"></figure>
+      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l12 16M18 4L6 20"/><circle cx="6" cy="4" r="2"/><circle cx="18" cy="4" r="2"/></svg></i><h3>Чёткая форма</h3><p>Режем любую форму на плоттере с высокой точностью</p></div>
+      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></i><h3>Защита</h3><p>Смола защищает рисунок. От влаги, царапин и выцветания на долгое время.</p></div>
+      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15c2-6 14-6 16 0"/><path d="M4 15c2 3 14 3 16 0"/></svg></i><h3>Полимерная смола</h3><p>Мягкая, с эффектом «антистресс». Не дубеет со временем, не желтеет и держит форму без подтёков.</p></div>
+      <div class="wi rv"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="10" height="18" rx="2"/><path d="M15 8h3a2 2 0 0 1 2 2v6"/><circle cx="10" cy="11" r="2.2"/></svg></i><h3>Для любых поверхностей</h3><p>Клеится куда угодно. Чехол телефона, ноутбук, скейтборд, бутылка, блокнот, холодильник.</p></div>
+      <figure class="why__media rv"><img src="adv/p3.webp" alt="Стикерпаки в розовом стиле" loading="lazy"></figure>
+  </div></div>
 </section>
 
 <section class="rev" id="reviews">
@@ -1304,27 +1346,6 @@
   </div></div>
 </section>
 
-<section id="contacts">
-  <div class="in">
-    <div class="visit">
-      <div class="visit__card rv">
-        <h2 class="h2">Контакты</h2>
-        <p class="visit__lead">Приезжайте к нам в офис, мы покажем образцы материалов, дадим потрогать готовые стикеры и подскажем, что лучше подойдёт именно вам.</p>
-        <dl class="visit__list">
-          <div><dt>Адрес</dt><dd>Москва, ул. Орджоникидзе, 11с1А подъезд 29</dd></div>
-          <div><dt>Часы</dt><dd>ежедневно 9:00–22:00</dd></div>
-          <div><dt>Почта</dt><dd><a href="mailto:zakaz@mdmprint.ru">zakaz@mdmprint.ru</a></dd></div>
-        </dl>
-        <a class="tel" href="tel:+74952561000">+7 (495) 256-10-00</a>
-        <a class="visit__route" href="https://yandex.ru/maps/org/mdmprint/227012965480/" target="_blank" rel="noopener">Как добраться <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a>
-      </div>
-      <div class="visit__map rv">
-        <iframe src="https://yandex.ru/map-widget/v1/?oid=227012965480&ol=biz&z=16" title="MDMprint на Яндекс Картах" loading="lazy" allowfullscreen></iframe>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section id="faq" class="faq">
   <div class="in">
     
@@ -1346,7 +1367,7 @@
       <div class="fld"><label for="f-p">Телефон *</label><input id="f-p" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" required><small class="fld__err" id="f-p-err">Нужен номер целиком — 11 цифр</small></div>
       <div class="fld"><label for="f-q">Вопрос или задача</label><textarea id="f-q" name="question" rows="3"></textarea></div>
       <label class="agree"><input type="checkbox" name="agree" required><span>Я даю согласие на обработку персональных данных согласно <a href="https://mdmprint.ru/soglasie-na-obrabotku-personalnyh-dannyh" target="_blank" rel="noopener">политике конфиденциальности</a> и принимаю условия <a href="https://mdmprint.ru/publichnaya-oferta" target="_blank" rel="noopener">оферты</a></span></label>
-      <button class="btn btn--y form__send">Отправить вопрос</button>
+      <button class="btn btn--go form__send">Отправить вопрос</button>
       <div class="form__done" role="status" hidden>
         <b>Заявка проверена</b>
         <p>Это прототип: заявка никуда не уходит, отправку подключает разработчик. На живом сайте здесь будет «Спасибо, ответим в течение 10-15 минут».</p>
@@ -1354,6 +1375,27 @@
       <p class="msgs__t">или напишите в мессенджер</p>
       <div class="msgs"><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4.5 2.9 11.4c-.9.4-.9 1.6 0 1.9l4.4 1.5 1.7 5.3c.2.7 1.1.9 1.6.4l2.5-2.4 4.6 3.4c.6.5 1.5.1 1.7-.6L22.3 5.8c.2-.9-.6-1.6-1.3-1.3zM9.7 14.6l-.4 3.3-1.2-3.8 9.3-6-7.7 6.5z"/></svg>Telegram</a><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3zm4.2 12.4-1.6-4.6-2.6 4.6-2.6-4.6-1.6 4.6H6.4l3-8h1.1l1.5 4.6 1.5-4.6h1.1l3 8z"/></svg>MAX</a></div>
     </form>
+  </div>
+</section>
+
+<section id="contacts">
+  <div class="in">
+    <div class="visit">
+      <div class="visit__card rv">
+        <h2 class="h2">Контакты</h2>
+        <p class="visit__lead">Приезжайте к нам в офис, мы покажем образцы материалов, дадим потрогать готовые стикеры и подскажем, что лучше подойдёт именно вам.</p>
+        <dl class="visit__list">
+          <div><dt>Адрес</dt><dd>Москва, ул. Орджоникидзе, 11с1А подъезд 29</dd></div>
+          <div><dt>Часы</dt><dd>ежедневно 9:00–22:00</dd></div>
+          <div><dt>Почта</dt><dd><a href="mailto:zakaz@mdmprint.ru">zakaz@mdmprint.ru</a></dd></div>
+        </dl>
+        <a class="tel" href="tel:+74952561000">+7 (495) 256-10-00</a>
+        <a class="visit__route" href="https://yandex.ru/maps/org/mdmprint/227012965480/" target="_blank" rel="noopener">Как добраться <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a>
+      </div>
+      <div class="visit__map rv">
+        <iframe src="https://yandex.ru/map-widget/v1/?oid=227012965480&ol=biz&z=16" title="MDMprint на Яндекс Картах" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1369,18 +1411,19 @@
     <div class="ft__top">
       <div>
       <p class="ft__cta">Есть идея для стикеров?<br><span>Посчитаем за минуту.</span></p>
-      <a class="ft__btn" href="#calc">Рассчитать стоимость <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4"/></svg></a>
+      <a class="btn btn--go btn--s" href="#calc">Рассчитать стоимость</a>
       </div>
     <div class="ft__cols">
-      <div><b>Разделы</b><a href="#about">О нас</a><a href="#b2b">Бизнесу</a><a href="#vidy">Виды</a><a href="#calc">Расчёт</a><a href="#works">Работы</a><a href="#why">Почему мы</a><a href="#reviews">Отзывы</a><a href="#contacts">Контакты</a><a href="#faq">Вопросы</a></div>
-      <div><b>Связаться</b><a class="ft__tel" href="tel:+74952561000">+7 (495) 256-10-00</a><a href="mailto:zakaz@mdmprint.ru">zakaz@mdmprint.ru</a><a href="https://yandex.ru/maps/org/mdmprint/227012965480/" target="_blank" rel="noopener">Москва, ул. Орджоникидзе, 11с1А, подъезд 29</a><span class="ft__note">ежедневно 9:00–22:00</span></div>
-      <div><b>Мессенджеры</b><a href="#">Telegram</a> <a href="#">MAX</a></div>
+      <div><b>Разделы</b><a href="#vidy">Виды</a><a href="#calc">Расчёт</a><a href="#works">Работы</a><a href="#b2b">Бизнесу</a><a href="#about">О нас</a><a href="#why">Почему мы</a><a href="#reviews">Отзывы</a><a href="#faq">Вопросы</a><a href="#contacts">Контакты</a></div>
+      <div><b>Связаться</b><a class="ft__tel" href="tel:+74952561000">+7 (495) 256-10-00</a><a href="mailto:zakaz@mdmprint.ru">zakaz@mdmprint.ru</a><a href="https://yandex.ru/maps/org/mdmprint/227012965480/" target="_blank" rel="noopener">Москва, ул. Орджоникидзе, 11с1А, подъезд 29</a><span class="ft__note">ежедневно 9:00–22:00</span><span class="ft__msg"><a href="#">Telegram</a><a href="#">MAX</a></span></div>
+            <div><b>Документы</b><a href="https://mdmprint.ru/publichnaya-oferta" target="_blank" rel="noopener">Публичная оферта<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a><a href="https://mdmprint.ru/soglasie-na-obrabotku-personalnyh-dannyh" target="_blank" rel="noopener">Политика <span class="nb">конфиденциальности<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a><a href="https://mdmprint.ru/polozhenie-ob-obrabotke-fajlov-cookies" target="_blank" rel="noopener">Обработка cookies<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></div>
       <a class="ft__up" href="#" aria-label="Наверх"><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V4M4 7.5l4-4 4 4"/></svg></a>
     </div>
     </div>
+    
     <div class="ft__legal">
-      <span>© ООО «МДМпринт» · ИНН 7704815108 · ОГРН 1127746679587</span>
-      <nav aria-label="Документы"><a href="https://mdmprint.ru/soglasie-na-obrabotku-personalnyh-dannyh" target="_blank" rel="noopener">Политика обработки персональных данных</a><a href="https://mdmprint.ru/terms" target="_blank" rel="noopener">Пользовательское соглашение</a><a href="https://mdmprint.ru/publichnaya-oferta" target="_blank" rel="noopener">Публичная оферта</a><a href="https://mdmprint.ru/polozhenie-ob-obrabotke-fajlov-cookies" target="_blank" rel="noopener">Положение о cookies</a></nav>
+      <p>ООО «МДМпринт» · ИНН 7704815108 · ОГРН 1127746679587 · © 2012–2026<br>115419, Москва, ул. Орджоникидзе, д. 11, стр. 1А</p>
+      <p>Материалы сайта не являются публичной офертой; условия заказа — в <a href="https://mdmprint.ru/publichnaya-oferta" target="_blank" rel="noopener">оферте</a>. Цены на странице предварительные, точную стоимость подтверждает менеджер.</p>
     </div>
   </div>
   <div class="ft__big" aria-hidden="true">3D стикеры</div>
@@ -1438,8 +1481,7 @@
       const f=F.getContext('2d');f.scale(dpr,dpr);
       const g=f.createLinearGradient(0,0,W,H);
       [[0,'#fff'],[.3,'#f3f3f2'],[.44,'#fff'],[.62,'#fafaf9'],[.86,'#efefee'],[1,'#fff']].forEach(([o,c])=>g.addColorStop(o,c));
-      rr(f,0,0,W,H,R0);f.fillStyle=g;f.fill();
-      f.save();f.globalCompositeOperation='destination-out';f.beginPath();f.arc(W-46,H-46,14,0,Math.PI*2);f.fill();f.restore();
+      f.beginPath();f.moveTo(8,H);f.arc(0,H,8,0,-Math.PI/2,true);f.lineTo(0,R0);f.arcTo(0,0,R0,0,R0);f.arcTo(W,0,W,R0,R0);f.lineTo(W,H-8);f.arc(W,H,8,-Math.PI/2,Math.PI,true);f.closePath();f.fillStyle=g;f.fill();
       f.globalCompositeOperation='destination-out';
       const sr=sheet.getBoundingClientRect();
       sts.forEach(st=>{const img=st.querySelector('img'),b=st.getBoundingClientRect();
@@ -1551,7 +1593,16 @@
         const c=mk(w,h),x=c.getContext('2d');x.textAlign='center';x.textBaseline='alphabetic';x.lineJoin='round';
         const txt=(fill,stroke)=>{x.font=`800 ${F}px ${ff}`;x.letterSpacing='0px';if(stroke){x.lineWidth=2*B;x.strokeStyle=stroke;x.strokeText(d.text,w/2,B+F*.8)}if(fill){x.fillStyle=fill;x.fillText(d.text,w/2,B+F*.8)}
           if(d.sub){x.font=`700 ${F*.32}px ${ff}`;x.letterSpacing=`${F*.06}px`;if(stroke)x.strokeText(d.sub,w/2,B+F*1.12);if(fill){x.fillStyle=d.subc||fill;x.fillText(d.sub,w/2,B+F*1.12)}}};
-        txt('#fff','#fff');txt(d.fg||'#141212');
+        txt(d.bg||'#fff',d.bg||'#fff');
+        {
+          const id=x.getImageData(0,0,w,h),D=id.data,seen=new Uint8Array(w*h),q=[];
+          for(let i=0;i<w;i++){q.push(i,(h-1)*w+i)}for(let j=0;j<h;j++){q.push(j*w,j*w+w-1)}
+          while(q.length){const p=q.pop();if(seen[p]||D[p*4+3]>200)continue;seen[p]=1;const px=p%w,py=(p-px)/w;
+            if(px>0)q.push(p-1);if(px<w-1)q.push(p+1);if(py>0)q.push(p-w);if(py<h-1)q.push(p+w)}
+          x.fillStyle=d.bg||'#fff';x.fillRect(0,0,1,1);const c1=x.getImageData(0,0,1,1).data;x.putImageData(id,0,0);
+          for(let p=0;p<w*h;p++)if(!seen[p]&&D[p*4+3]<255){D[p*4]=c1[0];D[p*4+1]=c1[1];D[p*4+2]=c1[2];D[p*4+3]=255}
+          x.putImageData(id,0,0)}
+        txt(d.fg||'#141212');
         const u=c.toDataURL(),im=st.querySelector('img');st.style.setProperty('--m',`url(${u})`);
         return new Promise(ok=>{im.onload=ok;im.src=u})}
       const d=st.dataset,[w,h]=SZ[d.shape],c=mk(w,h),x=c.getContext('2d'),L=await load(d.logo);
@@ -1793,17 +1844,19 @@
 
     }
     build('kind',F.kind); build('mat',F.mat); build('size',F.size); build('qty',F.qty); build('pack',F.pack);
-
-    document.querySelectorAll('.wk__calc').forEach(a=>a.addEventListener('click',()=>{
-      const d=a.closest('.wk').dataset;
-      [['kind',d.kind],['mat',d.mat]].forEach(([k,v])=>{ if(v==null) return; const r=document.querySelector('#'+k+' input[value="'+v+'"]'); if(r){r.checked=true; S[k]=+v;} });
-      calc();
-    }));
     $('needDesign').addEventListener('change',calc);
     calc();
   })();
 </script>
 <script>
+
+  (()=>{if(!matchMedia('(hover:hover) and (pointer:fine)').matches||!navigator.clipboard) return;
+    document.querySelectorAll('.visit a[href^="tel:"],.visit a[href^="mailto:"],.ft a[href^="tel:"],.ft a[href^="mailto:"]').forEach(a=>{
+      a.classList.add('cp'); a.dataset.tip='Скопировать'; let t;
+      a.addEventListener('click',e=>{e.preventDefault();
+        navigator.clipboard.writeText(a.textContent.trim()).then(()=>{a.dataset.tip='Скопировано'; a.classList.add('is-copied');
+          clearTimeout(t); t=setTimeout(()=>{a.classList.remove('is-copied'); a.dataset.tip='Скопировать';},1600);});});
+    });})();
 
   (()=>{const bar=document.getElementById('cookieBar'), ok=document.getElementById('cookieOk'); if(!bar) return;
     let seen=false; try{seen=localStorage.getItem('mdm-cookie-ok')==='1';}catch(e){}
@@ -1836,11 +1889,12 @@
         document.getElementById('ordTerm').textContent='Срок: '+document.getElementById('term').textContent; };
 
     ['change','input'].forEach(t=>document.getElementById('calcForm').addEventListener(t,()=>{if(flip.classList.contains('is-back')) setTimeout(sync);}));
-    const turn=on=>{ if(on) sync();
+    const turn=(on,big)=>{ if(on){ sync(); back.classList.toggle('is-big',!!big); back.querySelector('.form__done').hidden=true; }
       flip.classList.toggle('is-back',on);
       back.inert=!on; back.setAttribute('aria-hidden',!on); front.inert=on; front.setAttribute('aria-hidden',on);
-      setTimeout(()=>(on?back.querySelector('[name=name]'):front.querySelector('[data-flip]')).focus({preventScroll:true}),450);};
-    flip.querySelectorAll('[data-flip]').forEach(b=>b.addEventListener('click',()=>turn(b.dataset.flip==='1')));
+      setTimeout(()=>(on?back.querySelector(big?'[name=qty_note]':'[name=name]'):front.querySelector('[data-flip]')).focus({preventScroll:true}),450);};
+
+    flip.querySelectorAll('[data-flip]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault(); turn(b.dataset.flip!=='0', b.dataset.flip==='big');}));
     back.addEventListener('keydown',e=>{if(e.key==='Escape') turn(false);});
   })();
 
@@ -1852,8 +1906,12 @@
       c.style.setProperty('--mx',(ev.clientX-r.left)+'px'); c.style.setProperty('--my',(ev.clientY-r.top)+'px');});});
     c.addEventListener('pointerenter',()=>c.style.setProperty('--o',1)); c.addEventListener('pointerleave',()=>c.style.setProperty('--o',0));})();
 
-  (()=>{const box=document.getElementById('wkBox'); if(!box||!box.showModal) return; const im=box.querySelector('img');
-    document.querySelectorAll('.wk__img').forEach(b=>b.addEventListener('click',()=>{im.src=b.querySelector('img').src; box.showModal();}));
+  (()=>{const box=document.getElementById('wkBox'); if(!box||!box.showModal) return; const im=box.querySelector('img'), n=box.querySelector('.wk-box__n');
+    const items=[...document.querySelectorAll('.wk__img')]; let cur=0;
+    const show=k=>{cur=(k+items.length)%items.length; im.src=items[cur].querySelector('img').src; n.textContent=(cur+1)+' / '+items.length;};
+    items.forEach((b,k)=>b.addEventListener('click',()=>{show(k); box.showModal();}));
+    box.querySelectorAll('.wk-box__nav').forEach(b=>b.addEventListener('click',()=>show(cur+ +b.dataset.step)));
+    box.addEventListener('keydown',e=>{if(e.key==='ArrowRight') show(cur+1); if(e.key==='ArrowLeft') show(cur-1);});
     box.addEventListener('click',e=>{if(e.target===box) box.close();});})();
 </script>
 </body>
