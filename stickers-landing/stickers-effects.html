@@ -25,9 +25,6 @@
   .stage{display:flex;flex-wrap:wrap;gap:28px;align-items:center;padding:14px 0}
   .stage--dark-ready{border-radius:16px;transition:background .4s}
 
-  /* ── СТИКЕР-ПЛЕЙСХОЛДЕР (die-cut + купол смолы) ─────────────────────────
-     Реальных картинок пока нет (на Диске) — вместо арта эмодзи/градиент.
-     Важна не картинка, а сам физический эффект «выпуклой смолы». */
   .tiltwrap{perspective:900px}
   .st{position:relative;width:172px;height:172px;border-radius:30px;
     display:grid;place-items:center;transform-style:preserve-3d;
@@ -38,30 +35,24 @@
   .st--rect{width:210px;height:150px;border-radius:22px}
   .st[data-tilt]{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
   .st__art{font-size:76px;line-height:1;transform:translateZ(26px);filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))}
-  /* купол смолы: статический глянец + бевел по краю */
+
   .st__gloss{position:absolute;inset:0;border-radius:inherit;pointer-events:none;
     background:radial-gradient(70% 55% at 32% 22%, rgba(255,255,255,.85), rgba(255,255,255,0) 60%);
     box-shadow:inset 0 3px 8px rgba(255,255,255,.7), inset 0 -12px 22px rgba(0,0,0,.22)}
-  /* блик, бегущий за курсором */
+
   .st__glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
     transition:opacity .2s;
     background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.75), rgba(255,255,255,0) 42%);
     mix-blend-mode:screen}
   .tiltwrap:hover .st__glare{opacity:1}
-  /* плитка, где ЛИЦО стикера — реальный арт (SVG-файл), а не эмодзи на жёлтом фоне.
-     Жёлтый градиент и внутренний паддинг убираем: картинка занимает всю плашку, купол
-     смолы и блик ложатся ПОВЕРХ неё. Радиус ~24% под скругление самого SVG (rx 50 на 209). */
+
   .st--img{background:none;overflow:hidden;border-radius:40px;border:none}
-  /* У реального стикера: СТАТИЧНОЕ белое пятно убрано, от купола остаётся только бевел края
-     (верхний блик-кромка + нижняя тень) — форма выпуклости, без нарисованного «зайчика». */
+
   .st--img .st__gloss{background:none;
     box-shadow:inset 0 2px 6px rgba(255,255,255,.5), inset 0 -15px 28px rgba(0,0,0,.30)}
-  /* Интерактивный блик как на смоле: тугой яркий specular-хотспот + мягкий широкий ореол.
-     Смола всегда чуть бликует (base .4), на hover разгорается. Хотспот прижат к верху —
-     calc сжимает вертикаль к 20–80%: на выпуклом куполе свет идёт сверху, блик не падает в самый низ. */
+
   .st--img .st__glare{opacity:.5;mix-blend-mode:screen;background:
-    /* ГЛАВНАЯ полоса-блик: диагональное отражение «лампы/окна», едет за курсором по X.
-       Узкая яркая сердцевина с мягкими краями. */
+
     linear-gradient(118deg,
       transparent calc(var(--mx,50%) - 15%),
       rgba(255,255,255,.15) calc(var(--mx,50%) - 7%),
@@ -69,17 +60,16 @@
       rgba(255,255,255,.95) calc(var(--mx,50%) + 1%),
       rgba(255,255,255,.15) calc(var(--mx,50%) + 7%),
       transparent calc(var(--mx,50%) + 15%)),
-    /* ВТОРАЯ тонкая полоса рядом — двойной блик как от рамы окна, добавляет «стеклянности» */
+
     linear-gradient(118deg,
       transparent calc(var(--mx,50%) + 9%),
       rgba(255,255,255,.4) calc(var(--mx,50%) + 13%),
       transparent calc(var(--mx,50%) + 17%)),
-    /* тугой specular-хотспот в точке курсора — «пик» яркости на вершине купола */
+
     radial-gradient(16% 12% at var(--mx,50%) calc(var(--my,50%) * .6 + 16%), rgba(255,255,255,1), rgba(255,255,255,0) 60%)}
   .st--img .st__face{position:absolute;inset:0;border-radius:inherit;overflow:hidden}
   .st--img .st__face img{width:100%;height:100%;object-fit:cover;display:block}
 
-  /* ── PEEL: отгибающийся уголок ───────────────────────────────────────── */
   .peel{position:relative;transition:transform .25s}
   .peel::after{content:"";position:absolute;top:0;right:0;width:52px;height:52px;
     border-radius:0 30px 0 22px;background:linear-gradient(225deg,#fff 0%,#e9e9e9 45%,#cfcfcf 100%);
@@ -88,7 +78,6 @@
   .peel:hover{transform:translateY(-4px)}
   .peel:hover::after{opacity:1;transform:rotate(-14deg) translate(-2px,2px)}
 
-  /* ── HOLO: голографический перелив ───────────────────────────────────── */
   .holo .st__holo{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:.0;
     transition:opacity .25s;mix-blend-mode:color-dodge;
     background:conic-gradient(from 0deg,#ff2fd0,#48b0ff,#4dff9e,#ffe74d,#ff2fd0);
@@ -96,7 +85,6 @@
   .holo:hover .st__holo{opacity:.55;animation:holospin 3s linear infinite}
   @keyframes holospin{to{filter:saturate(1.4) hue-rotate(360deg)}}
 
-  /* ── GLOW: свет/тьма ─────────────────────────────────────────────────── */
   .glowdemo{border-radius:16px;padding:26px;transition:background .45s}
   .glowdemo.dark{background:#0c0c12}
   .glowbtn{border:0;cursor:pointer;font:inherit;font-weight:700;border-radius:999px;
@@ -110,13 +98,11 @@
   .glowdemo.dark .fx__note-inline{color:#9fe8bd}
   .fx__note-inline{font-size:12px;color:var(--text-tertiary,var(--text-secondary))}
 
-  /* ── SCATTER: разлёт при скролле ─────────────────────────────────────── */
   .scatter{display:flex;flex-wrap:wrap;gap:24px}
   .scatter .st{opacity:0;transform:translate(var(--dx,0),var(--dy,40px)) rotate(var(--dr,0deg));
     transition:transform .6s cubic-bezier(.2,.85,.25,1),opacity .6s}
   .scatter .st.in{opacity:1;transform:translate(0,0) rotate(0deg)}
 
-  /* ── МАГНИТНЫЕ 3D-КНОПКИ ─────────────────────────────────────────────── */
   .mrow{display:flex;gap:20px;flex-wrap:wrap}
   .btn3d{border:0;cursor:pointer;font:inherit;font-weight:800;font-size:16px;color:#1a1a1a;
     background:var(--brand);border-radius:16px;padding:16px 30px;position:relative;
@@ -141,7 +127,6 @@
     Каждый блок подписан, <b>где на лендинге применяем</b>.</p>
   <p class="hint">Картинки-стикеры — заглушки (эмодзи): важен эффект «выпуклой смолы», а не арт. На мобилке hover нет → там статика/фолбэк.</p>
 
-  <!-- 1. TILT + КУПОЛ + БЛИК + ПАРАЛЛАКС -->
   <section class="fx">
     <div class="fx__head"><span class="fx__n">1. Наклон + купол смолы + блик</span><span class="fx__where">герой · портфолио</span></div>
     <p class="fx__note">Стикер наклоняется за курсором (угол глушёный ~12°, не 50° как в демке), глянец
@@ -156,7 +141,6 @@
     </div>
   </section>
 
-  <!-- 2. PEEL -->
   <section class="fx">
     <div class="fx__head"><span class="fx__n">2. Отгиб уголка (peel)</span><span class="fx__where">портфолио</span></div>
     <p class="fx__note">При наведении уголок приподнимается с тенью — как настоящий стикер, который хочется
@@ -168,7 +152,6 @@
     </div>
   </section>
 
-  <!-- 3. HOLO -->
   <section class="fx">
     <div class="fx__head"><span class="fx__n">3. Голографический перелив</span><span class="fx__where">блок «Виды» → голо-стикеры</span></div>
     <p class="fx__note">Радужный перелив поверх стикера, оживает при наведении. Для голографических покрытий —
@@ -179,7 +162,6 @@
     </div>
   </section>
 
-  <!-- 4. GLOW -->
   <section class="fx">
     <div class="fx__head"><span class="fx__n">4. Свет / тьма — свечение</span><span class="fx__where">отдельный блок-витрина</span></div>
     <p class="fx__note">Твоя идея: тумблер «выключить свет» → фон гаснет, стикеры зажигаются. Это и витрина
@@ -194,7 +176,6 @@
     </div>
   </section>
 
-  <!-- 5. SCATTER -->
   <section class="fx">
     <div class="fx__head"><span class="fx__n">5. Разлёт при скролле</span><span class="fx__where">входы секций</span></div>
     <p class="fx__note">Стикеры «вразнобой» собираются на месте, когда блок появляется в кадре — та самая
@@ -207,7 +188,6 @@
     </div>
   </section>
 
-  <!-- 6. МАГНИТНЫЕ 3D-КНОПКИ -->
   <section class="fx">
     <div class="fx__head"><span class="fx__n">6. Магнитные 3D-кнопки</span><span class="fx__where">CTA везде</span></div>
     <p class="fx__note">Кнопка чуть тянется к курсору и вдавливается при нажатии — «физическая», объёмная.
@@ -230,16 +210,15 @@
   const FINE = matchMedia('(hover:hover) and (pointer:fine)').matches;
   const RM   = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ── Наклон за курсором (+ позиция блика) ──
   function bindTilt(el){
     const max = parseFloat(el.dataset.tilt) || 12;
-    const wrap = el.parentElement;                 // .tiltwrap несёт perspective
+    const wrap = el.parentElement;
     wrap.addEventListener('pointermove', e=>{
       const r = el.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;   // 0..1
+      const px = (e.clientX - r.left) / r.width;
       const py = (e.clientY - r.top)  / r.height;
       el.style.setProperty('--ry', ((px - .5) *  max) + 'deg');
-      el.style.setProperty('--rx', ((py - .5) * -max) + 'deg');   // инверсия по вертикали (из-за perspective)
+      el.style.setProperty('--rx', ((py - .5) * -max) + 'deg');
       el.style.setProperty('--mx', (px * 100) + '%');
       el.style.setProperty('--my', (py * 100) + '%');
     });
@@ -248,7 +227,6 @@
     });
   }
 
-  // ── Магнитная кнопка ──
   function bindMagnet(btn, strength=0.4){
     btn.addEventListener('pointermove', e=>{
       const r = btn.getBoundingClientRect();
@@ -264,17 +242,15 @@
     document.querySelectorAll('[data-magnet]').forEach(b=>bindMagnet(b));
   }
 
-  // ── Свет/тьма ──
   document.querySelectorAll('[data-glow-toggle]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const box = btn.closest('.glowdemo');
       const on  = box.classList.toggle('dark');
       btn.textContent = on ? 'Включить свет 🔆' : 'Выключить свет 💡';
-      // в проде здесь: ym(COUNTER,'reachGoal','glow_toggle') — цель «поиграли со светом»
+
     });
   });
 
-  // ── Разлёт при скролле ──
   if(!RM && 'IntersectionObserver' in window){
     const io = new IntersectionObserver((es)=>es.forEach(x=>{
       if(x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target); }

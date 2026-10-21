@@ -222,7 +222,7 @@
       const u=c.toDataURL(),im=st.querySelector('img');st.style.setProperty('--m',`url(${u})`);
       await new Promise(ok=>{im.onload=ok;im.src=u})});
 
-    sts.forEach(st=>{const src=st.querySelector('img').getAttribute('src');if(src)st.style.setProperty('--m',`url(${src})`)});
+    sts.forEach(st=>{const im=st.querySelector('img');if(im.getAttribute('src'))st.style.setProperty('--m',`url("${im.src}")`)});
     Promise.all([document.fonts.ready,...plates]).then(()=>Promise.all(sts.map(st=>st.querySelector('img').decode().catch(()=>{})))).then(()=>{build();onS();sheet.classList.add('is-ready')});
     addEventListener('scroll',onS,{passive:true});
     let rz,rw=innerWidth;addEventListener('resize',()=>{if(innerWidth===rw)return;rw=innerWidth;clearTimeout(rz);rz=setTimeout(build,150)});

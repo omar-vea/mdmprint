@@ -28,3 +28,12 @@ stickers-landing/_v4-*.html
 stickers-landing/_publish-v4.py
 # исходники ретуши — в репо не кладём
 *.psd
+
+# архив лендинга стикеров: исходники, скрины, отработанные песочницы — локально, не в репо
+stickers-landing/_archive/
+
+# стикеры: таблицы, ТЗ и выгрузки (цены!) в репо не кладём; песочницы и инструменты — внутренние
+*.xlsx
+*.docx
+stickers-landing/*.csv
+stickers-landing/_sandbox-*.html
