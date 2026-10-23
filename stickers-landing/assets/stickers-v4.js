@@ -542,6 +542,7 @@
   })();
 
   (()=>{const ft=document.querySelector('.ft'),end=document.getElementById('pgEnd');if(!ft||!end)return;
-    ft.classList.add('is-far');
-    new IntersectionObserver(([e])=>ft.classList.toggle('is-far',!e.isIntersecting),{rootMargin:'0px 0px 100% 0px'}).observe(end);
+
+    const upd=()=>ft.classList.toggle('is-far',end.getBoundingClientRect().top>innerHeight*2);
+    addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd();
   })();
