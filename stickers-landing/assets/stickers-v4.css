@@ -45,6 +45,14 @@
 
   @media(min-width:1001px){.hero{--top:clamp(24px,3vw,45px)}}
 
+  .hscroll{position:fixed;left:50%;bottom:var(--hsb,40px);transform:translateX(-50%);z-index:5;pointer-events:none;
+    display:flex;flex-direction:column;align-items:center;gap:8px;font-size:15px;line-height:20px;font-weight:600;color:var(--text-primary);
+    opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+  .hscroll.is-on{opacity:1;visibility:visible;transition:opacity .3s}
+  .hscroll svg{box-sizing:border-box;width:32px;height:32px;padding:8px;border-radius:50%;background:#FFC100;fill:none;stroke:#222220;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;animation:hsBob 1.6s ease-in-out infinite}
+  @keyframes hsBob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+  @media(prefers-reduced-motion:reduce){.hscroll svg{animation:none}}
+
   .hsheet{transform:perspective(1600px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg));transition:transform .5s cubic-bezier(.2,.8,.2,1);will-change:transform}
   .hst::after,.hst__holo,.hst__sheen{will-change:transform}
   .hsheet.is-tilt{transition:transform .12s linear}

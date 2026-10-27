@@ -546,3 +546,23 @@
     const upd=()=>ft.classList.toggle('is-far',end.getBoundingClientRect().top>innerHeight*2);
     addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd();
   })();
+
+(function(){
+  const h=document.querySelector('.hscroll'), stub=document.querySelector('.hstub'), next=document.getElementById('vidy');
+  if(!h||!stub||!next) return;
+  let fits=false, nextOn=false;
+  const ck=document.getElementById('cookieBar');
+
+  const ckBlocks=()=>{ if(!ck||ck.hidden) return false; const a=ck.getBoundingClientRect(), b=h.getBoundingClientRect(); return a.left<b.right && a.right>b.left && a.top<b.bottom && a.bottom>b.top; };
+  const upd=()=> h.classList.toggle('is-on', fits && !nextOn && !ckBlocks());
+  if(ck) new MutationObserver(upd).observe(ck,{attributes:true,attributeFilter:['hidden']});
+  function place(){
+    if(nextOn) return;
+    const free=innerHeight - stub.getBoundingClientRect().bottom, need=h.offsetHeight;
+    fits = free >= need + 24;
+    h.style.setProperty('--hsb', Math.max(12, (free - need)/2) + 'px');
+    upd();
+  }
+  if('IntersectionObserver' in window) new IntersectionObserver(([e])=>{ nextOn = e.isIntersecting || e.boundingClientRect.top<0; if(!nextOn) place(); upd(); }).observe(next);
+  addEventListener('resize', place); addEventListener('load', place); place();
+})();
