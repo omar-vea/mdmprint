@@ -26,12 +26,28 @@
   (()=>{
     const hero=document.querySelector('.hero'),sheet=hero.querySelector('.hsheet'),cv=document.getElementById('film'),ctx=cv.getContext('2d');
     const h1=sheet.querySelector('h1'),sts=[...sheet.querySelectorAll('.hst')];
-    let W,H,M,dpr,F,T,G,R0=32;
+    let W,H,M,dpr,F,T,G,R0=32,PEEL=innerHeight*.55;
     const mk=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};
 
-    const dilate=(img,w,h,r,col)=>{const c=mk(Math.ceil((w+2*r)*dpr),Math.ceil((h+2*r)*dpr)),x=c.getContext('2d');x.scale(dpr,dpr);
-      for(const k of [0,.34,.67,1])for(let i=0;i<(k?24:1);i++){const t=i/24*Math.PI*2;x.drawImage(img,r+Math.cos(t)*r*k,r+Math.sin(t)*r*k,w,h)}
-      x.globalCompositeOperation='source-in';x.fillStyle=col;x.fillRect(0,0,w+2*r,h+2*r);return c};
+    const edt=(on,W,H)=>{const I=1e20,d=new Float64Array(W*H),n=Math.max(W,H),f=new Float64Array(n),v=new Int32Array(n),z=new Float64Array(n+1);
+      for(let i=0;i<W*H;i++)d[i]=on[i]?0:I;
+      const pass=(s,st,N)=>{let k=-1,t;for(let q=0;q<N;q++){f[q]=d[s+q*st];if(f[q]===I)continue;t=-I;
+          while(k>=0){const p=v[k];t=(f[q]+q*q-f[p]-p*p)/(2*(q-p));if(t>z[k])break;k--}
+          k++;v[k]=q;z[k]=k?t:-I;z[k+1]=I}
+        if(k<0)return;for(let q=0,j=0;q<N;q++){while(z[j+1]<q)j++;const p=v[j];d[s+q*st]=f[p]+(q-p)*(q-p)}};
+      for(let x=0;x<W;x++)pass(x,W,H);for(let y=0;y<H;y++)pass(y*W,1,W);return d};
+
+    const CONTOUR_C=9;
+
+    const contour=(img,w,h,P)=>{const q=Math.min(3,devicePixelRatio||1),C=CONTOUR_C,O=Math.min(12,Math.min(w,h)*.12),E=Math.ceil((P+C+2)*q)+2,gw=Math.ceil(w*q)+2*E,gh=Math.ceil(h*q)+2*E;
+      const g=mk(gw,gh),gx=g.getContext('2d',{willReadFrequently:true});gx.drawImage(img,E,E,w*q,h*q);
+      const A=gx.getImageData(0,0,gw,gh).data,inn=new Uint8Array(gw*gh);for(let i=0;i<gw*gh;i++)inn[i]=A[i*4+3]>127;
+      const d1=edt(inn,gw,gh),R2=((P+C)*q)**2,out=new Uint8Array(gw*gh);for(let i=0;i<gw*gh;i++)out[i]=d1[i]>R2;
+      const d2=edt(out,gw,gh),T2=((C+O)*q)**2,core=new Uint8Array(gw*gh);for(let i=0;i<gw*gh;i++)core[i]=d2[i]>T2;
+      const d3=edt(core,gw,gh);
+      return (r,col)=>{const c=mk(Math.ceil((w+2*r)*q),Math.ceil((h+2*r)*q)),x=c.getContext('2d'),id=x.createImageData(c.width,c.height),o=Math.round(E-r*q),L=(O+r-P)*q;
+        for(let j=0;j<c.height;j++)for(let i=0;i<c.width;i++){const a=L-Math.sqrt(d3[(j+o)*gw+i+o])+.5;id.data[(j*c.width+i)*4+3]=a<=0?0:a>=1?255:a*255}
+        x.putImageData(id,0,0);x.globalCompositeOperation='source-in';x.fillStyle=col;x.fillRect(0,0,c.width,c.height);return c}};
 
     const textBand=(tg,r,col,line)=>{const cs=getComputedStyle(tg),tw=tg.offsetWidth,th=tg.offsetHeight,E=Math.ceil(r)+3,q=Math.min(3,devicePixelRatio||1);
       const c=mk(Math.ceil((tw+2*E)*q),Math.ceil((th+2*E)*q)),x=c.getContext('2d');x.scale(q,q);
@@ -50,6 +66,8 @@
     function measure(){
       dpr=Math.min(2,devicePixelRatio||1);W=sheet.offsetWidth;H=sheet.offsetHeight;M=Math.round(Math.max(W,H)*.4);
       R0=parseFloat(getComputedStyle(sheet).borderTopLeftRadius)||32;
+
+      PEEL=Math.round(innerHeight*.55);hero.style.setProperty('--pin',PEEL+'px');hero.style.height=parseFloat(getComputedStyle(hero).paddingTop)+sheet.parentElement.offsetHeight+PEEL+'px';
       Object.assign(cv.style,{left:-M+'px',top:-M+'px',width:W+2*M+'px',height:H+2*M+'px'});
       cv.width=(W+2*M)*dpr;cv.height=(H+2*M)*dpr;
       F=mk(W*dpr,H*dpr);T=mk(W*dpr,H*dpr);G=mk(cv.width,cv.height);
@@ -63,11 +81,11 @@
         const cx=b.left+b.width/2-sr.left,cy=b.top+b.height/2-sr.top,w=st.offsetWidth,h=img.offsetHeight;
         const a=parseFloat(getComputedStyle(st).getPropertyValue('--r'))*Math.PI/180||0;
 
-        const P=7,Q=8.2,band=dilate(img,w,h,P,'#fbfbfa'),line=dilate(img,w,h,Q,'rgba(20,18,18,.16)');
+        const P=7,Q=8.2,paint=contour(img,w,h,P),band=paint(P,'#fbfbfa'),line=paint(Q,'rgba(20,18,18,.16)');
         const cut=st.querySelector('.hst__cut');cut.replaceChildren(band);
         f.save();f.translate(cx,cy);f.rotate(a);
         f.globalCompositeOperation='source-over';f.drawImage(line,-w/2-Q,-h/2-Q,w+2*Q,h+2*Q);
-        f.globalCompositeOperation='destination-out';f.drawImage(dilate(img,w,h,P,'#000'),-w/2-P,-h/2-P,w+2*P,h+2*P);
+        f.globalCompositeOperation='destination-out';f.drawImage(paint(P,'#000'),-w/2-P,-h/2-P,w+2*P,h+2*P);
         f.restore();
 
         const tg=st.querySelector('.hst__tag');if(!tg||!tg.offsetWidth)return;
@@ -129,18 +147,20 @@
       if(Math.abs(d)<.0015){if(d){P=Pt;draw()}q=false;return}
       P+=d*.22;draw();requestAnimationFrame(step)};
     const onS=()=>{
-      const y=-hero.getBoundingClientRect().top,vh=innerHeight;
-      Pt=cl01(y/(vh*.9));hero.classList.toggle('is-open',Pt>.5);
+      const y=-hero.getBoundingClientRect().top;
+      Pt=cl01(y/PEEL);hero.classList.toggle('is-open',Pt>.5);
       if(first||still){first=false;if(Pt!==P){P=Pt;draw()}}
       else if(!q&&Pt!==P){q=true;requestAnimationFrame(step)}
-      flipping=y>vh*.9;if(flipping){sheet.classList.remove('is-tilt');['--ty','--tx'].forEach(k=>sheet.style.removeProperty(k))}};
+      flipping=y>PEEL;if(flipping){sheet.classList.remove('is-tilt');['--ty','--tx'].forEach(k=>sheet.style.removeProperty(k))}};
 
     const SZ={seal:[320,320],star:[200,200],oval:[440,280],rect:[400,208],square:[300,300],circle:[320,320],pill:[440,150],heart:[340,300]};
     const shape=(x,sh,w,h)=>{x.beginPath();
       if(sh==='circle')x.arc(w/2,h/2,w/2,0,Math.PI*2);
       else if(sh==='oval')x.ellipse(w/2,h/2,w/2,h/2,0,0,Math.PI*2);
       else if(sh==='seal'){for(let i=0;i<=360;i++){const t=i/360*Math.PI*2,r=w/2*(1-.035*(1+Math.cos(t*28))/2);i?x.lineTo(w/2+Math.cos(t)*r,h/2+Math.sin(t)*r):x.moveTo(w/2+r,h/2)}}
-      else if(sh==='star'){const c=w/2,k=w*.12;x.moveTo(c,0);x.quadraticCurveTo(c+k,c-k,w,c);x.quadraticCurveTo(c+k,c+k,c,h);x.quadraticCurveTo(c-k,c+k,0,c);x.quadraticCurveTo(c-k,c-k,c,0)}
+      else if(sh==='star'){const c=w/2,a=c*.117,b=c*.283,k=c*.323;
+        for(let i=0;i<4;i++){const s=[0,1,0,-1][i],o=[1,0,-1,0][i],P=(al,si)=>[c+s*al+o*si,c-o*al+s*si];
+          if(!i)x.moveTo(...P(c-b,-a));x.quadraticCurveTo(...P(c,0),...P(c-b,a));x.quadraticCurveTo(...P(k,k),...P(a,c-b))}}
       else if(sh==='heart'){x.moveTo(w/2,h*.97);x.bezierCurveTo(w*.18,h*.74,0,h*.52,0,h*.3);x.bezierCurveTo(0,h*.1,w*.14,0,w*.28,0);x.bezierCurveTo(w*.39,0,w*.47,h*.06,w/2,h*.16);
         x.bezierCurveTo(w*.53,h*.06,w*.61,0,w*.72,0);x.bezierCurveTo(w*.86,0,w,h*.1,w,h*.3);x.bezierCurveTo(w,h*.52,w*.82,h*.74,w/2,h*.97)}
       else{const r=sh==='pill'?h/2:sh==='square'?70:60;rr(x,0,0,w,h,r);return}
