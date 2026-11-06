@@ -526,12 +526,15 @@
     box.addEventListener('keydown',e=>{if(e.key==='ArrowRight') show(cur+1); if(e.key==='ArrowLeft') show(cur-1);});
     box.addEventListener('click',e=>{if(e.target===box) box.close();});})();
 
+  new IntersectionObserver(([e])=>document.documentElement.classList.toggle('ft-end',e.isIntersecting)).observe(document.querySelector('.ft'));
+
   (()=>{const hx=document.getElementById('hx'),hero=document.querySelector('.hero'),sec=document.getElementById('hxSec'),
       btn=hx.querySelector('.hx__sec'),menu=document.getElementById('hxMenu'),items=[...menu.querySelectorAll('a[href^="#"]')],
       targets=items.map(a=>document.querySelector(a.hash));
+    const alw=matchMedia('(hover:none) and (pointer:coarse)').matches;
     let shown=false,cur;
     const closeMenu=()=>{menu.hidden=true;btn.setAttribute('aria-expanded','false')};
-    const upd=()=>{const on=hero.getBoundingClientRect().bottom<80;
+    const upd=()=>{const on=alw||hero.getBoundingClientRect().bottom<80;
       if(on!==shown){shown=on;hx.classList.toggle('is-on',on);hx.inert=!on;if(!on)closeMenu()}
       if(!on)return;
       let a=null;targets.forEach((t,i)=>{if(t&&t.getBoundingClientRect().top<innerHeight*.33)a=items[i]});
