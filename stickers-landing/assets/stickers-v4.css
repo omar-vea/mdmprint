@@ -98,6 +98,10 @@
     color:var(--muted);text-decoration:none;font-size:14px;
     padding:0 14px;background:radial-gradient(circle,rgba(20,18,18,.28) 1px,transparent 1.5px) 0 0/8px 2px repeat-x content-box}
   .hstub b{font-family:var(--font-head);font-weight:800;text-transform:uppercase;font-size:18px;letter-spacing:.02em;color:var(--ink)}
+
+  .hstub__tag{flex:none;display:inline-flex;align-items:center;height:30px;padding:0 11px;border-radius:9px;background:var(--y);color:var(--ink);
+    font:normal 800 18px/1 var(--font-head);text-transform:uppercase;letter-spacing:.02em;white-space:nowrap;transform:rotate(-3deg);
+    box-shadow:0 0 0 2.5px #fff,0 0 0 3.3px rgba(20,18,18,.16),0 3px 6px rgba(20,18,18,.18)}
   .hstub small{display:inline-flex;align-items:center;gap:6px;height:34px;margin-left:6px;padding:0 6px 0 14px;border-radius:99px;background:var(--ink);color:#fff;
     font-size:13.5px;font-weight:700;transition:background .2s}
   .hstub small .arr{width:22px;height:22px;padding:4px;border-radius:50%;background:var(--y);color:var(--ink)}
@@ -170,6 +174,7 @@
     .hstub b{font-size:14px;text-align:left;line-height:1.05}
     .hstub small{margin-left:0;height:32px;font-size:12.5px;padding:0 5px 0 11px}
     .hstub b{margin-left:12px;font-size:13px;text-wrap:balance}.hstub small{margin-right:12px}
+    .hstub__tag{margin-left:12px;height:26px;padding:0 8px;border-radius:7px;font-size:14px}.hstub__tag+b{margin-left:0}
   }
 
   @media(max-width:560px) and (hover:none) and (pointer:coarse){
