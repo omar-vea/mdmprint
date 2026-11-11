@@ -39,7 +39,7 @@
 
     const CONTOUR_C=9;
 
-    const contour=(img,w,h,P)=>{const q=Math.min(3,(devicePixelRatio||1)*Z),C=CONTOUR_C,O=Math.min(12,Math.min(w,h)*.12),E=Math.ceil((P+C+2)*q)+2,gw=Math.ceil(w*q)+2*E,gh=Math.ceil(h*q)+2*E;
+    const contour=(img,w,h,P)=>{const q=Math.min(3,devicePixelRatio||1),C=CONTOUR_C,O=Math.min(12,Math.min(w,h)*.12),E=Math.ceil((P+C+2)*q)+2,gw=Math.ceil(w*q)+2*E,gh=Math.ceil(h*q)+2*E;
       const g=mk(gw,gh),gx=g.getContext('2d',{willReadFrequently:true});gx.drawImage(img,E,E,w*q,h*q);
       const A=gx.getImageData(0,0,gw,gh).data,inn=new Uint8Array(gw*gh);for(let i=0;i<gw*gh;i++)inn[i]=A[i*4+3]>127;
       const d1=edt(inn,gw,gh),R2=((P+C)*q)**2,out=new Uint8Array(gw*gh);for(let i=0;i<gw*gh;i++)out[i]=d1[i]>R2;
@@ -49,7 +49,7 @@
         for(let j=0;j<c.height;j++)for(let i=0;i<c.width;i++){const a=L-Math.sqrt(d3[(j+o)*gw+i+o])+.5;id.data[(j*c.width+i)*4+3]=a<=0?0:a>=1?255:a*255}
         x.putImageData(id,0,0);x.globalCompositeOperation='source-in';x.fillStyle=col;x.fillRect(0,0,c.width,c.height);return c}};
 
-    const textBand=(tg,r,col,line)=>{const cs=getComputedStyle(tg),tw=tg.offsetWidth,th=tg.offsetHeight,E=Math.ceil(r)+3,q=Math.min(3,(devicePixelRatio||1)*Z);
+    const textBand=(tg,r,col,line)=>{const cs=getComputedStyle(tg),tw=tg.offsetWidth,th=tg.offsetHeight,E=Math.ceil(r)+3,q=Math.min(3,devicePixelRatio||1);
       const c=mk(Math.ceil((tw+2*E)*q),Math.ceil((th+2*E)*q)),x=c.getContext('2d');x.scale(q,q);
       x.font=`${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;x.letterSpacing=cs.letterSpacing;x.textBaseline='alphabetic';
       const m=x.measureText('Н'),asc=m.fontBoundingBoxAscent,desc=m.fontBoundingBoxDescent,y=E+(th-(asc+desc))/2+asc,t=tg.textContent.toUpperCase();
@@ -60,16 +60,16 @@
     function build(){
 
       const tf=sheet.style.transform,tr=sheet.style.transition;sheet.style.transition='none';sheet.style.transform='none';
-      Z=Math.max(1,Math.min(innerWidth/1920,innerHeight/1080));hero.style.setProperty('--hz',Z);
       try{measure()}finally{sheet.style.transform=tf;sheet.style.transition=tr}
-      draw();
+      draw();dispatchEvent(new Event('heroready'));
     }
-    let Z=1;
+    const coarse=matchMedia('(hover:none) and (pointer:coarse)').matches;
     function measure(){
-      dpr=Math.min(2,(devicePixelRatio||1)*Z);W=sheet.offsetWidth;H=sheet.offsetHeight;M=Math.round(Math.max(W,H)*.4);
+      dpr=Math.min(2,devicePixelRatio||1);W=sheet.offsetWidth;H=sheet.offsetHeight;M=Math.round(Math.max(W,H)*.4);
       R0=parseFloat(getComputedStyle(sheet).borderTopLeftRadius)||32;
 
-      PEEL=Math.round(innerHeight*.55);hero.style.setProperty('--pin',PEEL+'px');hero.style.height=parseFloat(getComputedStyle(hero).paddingTop)+sheet.parentElement.offsetHeight*Z+PEEL+'px';
+      hero.style.removeProperty('--top');if(!coarse){const t0=parseFloat(getComputedStyle(hero).paddingTop),hs=sheet.parentElement.offsetHeight+60;hero.style.setProperty('--top',Math.max(t0,Math.round((innerHeight-hs)/2))+'px')}
+      PEEL=Math.round(innerHeight*.55);hero.style.setProperty('--pin',PEEL+'px');hero.style.height=parseFloat(getComputedStyle(hero).paddingTop)+sheet.parentElement.offsetHeight+PEEL+'px';
       Object.assign(cv.style,{left:-M+'px',top:-M+'px',width:W+2*M+'px',height:H+2*M+'px'});
       cv.width=(W+2*M)*dpr;cv.height=(H+2*M)*dpr;
       F=mk(W*dpr,H*dpr);T=mk(W*dpr,H*dpr);G=mk(cv.width,cv.height);
@@ -80,7 +80,7 @@
       f.globalCompositeOperation='destination-out';
       const sr=sheet.getBoundingClientRect();
       sts.forEach(st=>{if(!st.offsetWidth)return;const img=st.querySelector('img'),b=st.getBoundingClientRect();
-        const cx=(b.left+b.width/2-sr.left)/Z,cy=(b.top+b.height/2-sr.top)/Z,w=st.offsetWidth,h=img.offsetHeight;
+        const cx=b.left+b.width/2-sr.left,cy=b.top+b.height/2-sr.top,w=st.offsetWidth,h=img.offsetHeight;
         const a=parseFloat(getComputedStyle(st).getPropertyValue('--r'))*Math.PI/180||0;
 
         const P=7,Q=8.2,paint=contour(img,w,h,P),band=paint(P,'#fbfbfa'),line=paint(Q,'rgba(20,18,18,.16)');
@@ -93,7 +93,7 @@
         const tg=st.querySelector('.hst__tag');if(!tg||!tg.offsetWidth)return;
         const [tbc,E,tw,th]=textBand(tg,3.5,'#fbfbfa','#5e5a55');
         Object.assign(tbc.style,{left:-E+'px',top:-E+'px',width:tw+2*E+'px',height:th+2*E+'px'});tg.querySelector('canvas')?.remove();tg.prepend(tbc);
-        const tb=tg.getBoundingClientRect(),tx=(tb.left+tb.width/2-sr.left)/Z,ty=(tb.top+tb.height/2-sr.top)/Z;
+        const tb=tg.getBoundingClientRect(),tx=tb.left+tb.width/2-sr.left,ty=tb.top+tb.height/2-sr.top;
         f.save();f.translate(tx,ty);f.rotate(a);
         const [thc,E3]=textBand(tg,4,'#000');
         f.globalCompositeOperation='destination-out';f.drawImage(thc,-tw/2-E3,-th/2-E3,tw+2*E3,th+2*E3);
@@ -104,7 +104,7 @@
       f.font=`${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;f.letterSpacing=cs.letterSpacing;
       const asc=f.measureText('Н').fontBoundingBoxAscent,tn=h1.firstChild,txt=tn.textContent,rg=document.createRange();
       txt.replace(/\S+/g,(w,i)=>{rg.setStart(tn,i);rg.setEnd(tn,i+w.length);const r=rg.getBoundingClientRect();
-        f.fillText(w.toUpperCase(),(r.left-sr.left)/Z,(r.top-sr.top)/Z+asc);return w});
+        f.fillText(w.toUpperCase(),r.left-sr.left,r.top-sr.top+asc);return w});
     }
     let P=0;
     function draw(){
@@ -245,9 +245,10 @@
       await new Promise(ok=>{im.onload=ok;im.src=u})});
 
     sts.forEach(st=>{const im=st.querySelector('img');if(im.getAttribute('src'))st.style.setProperty('--m',`url("${im.src}")`)});
-    Promise.all([document.fonts.ready,...plates]).then(()=>Promise.all(sts.map(st=>st.querySelector('img').decode().catch(()=>{})))).then(()=>{build();onS();sheet.classList.add('is-ready');dispatchEvent(new Event('resize'))});
+    Promise.all([document.fonts.ready,...plates]).then(()=>Promise.all(sts.map(st=>st.querySelector('img').decode().catch(()=>{})))).then(()=>{build();onS();sheet.classList.add('is-ready')});
     addEventListener('scroll',onS,{passive:true});
-    let rz,rw=innerWidth;addEventListener('resize',()=>{if(innerWidth===rw&&Z===Math.max(1,Math.min(innerWidth/1920,innerHeight/1080)))return;rw=innerWidth;clearTimeout(rz);rz=setTimeout(build,150)});
+    let rz,rw=innerWidth;addEventListener('resize',()=>{if(innerWidth===rw&&coarse)return;
+    rw=innerWidth;clearTimeout(rz);rz=setTimeout(build,150)});
   })();
 
   (()=>{const b=document.getElementById('vlight'),sh=document.getElementById('vsheet');if(!b)return;
@@ -570,7 +571,7 @@
   })();
 
 (function(){
-  const h=document.querySelector('.hscroll'), stub=document.querySelector('.hstub'), next=document.getElementById('vidy');
+  const h=document.querySelector('.hscroll'), stub=document.querySelector('.hstub'), next=document.getElementById('vidy'), hero=document.querySelector('.hero');
   if(!h||!stub||!next) return;
   let fits=false, nextOn=false;
   const ck=document.getElementById('cookieBar');
@@ -580,11 +581,14 @@
   if(ck) new MutationObserver(upd).observe(ck,{attributes:true,attributeFilter:['hidden']});
   function place(){
     if(nextOn) return;
+
+    if(scrollY > (parseFloat(hero.style.getPropertyValue('--pin')) || innerHeight*.55)) return;
     const free=innerHeight - stub.getBoundingClientRect().bottom, need=h.offsetHeight;
     fits = free >= need + 24;
-    h.style.setProperty('--hsb', Math.max(12, (free - need)/2) + 'px');
+    const gap=Math.min((free - need)/2, 40);
+    h.style.setProperty('--hsb', Math.max(12, free - need - gap) + 'px');
     upd();
   }
   if('IntersectionObserver' in window) new IntersectionObserver(([e])=>{ nextOn = e.isIntersecting || e.boundingClientRect.top<0; if(!nextOn) place(); upd(); }).observe(next);
-  addEventListener('resize', place); addEventListener('load', place); place();
+  addEventListener('resize', place); addEventListener('load', place); addEventListener('scroll', place, {passive:true}); addEventListener('heroready', place); place();
 })();
